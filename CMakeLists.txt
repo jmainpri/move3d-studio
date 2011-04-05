@@ -1,82 +1,147 @@
-# The name of the project is "LIBHRI". CMakeLists files in this project can
-# refer to the root source directory of the project as ${LIBHRI_SOURCE_DIR} and
-# to the root binary directory of the project as ${LIBHRI_BINARY_DIR}.
+# The name of the project is "MOVE3DSTUDIO". CMakeLists files in this project can
+# refer to the root source directory of the project as ${MOVE3DSTUDIO_SOURCE_DIR} and
+# to the root binary directory of the project as ${MOVE3DSTUDIO_BINARY_DIR}.
 cmake_minimum_required (VERSION 2.6)
 
-PROJECT(LIBHRI CXX)
+PROJECT(MOVE3DSTUDIO C CXX)
 
-set( PACKAGE_NAME libhri )
+set( PACKAGE_NAME move3d-studio )
 set( PACKAGE_VERSION 3.10.99 )
 
 #Uncomment next line to get verbose makefiles.
 #SET(CMAKE_VERBOSE_MAKEFILE true)
 
 # Pick up our scripts - they are all in the conf subdirectory
-SET(LIBHRI_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-SET(CMAKE_MODULE_PATH ${LIBHRI_MODULE_PATH})
+SET(MOVE3DSTUDIO_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+SET(CMAKE_MODULE_PATH ${MOVE3DSTUDIO_MODULE_PATH})
+
+INCLUDE("${CMAKE_MODULE_PATH}/TargetDoc.cmake" OPTIONAL)
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/script/CMake")
+SET(BUILD_SHARED_LIBS true)
+
+#--------------------- Project ------------------------------------------------
+
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
 
 #--------------------- Move3D -------------------------------------------------
 FIND_PACKAGE (Pkgconfig)
 pkg_check_modules(MOVE3D REQUIRED "libmove3d")
 
-#MESSAGE( "${MOVE3D_INCLUDE_DIRS}" )
-#MESSAGE( "${MOVE3D_LIBRARY_DIRS}" )
+INCLUDE_directories(${MOVE3D_INCLUDE_DIRS})
+#SET(LIBS ${LIBS} ${MOVE3D_LDFLAGS})
+#MESSAGE( MOVE3D_LIBRARIES = ${MOVE3D_LIBRARIES})
+#------------------------------------------------------------------------------
+#-------------- XFORMS --------------------------------------------------------
 
-MESSAGE( "${MOVE3D_CFLAGS}" )
-MESSAGE( "${MOVE3D_LDFLAGS}" )
+FIND_PACKAGE(XFORMS REQUIRED)
+INCLUDE_directories(${XFORMS_INCLUDE_DIR})
+SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${XFORMS_INCLUDE_DIR})
+SET(LIBS ${LIBS} ${XFORMS_LIBRARIES})
 
-#INCLUDE_DIRECTORIES(${MOVE3D_INCLUDE_DIRS})
-#LINK_DIRECTORIES( ${MOVE3D_LIBRARY_DIRS} )
-#set(LIBS ${LIBS} ${MOVE3D_LIBRARIES})
 #------------------------------------------------------------------------------
 
-INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
+FIND_PACKAGE(X11 REQUIRED)
+INCLUDE_directories(${X11_INCLUDE_DIR})
+SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${X11_INCLUDE_DIR})
+SET(LIBS ${LIBS} ${X11_LIBRARIES})
 
-INCLUDE("${CMAKE_MODULE_PATH}/TargetDoc.cmake" OPTIONAL)
+SET(WITH_XFORMS ON)
 
-SET(BUILD_SHARED_LIBS true)
+IF(APPLE)
+	IF(GL_NATIVE)
+  		FIND_PACKAGE(OpenGL REQUIRED)
+  		INCLUDE_directories("${OPENGL_INCLUDE_DIR}/Headers")
+  		SET(INCLUDE_DIRS ${INCLUDE_DIRS} "${OPENGL_INCLUDE_DIR}/Headers")
+  		SET(LIBS ${LIBS} ${OPENGL_LIBRARIES})
+  		Message(${OPENGL_INCLUDE_DIR})
+  		Message(${OPENGL_LIBRARIES})
+  		IF(WITH_XFORMS)
+  			FIND_PACKAGE(GLU REQUIRED)
+  			INCLUDE_directories(${GLU_INCLUDE_DIR})
+  			SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${GLU_INCLUDE_DIR})
+  			SET(LIBS ${LIBS} ${GLU_LIBRARIES})
+  			FIND_PACKAGE(GL REQUIRED)
+  			INCLUDE_directories(${GL_INCLUDE_DIR})
+  			SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${GL_INCLUDE_DIR})
+  			SET(LIBS ${LIBS} ${GL_LIBRARIES})
+  		ENDIF(WITH_XFORMS)
+	ELSE(GL_NATIVE)
+		FIND_PACKAGE(GLU REQUIRED)
+  		INCLUDE_directories(${GLU_INCLUDE_DIR})
+  		SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${GLU_INCLUDE_DIR})
+  		SET(LIBS ${LIBS} ${GLU_LIBRARIES})
+  		FIND_PACKAGE(GL REQUIRED)
+  		INCLUDE_directories(${GL_INCLUDE_DIR})
+  		SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${GL_INCLUDE_DIR})
+  		SET(LIBS ${LIBS} ${GL_LIBRARIES})
+	ENDIF(GL_NATIVE)
+ELSE(APPLE)
+  FIND_PACKAGE(OpenGL REQUIRED)
+  INCLUDE_directories(${OPENGL_INCLUDE_DIR})
+  SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR})
+  SET(LIBS ${LIBS} ${OPENGL_LIBRARIES})
 
-# Get the current libhri version
-ADD_DEFINITIONS(${MOVE3D_CFLAGS} -DUNIX -DHRI_VERSION="${PACKAGE_VERSION}")
+  FIND_PACKAGE(GLU REQUIRED)
+  INCLUDE_directories(${GLU_INCLUDE_DIR})
+  SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${GLU_INCLUDE_DIR})
+  SET(LIBS ${LIBS} ${GLU_LIBRARIES})
+ENDIF(APPLE)
 
-# La target ne link absolument pas contre libmove3d
-# si tu compile sans HRI_PLANNER il y a plein d'erreures
-# les lignes suivantes sont celles que j'utilise dans mon
-# projet pour linker un pkg issue de pkgconfig, bonne chance et bon courage
-# pour le linker avec ce projet lˆ (j'y ai passŽ une heure j'ai
-# pas rŽussit, il y aurait une target par default qui a le mme nom )
+#------------------------------------------------------------------------------	
+			
+#MESSAGE( LIBS = ${LIBS} )
+#MESSAGE( MOVE3D_LDFLAGS =  "${MOVE3D_LDFLAGS}" )
+MESSAGE( MOVE3D_CFLAGS =  "${MOVE3D_CFLAGS}" )
 
-#ADD_LIBRARY(hri SHARED ${PROJECT_SOURCE_DIR}/src)
-#SET_TARGET_PROPERTIES(hri PROPERTIES COMPILE_FLAGS ${MOVE3D_CFLAGS})
-#TARGET_LINK_LIBRARIES(hri ${MOVE3D_LDFLAGS})
+IF(UNIX)
+  ADD_DEFINITIONS(-DUNIX)
+  IF(APPLE)
+    ADD_DEFINITIONS(-DMACOSX)
+  ELSE(APPLE)
+    ADD_DEFINITIONS(-DLINUX)
+  ENDIF(APPLE)
+ELSE(UNIX)
+ MESSAGE (FATAL_ERROR "Not supported Platform")
+ENDIF(UNIX)
+
+#Default mode is Debug
+IF(NOT CMAKE_BUILD_TYPE)
+  SET(CMAKE_BUILD_TYPE Debug CACHE STRING
+      "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+      FORCE)
+ENDIF(NOT CMAKE_BUILD_TYPE)
+
+# Get the current move3d-studio version
+ADD_DEFINITIONS(${MOVE3D_CFLAGS} ${INCLUDE_DIRS} -DMOVE3D_STUDIO_VERSION="${PACKAGE_VERSION}" )
+ADD_DEFINITIONS(-DWITH_XFORMS)
 
 ##########################################
 ##       PKGCONFIG file                ###
 ##########################################
 
-IF   (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/libhri.pc.in")
-    MESSAGE(STATUS "configured ${CMAKE_CURRENT_SOURCE_DIR}/libhri.pc.in --> ${CMAKE_CURRENT_BINARY_DIR}/libhri.pc")
-    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/libhri.pc.in 
-      ${CMAKE_CURRENT_BINARY_DIR}/libhri.pc
+IF   (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/move3d-studio.pc.in")
+    MESSAGE(STATUS "configured ${CMAKE_CURRENT_SOURCE_DIR}/move3d-studio.pc.in --> ${CMAKE_CURRENT_BINARY_DIR}/move3d-studio.pc")
+    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/move3d-studio.pc.in 
+      ${CMAKE_CURRENT_BINARY_DIR}/move3d-studio.pc
       @ONLY )
 
 	INSTALL(FILES
-		${CMAKE_CURRENT_BINARY_DIR}/libhri.pc
+		${CMAKE_CURRENT_BINARY_DIR}/move3d-studio.pc
 		DESTINATION lib/pkgconfig
 	)
-ENDIF(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/libhri.pc.in")
+ENDIF(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/move3d-studio.pc.in")
 
 ##########################################
 ##           Options                   ###
 ##########################################
 
-OPTION (USE_MIGHTABILITY_MAPS "Enable Mightability Maps support" OFF)
+#OPTION (USE_MIGHTABILITY_MAPS "Enable Mightability Maps support" OFF)
+OPTION (WITH_XFORMS "Enable Mightability Maps support" ON)
 
 ##########################################
 ##       HRI library                 ###
 ##########################################
 
-
-ADD_SUBDIRECTORY (src)
+ADD_SUBDIRECTORY (src/move3d-xforms)
 
 
