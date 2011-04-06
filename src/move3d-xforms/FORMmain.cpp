@@ -1,20 +1,23 @@
-#include "P3d-pkg.h"
-#include "Planner-pkg.h"
-#include "Graphic-pkg.h"
-#include "Move3d-pkg.h"
-#include "Localpath-pkg.h"
-#include "Collision-pkg.h"
-#include "Util-pkg.h"
-#include "UserAppli-pkg.h"
-#include "Bio-pkg.h"
+#include <P3d-pkg.h>
+#include <Planner-pkg.h>
+#include <Graphic-pkg.h>
+#include <Move3d-pkg.h>
+#include <Localpath-pkg.h>
+#include <Collision-pkg.h>
+#include <Util-pkg.h>
+#include <UserAppli-pkg.h>
+#include <Bio-pkg.h>
 #ifdef ENERGY
-#include "../bio/BioEnergy/include/Energy-pkg.h"
+#include <libmove3d/bio/BioEnergy/include/Energy-pkg.h>
 #endif
+
 #ifdef HRI_PLANNER
-#include "Hri_planner-pkg.h"
+#include <hri/hri.h>
+#include "hri-gui/FORMhri_planner_proto.h"
 #endif
+
 #ifdef GRASP_PLANNING
-#include "GraspPlanning-pkg.h"
+#include <GraspPlanning-pkg.h>
 #endif
 #ifdef QT_LIBRARY
 #include "../qtWindow/cppToQt.hpp"

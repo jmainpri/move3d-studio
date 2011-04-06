@@ -19,12 +19,40 @@ INCLUDE("${CMAKE_MODULE_PATH}/TargetDoc.cmake" OPTIONAL)
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/script/CMake")
 SET(BUILD_SHARED_LIBS true)
 
+FIND_PACKAGE (PkgConfig REQUIRED)
+
 #--------------------- Project ------------------------------------------------
 
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
 
+##########################################
+##           Options                   ###
+##########################################
+
+OPTION (WITH_XFORMS "Use XForms toolkit for interface" ON)
+OPTION (HRI_GUI "Enable Human-Robot Interaction related parts" ON)
+
+IF(WITH_XFORMS)
+	ADD_DEFINITIONS(-DWITH_XFORMS)
+ENDIF()
+
+IF(HRI_GUI)
+	ADD_DEFINITIONS(-DHRI_PLANNER)
+	
+	### libhri dependency
+	PKG_CHECK_MODULES(LIBHRI REQUIRED libhri)
+	INCLUDE_DIRECTORIES(${LIBHRI_INCLUDE_DIRS})
+	LINK_DIRECTORIES( ${LIBHRI_LIBRARY_DIRS} )
+	SET(LIBS ${LIBS} ${LIBHRI_LIBRARIES})
+ENDIF()
+
+##########################################
+##      Others dependencies             ##
+##########################################
+
+
 #--------------------- Move3D -------------------------------------------------
-FIND_PACKAGE (Pkgconfig)
+
 pkg_check_modules(MOVE3D REQUIRED "libmove3d")
 
 INCLUDE_directories(${MOVE3D_INCLUDE_DIRS})
@@ -44,8 +72,6 @@ FIND_PACKAGE(X11 REQUIRED)
 INCLUDE_directories(${X11_INCLUDE_DIR})
 SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${X11_INCLUDE_DIR})
 SET(LIBS ${LIBS} ${X11_LIBRARIES})
-
-SET(WITH_XFORMS ON)
 
 IF(APPLE)
 	IF(GL_NATIVE)
@@ -112,8 +138,7 @@ IF(NOT CMAKE_BUILD_TYPE)
 ENDIF(NOT CMAKE_BUILD_TYPE)
 
 # Get the current move3d-studio version
-ADD_DEFINITIONS(${MOVE3D_CFLAGS} ${INCLUDE_DIRS} -DMOVE3D_STUDIO_VERSION="${PACKAGE_VERSION}" )
-ADD_DEFINITIONS(-DWITH_XFORMS)
+ADD_DEFINITIONS(${MOVE3D_CFLAGS} -DMOVE3D_STUDIO_VERSION="${PACKAGE_VERSION}" )
 
 ##########################################
 ##       PKGCONFIG file                ###
@@ -132,16 +157,9 @@ IF   (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/move3d-studio.pc.in")
 ENDIF(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/move3d-studio.pc.in")
 
 ##########################################
-##           Options                   ###
-##########################################
-
-#OPTION (USE_MIGHTABILITY_MAPS "Enable Mightability Maps support" OFF)
-OPTION (WITH_XFORMS "Enable Mightability Maps support" ON)
-
-##########################################
 ##       HRI library                 ###
 ##########################################
 
-ADD_SUBDIRECTORY (src/move3d-xforms)
+ADD_SUBDIRECTORY (src)
 
 

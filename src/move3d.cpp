@@ -16,7 +16,6 @@
 #include "UdpClient.h"
 
 #include "locale.h"
-#include "molecule.xpm"
 
 // TODO
 #undef USE_GLUT

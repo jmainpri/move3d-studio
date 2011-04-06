@@ -1,4 +1,9 @@
 
+IF(HRI_GUI)
+	MESSAGE("Building move3d-studio with HRI support")
+	ADD_SUBDIRECTORY(hri-gui)
+ENDIF()
+
 FOREACH (srcfile 
 	FORMconstraints.cpp 
 	FORMdiffusion.cpp 
@@ -23,15 +28,7 @@ FOREACH (srcfile
 	LIST(APPEND MOVE3DSTUDIO_SRC ${srcfile})
 ENDFOREACH(srcfile)
 
-FILE(GLOB_RECURSE INCLUDE_DIRS "include/*.h")
-
 ADD_LIBRARY(move3d-xforms STATIC ${MOVE3DSTUDIO_SRC})
-TARGET_LINK_LIBRARIES(move3d-xforms ${MOVE3D_LDFLAGS} ${LIBS})
+TARGET_LINK_LIBRARIES(move3d-xforms ${LIBS})
 
-ADD_EXECUTABLE(move3d-studio move3d.cpp ${INCLUDE_DIRS})
-TARGET_LINK_LIBRARIES(move3d-studio move3d-xforms)
-
-INSTALL(TARGETS move3d-studio
-        RUNTIME DESTINATION bin 
-	CONFIGURATIONS ${CMAKE_BUILD_TYPE})
-		
+SET(COMPONENTS ${COMPONENTS} move3d-xforms PARENT_SCOPE)

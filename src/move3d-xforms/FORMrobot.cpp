@@ -8,8 +8,9 @@
 #include "Util-pkg.h"
 #include "Bio-pkg.h"
 #include <iostream>
+
 #ifdef HRI_PLANNER
-#include "Hri_planner-pkg.h"
+#include <hri/hri.h>
 #endif
 
 #ifdef HRI_COSTSPACE
