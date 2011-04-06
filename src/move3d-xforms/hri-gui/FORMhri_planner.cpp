@@ -9,6 +9,11 @@
 #include <hri/hri.h>
 
 #include "FORMhri_planner_proto.h"
+#include "FORMgikjointselection_proto.h"
+#include "FORMpsp_parameters_proto.h"
+#include "p3d_perspective_proto.h"
+#include "graphic/g3d_perspective_window_proto.h"
+#include "graphic/g3d_draw_navigation_proto.h"
 
 /* ------- FUNCTION VARIABLES ------- */
 

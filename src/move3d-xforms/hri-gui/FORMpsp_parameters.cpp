@@ -8,7 +8,12 @@
 
 #include <hri/hri.h>
 
+#include "perspective.h"
 #include "FORMpsp_parameters_proto.h"
+#include "graphic/g3d_position_area_proto.h"
+#include "graphic/g3d_perspective_window_proto.h"
+#include "graphic/g3d_draw_camera_proto.h"
+#include "p3d_perspective_proto.h"
 
 FL_FORM  *PSP_PARAMETERS_FORM = NULL;
 
