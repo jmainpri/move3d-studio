@@ -55,8 +55,9 @@ ENDIF()
 
 pkg_check_modules(MOVE3D REQUIRED "libmove3d")
 
-INCLUDE_directories(${MOVE3D_INCLUDE_DIRS})
-#SET(LIBS ${LIBS} ${MOVE3D_LDFLAGS})
+INCLUDE_DIRECTORIES(${MOVE3D_INCLUDE_DIRS})
+SET(LIBS ${LIBS} ${MOVE3D_LIBRARIES})
+LINK_DIRECTORIES( ${MOVE3D_LIBRARY_DIRS} )
 #MESSAGE( MOVE3D_LIBRARIES = ${MOVE3D_LIBRARIES})
 #------------------------------------------------------------------------------
 #-------------- XFORMS --------------------------------------------------------
