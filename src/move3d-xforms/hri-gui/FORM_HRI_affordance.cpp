@@ -1,16 +1,18 @@
-#include "Util-pkg.h"
-#include "P3d-pkg.h"
-#include "Planner-pkg.h"
-#include "Move3d-pkg.h"
-#include "Localpath-pkg.h"
-#include "Collision-pkg.h"
-#include "Graphic-pkg.h"
-#include "Hri_planner-pkg.h"
+#include <Util-pkg.h>
+#include <P3d-pkg.h>
+#include <Planner-pkg.h>
+#include <Move3d-pkg.h>
+#include <Localpath-pkg.h>
+#include <Collision-pkg.h>
+#include <Graphic-pkg.h>
+
+#include <hri/hri.h>
 
 #ifdef USE_SYM_GEO_PLAN
 #include "include/Geo_Sym_Sys.h"
 #endif
 
+#include "FORM_HRI_affordance_proto.h"
 
 #define LOCAL_COMPUTATION_EPSILON (1e-9)
 
