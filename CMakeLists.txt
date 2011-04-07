@@ -65,7 +65,7 @@ INCLUDE_DIRECTORIES(${MOVE3D_INCLUDE_DIRS})
 SET(LIBS ${LIBS} ${MOVE3D_LIBRARIES})
 LINK_DIRECTORIES( ${MOVE3D_LIBRARY_DIRS} )
 #MESSAGE( MOVE3D_LIBRARIES = ${MOVE3D_LIBRARIES})
-#------------------------------------------------------------------------------
+
 #-------------- XFORMS --------------------------------------------------------
 
 FIND_PACKAGE(XFORMS REQUIRED)
@@ -73,7 +73,7 @@ INCLUDE_directories(${XFORMS_INCLUDE_DIR})
 SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${XFORMS_INCLUDE_DIR})
 SET(LIBS ${LIBS} ${XFORMS_LIBRARIES})
 
-#------------------------------------------------------------------------------
+#--------------- OPENGL -------------------------------------------------------
 
 FIND_PACKAGE(X11 REQUIRED)
 INCLUDE_directories(${X11_INCLUDE_DIR})
@@ -119,6 +119,15 @@ ELSE(APPLE)
   SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${GLU_INCLUDE_DIR})
   SET(LIBS ${LIBS} ${GLU_LIBRARIES})
 ENDIF(APPLE)
+
+#------------------- softMotion -----------------------------------------------	
+
+pkg_check_modules(SOFTMOTION REQUIRED "softMotion-libs")
+
+INCLUDE_DIRECTORIES(${SOFTMOTION_INCLUDE_DIRS})
+SET(LIBS ${LIBS} ${SOFTMOTION_LIBRARIES})
+LINK_DIRECTORIES( ${SOFTMOTION_LIBRARY_DIRS} )
+MESSAGE( SOFTMOTION_LIBRARIES = ${SOFTMOTION_LIBRARIES})
 
 #------------------------------------------------------------------------------	
 			
