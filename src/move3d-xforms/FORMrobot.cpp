@@ -1,13 +1,15 @@
-#include "P3d-pkg.h"
-#include "Graphic-pkg.h"
-#include "Move3d-pkg.h"
-#include "Planner-pkg.h"
-#include "Localpath-pkg.h"
-#include "Collision-pkg.h"
-#include "Graphic-pkg.h"
-#include "Util-pkg.h"
-#include "Bio-pkg.h"
 #include <iostream>
+
+#include <P3d-pkg.h>
+#include <Graphic-pkg.h>
+#include <Planner-pkg.h>
+#include <Localpath-pkg.h>
+#include <Collision-pkg.h>
+#include <Graphic-pkg.h>
+#include <Util-pkg.h>
+#include <Bio-pkg.h>
+
+#include <move3d.h>
 
 #ifdef HRI_PLANNER
 #include <hri/hri.h>
@@ -20,6 +22,15 @@
 #ifdef QT_GL
 #include "../qtWindow/cppToQt.hpp"
 #endif
+
+#include "g3d_draw_ui.h"
+
+#include "proto/FORMenv_proto.h"
+#include "proto/FORMoptim_proto.h"
+#include "proto/FORMconstraints_proto.h"
+#include "proto/FORMplanner_proto.h"
+
+#include "proto/FORMrobot_proto.h"
 
 extern MENU_FILTER *FILTER_FORM;  // KINEO-DEV :doit etre declare dans un .h !!
 extern FL_OBJECT  *robotparams_obj; // KINEO-DEV :doit etre declare dans un .h !!

@@ -1,16 +1,26 @@
-#include "Util-pkg.h"
-#include "P3d-pkg.h"
-#include "Planner-pkg.h"
-#include "Move3d-pkg.h"
-#include "Localpath-pkg.h"
-#include "Collision-pkg.h"
-#include "Graphic-pkg.h"
-#include "Bio-pkg.h"
-#include "sys/stat.h"
+#include <Util-pkg.h>
+#include <P3d-pkg.h>
+#include <Planner-pkg.h>
+#include <Localpath-pkg.h>
+#include <Collision-pkg.h>
+#include <Graphic-pkg.h>
+#include <Bio-pkg.h>
+#include <sys/stat.h>
+
+#include <move3d.h>
 
 #ifdef CXX_PLANNER
-#include "../planner_cxx/plannerFunctions.hpp"
+#include <libmove3d/planner_cxx/plannerFunctions.hpp>
 #endif
+
+#include "proto/FORMpath_deform_proto.h"
+#include "proto/FORMmultiLocalPath_proto.h"
+#include "proto/FORMrobot_proto.h"
+#include "proto/FORMoptim_proto.h"
+#include "g3d_draw_ui.h"
+
+/* globals */
+extern Pixmap GetApplicationIcon( );
 
 #define MAX_NB_TRY_OPTIM  20
 

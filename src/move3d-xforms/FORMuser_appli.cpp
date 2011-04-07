@@ -1,30 +1,34 @@
-#include "Graphic-pkg.h"
-#include "UserAppli-pkg.h"
-#include "GL/glx.h"
-#include "Planner-pkg.h"
-#include "Collision-pkg.h"
-#include "P3d-pkg.h"
-#include "Util-pkg.h"
-#include "Move3d-pkg.h"
 #include <list>
 
+#include <Graphic-pkg.h>
+#include <GL/glx.h>
+#include <Planner-pkg.h>
+#include <Collision-pkg.h>
+#include <P3d-pkg.h>
+#include <Util-pkg.h>
+
 #ifdef LIGHT_PLANNER
-  #include "../lightPlanner/proto/DlrPlanner.h"
-  #include "../lightPlanner/proto/DlrParser.h"
-  #include "../lightPlanner/proto/lightPlanner.h"
-  #include "../lightPlanner/proto/lightPlannerApi.h"
-  #include "../lightPlanner/proto/ManipulationTestFunctions.hpp"
-#include "../lightPlanner/proto/robotPos.h"
+  #include <libmove3d/lightPlanner/proto/DlrPlanner.h>
+  #include <libmove3d/lightPlanner/proto/DlrParser.h>
+  #include <libmove3d/lightPlanner/proto/lightPlanner.h>
+  #include <libmove3d/lightPlanner/proto/lightPlannerApi.h>
+  #include <libmove3d/lightPlanner/proto/ManipulationTestFunctions.hpp>
+#include <libmove3d/lightPlanner/proto/robotPos.h>
 #endif
 #ifdef DPG
-  #include "../planner/dpg/proto/p3d_chanEnv_proto.h"
+  #include <libmove3d/planner/dpg/proto/p3d_chanEnv_proto.h>
 #endif
 #ifdef GRASP_PLANNING
-  #include "GraspPlanning-pkg.h"
+  #include <GraspPlanning-pkg.h>
   #ifdef LIGHT_PLANNER
-    #include "../lightPlanner/proto/Manipulation.h"
+    #include <libmove3d/lightPlanner/proto/Manipulation.h>
   #endif
 #endif
+
+#include "g3d_draw_ui.h"
+
+#include "proto/userappli_proto.h"
+
 FL_FORM *USER_APPLI_FORM = NULL;
 static void callbacks(FL_OBJECT *ob, long arg);
 static int CB_userAppliForm_OnClose(FL_FORM *form, void *arg);

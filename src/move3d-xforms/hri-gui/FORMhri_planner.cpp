@@ -1,7 +1,6 @@
 #include <Util-pkg.h>
 #include <P3d-pkg.h>
 #include <Planner-pkg.h>
-#include <Move3d-pkg.h>
 #include <Localpath-pkg.h>
 #include <Collision-pkg.h>
 #include <Graphic-pkg.h>
@@ -14,6 +13,8 @@
 #include "p3d_perspective_proto.h"
 #include "graphic/g3d_perspective_window_proto.h"
 #include "graphic/g3d_draw_navigation_proto.h"
+
+#include "../../move3d-xforms/proto/FORMrobot_proto.h"
 
 /* ------- FUNCTION VARIABLES ------- */
 

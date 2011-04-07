@@ -1,21 +1,19 @@
-#include "Util-pkg.h"
-#include "P3d-pkg.h"
+#include <Util-pkg.h>
+#include <P3d-pkg.h>
 
-#
+#include <move3d.h>
 
 #ifdef P3D_PLANNER
-#include "Planner-pkg.h"
+#include <Planner-pkg.h>
 #endif
 #ifdef P3D_COLLISION_CHECKING
-#include "Collision-pkg.h"
+#include <Collision-pkg.h>
 #endif
 
-#include "Move3d-pkg.h"
-#include "Bio-pkg.h"
-#include "UserAppli-pkg.h"
-#include "UdpClient.h"
+#include <Bio-pkg.h>
+#include <UdpClient.h>
 
-#include "locale.h"
+#include <locale.h>
 
 // TODO
 #undef USE_GLUT
@@ -28,27 +26,33 @@
 #endif
 
 #if defined( QT_GL ) && defined( CXX_PLANNER )
-#include "project.hpp"
-#include "cppToQt.hpp"
-#endif
-#ifdef LIGHT_PLANNER
-#include "../lightPlanner/proto/DlrPlanner.h"
-#include "../lightPlanner/proto/DlrParser.h"
-#include "../lightPlanner/proto/lightPlannerApi.h"
-#if defined( MULTILOCALPATH ) && defined( GRASP_PLANNING )
-#include "../lightPlanner/proto/ManipulationTestFunctions.hpp"
-#endif
-#endif
-#ifdef CXX_PLANNER
-#include "planningAPI.hpp"
-#include "cost_space.hpp"
-#include <boost/bind.hpp>
-#endif
-#ifdef WITH_XFORMS
-#include "Graphic-pkg.h"
+#include <project.hpp>
+#include <cppToQt.hpp>
 #endif
 
-#include "../graphic/proto/g3d_glut.hpp"
+#ifdef LIGHT_PLANNER
+#include <libmove3d/lightPlanner/proto/DlrPlanner.h>
+#include <libmove3d/lightPlanner/proto/DlrParser.h>
+#include <libmove3d/lightPlanner/proto/lightPlannerApi.h>
+
+  #if defined( MULTILOCALPATH ) && defined( GRASP_PLANNING )
+  #include <libmove3d/lightPlanner/proto/ManipulationTestFunctions.hpp>
+  #endif
+
+#endif
+
+#ifdef CXX_PLANNER
+#include <planningAPI.hpp>
+#include <cost_space.hpp>
+#include <boost/bind.hpp>
+#endif
+
+#ifdef WITH_XFORMS
+#include <Graphic-pkg.h>
+#include "move3d-xforms/proto/FORMmain_proto.h"
+#endif
+
+#include <libmove3d/graphic/proto/g3d_glut.hpp>
 
 static int FILTER_TO_BE_SET_ACTIVE = FALSE;
 //extern void g3d_create_main_form(void);

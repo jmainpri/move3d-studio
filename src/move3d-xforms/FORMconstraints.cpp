@@ -2,11 +2,18 @@
  
 */
 
-#include "P3d-pkg.h"
-#include "Move3d-pkg.h"
-#include "Graphic-pkg.h"
 #include <iostream>
 
+#include "P3d-pkg.h"
+#include "Graphic-pkg.h"
+
+#include "move3d.h"
+
+#include "g3d_draw_ui.h"
+#include "proto/FORMrobot_proto.h"
+
+/* globals */
+extern Pixmap GetApplicationIcon( );
 
 extern MENU_ROBOT *ROBOTS_FORM;	// KINEO-DEV :doit �tre d�clar� dans un .h !!
 extern int robotSelectPositionFlag;

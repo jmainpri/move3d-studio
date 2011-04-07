@@ -2,8 +2,12 @@
 #include "Graphic-pkg.h"
 #include "Util-pkg.h"
 #include "P3d-pkg.h"
-#include "Move3d-pkg.h"
 #include "Planner-pkg.h"
+
+#include "proto/FORMrobot_proto.h"
+#include "g3d_draw_ui.h"
+
+#include "proto/FORMoptim_proto.h"
 
 #define MAX_NB_TRY_OPTIM  20
 

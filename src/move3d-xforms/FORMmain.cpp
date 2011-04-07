@@ -1,15 +1,19 @@
+//////// System includes ////////
 #include <P3d-pkg.h>
 #include <Planner-pkg.h>
 #include <Graphic-pkg.h>
-#include <Move3d-pkg.h>
 #include <Localpath-pkg.h>
 #include <Collision-pkg.h>
 #include <Util-pkg.h>
-#include <UserAppli-pkg.h>
 #include <Bio-pkg.h>
+
+#include <move3d.h>
+
 #ifdef ENERGY
 #include <libmove3d/bio/BioEnergy/include/Energy-pkg.h>
 #endif
+
+//////// GUI forms includes ////////
 
 #ifdef HRI_PLANNER
 #include <hri/hri.h>
@@ -27,6 +31,16 @@
 #ifdef QT_LIBRARY
 #include "../qtWindow/cppToQt.hpp"
 #endif
+
+#include "proto/FORMgenom_proto.h"
+#include "proto/FORMsoftMotion_proto.h"
+#include "proto/FORMenv_proto.h"
+#include "proto/FORMuser_appli_proto.h"
+#include "proto/FORMsteering_proto.h"
+#include "proto/FORMdiffusion_proto.h"
+#include "proto/FORMplanner_proto.h"
+#include "proto/FORMrobot_proto.h"
+
 #include "molecule.xpm"
 
 typedef void (*fct_interface)(void);

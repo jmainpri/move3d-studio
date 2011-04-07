@@ -1,20 +1,23 @@
-#include "UserAppli-pkg.h"
-#include "Planner-pkg.h"
-#include "Graphic-pkg.h"
-#include "P3d-pkg.h"
-#include "Move3d-pkg.h"
-#include "Localpath-pkg.h"
-#include "Collision-pkg.h"
-#include "Util-pkg.h"
-#include "UdpClient.h"
+#include <Planner-pkg.h>
+#include <Graphic-pkg.h>
+#include <P3d-pkg.h>
+#include <Localpath-pkg.h>
+#include <Collision-pkg.h>
+#include <Util-pkg.h>
+#include <UdpClient.h>
 
 #ifdef LIGHT_PLANNER
-#include "../lightPlanner/proto/lightPlannerApi.h"
-#include "../lightPlanner/proto/lightPlanner.h"
+#include <libmove3d/lightPlanner/proto/lightPlannerApi.h>
+#include <libmove3d/lightPlanner/proto/lightPlanner.h>
 #endif
 #ifdef DPG
-#include "../planner/dpg/proto/p3d_chanEnv_proto.h"
+#include <libmove3d/planner/dpg/proto/p3d_chanEnv_proto.h>
 #endif
+
+#include "proto/FORMplanner_proto.h"
+#include "proto/FORMrobot_proto.h"
+
+
 static int trueFunction(p3d_rob* robot, p3d_localpath* curLp);
 static void p3d_fuseGraphs(p3d_rob* robot, p3d_graph* mainGraph, p3d_graph* subGraph);
 #ifdef DPG

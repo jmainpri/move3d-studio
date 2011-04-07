@@ -2,13 +2,19 @@
 #ifdef MULTILOCALPATH
 //File Created By Xavier BROQUERE
 //On 29/10/2007
-#include "Util-pkg.h"
-#include "P3d-pkg.h"
-#include "Planner-pkg.h"
-#include "Move3d-pkg.h"
-#include "Localpath-pkg.h"
-#include "Collision-pkg.h"
-#include "Graphic-pkg.h"
+#include <Util-pkg.h>
+#include <P3d-pkg.h>
+#include <Planner-pkg.h>
+#include <Localpath-pkg.h>
+#include <Collision-pkg.h>
+#include <Graphic-pkg.h>
+
+#include "g3d_draw_ui.h"
+
+#include "proto/FORMmultiLocalPath_proto.h"
+
+/* globals */
+extern Pixmap GetApplicationIcon( );
 
 //FL_OBJECTS declaration
 extern FL_FORM * MULTILOCALPATH_FORM;

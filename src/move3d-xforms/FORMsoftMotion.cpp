@@ -1,22 +1,23 @@
-#include "Collision-pkg.h"
-#include "Graphic-pkg.h"
-#include "Util-pkg.h"
-#include "P3d-pkg.h"
-#include "Move3d-pkg.h"
-#include "Planner-pkg.h"
-#include "Localpath-pkg.h"
-#include "GraspPlanning-pkg.h"
-#include "gbM/Proto_gbModeles.h"
 #include <list>
 #include <string>
-#include "../lightPlanner/proto/lightPlannerApi.h"
-#include "../lightPlanner/proto/lightPlanner.h"
-#include "../lightPlanner/proto/ManipulationStruct.h"
-#include "../lightPlanner/proto/Manipulation.h"
-#include "../lightPlanner/proto/ManipulationPlanner.hpp"
-#include "../lightPlanner/proto/ManipulationUtils.hpp"
+
+#include <Collision-pkg.h>
+#include <Graphic-pkg.h>
+#include <Util-pkg.h>
+#include <P3d-pkg.h>
+#include <Planner-pkg.h>
+#include <Localpath-pkg.h>
+#include <GraspPlanning-pkg.h>
+#include <gbM/Proto_gbModeles.h>
+#include <libmove3d/lightPlanner/proto/lightPlannerApi.h>
+#include <libmove3d/lightPlanner/proto/lightPlanner.h>
+#include <libmove3d/lightPlanner/proto/ManipulationStruct.h>
+#include <libmove3d/lightPlanner/proto/Manipulation.h>
+#include <libmove3d/lightPlanner/proto/ManipulationPlanner.hpp>
+#include <libmove3d/lightPlanner/proto/ManipulationUtils.hpp>
 
 
+#include "proto/FORMrobot_proto.h"
 
 /* --------- FORM VARIABLES ------- */
 FL_FORM  * SOFT_MOTION_FORM = NULL;

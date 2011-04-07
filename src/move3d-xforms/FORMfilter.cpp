@@ -1,7 +1,10 @@
-#include "P3d-pkg.h"
-#include "Move3d-pkg.h"
-#include "Collision-pkg.h"
-#include "Graphic-pkg.h"
+#include <P3d-pkg.h>
+#include <Collision-pkg.h>
+#include <Graphic-pkg.h>
+
+#include <move3d.h>
+
+#include "proto/FORMrobot_proto.h"
 
 #define NBUTTON_PER_LINE 3
 

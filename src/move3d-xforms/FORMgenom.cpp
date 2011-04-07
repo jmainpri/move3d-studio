@@ -1,29 +1,30 @@
-//#include "Manipulation.h"
-#include "Collision-pkg.h"
-#include "Graphic-pkg.h"
-#include "Util-pkg.h"
-#include "P3d-pkg.h"
-#include "Move3d-pkg.h"
-#include "Planner-pkg.h"
-#include "Localpath-pkg.h"
-#include "GraspPlanning-pkg.h"
-#include "gbM/Proto_gbModeles.h"
-//#include "lightPlanner.h"
-//#include "lightPlannerApi.h"
-#include "../lightPlanner/proto/ManipulationViaConfPlanner.hpp"
-#include "LightPlanner-pkg.h"
-#include "../graspPlanning/proto/gp_grasp_generation_proto.h"
-#ifdef DPG
-#include "p3d_chanEnv_proto.h"
-#endif
-
-#ifdef CXX_PLANNER
-#include "planner_cxx/plannerFunctions.hpp"
-#endif
-
 #include <list>
 #include <string>
 #include <iostream>
+
+//#include <Manipulation.h>
+#include <Collision-pkg.h>
+#include <Graphic-pkg.h>
+#include <Util-pkg.h>
+#include <P3d-pkg.h>
+#include <Planner-pkg.h>
+#include <Localpath-pkg.h>
+#include <GraspPlanning-pkg.h>
+#include <gbM/Proto_gbModeles.h>
+//#include <lightPlanner.h>
+//#include <lightPlannerApi.h>
+#include <libmove3d/lightPlanner/proto/ManipulationViaConfPlanner.hpp>
+#include <LightPlanner-pkg.h>
+#include <libmove3d/graspPlanning/proto/gp_grasp_generation_proto.h>
+#ifdef DPG
+#include <p3d_chanEnv_proto.h>
+#endif
+
+#ifdef CXX_PLANNER
+#include <planner_cxx/plannerFunctions.hpp>
+#endif
+
+#include "proto/FORMrobot_proto.h"
 
 // #if defined(MULTILOCALPATH) && defined(GRASP_PLANNING) && defined(LIGHT_PLANNER)
 

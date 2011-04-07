@@ -1,13 +1,19 @@
-#include "Util-pkg.h"
-#include "P3d-pkg.h"
-#include "Graphic-pkg.h"
-#include "Planner-pkg.h"
-#include "Move3d-pkg.h"
-#include "Collision-pkg.h"
+#include <Util-pkg.h>
+#include <P3d-pkg.h>
+#include <Graphic-pkg.h>
+#include <Planner-pkg.h>
+#include <Collision-pkg.h>
+
+#include "g3d_draw_ui.h"
+#include "proto/FORMrobot_proto.h"
+#include "proto/FORMdiffusion_proto.h"
 
 #ifdef HRI_COSTSPACE
 #include "hri_costspace/HRICS_old.h"
 #endif
+
+/* globals */
+extern Pixmap GetApplicationIcon( );
 
 extern FL_OBJECT* Diffusion_obj;
 extern FL_OBJECT* SEARCH_DRAW_OBJ;

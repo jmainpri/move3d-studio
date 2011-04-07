@@ -3,10 +3,15 @@
 #include "Util-pkg.h"
 #include "P3d-pkg.h"
 #include "Planner-pkg.h"
-#include "Move3d-pkg.h"
 #include "Localpath-pkg.h"
 #include "Collision-pkg.h"
 #include "Graphic-pkg.h"
+
+#include "g3d_draw_ui.h"
+#include "proto/FORMpath_deform_proto.h"
+
+/* globals */
+extern Pixmap GetApplicationIcon();
 
 //FL_OBJECTS declaration
 extern FL_FORM * PATH_DEFORM_FORM;

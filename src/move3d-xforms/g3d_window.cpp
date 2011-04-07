@@ -1,35 +1,41 @@
-#include "Util-pkg.h"
-#include "P3d-pkg.h"
+#include <iostream>
 
-#include "Graphic-pkg.h"
+#include <Util-pkg.h>
+#include <P3d-pkg.h>
+
+#include <Graphic-pkg.h>
 
 #ifdef P3D_PLANNER
-#include "Planner-pkg.h"
+#include <Planner-pkg.h>
 #endif
 
-#include "Move3d-pkg.h"
-#include "Collision-pkg.h"
+#include <Collision-pkg.h>
+
+#include <move3d.h>
 
 extern void* GroundCostObj;
 
-#include <iostream>
 
 #ifndef PROTO
 #ifdef UNIX
-#include "GL/glx.h"
+#include <GL/glx.h>
 #define GLX_H 
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "forms.h"
-#include "glcanvas.h"
+#include <forms.h>
+#include <glcanvas.h>
 #ifdef __cplusplus
 }
 #endif
 
 #endif
 #endif
+
+#include "proto/FORMenv_proto.h"
+#include "proto/FORMrobot_proto.h"
+#include "g3d_window.h"
 
 #define MOUSE_BTN_LEFT  256
 #define MOUSE_BTN_CENTER  512

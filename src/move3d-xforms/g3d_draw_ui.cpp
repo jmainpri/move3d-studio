@@ -16,6 +16,7 @@
              sur le form cette variable est mise a null.
 */
 #include "Graphic-pkg.h"
+#include "g3d_draw_ui.h"
 //function definition:
 
 static int g3d_create_fl_object_on_form(FL_OBJECT** obj, int type, FL_Coord w, FL_Coord h, const char *label, FL_FORM** parent);
