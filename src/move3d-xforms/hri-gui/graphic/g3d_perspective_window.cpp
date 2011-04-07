@@ -1,10 +1,14 @@
-#include "P3d-pkg.h"
-#include "Util-pkg.h"
-#include "Collision-pkg.h"
-#include "Graphic-pkg.h"
-#include "Planner-pkg.h"
-#include "hri.h"
+#include <P3d-pkg.h>
+#include <Util-pkg.h>
+#include <Collision-pkg.h>
+#include <Graphic-pkg.h>
+#include <Planner-pkg.h>
 
+#include <hri/hri.h>
+
+#include "../perspective.h"
+
+#include "g3d_perspective_window_proto.h"
 
 #ifdef __cplusplus
 extern "C" {

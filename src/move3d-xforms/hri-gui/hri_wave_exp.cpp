@@ -1,10 +1,14 @@
-#include "Util-pkg.h"
-#include "P3d-pkg.h"
-#include "Planner-pkg.h"
-#include "Localpath-pkg.h"
-#include "Collision-pkg.h"
-#include "Graphic-pkg.h"
-#include "hri.h"
+#include <Util-pkg.h>
+#include <P3d-pkg.h>
+#include <Planner-pkg.h>
+#include <Localpath-pkg.h>
+#include <Collision-pkg.h>
+#include <Graphic-pkg.h>
+
+#include <hri/hri.h>
+
+#include "perspective.h"
+#include "hri_wave_exp_proto.h"
 
 #define MAX_ROW_INDEX 44 //10 centimeters
 #define MAX_COL_INDEX 79

@@ -1,11 +1,13 @@
-#include "P3d-pkg.h"
-#include "Planner-pkg.h"
-#include "Collision-pkg.h"
-#include "Graphic-pkg.h"
-#include "Util-pkg.h"
-#include "hri.h"
-#include "iostream"
-//#endif
+#include <P3d-pkg.h>
+#include <Planner-pkg.h>
+#include <Collision-pkg.h>
+#include <Graphic-pkg.h>
+#include <Util-pkg.h>
+#include <iostream>
+
+#include <hri/hri.h>
+
+#include "g3d_draw_camera_proto.h"
 
 /* Modif Luis */
 

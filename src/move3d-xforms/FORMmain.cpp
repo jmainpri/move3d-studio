@@ -14,6 +14,11 @@
 #ifdef HRI_PLANNER
 #include <hri/hri.h>
 #include "hri-gui/FORMhri_planner_proto.h"
+
+#ifdef USE_MIGHTABILITY_MAPS
+#include "hri-gui/FORM_HRI_affordance_proto.h"
+#endif
+
 #endif
 
 #ifdef GRASP_PLANNING

@@ -1,14 +1,13 @@
-#include "P3d-pkg.h"
-#include "Planner-pkg.h"
-#include "Collision-pkg.h"
-#include "Graphic-pkg.h"
-#include "Util-pkg.h"
-//#include "Util-pkg.h"
-#ifdef HRI_PLANNER
-#include "hri.h"
-#endif
+#include <P3d-pkg.h>
+#include <Planner-pkg.h>
+#include <Collision-pkg.h>
+#include <Graphic-pkg.h>
+#include <Util-pkg.h>
 
+#include <hri/hri.h>
 
+#include "../p3d_perspective_proto.h"
+#include "g3d_position_area_proto.h"
 
 
  /* Internal Functions */

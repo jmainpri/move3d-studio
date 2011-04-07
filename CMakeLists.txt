@@ -43,6 +43,7 @@ ENDIF()
 
 IF(HRI_GUI)
 	ADD_DEFINITIONS(-DHRI_PLANNER)
+	ADD_DEFINITIONS(-DHRI_PLANNER_GUI) #Needed for libmove3d/include/device.h (p3d_rob struct)
 	
 	### libhri dependency
 	PKG_CHECK_MODULES(LIBHRI REQUIRED libhri)

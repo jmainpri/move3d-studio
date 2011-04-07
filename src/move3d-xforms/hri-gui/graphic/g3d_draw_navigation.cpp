@@ -1,11 +1,13 @@
-#include "Util-pkg.h"
-#include "P3d-pkg.h"
-#include "Planner-pkg.h"
-#include "Collision-pkg.h"
-#include "Graphic-pkg.h"
-#include "GroundHeight-pkg.h"
-#include "hri.h"
+#include <Util-pkg.h>
+#include <P3d-pkg.h>
+#include <Planner-pkg.h>
+#include <Collision-pkg.h>
+#include <Graphic-pkg.h>
+#include <GroundHeight-pkg.h>
 
+#include <hri/hri.h>
+
+#include "g3d_draw_navigation_proto.h"
 /*
  * Play the current trajectory of the robot with his bitmap
  *
