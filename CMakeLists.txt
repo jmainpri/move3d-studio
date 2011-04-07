@@ -6,7 +6,7 @@ cmake_minimum_required (VERSION 2.6)
 PROJECT(MOVE3DSTUDIO C CXX)
 
 set( PACKAGE_NAME move3d-studio )
-set( PACKAGE_VERSION 3.10.99 )
+set( PACKAGE_VERSION 1.0 )
 
 #Uncomment next line to get verbose makefiles.
 #SET(CMAKE_VERBOSE_MAKEFILE true)
