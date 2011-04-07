@@ -1,3 +1,5 @@
+#ifdef USE_MIGHTABILITY_MAPS
+
 #include <Util-pkg.h>
 #include <P3d-pkg.h>
 #include <Planner-pkg.h>
@@ -2243,7 +2245,4 @@ void g3d_create_HRI_affordance_form(void)
        
 }
 
-
-
-
-
+#endif //USE_MIGHTABILITY_MAPS
