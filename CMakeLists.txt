@@ -31,7 +31,7 @@ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
 
 OPTION (WITH_XFORMS "Use XForms toolkit for interface" ON)
 OPTION (HRI_GUI "Enable Human-Robot Interaction related parts" ON)
-OPTION (MIGHTABILITY_MAPS "Enable MigthabilityMaps interface" ON)
+OPTION (MIGHTABILITY_MAPS "Enable MigthabilityMaps interface" OFF)
 
 IF(WITH_XFORMS)
 	ADD_DEFINITIONS(-DWITH_XFORMS)
@@ -46,6 +46,9 @@ IF(HRI_GUI)
 	ADD_DEFINITIONS(-DHRI_PLANNER_GUI) #Needed for libmove3d/include/device.h (p3d_rob struct)
 	
 	### libhri dependency
+        IF(DEFINED LIBHRI_PC)
+		SET(ENV{PKG_CONFIG_PATH} $ENV{PKG_CONFIG_PATH}:${LIBHRI_PC})
+	ENDIF()
 	PKG_CHECK_MODULES(LIBHRI REQUIRED libhri)
 	INCLUDE_DIRECTORIES(${LIBHRI_INCLUDE_DIRS})
 	LINK_DIRECTORIES( ${LIBHRI_LIBRARY_DIRS} )
@@ -58,7 +61,9 @@ ENDIF()
 
 
 #--------------------- Move3D -------------------------------------------------
-
+IF(DEFINED LIBMOVE3D_PC)
+	SET(ENV{PKG_CONFIG_PATH} $ENV{PKG_CONFIG_PATH}:${LIBMOVE3D_PC})
+ENDIF()
 pkg_check_modules(MOVE3D REQUIRED "libmove3d")
 
 INCLUDE_DIRECTORIES(${MOVE3D_INCLUDE_DIRS})

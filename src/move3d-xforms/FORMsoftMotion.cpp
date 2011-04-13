@@ -16,9 +16,6 @@
 #include <libmove3d/lightPlanner/proto/ManipulationPlanner.hpp>
 #include <libmove3d/lightPlanner/proto/ManipulationUtils.hpp>
 
-
-#include "proto/FORMrobot_proto.h"
-
 /* --------- FORM VARIABLES ------- */
 FL_FORM  * SOFT_MOTION_FORM = NULL;
 static FL_OBJECT * BT_COMP_TRAJ_OBJ = NULL;
