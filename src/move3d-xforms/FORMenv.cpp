@@ -1,7 +1,7 @@
 #include "P3d-pkg.h"
 #include "Graphic-pkg.h"
 #include "Collision-pkg.h"
-
+#include "forms.h"
 #include "proto/FORMenv_proto.h"
 
 extern FL_OBJECT  *envparams_obj;	// KINEO-DEV :doit �tre d�clar� dans un .h !!

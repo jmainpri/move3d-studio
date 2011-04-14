@@ -5,6 +5,8 @@
  */
 #ifndef __CEXTRACT__
 
+#include "forms.h"
+
 extern void position_robot_at_beginning ( int ir, p3d_traj *trajPt );
 extern int calc_real_dof ( void );
 extern void g3d_create_robot_form ( int ir );

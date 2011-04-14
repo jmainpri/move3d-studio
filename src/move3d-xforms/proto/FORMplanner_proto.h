@@ -5,6 +5,8 @@
  */
 #ifndef __CEXTRACT__
 
+#include "forms.h"
+
 extern void g3d_create_planner_form ( void );
 extern void CB_global_search_obj(FL_OBJECT *ob, long arg);
 extern void CB_specific_search_obj ( FL_OBJECT *ob, long arg );

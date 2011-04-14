@@ -10,7 +10,7 @@
 #include <move3d.h>
 
 #ifdef ENERGY
-#include <libmove3d/bio/BioEnergy/include/Energy-pkg.h>
+#include <bio/BioEnergy/include/Energy-pkg.h>
 #endif
 
 //////// GUI forms includes ////////

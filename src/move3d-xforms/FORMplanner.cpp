@@ -10,7 +10,7 @@
 #include <move3d.h>
 
 #ifdef CXX_PLANNER
-#include <libmove3d/planner_cxx/plannerFunctions.hpp>
+#include <planner_cxx/plannerFunctions.hpp>
 #endif
 
 #include "proto/FORMpath_deform_proto.h"

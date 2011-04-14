@@ -10,6 +10,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include "forms.h"
 
 #include "../lightPlanner/proto/Manipulation.h"
 

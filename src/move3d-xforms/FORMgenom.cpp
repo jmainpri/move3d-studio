@@ -13,9 +13,9 @@
 #include <gbM/Proto_gbModeles.h>
 //#include <lightPlanner.h>
 //#include <lightPlannerApi.h>
-#include <libmove3d/lightPlanner/proto/ManipulationViaConfPlanner.hpp>
+#include <lightPlanner/proto/ManipulationViaConfPlanner.hpp>
 #include <LightPlanner-pkg.h>
-#include <libmove3d/graspPlanning/proto/gp_grasp_generation_proto.h>
+#include <graspPlanning/proto/gp_grasp_generation_proto.h>
 #ifdef DPG
 #include <p3d_chanEnv_proto.h>
 #endif
@@ -145,8 +145,8 @@ void g3d_delete_genom_form(void) {
 /* -------------------- MAIN GROUP --------------------- */
 static void initManipulationGenom() {
   if (manipulation == NULL) {
-// 	p3d_rob * robotPt= p3d_get_robot_by_name("JIDOKUKA_ROBOT");
- p3d_rob * robotPt= p3d_get_robot_by_name("PR2_ROBOT");
+	p3d_rob * robotPt= p3d_get_robot_by_name("JIDOKUKA_ROBOT");
+//  p3d_rob * robotPt= p3d_get_robot_by_name("PR2_ROBOT");
 	manipulation= new ManipulationPlanner(robotPt);
 //         manipulation->setArmType(GP_LWR); // set the arm type
   }

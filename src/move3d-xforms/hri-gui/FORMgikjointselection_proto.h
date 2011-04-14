@@ -8,6 +8,8 @@
 
 #ifndef __CEXTRACT__
 
+#include "forms.h"
+
 extern void g3d_create_gik_jointsel_form ( void );
 extern void g3d_show_gik_jointsel_form ( void );
 extern void g3d_hide_gik_jointsel_form ( void );
