@@ -23,8 +23,6 @@ FIND_PACKAGE (PkgConfig REQUIRED)
 
 #--------------------- Project ------------------------------------------------
 
-INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
-
 ##########################################
 ##           Options                   ###
 ##########################################
@@ -47,7 +45,7 @@ IF(HRI_GUI)
 	
 	### libhri dependency
         IF(DEFINED LIBHRI_PC)
-		SET(ENV{PKG_CONFIG_PATH} $ENV{PKG_CONFIG_PATH}:${LIBHRI_PC})
+		SET(ENV{PKG_CONFIG_PATH} ${LIBHRI_PC}:$ENV{PKG_CONFIG_PATH})
 	ENDIF()
 	PKG_CHECK_MODULES(LIBHRI REQUIRED libhri)
 	INCLUDE_DIRECTORIES(${LIBHRI_INCLUDE_DIRS})
@@ -62,7 +60,7 @@ ENDIF()
 
 #--------------------- Move3D -------------------------------------------------
 IF(DEFINED LIBMOVE3D_PC)
-	SET(ENV{PKG_CONFIG_PATH} $ENV{PKG_CONFIG_PATH}:${LIBMOVE3D_PC})
+	SET(ENV{PKG_CONFIG_PATH} ${LIBMOVE3D_PC}:$ENV{PKG_CONFIG_PATH})
 ENDIF()
 pkg_check_modules(MOVE3D REQUIRED "libmove3d")
 
