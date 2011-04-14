@@ -9,11 +9,13 @@ extern void g3d_set_default_material();
 extern void g3d_set_shade_material();
 extern void g3d_draw_win(G3D_Window *win);
 
-extern void (*ext_g3d_draw_allwin_active_backbuffer)();
-void g3d_draw_win_back_buffer(G3D_Window *win)
-{
-	  ext_g3d_draw_allwin_active_backbuffer();
-}
+//TODO: g3d_window.cpp already offers a Xforms based implementation of th g3d_draw_back_buffer
+// What is really needed in order to compile with both xfomrs and Qt?
+//extern void (*ext_g3d_draw_allwin_active_backbuffer)();
+void g3d_draw_win_back_buffer(G3D_Window *win);
+//{
+//	  ext_g3d_draw_allwin_active_backbuffer();
+//}
 
 
 extern void g3d_draw_allwin ( void );

@@ -9,7 +9,7 @@
 #include <Util-pkg.h>
 #include <Bio-pkg.h>
 
-#include <move3d.h>
+#include <libmove3d/graphic/move3d-gui.h>
 
 #ifdef HRI_PLANNER
 #include <hri/hri.h>

@@ -1,5 +1,7 @@
 #ifdef USE_MIGHTABILITY_MAPS
 
+#include <forms.h>
+
 #include <Util-pkg.h>
 #include <P3d-pkg.h>
 #include <Planner-pkg.h>

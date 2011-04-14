@@ -4,10 +4,9 @@
 
 #include <iostream>
 
-#include "P3d-pkg.h"
-#include "Graphic-pkg.h"
-
-#include "move3d.h"
+#include <P3d-pkg.h>
+#include <Graphic-pkg.h>
+#include <libmove3d/graphic/move3d-gui.h>
 
 #include "g3d_draw_ui.h"
 #include "proto/FORMrobot_proto.h"

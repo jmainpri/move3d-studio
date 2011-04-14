@@ -1,7 +1,7 @@
 #include <Util-pkg.h>
 #include <P3d-pkg.h>
 
-#include <move3d.h>
+#include <libmove3d/graphic/move3d-gui.h>
 
 #ifdef P3D_PLANNER
 #include <Planner-pkg.h>
@@ -31,12 +31,12 @@
 #endif
 
 #ifdef LIGHT_PLANNER
-#include <lightPlanner/proto/DlrPlanner.h>
-#include <lightPlanner/proto/DlrParser.h>
-#include <lightPlanner/proto/lightPlannerApi.h>
+#include <libmove3d/lightPlanner/proto/DlrPlanner.h>
+#include <libmove3d/lightPlanner/proto/DlrParser.h>
+#include <libmove3d/lightPlanner/proto/lightPlannerApi.h>
 
   #if defined( MULTILOCALPATH ) && defined( GRASP_PLANNING )
-  #include <lightPlanner/proto/ManipulationTestFunctions.hpp>
+  #include <libmove3d/lightPlanner/proto/ManipulationTestFunctions.hpp>
   #endif
 
 #endif
@@ -52,7 +52,7 @@
 #include "move3d-xforms/proto/FORMmain_proto.h"
 #endif
 
-#include <graphic/proto/g3d_glut.hpp>
+#include <libmove3d/graphic/proto/g3d_glut.hpp>
 
 static int FILTER_TO_BE_SET_ACTIVE = FALSE;
 //extern void g3d_create_main_form(void);

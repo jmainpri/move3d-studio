@@ -7,11 +7,11 @@
 #include <UdpClient.h>
 
 #ifdef LIGHT_PLANNER
-#include <lightPlanner/proto/lightPlannerApi.h>
-#include <lightPlanner/proto/lightPlanner.h>
+#include <libmove3d/lightPlanner/proto/lightPlannerApi.h>
+#include <libmove3d/lightPlanner/proto/lightPlanner.h>
 #endif
 #ifdef DPG
-#include <planner/dpg/proto/p3d_chanEnv_proto.h>
+#include <libmove3d/planner/dpg/proto/p3d_chanEnv_proto.h>
 #endif
 
 #include "proto/FORMplanner_proto.h"

@@ -1,7 +1,7 @@
 #include <P3d-pkg.h>
 #include <Graphic-pkg.h>
 
-#include <move3d.h>
+#include <libmove3d/graphic/move3d-gui.h>
 
 extern p3d_matrix4 Id;	// KINEO-DEV :doit être déclaré dans un .h !!
 
