@@ -105,6 +105,8 @@ static FL_OBJECT  *BT_HRI_TASK_PERFORMED_BY_AGENT_OBJ;
 static FL_OBJECT  *BT_HRI_TASK_PERFORMED_FOR_AGENT_OBJ;
 static FL_OBJECT  *BT_HRI_TASK_PERFORMED_FOR_OBJECT_OBJ;
 static FL_OBJECT  *BT_USE_OBJECT_DIMENSION_FOR_CANDIDATE_PTS_OBJ;
+static FL_OBJECT  *BT_PERFORMING_AGENT_MASTER_OBJ;
+static FL_OBJECT  *BT_FOR_PROACTIVE_BEHAVIOR_OBJ;
 
  #ifdef HUMAN2_EXISTS_FOR_MA
 static FL_OBJECT  *BT_SHOW_DIRECT_REACHABILITY_HUM2_OBJ; 
@@ -233,6 +235,8 @@ extern int CURRENT_HRI_TASK_PLAN_ID_TO_SHOW;
 extern int INDEX_CURRENT_HRI_TASK_SUB_PLAN_TO_SHOW;
 extern int SHOW_HRI_TASK_TRAJ_TYPE;
 extern int SHOW_HRI_PLAN_TYPE;
+extern int IS_PERFORMING_AGENT_MASTER;
+extern int TASK_IS_FOR_PROACTIVE_BEHAVIOR;
 
 int update_HRI_task_plan_list();
 
@@ -291,11 +295,16 @@ static void CB_show_human_perspective_obj(FL_OBJECT *ob, long arg)
  if(SHOW_HUMAN_PERSPECTIVE==0)
  {
   envPt_MM = (p3d_env *) p3d_get_desc_curid(P3D_ENV);
-  int cur_hum_index=get_index_of_robot_by_name ( "ACHILE_HUMAN1" );
+  ////int cur_hum_index=get_index_of_robot_by_name ( "ACHILE_HUMAN1" );
+  int cur_hum_index=indices_of_MA_agents[CURRENT_TASK_PERFORMED_FOR];
    HRI_AGENT * target_human;
    target_human = hri_create_agent(envPt_MM->robot[cur_hum_index]);
 ////   printf(" Inside JIDO_hide_obj_from_human(), HRI_AGENT for human is created, target_human name = %s\n",target_human->robotPt->name);
    show_humans_perspective(target_human, FALSE);
+   
+   double visibility_val;
+   find_MA_Agent_visibility(CURRENT_TASK_PERFORMED_FOR, CURRENT_OBJECT_TO_MANIPULATE, visibility_val);
+   
  SHOW_HUMAN_PERSPECTIVE=1;
  }
  else
@@ -688,10 +697,25 @@ int add_objects_for_HRI_task()
   }
   return 1;
 }
+
+static int traj_play = TRUE;
+
+static int 
+default_drawtraj_fct_with_XFORM(p3d_rob* robot, p3d_localpath* curLp)
+{
+  g3d_draw_allwin_active();
+ //#if defined(WITH_XFORMS)
+  fl_check_forms();
+ //#endif
+  ////if(XFORM_update_func!=NULL)
+  ////XFORM_update_func();
+  return(traj_play);
+}
  
 static void CB_calculate_affordance_active_obj(FL_OBJECT *ob, long arg)
 {
-
+ ////XFORM_update_func=fl_check_forms;
+  default_drawtraj_fct_ptr=default_drawtraj_fct_with_XFORM;
  Create_and_init_Mightability_Maps();
  
  add_agents_for_HRI_task();
@@ -914,8 +938,16 @@ static void CB_find_current_task_candidates_obj(FL_OBJECT *ob, long arg)
 
  //// find_candidate_points_for_current_HRI_task(CURRENT_HRI_MANIPULATION_TASK, JIDO_MA, HUMAN1_MA, &resultant_current_candidate_point);
  candidate_poins_for_task *curr_resultant_candidate_points=MY_ALLOC(candidate_poins_for_task,1);
- 
- find_HRI_task_candidate_points(CURRENT_HRI_MANIPULATION_TASK,CURRENT_OBJECT_TO_MANIPULATE,CURRENT_TASK_PERFORMED_BY,CURRENT_TASK_PERFORMED_FOR,curr_resultant_candidate_points);
+
+ int performing_agent_rank;
+printf(" >> IS_PERFORMING_AGENT_MASTER=%d\n",IS_PERFORMING_AGENT_MASTER);
+if(IS_PERFORMING_AGENT_MASTER==1)
+performing_agent_rank=1;//Master
+else
+performing_agent_rank=0;//Slave
+
+
+  find_HRI_task_candidate_points(CURRENT_HRI_MANIPULATION_TASK,CURRENT_OBJECT_TO_MANIPULATE,CURRENT_TASK_PERFORMED_BY,CURRENT_TASK_PERFORMED_FOR,performing_agent_rank,curr_resultant_candidate_points);
  
   MY_FREE(curr_resultant_candidate_points, candidate_poins_for_task,1);
 
@@ -998,7 +1030,9 @@ static void CB_find_current_task_solution_obj(FL_OBJECT *ob, long arg)
  task.for_object=CURRENT_OBJECT_TO_MANIPULATE;
  printf(" inside CB_find_current_task_solution_obj() CURRENT_OBJECT_TO_MANIPULATE= %s,  task.for_object =%s\n",CURRENT_OBJECT_TO_MANIPULATE,task.for_object.c_str());
  static int task_plan_id=0;
- validate_HRI_task(task, task_plan_id);
+ int for_proactive_info=TASK_IS_FOR_PROACTIVE_BEHAVIOR;
+ 
+ validate_HRI_task(task, task_plan_id,for_proactive_info);
  printf(" After validate_HRI_task\n");
  task_plan_id++;
  update_HRI_task_plan_list();
@@ -1831,7 +1865,7 @@ static void g3d_create_show_3D_turn_around_reach_hum2_obj(void)
 
 static void g3d_create_show_human_perspective_obj(void)
 {
- BT_SHOW_HUMAN_PERSPECTIVE_OBJ = fl_add_checkbutton(FL_PUSH_BUTTON,400,620,50,20,"Show Human's Perspective");
+ BT_SHOW_HUMAN_PERSPECTIVE_OBJ = fl_add_checkbutton(FL_PUSH_BUTTON,400,620,50,20,"Show Target Agent's Perspective");
 	
   fl_set_call_back(BT_SHOW_HUMAN_PERSPECTIVE_OBJ,CB_show_human_perspective_obj,0);
 
@@ -1963,13 +1997,39 @@ void get_choice_use_object_dimension_for_candidate_pts(FL_OBJECT *obj, long arg)
 }
 void g3d_create_use_object_dimension_for_candidate_pts()
 {
-  BT_USE_OBJECT_DIMENSION_FOR_CANDIDATE_PTS_OBJ=fl_add_checkbutton(FL_PUSH_BUTTON,250,660,80,20," Use Object Dimension");
+  BT_USE_OBJECT_DIMENSION_FOR_CANDIDATE_PTS_OBJ=fl_add_checkbutton(FL_PUSH_BUTTON,50,660,80,20," Use Object Dimension");
 //   for(int i=0; i<envPt_MM->nr; i++)
 //   {
 //     fl_addto_choice(BT_HRI_TASK_PERFORMED_FOR_OBJECT_OBJ,envPt_MM->robot[i]->name);
 //   }
   
   fl_set_call_back(BT_USE_OBJECT_DIMENSION_FOR_CANDIDATE_PTS_OBJ,get_choice_use_object_dimension_for_candidate_pts,0);
+}
+
+void get_choice_performing_agent_master(FL_OBJECT *obj, long arg)
+{
+  IS_PERFORMING_AGENT_MASTER=(int)fl_get_button(BT_PERFORMING_AGENT_MASTER_OBJ);
+  printf("IS_PERFORMING_AGENT_MASTER=%d\n", IS_PERFORMING_AGENT_MASTER);
+}
+
+void g3d_create_performing_agent_master()
+{
+  BT_PERFORMING_AGENT_MASTER_OBJ=fl_add_checkbutton(FL_PUSH_BUTTON,210,660,80,20,"Performing Agent is Master");
+  
+  fl_set_call_back(BT_PERFORMING_AGENT_MASTER_OBJ,get_choice_performing_agent_master,0);
+}
+
+void get_choice_for_proactive_behavior(FL_OBJECT *obj, long arg)
+{
+  TASK_IS_FOR_PROACTIVE_BEHAVIOR=(int)fl_get_button(BT_PERFORMING_AGENT_MASTER_OBJ);
+  printf("TASK_IS_FOR_PROACTIVE_BEHAVIOR=%d\n", TASK_IS_FOR_PROACTIVE_BEHAVIOR);
+}
+
+void g3d_create_is_solution_for_proactive_behavior()
+{
+  BT_FOR_PROACTIVE_BEHAVIOR_OBJ=fl_add_checkbutton(FL_PUSH_BUTTON,520,510,150,20,"Task is for proactive behavior");
+  
+  fl_set_call_back(BT_FOR_PROACTIVE_BEHAVIOR_OBJ,get_choice_for_proactive_behavior,0);
 }
 
 
@@ -2187,7 +2247,9 @@ void g3d_create_HRI_affordance_form(void)
    g3d_create_select_object_for_task_obj();
    
    g3d_create_use_object_dimension_for_candidate_pts();
-
+   g3d_create_performing_agent_master();
+   g3d_create_is_solution_for_proactive_behavior();
+  
    g3d_create_Mightability_Maps_Set_operations_group();
 
    g3d_create_hri_task_plan_list_group();
@@ -2247,3 +2309,6 @@ void g3d_create_HRI_affordance_form(void)
 }
 
 #endif //USE_MIGHTABILITY_MAPS
+
+
+
