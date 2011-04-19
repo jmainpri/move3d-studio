@@ -180,7 +180,7 @@ void g3d_create_hri_planner_form(void)
   fl_end_form();
 
   g3d_create_gik_jointsel_form();
-  g3d_create_psp_parameters_form();
+  g3d_create_psp_parameters_form();//NOTE by Amit: If giving segfault during launching with gui, comment this line, it seems to be broken with the split version of BioMove3d
 
   hri_initialize_visibility();
 
