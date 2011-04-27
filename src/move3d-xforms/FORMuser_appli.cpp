@@ -530,10 +530,13 @@ static void callbacks(FL_OBJECT *ob, long arg){
 //   printf("q[%d] = %f\n",i, phiArray[i]);
 //
 /** pr2Ik test object vs wrist abs_pos*/
-ArmManipulationData armData = (*XYZ_ROBOT->armManipulationData)[1];
-p3d_mat4Print(armData.getManipulationJnt()->abs_pos, "object");
-p3d_cntrt *ct = armData.getCcCntrt();
-p3d_mat4Print(ct->pasjnts[ct->npasjnts -1]->abs_pos, "wrist");
+// ArmManipulationData armData = (*XYZ_ROBOT->armManipulationData)[1];
+// p3d_mat4Print(armData.getManipulationJnt()->abs_pos, "object");
+// p3d_cntrt *ct = armData.getCcCntrt();
+// p3d_mat4Print(ct->pasjnts[ct->npasjnts -1]->abs_pos, "wrist");
+
+/** Robot fix joint except specific arm */
+fixAllJointsWithoutArm(XYZ_ROBOT, 0);
 
 #endif
       break;

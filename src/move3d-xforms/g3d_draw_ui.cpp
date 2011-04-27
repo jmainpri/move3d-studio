@@ -65,7 +65,7 @@ void g3d_create_form(FL_FORM** form, int w, int h, int type){
     return;
   }
   *form = fl_bgn_form(type,w,h);
-  (*form)->u_vdata = (void*)malloc(sizeof(FL_OBJECT*));
+//   (*form)->u_vdata = (void*)malloc(sizeof(FL_OBJECT*));
   (*form)->u_vdata = NULL;
 }
 
@@ -942,6 +942,8 @@ void g3d_fl_free_object(FL_OBJECT* obj){
     ((FL_OBJECT**)(((FL_OBJECT**)obj->u_vdata)[1])->u_vdata)[0] = ((FL_OBJECT**)obj->u_vdata)[0];
   if (obj->parent && obj->parent->child == obj){//si l'objet n'est pas sur le form, et que c'est le premier element
     obj->parent->child = ((FL_OBJECT**)obj->u_vdata)[1]; //on donne le suivant de l'objet comme premier fils du parent
+  } else if (obj->form && ((FL_OBJECT*)(obj->form->u_vdata) == obj) ){
+    obj->form->u_vdata = ((FL_OBJECT**)obj->u_vdata)[1];
   }
   //suppression de tous les enfants
   if (obj->child != NULL){//si l'objet a des enfants.
@@ -953,7 +955,14 @@ void g3d_fl_free_object(FL_OBJECT* obj){
     }
   }//si pas de fils supprimer l'objet
   free(obj->u_vdata);
+  ((FL_OBJECT**)obj->u_vdata)[0] = NULL;
+  ((FL_OBJECT**)obj->u_vdata)[1] = NULL;
+  obj->u_vdata = NULL;
+  obj->parent = NULL;
+  obj->child = NULL;
+  obj->form = NULL;
   fl_free_object(obj);
+  obj = NULL;
 }
 
 /****************************************************************************/
@@ -963,6 +972,10 @@ void g3d_fl_free_object(FL_OBJECT* obj){
 /****************************************************************************/
 
 void g3d_fl_free_form(FL_FORM* form){
-  free(form->u_vdata);
+  if(form->u_vdata){
+    free(form->u_vdata);
+  }
+  form->first = NULL;
+  form->last = NULL;
   fl_free_form(form);
 }

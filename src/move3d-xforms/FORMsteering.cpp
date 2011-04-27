@@ -59,12 +59,16 @@ void g3d_delete_steering_form(void)
 
   fl_free_object(obj1);
   fl_free_object(obj2);
-  fl_free_object(GROUP);
 
   for(i=0;i<n;i++){
+    BUTTON_TAB_OBJ[i]->u_vdata = NULL;
+    BUTTON_TAB_OBJ[i]->next = NULL;
+    BUTTON_TAB_OBJ[i]->prev = NULL;
     fl_free_object(BUTTON_TAB_OBJ[i]);
   }
- 
+  GROUP->next = NULL;
+  GROUP->prev = NULL;
+  fl_free_object(GROUP);
   fl_free_form(STEERING_FORM);
 
   free(BUTTON_TAB_OBJ);

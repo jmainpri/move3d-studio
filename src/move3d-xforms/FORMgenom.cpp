@@ -38,8 +38,8 @@
 // #define SUPPORT_NAME "HRP2TABLE"
 #define SUPPORT_NAME "IKEA_SHELF"
 //#define SUPPORT_NAME "SHELF"
-// #define PLACEMENT_NAME "IKEA_SHELF"
-#define PLACEMENT_NAME "HRP2TABLE"
+#define PLACEMENT_NAME "IKEA_SHELF"
+// #define PLACEMENT_NAME "HRP2TABLE"
 #define HUMAN_NAME "ACHILE_HUMAN1"
 #define CAMERA_JNT_NAME "Tilt"
 #define CAMERA_FOV 80.0
@@ -57,11 +57,6 @@ static int FORMGENOM_OBJECTGRABED = 0;
 /* --------- FORM VARIABLES ------- */
 FL_FORM  * GENOM_FORM = NULL;
 static FL_OBJECT * GENOMGROUP = NULL;
-
-
-static FL_OBJECT * BT_SET_Q_OBJ = NULL;
-static FL_OBJECT * BT_SET_X_OBJ = NULL;
-
 
 
 static FL_OBJECT * BT_ARM_GOTO_Q_OBJ = NULL;
@@ -84,6 +79,7 @@ static FL_OBJECT * BT_PLACE = NULL;
 static FL_OBJECT * BT_CONSTRUCTPRM = NULL;
 static FL_OBJECT * BT_ESCAPE_OBJECT = NULL;
 static FL_OBJECT * BT_PLANVIAPOINTS = NULL;
+static FL_OBJECT * BT_SEQUENCE = NULL;
 
 #ifdef DPG
 static FL_OBJECT * BT_CHECKCOLONTRAJ = NULL;
@@ -95,16 +91,12 @@ static void g3d_create_genom_group(void);
 static void genomDraw();
 static void genomKey();
 
-static void CB_genomSetQ_obj(FL_OBJECT *obj, long arg);
-static void CB_genomSetX_obj(FL_OBJECT *obj, long arg);
 static void CB_genomArmGotoQ_obj(FL_OBJECT *obj, long arg);
 static void CB_genomArmExtract_obj(FL_OBJECT *obj, long arg);
 static void CB_genomArmGotoX_obj(FL_OBJECT *obj, long arg);
 static void CB_genomFindSimpleGraspConfiguration_obj(FL_OBJECT *obj, long arg);
 
 static void CB_genomPickUp_gotoObject(FL_OBJECT *obj, long arg);
-
-
 
 static void CB_genomCleanRoadmap_obj(FL_OBJECT *obj, long arg);
 static void CB_genomArmComputePRM_obj(FL_OBJECT *obj, long arg);
@@ -119,6 +111,7 @@ static void CB_genomPlaceObject(FL_OBJECT *obj, long arg);
 static void CB_genomEscapeObject(FL_OBJECT *obj, long arg);
 
 static void CB_genomPlanTrajViaPoints(FL_OBJECT *obj, long arg);
+static void CB_genomSequence(FL_OBJECT *obj, long arg);
 #ifdef DPG
 static void CB_checkColOnTraj(FL_OBJECT *obj, long arg);
 static void CB_replanColTraj(FL_OBJECT *obj, long arg);
@@ -145,9 +138,9 @@ void g3d_delete_genom_form(void) {
 /* -------------------- MAIN GROUP --------------------- */
 static void initManipulationGenom() {
   if (manipulation == NULL) {
-	p3d_rob * robotPt= p3d_get_robot_by_name("JIDOKUKA_ROBOT");
+// 	p3d_rob * robotPt= p3d_get_robot_by_name("JIDOKUKA_ROBOT");
 //  p3d_rob * robotPt= p3d_get_robot_by_name("PR2_ROBOT");
-	manipulation= new ManipulationPlanner(robotPt);
+	manipulation= new ManipulationPlanner(XYZ_ROBOT);
 //         manipulation->setArmType(GP_LWR); // set the arm type
   }
   return;
@@ -167,14 +160,6 @@ static void g3d_create_genom_group(void) {
 	h= 40;
 	dy= h + 10;
 
-	BT_SET_Q_OBJ =  fl_add_button(FL_NORMAL_BUTTON, x, y, w, h, "Set arm Q");
-	fl_set_call_back(BT_SET_Q_OBJ, CB_genomSetQ_obj, 1);
-
-        y+= dy;
-	BT_SET_X_OBJ =  fl_add_button(FL_NORMAL_BUTTON, x, y, w, h, "Set arm X");
-	fl_set_call_back(BT_SET_X_OBJ, CB_genomSetX_obj, 1);
-
-	 y+= dy;
          BT_SET_CARTESIAN = fl_add_button(FL_RADIO_BUTTON, x, y, w, h, "Set Cartesian");
 	fl_set_call_back(BT_SET_CARTESIAN, CB_set_cartesian, 1);
 	fl_set_object_color(BT_SET_CARTESIAN,FL_MCOL,FL_GREEN);
@@ -217,11 +202,11 @@ static void g3d_create_genom_group(void) {
 
 
 	y+= dy;
-        BT_PICK_UP_TAKE =  fl_add_button(FL_NORMAL_BUTTON, x, y, w, h, "Take");
+        BT_PICK_UP_TAKE =  fl_add_button(FL_NORMAL_BUTTON, x, y, w, h, "Take To Conf");
         fl_set_call_back(BT_PICK_UP_TAKE, CB_genomPickUp_takeObject, 1);
 
   y+= dy;
-        BT_PICK_UP_TAKE_XYZ =  fl_add_button(FL_NORMAL_BUTTON, x, y, w, h, "Take (XYZ)");
+        BT_PICK_UP_TAKE_XYZ =  fl_add_button(FL_NORMAL_BUTTON, x, y, w, h, "Take To XYZ");
         fl_set_call_back(BT_PICK_UP_TAKE_XYZ, CB_genomPickUp_takeObjectToXYZ, 1);
   y+= dy;
         BT_TAKE_TO_PLACE =  fl_add_button(FL_NORMAL_BUTTON, x, y, w, h, "Take To Place");
@@ -232,13 +217,6 @@ static void g3d_create_genom_group(void) {
   y+= dy;
         BT_ESCAPE_OBJECT =  fl_add_button(FL_NORMAL_BUTTON, x, y, w, h, "Escape object");
         fl_set_call_back(BT_ESCAPE_OBJECT, CB_genomEscapeObject, 1);
-// 	y+= dy;
-// 	BT_SIMPLE_GRASP_PLANNER_OBJ =  fl_add_button(FL_NORMAL_BUTTON, x, y, w, h, "Simple grasp config");
-// 	fl_set_call_back(BT_SIMPLE_GRASP_PLANNER_OBJ, CB_genomFindSimpleGraspConfiguration_obj, 1);
-
-//   y+= dy;
-//   BT_COMP_TRAJ_CONFIGS_OBJ =  fl_add_button(FL_NORMAL_BUTTON, x, y, w, h, "Compute traj from configs");
-//   fl_set_call_back(BT_COMP_TRAJ_CONFIGS_OBJ, CB_genomComputeTrajFromConfigs_obj, 1);
 
   y+= dy;
   BT_CONSTRUCTPRM =  fl_add_button(FL_NORMAL_BUTTON, x, y, w, h, "Build PRM");
@@ -248,6 +226,10 @@ static void g3d_create_genom_group(void) {
   y+= dy;
   BT_PLANVIAPOINTS =  fl_add_button(FL_NORMAL_BUTTON, x, y, w, h, "Plan Via Conf traj");
   fl_set_call_back(BT_PLANVIAPOINTS, CB_genomPlanTrajViaPoints, 0);
+  
+  y+= dy;
+  BT_SEQUENCE =  fl_add_button(FL_NORMAL_BUTTON, x, y, w, h, "Sequence");
+  fl_set_call_back(BT_SEQUENCE, CB_genomSequence, 0);
   
 #ifdef DPG
   y+= dy;
@@ -262,106 +244,6 @@ static void g3d_create_genom_group(void) {
   fl_end_group();
 }
 
-static void CB_read_Q(FL_OBJECT *ob, long arg) {
- int result;
- const char *str;
- p3d_rob *robotPt = NULL;
-
- 
-
-
- robotPt= (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
- FORMrobot_update(p3d_get_desc_curnum(P3D_ROBOT));
-
- str= fl_get_input(INPUT_OBJ2);
- result= sscanf(str, "%lf %lf %lf %lf %lf %lf", &QGOAL[0], &QGOAL[1], &QGOAL[2], &QGOAL[3], &QGOAL[4], &QGOAL[5]);
- if(result!=6)
- {
-   fl_show_question("Expected format: q1 q2 q3 q4 q5 q6\n", 1);
-   printf("Expected format of QGOAL input: q1 q2 q3 q4 q5 q6\n");
-   QGOAL[0]= QGOAL[1]= QGOAL[2]= QGOAL[3]= QGOAL[4]= QGOAL[5]= 0.0;
- }
-//  result= genomSetArmQ(robotPt, QGOAL[0], QGOAL[1], QGOAL[2], QGOAL[3], QGOAL[4], QGOAL[5]);
- if(result==1) {
-         printf("Configuration is not reachable by virtual object:%f %f %f %f %f %f\n", QGOAL[0], QGOAL[1], QGOAL[2], QGOAL[3], QGOAL[4], QGOAL[5]);
- }
- else {
-         p3d_get_robot_config_into(robotPt, &robotPt->ROBOT_GOTO);
- }
-
-
-
- str= fl_get_input(INPUT_OBJ1);
- result= sscanf(str, "%lf %lf %lf %lf %lf %lf", &QCUR[0], &QCUR[1], &QCUR[2], &QCUR[3], &QCUR[4], &QCUR[5]);
- if(result!=6)
- {
-   fl_show_question("Expected format: q1 q2 q3 q4 q5 q6\n", 1);
-   printf("Expected format of Q input: q1 q2 q3 q4 q5 q6\n");
-   QCUR[0]= QCUR[1]= QCUR[2]= QCUR[3]= QCUR[4]= QCUR[5]= 0.0;
- }
- printf("%lf %lf %lf %lf %lf %lf \n", QCUR[0], QCUR[1], QCUR[2], QCUR[3], QCUR[4], QCUR[5]);
-
-
-//  result = genomSetArmQ(robotPt, QCUR[0], QCUR[1], QCUR[2], QCUR[3], QCUR[4], QCUR[5]);
- if(result==1) {
-         printf("Configuration is not reachable by virtual object:%f %f %f %f %f %f\n", QCUR[0], QCUR[1], QCUR[2], QCUR[3], QCUR[4], QCUR[5]);
- }
- else {
-         p3d_get_robot_config_into(robotPt, &robotPt->ROBOT_POS);
- }
-
-
- g3d_draw_allwin_active();
-
- fl_hide_form(INPUT_FORM);
- fl_free_object(INPUT_OBJ1);
- fl_free_object(INPUT_OBJ2);
- fl_free_form(INPUT_FORM);
-}
-
-static void CB_read_X(FL_OBJECT *ob, long arg) {
- int result;
- const char *str;
- p3d_rob *robotPt = NULL;
-
-	if (manipulation== NULL) {
-	  initManipulationGenom();
-	}
-	
- robotPt= (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
- FORMrobot_update(p3d_get_desc_curnum(P3D_ROBOT));
-
- str= fl_get_input(INPUT_OBJ2);
- result= sscanf(str, "%lf %lf %lf %lf %lf %lf", &XGOAL[0], &XGOAL[1], &XGOAL[2], &XGOAL[3], &XGOAL[4], &XGOAL[5]);
- if(result!=6)
- {
-   fl_show_question("Expected format: x y z rx ry rz\n", 1);
-   printf("Expected format of XGOAL input: x y z rx ry rz\n");
-   XGOAL[0]= XGOAL[1]= XGOAL[2]= XGOAL[3]= XGOAL[4]= XGOAL[5]= 0.0;
- }
-//  manipulation->setArmX(XGOAL[0], XGOAL[1], XGOAL[2], XGOAL[3], XGOAL[4], XGOAL[5]);
- p3d_get_robot_config_into(robotPt, &robotPt->ROBOT_GOTO);
-
-
- str= fl_get_input(INPUT_OBJ1);
- result= sscanf(str, "%lf %lf %lf %lf %lf %lf", &XCUR[0], &XCUR[1], &XCUR[2], &XCUR[3], &XCUR[4], &XCUR[5]);
- if(result!=6)
- {
-   fl_show_question("Expected format: x y z rx ry rz\n", 1);
-   printf("Expected format of X input: x y z rx ry rz6\n");
-   XCUR[0]= XCUR[1]= XCUR[2]= XCUR[3]= XCUR[4]= XCUR[5]= 0.0;
- }
- printf("%lf %lf %lf %lf %lf %lf \n", XCUR[0], XCUR[1], XCUR[2], XCUR[3], XCUR[4], XCUR[5]);
-
-//  manipulation->setArmX(XCUR[0], XCUR[1], XCUR[2], XCUR[3], XCUR[4], XCUR[5]);
- 
- g3d_draw_allwin_active();
- fl_hide_form(INPUT_FORM);
- fl_free_object(INPUT_OBJ1);
- fl_free_object(INPUT_OBJ2);
- fl_free_form(INPUT_FORM);
-}
-
 static void CB_cancel(FL_OBJECT *ob, long arg) {
   fl_hide_form(INPUT_FORM);
   fl_free_object(INPUT_OBJ1);
@@ -369,108 +251,6 @@ static void CB_cancel(FL_OBJECT *ob, long arg) {
   fl_free_form(INPUT_FORM);
 }
 
-static void CB_genomSetQ_obj(FL_OBJECT *obj, long arg) {
-  int x, y, w, h;
-  FL_OBJECT *ok, *cancel;
-  configPt q0= NULL;
-  p3d_rob *robotPt = NULL;
-  char str1[128], str2[128];
-
-  	if (manipulation== NULL) {
-	  initManipulationGenom();
-	}
-
-  robotPt= (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
-  FORMrobot_update(p3d_get_desc_curnum(P3D_ROBOT));
-  q0= p3d_get_robot_config(robotPt);
-  
-//   manipulation->getArmQ(&QCUR[0], &QCUR[1], &QCUR[2], &QCUR[3], &QCUR[4], &QCUR[5]);
-  p3d_set_and_update_this_robot_conf(robotPt, robotPt->ROBOT_GOTO);
-//   manipulation->getArmQ( &QGOAL[0], &QGOAL[1], &QGOAL[2], &QGOAL[3], &QGOAL[4], &QGOAL[5]);
-  p3d_set_and_update_this_robot_conf(robotPt, q0);
-  p3d_set_ROBOT_START(q0);
-  p3d_destroy_config(robotPt, q0);
-
-  sprintf(str1, "%lf     %lf     %lf    %lf     %lf     %lf", QCUR[0], QCUR[1], QCUR[2], QCUR[3], QCUR[4], QCUR[5]);
-  sprintf(str2, "%lf     %lf     %lf    %lf     %lf     %lf", QGOAL[0],QGOAL[1],QGOAL[2],QGOAL[3],QGOAL[4],QGOAL[5]);
-
-  x= 110;
-  y= 30;
-  w= 380;
-  h= 40;
-
-  INPUT_FORM = fl_bgn_form(FL_FLAT_BOX, (int)(1.5*w), 5*h);
-  fl_add_text(FL_NORMAL_TEXT,0,0,400,40,"ENTER ARM START AND GOAL CONFIGURATIONS (current values are displayed):");
-
-  INPUT_OBJ1  = fl_add_input(FL_NORMAL_INPUT, x, y, w, h,"Qstart : \n(6 angles in radians)");
-  fl_set_input_color(INPUT_OBJ1, 0, 0);
-  fl_set_input(INPUT_OBJ1, str1);
-
-  INPUT_OBJ2  = fl_add_input(FL_NORMAL_INPUT, x, y+2*h, w, h,"Qgoal : \n(6 angles in radians)");
-  fl_set_input_color(INPUT_OBJ2, 0, 0);
-  fl_set_input(INPUT_OBJ2, str2);
-
-  ok = fl_add_button(FL_BUTTON, x, y+3*h+20, 60, 20, "OK");
-  fl_set_object_callback(ok, CB_read_Q, 0);
-  cancel = fl_add_button(FL_PUSH_BUTTON, x+90, y+3*h+20, 60, 20, "Cancel");
-  fl_set_object_callback(cancel, CB_cancel, 0);
-
-  fl_end_form();
-
-  fl_show_form(INPUT_FORM, FL_PLACE_SIZE, TRUE, "");
-}
-
-static void CB_genomSetX_obj(FL_OBJECT *obj, long arg) {
-  int x, y, w, h;
-  FL_OBJECT *ok, *cancel;
-  configPt q0= NULL;
-  p3d_rob *robotPt = NULL;
-  char str1[128], str2[128];
-
-    	if (manipulation== NULL) {
-	  initManipulationGenom();
-	}
-
-
-  robotPt= (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
-  FORMrobot_update(p3d_get_desc_curnum(P3D_ROBOT));
-  q0= p3d_get_robot_config(robotPt);
-//   manipulation->getArmX(&XCUR[0], &XCUR[1], &XCUR[2], &XCUR[3], &XCUR[4], &XCUR[5]);
-
-  p3d_set_and_update_this_robot_conf(robotPt, robotPt->ROBOT_GOTO);
-//   manipulation->getArmX( &XGOAL[0], &XGOAL[1], &XGOAL[2], &XGOAL[3], &XGOAL[4], &XGOAL[5]);
-  p3d_set_and_update_this_robot_conf(robotPt, q0);
-  p3d_set_ROBOT_START(q0);
-  p3d_destroy_config(robotPt, q0);
-
-  sprintf(str1, "%lf     %lf     %lf    %lf     %lf     %lf", XCUR[0], XCUR[1], XCUR[2], XCUR[3], XCUR[4], XCUR[5]);
-  sprintf(str2, "%lf     %lf     %lf    %lf     %lf     %lf", XGOAL[0],XGOAL[1],XGOAL[2],XGOAL[3],XGOAL[4],XGOAL[5]);
-
-  x= 110;
-  y= 30;
-  w= 380;
-  h= 40;
-
-  INPUT_FORM = fl_bgn_form(FL_FLAT_BOX, (int)(1.5*w), 5*h);
-  fl_add_text(FL_NORMAL_TEXT,0,0,400,40,"ENTER ARM START AND GOAL END EFFECTOR POSES (current values are displayed):");
-
-  INPUT_OBJ1  = fl_add_input(FL_NORMAL_INPUT, x, y, w, h,"Xstart : \n(position \n+ Euler angles \n(in degrees))");
-  fl_set_input_color(INPUT_OBJ1, 0, 0);
-  fl_set_input(INPUT_OBJ1, str1);
-
-  INPUT_OBJ2  = fl_add_input(FL_NORMAL_INPUT, x, y+2*h, w, h,"Xgoal : \n(position \n+ Euler angles \n(in degrees))");
-  fl_set_input_color(INPUT_OBJ2, 0, 0);
-  fl_set_input(INPUT_OBJ2, str2);
-
-  ok = fl_add_button(FL_BUTTON, x, y+3*h+20, 60, 20, "OK");
-  fl_set_object_callback(ok, CB_read_X, 0);
-  cancel = fl_add_button(FL_PUSH_BUTTON, x+90, y+3*h+20, 60, 20, "Cancel");
-  fl_set_object_callback(cancel, CB_cancel, 0);
-
-  fl_end_form();
-
-  fl_show_form(INPUT_FORM, FL_PLACE_SIZE, TRUE, "");
-}
 
 static void CB_genomArmGotoQ_obj(FL_OBJECT *obj, long arg) {
 
@@ -554,9 +334,9 @@ static void CB_genomArmGotoX_obj(FL_OBJECT *obj, long arg)
   objStart.push_back(P3D_HUGE);
   objStart.push_back(P3D_HUGE);
   objStart.push_back(P3D_HUGE);
-  objGoto.push_back(3.24499616);
-  objGoto.push_back(-4.4909956);
-  objGoto.push_back(1.17534539);
+    objGoto.push_back(4.73);
+    objGoto.push_back(-2.78);
+    objGoto.push_back(1.19);
   objGoto.push_back(P3D_HUGE);
   objGoto.push_back(P3D_HUGE);
   objGoto.push_back(P3D_HUGE);
@@ -844,9 +624,9 @@ static void CB_genomPickUp_takeObjectToXYZ(FL_OBJECT *obj, long arg) {
     objStart.push_back(P3D_HUGE);
     objStart.push_back(P3D_HUGE);
     objStart.push_back(P3D_HUGE);
-    objGoto.push_back(3.70);
-    objGoto.push_back(-4.30);
-    objGoto.push_back(1.00);
+    objGoto.push_back(2.96);
+    objGoto.push_back(-4.95);
+    objGoto.push_back(0.98);
     objGoto.push_back(0.0);
     objGoto.push_back(0.0);
     objGoto.push_back(P3D_HUGE);
@@ -876,11 +656,12 @@ static void CB_genomPlaceObject(FL_OBJECT *obj, long arg) {
   std::vector <MANPIPULATION_TRAJECTORY_CONF_STR> confs;
   std::vector <SM_TRAJ> smTrajs;
   std::vector<double> objStart, objGoto;
-  objGoto.push_back(4.14);
-  objGoto.push_back(-2.85);
-  objGoto.push_back(0.76);
-  objGoto.push_back(0.0);
-  objGoto.push_back(0.0);
+    objGoto.push_back(2.96);
+    objGoto.push_back(-4.95);
+    objGoto.push_back(0.78);
+    objGoto.push_back(0.0);
+    objGoto.push_back(0.0);
+    objGoto.push_back(P3D_HUGE);
   objGoto.push_back(P3D_HUGE);
   gpGrasp grasp;
 
@@ -910,8 +691,8 @@ static void CB_genomTakeToPlace(FL_OBJECT *obj, long arg) {
   std::vector <MANPIPULATION_TRAJECTORY_CONF_STR> confs;
   std::vector <SM_TRAJ> smTrajs;
   std::vector<double> objStart, objGoto;
-  objGoto.push_back(4.39);
-  objGoto.push_back(-2.14);
+  objGoto.push_back(4.83);
+  objGoto.push_back(-2.39);
   objGoto.push_back(0.74);
   objGoto.push_back(0.0);
   objGoto.push_back(0.0);
@@ -969,6 +750,21 @@ static void CB_genomPlanTrajViaPoints(FL_OBJECT *obj, long arg) {
    }
  }
  m_viaConfPlan.planTrajFromConfigArrayInRobotTheForm(smTrajs);
+}
+
+static void CB_genomSequence(FL_OBJECT *obj, long arg) {
+
+  if (manipulation== NULL) {
+    initManipulationGenom();
+  }
+  CB_genomPickUp_gotoObject(obj, arg);
+  p3d_copy_config_into(XYZ_ROBOT, XYZ_ROBOT->ROBOT_GOTO, &XYZ_ROBOT->ROBOT_POS);
+ 
+  CB_genomPickUp_takeObjectToXYZ(obj, arg);
+  p3d_copy_config_into(XYZ_ROBOT, XYZ_ROBOT->ROBOT_GOTO, &XYZ_ROBOT->ROBOT_POS);
+  CB_genomPlaceObject(obj, arg);
+
+  return;
 }
 
 // #endif
