@@ -91,6 +91,8 @@ static FL_OBJECT  *MIGHTABILITY_SET_FRAME_OBJ;
 static FL_OBJECT  *MIGHTABILITY_SET_OPERATIONS_GROUP_OBJ;
 static FL_OBJECT  *HRI_TASK_PLAN_LIST_FRAME_OBJ;
 static FL_OBJECT  *HRI_TASK_PLAN_LIST_GROUP_OBJ;
+static FL_OBJECT  *BT_SHOW_GRASP_FOR_HOW_TO_PLACE_OBJ;
+static FL_OBJECT  *BT_SHOW_HOW_TO_PLACE_AT_OBJ;
 
 static FL_OBJECT  *BT_SHOW_VISIBILE_PLACE_AGENTS_OBJ[MAXI_NUM_OF_AGENT_FOR_HRI_TASK][12];
 static FL_OBJECT  *BT_SHOW_REACHABLE_PLACE_AGENTS_HAND_OBJ[MAXI_NUM_OF_AGENT_FOR_HRI_TASK][5];
@@ -237,6 +239,9 @@ extern int SHOW_HRI_TASK_TRAJ_TYPE;
 extern int SHOW_HRI_PLAN_TYPE;
 extern int IS_PERFORMING_AGENT_MASTER;
 extern int TASK_IS_FOR_PROACTIVE_BEHAVIOR;
+
+extern int SHOW_HOW_TO_PLACE_AT;
+extern int SHOW_GRASP_FOR_HOW_TO_PLACE_AT;
 
 int update_HRI_task_plan_list();
 
@@ -1766,8 +1771,47 @@ BT_SHOW_WEIGHT_FOR_CANDIDATES_OBJ = fl_add_checkbutton(FL_PUSH_BUTTON,370,480,15
        
 }
 
+static void CB_show_how_to_place_at_obj(FL_OBJECT *ob, long arg)
+{
+ if(SHOW_HOW_TO_PLACE_AT==0)
+ SHOW_HOW_TO_PLACE_AT=1;
+ else
+ SHOW_HOW_TO_PLACE_AT=0;
+ 
+
+ fl_check_forms();
+ g3d_draw_allwin_active();
+}
 
 
+
+void g3d_create_show_how_to_placement_at_obj(void)
+{
+BT_SHOW_HOW_TO_PLACE_AT_OBJ = fl_add_checkbutton(FL_PUSH_BUTTON,530,470,150,20,"Show How to place for where to place Candidates");
+	//fl_set_object_color(BT_PATH_FIND_OBJ,FL_RED,FL_COL1);
+	fl_set_call_back(BT_SHOW_HOW_TO_PLACE_AT_OBJ,CB_show_how_to_place_at_obj,0);
+       
+}
+
+static void CB_show_grasp_for_how_to_place_obj(FL_OBJECT *ob, long arg)
+{
+ if(SHOW_GRASP_FOR_HOW_TO_PLACE_AT==0)
+ SHOW_GRASP_FOR_HOW_TO_PLACE_AT=1;
+ else
+ SHOW_GRASP_FOR_HOW_TO_PLACE_AT=0;
+ 
+
+ fl_check_forms();
+ g3d_draw_allwin_active();
+} 
+
+void g3d_create_show_grasp_for_how_to_place_obj(void)
+{
+BT_SHOW_GRASP_FOR_HOW_TO_PLACE_OBJ = fl_add_checkbutton(FL_PUSH_BUTTON,530,480,150,20,"Show grasps for How to place ");
+	//fl_set_object_color(BT_PATH_FIND_OBJ,FL_RED,FL_COL1);
+	fl_set_call_back(BT_SHOW_GRASP_FOR_HOW_TO_PLACE_OBJ,CB_show_grasp_for_how_to_place_obj,0);
+       
+}
 
 
 
@@ -2236,6 +2280,8 @@ void g3d_create_HRI_affordance_form(void)
 
    g3d_create_execute_current_task_solution_obj();
    g3d_create_show_weight_for_candidates_obj();
+   g3d_create_show_how_to_placement_at_obj();
+   g3d_create_show_grasp_for_how_to_place_obj();
    g3d_create_show_obstacle_cells_obj();
    g3d_record_window_movement_obj();
    g3d_create_show_human_perspective_obj();
