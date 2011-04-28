@@ -1397,7 +1397,34 @@ static void CB_trajnum_obj(FL_OBJECT *ob, long arg)
   p3d_rob *robotPt;
   pp3d_traj trajPt;
  
-  ROBOTS_FORM[ir].g3d_trajnum = fl_get_choice(ob)-1;
+  
+  const char* trajName = fl_get_choice_text(ob);
+  char c;
+  int trajNameLength = 0;
+  do{
+    c = trajName[trajNameLength];
+    ++trajNameLength;
+  }while(c != '\0');
+  int openPar = trajNameLength - 1, closePar = 0;
+  
+  //We look for the last (#)
+  for(; openPar >= 0; --openPar){
+    if(trajName[openPar] == ')'){
+      closePar = openPar;
+    }
+    if(trajName[openPar] == '('){
+      ++openPar;
+      break;
+    }
+  }
+  char trajNum[trajNameLength];
+  for(int i = openPar, j = 0; i < closePar; i++, j++){
+    trajNum[j] = trajName[i];
+  }
+  trajNum[closePar - openPar] = '\0';
+  ROBOTS_FORM[ir].g3d_trajnum = atoi(trajNum) + 1;
+    
+//   ROBOTS_FORM[ir].g3d_trajnum = fl_get_choice(ob)-1;
 
   robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
 
