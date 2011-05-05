@@ -138,7 +138,8 @@ static FL_OBJECT  *BT_SELECT_HRI_TASK_PLAN_ID;
 static FL_OBJECT  *BT_SELECT_HRI_TASK_SUB_PLAN_ID;
 static FL_OBJECT  *BT_SHOW_HRI_TASK_TRAJ_TYPE_OBJ;
 static FL_OBJECT  *BT_SHOW_HRI_PLAN_TYPE_OBJ;
-
+static FL_OBJECT  *BT_CREATE_AGENTS_FOR_MA_N_ASA_OBJ;
+static FL_OBJECT  *BT_PREPARE_FOR_SATE_ANALYSIS_OBJ;
 extern int CALCULATE_AFFORDANCE;
 int SHOW_HRP2_GIK_SOL=0;
 extern int PERSPECTIVE_WIN_ENABLED;
@@ -717,18 +718,39 @@ default_drawtraj_fct_with_XFORM(p3d_rob* robot, p3d_localpath* curLp)
   return(traj_play);
 }
  
+static void CB_create_agents_for_MA_n_ASA_obj(FL_OBJECT *ob, long arg)
+{
+  init_agents_for_MA_and_ASA();
+  
+}
+
 static void CB_calculate_affordance_active_obj(FL_OBJECT *ob, long arg)
 {
  ////XFORM_update_func=fl_check_forms;
   default_drawtraj_fct_ptr=default_drawtraj_fct_with_XFORM;
- Create_and_init_Mightability_Maps();
+ int MA_init_res=Create_and_init_Mightability_Maps();
  
+ if(MA_init_res==1)
+ {
  add_agents_for_HRI_task();
  add_objects_for_HRI_task();
-
+ } 
  g3d_draw_env();
  fl_check_forms();
  g3d_draw_allwin_active();
+}
+
+static void CB_prepare_for_state_analysis_obj(FL_OBJECT *ob, long arg)
+{
+  char threshold_file_path[150];
+  char *home_dir=getenv("HOME");
+  printf(" Home directory is %s\n",home_dir);
+  strcpy(threshold_file_path,home_dir);
+  char threshold_file_name[50]="/Human_State_Analysis_Thresholds.txt";
+  strcat(threshold_file_path,threshold_file_name);
+  
+  //"/home/akpandey/Human_State_Analysis_Thresholds.txt";
+  prepare_for_Agent_State_Analysis(threshold_file_path);
 }
 
 #ifdef USE_HRP2_GIK
@@ -1439,13 +1461,33 @@ static void g3d_update_HRP2_state_obj(void)
 }
 #endif
 
+
+
+static void g3d_create_agents_for_MA_n_ASA_obj(void)
+{
+ BT_CREATE_AGENTS_FOR_MA_N_ASA_OBJ = fl_add_button(FL_NORMAL_BUTTON,550,60,150,30,"Create Agents for MA & ASA");
+	
+  fl_set_call_back(BT_CREATE_AGENTS_FOR_MA_N_ASA_OBJ,CB_create_agents_for_MA_n_ASA_obj,0);
+
+}
+
+static void g3d_create_prepare_for_state_analysis_obj(void)
+{
+ BT_PREPARE_FOR_SATE_ANALYSIS_OBJ = fl_add_button(FL_NORMAL_BUTTON,550,100,150,30,"Prepare For State Analysis");
+	
+  fl_set_call_back(BT_PREPARE_FOR_SATE_ANALYSIS_OBJ,CB_prepare_for_state_analysis_obj,0);
+
+} 
+
 static void g3d_create_calculate_affordance_obj(void)
 {
- BT_CALCULATE_AFFORDANCE_OBJ = fl_add_button(FL_NORMAL_BUTTON,10,10,150,30,"Calculate Mightabilities");
+ BT_CALCULATE_AFFORDANCE_OBJ = fl_add_button(FL_NORMAL_BUTTON,550,140,150,30,"Calculate Mightabilities");
 	
   fl_set_call_back(BT_CALCULATE_AFFORDANCE_OBJ,CB_calculate_affordance_active_obj,0);
 
 }
+
+
 
 #ifdef USE_HRP2_GIK
 void g3d_create_hrp2_reach_target_obj(void)
@@ -2226,6 +2268,8 @@ void g3d_create_HRI_affordance_form(void)
   g3d_create_show_visible_place_agents_obj();
   
    g3d_create_calculate_affordance_obj();
+   g3d_create_agents_for_MA_n_ASA_obj();
+   g3d_create_prepare_for_state_analysis_obj();
    g3d_create_show_object_reach_obj();
    g3d_create_show_object_visibility_obj();
 
