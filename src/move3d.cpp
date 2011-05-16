@@ -1,7 +1,7 @@
 #include <Util-pkg.h>
 #include <P3d-pkg.h>
 
-#include <libmove3d/graphic/move3d-gui.h>
+#include <libmove3d/include/move3d-gui.h>
 
 #ifdef P3D_PLANNER
 #include <Planner-pkg.h>

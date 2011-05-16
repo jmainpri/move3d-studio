@@ -7,7 +7,7 @@
 #include <Util-pkg.h>
 #include <Bio-pkg.h>
 
-#include <libmove3d/graphic/move3d-gui.h>
+#include <libmove3d/include/move3d-gui.h>
 
 #ifdef ENERGY
 #include <bio/BioEnergy/include/Energy-pkg.h>

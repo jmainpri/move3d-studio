@@ -1,7 +1,7 @@
 #include <P3d-pkg.h>
 #include <Collision-pkg.h>
 #include <Graphic-pkg.h>
-#include <libmove3d/graphic/move3d-gui.h>
+#include <libmove3d/include/move3d-gui.h>
 
 #include "proto/FORMrobot_proto.h"
 
