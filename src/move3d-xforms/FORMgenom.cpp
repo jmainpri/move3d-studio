@@ -30,16 +30,20 @@
 
 //#define OBJECT_NAME "DUPLO_OBJECT"
 //#define OBJECT_NAME "WOODEN_OBJECT"
-
-#define OBJECT_NAME "GREY_TAPE"/*"MUG"ORANGE_BOTTLE"*/
-
-// #define OBJECT_NAME "GREY_TAPE"
+// #define OBJECT_NAME "SURPRISE_BOX"
+#define OBJECT_NAME "GREY_TAPE"
 //#define OBJECT_NAME "YELLOW_BOTTLE"
+// #define OBJECT_NAME "LOTR_TAPE"
+// #define OBJECT_NAME "GREY_K7"
+
 // #define SUPPORT_NAME "HRP2TABLE"
 #define SUPPORT_NAME "IKEA_SHELF"
 //#define SUPPORT_NAME "SHELF"
-#define PLACEMENT_NAME "IKEA_SHELF"
-// #define PLACEMENT_NAME "HRP2TABLE"
+
+// #define PLACEMENT_NAME "IKEA_SHELF"
+#define PLACEMENT_NAME "HRP2TABLE"
+
+
 #define HUMAN_NAME "ACHILE_HUMAN1"
 #define CAMERA_JNT_NAME "Tilt"
 #define CAMERA_FOV 80.0
@@ -334,9 +338,9 @@ static void CB_genomArmGotoX_obj(FL_OBJECT *obj, long arg)
   objStart.push_back(P3D_HUGE);
   objStart.push_back(P3D_HUGE);
   objStart.push_back(P3D_HUGE);
-    objGoto.push_back(4.73);
+    objGoto.push_back(4.63);
     objGoto.push_back(-2.78);
-    objGoto.push_back(1.19);
+    objGoto.push_back(1.15);
   objGoto.push_back(P3D_HUGE);
   objGoto.push_back(P3D_HUGE);
   objGoto.push_back(P3D_HUGE);
@@ -624,9 +628,9 @@ static void CB_genomPickUp_takeObjectToXYZ(FL_OBJECT *obj, long arg) {
     objStart.push_back(P3D_HUGE);
     objStart.push_back(P3D_HUGE);
     objStart.push_back(P3D_HUGE);
-    objGoto.push_back(2.96);
-    objGoto.push_back(-4.95);
-    objGoto.push_back(0.98);
+    objGoto.push_back(4.19);
+    objGoto.push_back(-2.05);
+    objGoto.push_back(1.2);
     objGoto.push_back(0.0);
     objGoto.push_back(0.0);
     objGoto.push_back(P3D_HUGE);
@@ -656,12 +660,11 @@ static void CB_genomPlaceObject(FL_OBJECT *obj, long arg) {
   std::vector <MANPIPULATION_TRAJECTORY_CONF_STR> confs;
   std::vector <SM_TRAJ> smTrajs;
   std::vector<double> objStart, objGoto;
-    objGoto.push_back(2.96);
-    objGoto.push_back(-4.95);
-    objGoto.push_back(0.78);
-    objGoto.push_back(0.0);
-    objGoto.push_back(0.0);
-    objGoto.push_back(P3D_HUGE);
+  objGoto.push_back(4.39);
+  objGoto.push_back(-2.25);
+  objGoto.push_back(0.73);
+  objGoto.push_back(0.0);
+  objGoto.push_back(0.0);
   objGoto.push_back(P3D_HUGE);
   gpGrasp grasp;
 
@@ -691,9 +694,9 @@ static void CB_genomTakeToPlace(FL_OBJECT *obj, long arg) {
   std::vector <MANPIPULATION_TRAJECTORY_CONF_STR> confs;
   std::vector <SM_TRAJ> smTrajs;
   std::vector<double> objStart, objGoto;
-  objGoto.push_back(4.83);
-  objGoto.push_back(-2.39);
-  objGoto.push_back(0.74);
+  objGoto.push_back(4.39);
+  objGoto.push_back(-2.25);
+  objGoto.push_back(0.73);
   objGoto.push_back(0.0);
   objGoto.push_back(0.0);
   objGoto.push_back(P3D_HUGE);
@@ -757,13 +760,32 @@ static void CB_genomSequence(FL_OBJECT *obj, long arg) {
   if (manipulation== NULL) {
     initManipulationGenom();
   }
+  
+  fixAllJointsWithoutArm(XYZ_ROBOT, 0);
+  
   CB_genomPickUp_gotoObject(obj, arg);
   p3d_copy_config_into(XYZ_ROBOT, XYZ_ROBOT->ROBOT_GOTO, &XYZ_ROBOT->ROBOT_POS);
+  p3d_copy_config_into(XYZ_ROBOT, XYZ_ROBOT->conf[0]->q, &XYZ_ROBOT->ROBOT_GOTO);
  
-  CB_genomPickUp_takeObjectToXYZ(obj, arg);
+  fixAllJointsWithoutArm(XYZ_ROBOT, 0);
+  
+  CB_genomPickUp_takeObject(obj, arg);
   p3d_copy_config_into(XYZ_ROBOT, XYZ_ROBOT->ROBOT_GOTO, &XYZ_ROBOT->ROBOT_POS);
+  
+  fixAllJointsWithoutArm(XYZ_ROBOT, 0);
+  
   CB_genomPlaceObject(obj, arg);
+  p3d_copy_config_into(XYZ_ROBOT, XYZ_ROBOT->ROBOT_GOTO, &XYZ_ROBOT->ROBOT_POS);
 
+//   CB_genomTakeToPlace(obj, arg);
+//   p3d_copy_config_into(XYZ_ROBOT, XYZ_ROBOT->ROBOT_GOTO, &XYZ_ROBOT->ROBOT_POS);
+  
+//   CB_genomEscapeObject(obj, arg);
+//   p3d_copy_config_into(XYZ_ROBOT, XYZ_ROBOT->ROBOT_GOTO, &XYZ_ROBOT->ROBOT_POS);
+//   p3d_copy_config_into(XYZ_ROBOT, XYZ_ROBOT->conf[0]->q, &XYZ_ROBOT->ROBOT_GOTO);
+  
+//   CB_genomArmGotoQ_obj(obj, arg);
+//   p3d_copy_config_into(XYZ_ROBOT, XYZ_ROBOT->ROBOT_GOTO, &XYZ_ROBOT->ROBOT_POS);
   return;
 }
 

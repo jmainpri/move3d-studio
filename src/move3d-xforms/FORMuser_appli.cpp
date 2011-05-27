@@ -538,6 +538,9 @@ static void callbacks(FL_OBJECT *ob, long arg){
 /** Robot fix joint except specific arm */
 fixAllJointsWithoutArm(XYZ_ROBOT, 0);
 
+/** Export with coldman*/
+// gpExport_robot_for_coldman(XYZ_ROBOT);
+
 #endif
       break;
     }

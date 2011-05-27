@@ -365,7 +365,7 @@ int main(int argc, char ** argv) {
   /* lecture du fichier environnement */
   p3d_set_directory(file_directory);
 #ifdef WITH_XFORMS
-  int fontsize = 10;
+  int fontsize = 8;
   FL_IOPT fl_cntl;
   fl_cntl.buttonFontSize = fontsize;
   fl_set_defaults(FL_PDButtonFontSize, &fl_cntl);
