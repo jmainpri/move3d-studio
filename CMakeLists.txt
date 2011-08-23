@@ -8,6 +8,35 @@ PROJECT(MOVE3DSTUDIO C CXX)
 set( PACKAGE_NAME move3d-studio )
 set( PACKAGE_VERSION 1.0 )
 
+# CMake information
+message( STATUS "CMake System = ${CMAKE_SYSTEM_NAME}")
+message( STATUS "CMake Processor = ${CMAKE_SYSTEM_PROCESSOR}")
+message( STATUS "CMake Source Dir = ${CMAKE_SOURCE_DIR}")
+message( STATUS "CMake Binary Dir = ${CMAKE_BINARY_DIR}")
+message( STATUS "CMake Install Prefix = ${CMAKE_INSTALL_PREFIX}")
+
+
+IF(UNIX)
+  ADD_DEFINITIONS(-DUNIX)
+  IF(APPLE)
+    ADD_DEFINITIONS(-DMACOSX)
+  ELSE(APPLE)
+    ADD_DEFINITIONS(-DLINUX)
+  ENDIF(APPLE)
+ELSE(UNIX)
+ MESSAGE (FATAL_ERROR "Not supported Platform")
+ENDIF(UNIX)
+
+#Default mode is Debug  --------------------------------------------------------
+IF(NOT CMAKE_BUILD_TYPE)
+  SET(CMAKE_BUILD_TYPE Debug CACHE STRING
+      "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+      FORCE)
+ENDIF(NOT CMAKE_BUILD_TYPE)
+
+# Get the current move3d-studio version
+ADD_DEFINITIONS(${MOVE3D_CFLAGS} -DMOVE3D_STUDIO_VERSION="${PACKAGE_VERSION}" )
+
 #Uncomment next line to get verbose makefiles.
 #SET(CMAKE_VERBOSE_MAKEFILE true)
 
@@ -27,12 +56,24 @@ FIND_PACKAGE (PkgConfig REQUIRED)
 ##           Options                   ###
 ##########################################
 
-OPTION (WITH_XFORMS "Use XForms toolkit for interface" ON)
-OPTION (HRI_GUI "Enable Human-Robot Interaction related parts" ON)
+OPTION (MOVE3D_XFORMS "Use XForms toolkit for interface" OFF)
+OPTION (MOVE3D_QT "Use Qt toolkit for interface" OFF)
+
+OPTION (HRI_GUI "Enable Human-Robot Interaction related parts" OFF)
 OPTION (MIGHTABILITY_MAPS "Enable MigthabilityMaps interface" OFF)
 
-IF(WITH_XFORMS)
+IF(MOVE3D_XFORMS)
+	#-------------- XFORMS --------------------------------------------------------
+	ADD_DEFINITIONS(-DMOVE3D_XFORMS)
 	ADD_DEFINITIONS(-DWITH_XFORMS)
+	FIND_PACKAGE(XFORMS REQUIRED)
+	INCLUDE_directories(${XFORMS_INCLUDE_DIR})
+	SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${XFORMS_INCLUDE_DIR})
+	SET(LIBS ${LIBS} ${XFORMS_LIBRARIES})
+ENDIF()
+
+IF(MOVE3D_QT)
+	ADD_DEFINITIONS(-DMOVE3D_QT)
 ENDIF()
 
 IF(MIGHTABILITY_MAPS)
@@ -52,112 +93,6 @@ IF(HRI_GUI)
 	LINK_DIRECTORIES( ${LIBHRI_LIBRARY_DIRS} )
 	SET(LIBS ${LIBS} ${LIBHRI_LIBRARIES})
 ENDIF()
-
-##########################################
-##      Others dependencies             ##
-##########################################
-
-
-#--------------------- Move3D -------------------------------------------------
-IF(DEFINED LIBMOVE3D_PC)
-	SET(ENV{PKG_CONFIG_PATH} ${LIBMOVE3D_PC}:$ENV{PKG_CONFIG_PATH})
-ENDIF()
-pkg_check_modules(MOVE3D REQUIRED "libmove3d")
-
-INCLUDE_DIRECTORIES(${MOVE3D_INCLUDE_DIRS})
-SET(LIBS ${LIBS} ${MOVE3D_LIBRARIES})
-LINK_DIRECTORIES( ${MOVE3D_LIBRARY_DIRS} )
-#MESSAGE( MOVE3D_LIBRARIES = ${MOVE3D_LIBRARIES})
-
-#-------------- XFORMS --------------------------------------------------------
-
-FIND_PACKAGE(XFORMS REQUIRED)
-INCLUDE_directories(${XFORMS_INCLUDE_DIR})
-SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${XFORMS_INCLUDE_DIR})
-SET(LIBS ${LIBS} ${XFORMS_LIBRARIES})
-
-#--------------- OPENGL -------------------------------------------------------
-
-FIND_PACKAGE(X11 REQUIRED)
-INCLUDE_directories(${X11_INCLUDE_DIR})
-SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${X11_INCLUDE_DIR})
-SET(LIBS ${LIBS} ${X11_LIBRARIES})
-
-IF(APPLE)
-	IF(GL_NATIVE)
-  		FIND_PACKAGE(OpenGL REQUIRED)
-  		INCLUDE_directories("${OPENGL_INCLUDE_DIR}/Headers")
-  		SET(INCLUDE_DIRS ${INCLUDE_DIRS} "${OPENGL_INCLUDE_DIR}/Headers")
-  		SET(LIBS ${LIBS} ${OPENGL_LIBRARIES})
-  		Message(${OPENGL_INCLUDE_DIR})
-  		Message(${OPENGL_LIBRARIES})
-  		IF(WITH_XFORMS)
-  			FIND_PACKAGE(GLU REQUIRED)
-  			INCLUDE_directories(${GLU_INCLUDE_DIR})
-  			SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${GLU_INCLUDE_DIR})
-  			SET(LIBS ${LIBS} ${GLU_LIBRARIES})
-  			FIND_PACKAGE(GL REQUIRED)
-  			INCLUDE_directories(${GL_INCLUDE_DIR})
-  			SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${GL_INCLUDE_DIR})
-  			SET(LIBS ${LIBS} ${GL_LIBRARIES})
-  		ENDIF(WITH_XFORMS)
-	ELSE(GL_NATIVE)
-		FIND_PACKAGE(GLU REQUIRED)
-  		INCLUDE_directories(${GLU_INCLUDE_DIR})
-  		SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${GLU_INCLUDE_DIR})
-  		SET(LIBS ${LIBS} ${GLU_LIBRARIES})
-  		FIND_PACKAGE(GL REQUIRED)
-  		INCLUDE_directories(${GL_INCLUDE_DIR})
-  		SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${GL_INCLUDE_DIR})
-  		SET(LIBS ${LIBS} ${GL_LIBRARIES})
-	ENDIF(GL_NATIVE)
-ELSE(APPLE)
-  FIND_PACKAGE(OpenGL REQUIRED)
-  INCLUDE_directories(${OPENGL_INCLUDE_DIR})
-  SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR})
-  SET(LIBS ${LIBS} ${OPENGL_LIBRARIES})
-
-  FIND_PACKAGE(GLU REQUIRED)
-  INCLUDE_directories(${GLU_INCLUDE_DIR})
-  SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${GLU_INCLUDE_DIR})
-  SET(LIBS ${LIBS} ${GLU_LIBRARIES})
-ENDIF(APPLE)
-
-#------------------- softMotion -----------------------------------------------	
-
-pkg_check_modules(SOFTMOTION REQUIRED "softMotion-libs")
-
-INCLUDE_DIRECTORIES(${SOFTMOTION_INCLUDE_DIRS})
-SET(LIBS ${LIBS} ${SOFTMOTION_LIBRARIES})
-LINK_DIRECTORIES( ${SOFTMOTION_LIBRARY_DIRS} )
-MESSAGE( SOFTMOTION_LIBRARIES = ${SOFTMOTION_LIBRARIES})
-
-#------------------------------------------------------------------------------	
-			
-#MESSAGE( LIBS = ${LIBS} )
-#MESSAGE( MOVE3D_LDFLAGS =  "${MOVE3D_LDFLAGS}" )
-MESSAGE( MOVE3D_CFLAGS =  "${MOVE3D_CFLAGS}" )
-
-IF(UNIX)
-  ADD_DEFINITIONS(-DUNIX)
-  IF(APPLE)
-    ADD_DEFINITIONS(-DMACOSX)
-  ELSE(APPLE)
-    ADD_DEFINITIONS(-DLINUX)
-  ENDIF(APPLE)
-ELSE(UNIX)
- MESSAGE (FATAL_ERROR "Not supported Platform")
-ENDIF(UNIX)
-
-#Default mode is Debug
-IF(NOT CMAKE_BUILD_TYPE)
-  SET(CMAKE_BUILD_TYPE Debug CACHE STRING
-      "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
-      FORCE)
-ENDIF(NOT CMAKE_BUILD_TYPE)
-
-# Get the current move3d-studio version
-ADD_DEFINITIONS(${MOVE3D_CFLAGS} -DMOVE3D_STUDIO_VERSION="${PACKAGE_VERSION}" )
 
 ##########################################
 ##       PKGCONFIG file                ###
