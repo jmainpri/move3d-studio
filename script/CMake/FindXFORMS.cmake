@@ -17,10 +17,10 @@ find_path (XFORMS_INCLUDE_DIR forms.h
 ## Check for the library
 
 find_library (XFORMS_LIBRARIES formsGL
-  PATHS ${XFORMS_LIB} /usr/local/lib /usr/lib /lib /sw/lib /opt/local/lib
+ PATHS ${XFORMS_LIB} /usr/local/lib /usr/lib /usr/lib64 /lib /sw/lib /opt/local/lib
   )
 find_library (FORMS_LIBRARIES forms
-  PATHS ${XFORMS_LIB} /usr/local/lib /usr/lib /lib /sw/lib /opt/local/lib
+ PATHS ${XFORMS_LIB} /usr/local/lib /usr/lib /usr/lib64 /lib /sw/lib /opt/local/lib
   )
 SET(XFORMS_LIBRARIES ${XFORMS_LIBRARIES} ${FORMS_LIBRARIES})
 UNSET(FORMS_LIBRARIES CACHE)
