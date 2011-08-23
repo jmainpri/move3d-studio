@@ -19,9 +19,6 @@
 #include "hri_costspace/HRICS_costspace.h"
 #endif
 
-#ifdef QT_GL
-#include "../qtWindow/cppToQt.hpp"
-#endif
 
 #include "g3d_draw_ui.h"
 
@@ -2199,7 +2196,7 @@ static int movie_drawtraj_fct(p3d_rob* robot, p3d_localpath* curLp)
   char str[512];
   char file[64];
   g3d_draw_allwin_active();
-#ifndef QT_GL
+
   fl_check_forms();
 #ifndef GRASP_PLANNING
   if((++movie_count)%image_rate == 0) {
@@ -2236,9 +2233,7 @@ static int movie_drawtraj_fct(p3d_rob* robot, p3d_localpath* curLp)
     system(str);
   }
 #endif
-#else
-  pipe2openGl->addCurrentImage();
-#endif
+
 
 
   return(traj_play);
@@ -2369,21 +2364,15 @@ static void CB_movietraj_obj(FL_OBJECT *ob, long arg)
       return;
     }
     movie_count = 0;
-#ifdef QT_GL
-    pipe2openGl->setIsNotTimeControlled(true);
-#endif
+
     g3d_show_tcur_rob(robotPt,movie_drawtraj_fct);
-#ifndef QT_GL
+
     //sprintf(str,"%s/bin/script/mpeg_make *.miff m3d.mpg",getenv("HOME_MOVE3D"));
     sprintf(str,"cd %s/video;mencoder mf://*.jpg -quiet -ovc xvid -xvidencopts bitrate=800 -oac copy -o m3d.avi",getenv("HOME_MOVE3D"));//change to video directory then compress jpg files to AVI video for more parameters and video format see man pages of mencoder
     system(str);
 //     sprintf(str,"rm %s/video/*.jpg",getenv("HOME_MOVE3D"));//removing jpg files
     system(str);
     fl_set_button(ob,0);
-#else
-    pipe2openGl->setIsNotTimeControlled(false);
-    pipe2openGl->saveImagesToDisk();
-#endif
   }
   else {traj_play = FALSE;}
 }

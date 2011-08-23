@@ -28,9 +28,6 @@
 #ifdef GRASP_PLANNING
 #include <GraspPlanning-pkg.h>
 #endif
-#ifdef QT_LIBRARY
-#include "../qtWindow/cppToQt.hpp"
-#endif
 
 #include "proto/FORMgenom_proto.h"
 #include "proto/FORMsoftMotion_proto.h"
@@ -280,11 +277,9 @@ void g3d_create_buttonless_main_form(void)
   g3d_set_win_center(G3D_WIN->vs, x1,y1,z1);
   /* on fixe la fonction de calback pour la fenetre graphique */
 
-#ifndef QT_GL
+
   g3d_set_win_drawer(G3D_WIN, g3d_draw);
-#else
-  g3d_set_win_drawer(G3D_WIN, NULL);
-#endif
+
 
 }
 
@@ -318,11 +313,9 @@ void g3d_create_main_form(void)
   g3d_set_win_center(G3D_WIN->vs, x1,y1,z1);
   /* on fixe la fonction de calback pour la fenetre graphique */
 
-#ifndef QT_GL
+
   g3d_set_win_drawer(G3D_WIN, g3d_draw);
-#else
-  g3d_set_win_drawer(G3D_WIN, NULL);
-#endif
+
   /* on fixe la fonction de calback pour la camera movile */
   g3d_set_win_fct_mobcam(G3D_WIN, g3d_fct_mobcam_form);
   /* Definition de la forme principale */
@@ -365,10 +358,7 @@ void g3d_create_main_form(void)
   g3d_create_bio_collision_form();
 #endif
 
-#ifdef QT_LIBRARY
-  // This is a pipe to use qt on XForm (X) objects
-  fl_add_io_callback(qt_fl_pipe[0], FL_READ, read_pipe, NULL);
-#endif
+
 
  /* Option interface */
   for(unsigned int j=0; j< (unsigned int)NB_OPTION_INTERFACE; j++) {
@@ -636,12 +626,11 @@ static void CB_envcur_obj(FL_OBJECT *ob, long arg)
       /* on reinitialise certaines variables globales */
       G3D_ACTIVE_CC = 1;
 
-#ifndef QT_GL
+
+      //HERE
       g3d_reinit_graphics();
-      // If using Qt's opengl : execute the code of this function in the Qt thread.
-#else
-      pipe2openGl->reinitGraphics();
-#endif
+
+
 
       fl_unfreeze_form(MAIN_FORM);
       g3d_refresh_allwin_active();
@@ -902,8 +891,8 @@ static void CB_load_obj(FL_OBJECT *ob, long arg)
    /* on reinitialise certaines variables globales */
    G3D_ACTIVE_CC = 1;
 
-   // Resize the xforms opengl window, unless we are using Qt for the opengl display
-#ifndef QT_GL
+
+
    double x1,x2,y1,y2,z1,z2,ampl=0.;
    h = G3D_WINSIZE;
    w = G3D_WINSIZE;
@@ -913,7 +902,7 @@ static void CB_load_obj(FL_OBJECT *ob, long arg)
    }
 
    g3d_resize_allwin_active(w,h,ampl);
-#endif
+
 
    ENV.setBool(Env::drawTraj,false);
    fl_set_button(SEARCH_DRAW_OPTIM_OBJ,0);
@@ -1479,8 +1468,8 @@ static void charge_scene(int env_num)
 
 
   // Save the scene of the opengl window,
-  // unless we are using Qt for the opengl display
-#ifndef QT_GL
+
+
   G3D_Window *win;
   int i;
 
@@ -1512,7 +1501,7 @@ static void charge_scene(int env_num)
   win->vs.FILAIRE = saved_scene[env_num-1].FILAIRE;
   win->vs.CONTOUR = saved_scene[env_num-1].CONTOUR;
   win->vs.GOURAUD = saved_scene[env_num-1].GOURAUD;
-#endif
+
 
 /*   printf("charge scene : environnement %s point de vue charge : %f %f %f %f %f %f %f %f %f\n", */
 /* 	 p3d_get_desc_curname(P3D_ENV),win->vs.x,win->vs.y,win->vs.z,win->vs.zo,win->vs.az,win->vs.el,win->vs.up[0],win->vs.up[1],win->vs.up[2]); */

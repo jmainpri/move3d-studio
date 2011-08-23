@@ -161,7 +161,7 @@ G3D_Window
 
   win->vs = g3d_init_viewer_state(size);
 
-#ifndef QT_GL
+
   FL_FORM    *form= fl_bgn_form(FL_UP_BOX,w+90,h+20);
 
   FL_OBJECT  *can = fl_add_glcanvas(FL_NORMAL_CANVAS,10,10,w,h,"GL canvas");
@@ -210,11 +210,7 @@ G3D_Window
   fl_set_button(logo, 1);
   fl_end_form();
 
-#else
-  FL_FORM    *form=NULL;
-  FL_FORM    *can=NULL;
-  FL_FORM    *mcamera=NULL;
-#endif
+
 
 
   /* Les parametres de la fenetre */
@@ -249,7 +245,7 @@ G3D_Window
   win->fct_key2= NULL;
 
 
-#ifndef QT_GL
+
   /* Attributs/Handlers du canvas */
   fl_set_glcanvas_attributes(can,G3D_GLCONFIG);
   fl_set_object_gravity(can,FL_NorthWest,FL_SouthEast);
@@ -324,7 +320,7 @@ G3D_Window
   fl_show_form(form,FL_PLACE_MOUSE|FL_FREE_SIZE,FL_FULLBORDER,name);
   /* Pour ne recevoir les events MOTION_NOTIFY que quand le bouton est down */
   fl_remove_selected_xevent(FL_ObjWin(can),PointerMotionMask|PointerMotionHintMask);
-#endif
+
 
 
   //Remplissage des matrices de projection sur les plans dans la direction de la lumière.
@@ -378,11 +374,6 @@ void
 g3d_refresh_allwin_active(void)
 /* used in FORMmain  */
 {
-
-#ifdef QT_LIBRARY
-    // Problem with the OpenGL code
-    return;
-#endif
 
   G3D_Window *w = G3D_WINDOW_LST;
   FL_OBJECT  *ob;
@@ -1324,247 +1315,6 @@ canvas_viewing(FL_OBJECT *ob, Window win, int w, int h, XEvent *xev, void *ud)
 
 #endif
 
-
-/**
-  * Next function are for displaying inside Qt
-  */
-#ifdef QT_GL
-
-G3D_Window * qt_get_cur_g3d_win()
-{
-	return G3D_WINDOW_CUR;
-}
-
-
-void qt_calc_cam_param()
-{
-	p3d_vector4 Xc, Xw;
-	p3d_vector4 up;
-
-	//	  std::cout << "G3D_WINDOW_CUR->zo = "<< G3D_WINDOW_CUR->zo << std::endl;
-
-	calc_cam_param(G3D_WINDOW_CUR, Xc, Xw);
-
-	/*std::cout << Xc[0] << " " << Xc[1] << " " << Xc[2] << std::endl;
-	 std::cout << Xw[0] << " " << Xw[1] << " " << Xw[2] << std::endl;
-	 std::cout << up[0] << " " << up[1] << " " << up[2] << std::endl;*/
-
-	JimXc[0] = Xc[0];
-	JimXc[1] = Xc[1];
-	JimXc[2] = Xc[2];
-
-	JimXw[0] = Xw[0];
-	JimXw[1] = Xw[1];
-	JimXw[2] = Xw[2];
-
-	if (G3D_WINDOW_CUR)
-	{
-		p3d_matvec4Mult(*G3D_WINDOW_CUR->cam_frame, G3D_WINDOW_CUR->vs.up, up);
-	}
-	else
-	{
-		up[0] = 0;
-		up[1] = 0;
-		up[2] = 1;
-	}
-
-	Jimup[0] = up[0];
-	Jimup[1] = up[1];
-	Jimup[2] = up[2];
-}
-
-
-void qt_canvas_viewing(int mouse_press, int button)
-{
-	G3D_Window *g3dwin = G3D_WINDOW_CUR;
-	int w = G3D_WINSIZE_WIDTH;
-	int h = G3D_WINSIZE_HEIGHT;
-	unsigned int key;
-
-	static int i0, j0;//,idr=-1;
-	int i, j;
-
-	static double x, y, z, zo, el, az;
-	double x_aux, y_aux, az_aux, rotinc, incinc;
-
-	G3D_MODIF_VIEW = TRUE;
-
-	if (mouse_press)
-	{
-		qt_get_win_mouse(&i0, &j0);
-		/*printf("----------------------------------\n", (double) i0);
-		 printf("i0 = %d\n", i0);
-		 printf("j0 = %d\n", j0);*/
-                x = g3dwin->vs.x;
-                y = g3dwin->vs.y;
-                z = g3dwin->vs.z;
-                zo = g3dwin->vs.zo;
-                el = g3dwin->vs.el;
-                az = g3dwin->vs.az;
-	}
-	else
-	{
-		qt_get_win_mouse(&i, &j);
-
-		if (button == 0)
-		{
-			key = 256;
-		}
-		else if (button == 1)
-		{
-			key = 512;
-		}
-		else if (button == 2)
-		{
-			key = 1024;
-		}
-
-		/*printf("i = %d\n", i);
-		 printf("j = %d\n", j);*/
-		//			printf("%d\n",key);
-		i -= i0;
-		j -= j0;
-		switch (key)
-		{
-		case 260: /* Select Object and Displace in X */
-                        //	move_robot(idr,0,j,g3dwin->vs.size/h);
-			break;
-		case 516: /* Select Object and Displace in Y */
-                        //	move_robot(idr,1,i,g3dwin->vs.size/w);
-			break;
-		case 1028:/* Select Object and Displace in Z */
-                        //	move_robot(idr,2,j,g3dwin->vs.size/h);
-			break;
-		case 256: /* zoom */
-		case 272:
-		case 258:
-		case 274:
-		case 8464:
-		case 16656:
-                        g3dwin->vs.zo = (zo * i) / w + zo;
-                        if (g3dwin->vs.zo < .0)
-			{
-
-                                g3dwin->vs.zo = .0;
-			}
-                        //			std::cout << "g3dwin->vs.zo = "<< g3dwin->vs.zo << std::endl;
-			break;
-		case 512: /* angle */
-		case 514:
-		case 528:
-		case 530:
-		case 8720:
-		case 16912:
-                        g3dwin->vs.az = (-2 * GAIN_AZ * i) / w + az;
-                        if (g3dwin->vs.az < .0)
-                                g3dwin->vs.az = 2 * M_PI;
-                        if (g3dwin->vs.az > 2 * M_PI)
-                                g3dwin->vs.az = .0;
-                        g3dwin->vs.el = (GAIN_EL * j) / w + el;
-                        if (g3dwin->vs.el < -M_PI / 2.0)
-                                g3dwin->vs.el = -M_PI / 2.0;
-                        if (g3dwin->vs.el > M_PI / 2.0)
-                                g3dwin->vs.el = M_PI / 2.0;
-			break;
-		case 1024: /* origin esf*/
-		case 1026:
-		case 1040:
-		case 1042:
-		case 9232:
-		case 17424:
-			rotinc = (-GAIN_AZ * i) / w;
-			incinc = (-GAIN_EL * j) / w;
-			/* rotation effects */
-                        g3dwin->vs.x = x + 2.0 * zo * cos(el) * sin(rotinc / 2.0) * sin(az
-					+ rotinc / 2.0);
-                        g3dwin->vs.y = y - 2.0 * zo * cos(el) * sin(rotinc / 2.0) * cos(az
-					+ rotinc / 2.0);
-                        g3dwin->vs.az = az + rotinc;
-
-                        if (g3dwin->vs.az < .0)
-                                g3dwin->vs.az = 2 * M_PI;
-                        if (g3dwin->vs.az > 2 * M_PI)
-                                g3dwin->vs.az = .0;
-                        x_aux = g3dwin->vs.x;
-                        y_aux = g3dwin->vs.y;
-                        az_aux = g3dwin->vs.az;
-			/* incline effects */
-                        g3dwin->vs.z = z - 2.0 * zo * sin(incinc / 2.0) * cos(el + incinc
-					/ 2.0);
-                        g3dwin->vs.x = x_aux + 2.0 * zo * sin(incinc / 2.0) * sin(el + incinc
-					/ 2.0) * cos(az_aux);
-                        g3dwin->vs.y = y_aux + 2.0 * zo * sin(incinc / 2.0) * sin(el + incinc
-					/ 2.0) * sin(az_aux);
-                        g3dwin->vs.el = el + incinc;
-                        if (g3dwin->vs.el < -M_PI / 2)
-                                g3dwin->vs.el = -M_PI / 2;
-                        if (g3dwin->vs.el > M_PI / 2)
-                                g3dwin->vs.el = M_PI / 2;
-			break;
-			/* deplacement du  point central de l'image */
-			/* - bouton gauche et central -> x          */
-			/* - bouton droit et central  -> y          */
-			/* - bouton gauche et droit   -> z          */
-		case 768: /* origin x */
-		case 770:
-		case 784:
-		case 8976:
-		case 17168:
-                        g3dwin->vs.x = x + j * g3dwin->vs.size / w;
-                        /*       g3dwin->vs.x = x + i*g3dwin->vs.size/h; */
-			break;
-		case 1536: /* origin y */
-		case 1552:
-		case 1538:
-		case 9744:
-		case 17936:
-                        g3dwin->vs.y = y + j * g3dwin->vs.size / w;
-                        /*       g3dwin->vs.y = y + i*g3dwin->vs.size/h; */
-			break;
-		case 1280: /* origin z */
-		case 1282:
-		case 1296:
-		case 9488:
-		case 17680:
-                        g3dwin->vs.z = z + j * g3dwin->vs.size / w;
-                        /*       g3dwin->vs.z = z + i*g3dwin->vs.size/h; */
-			break;
-		case 1792: /* reset up */
-                        g3dwin->vs.up[0] = .0;
-                        g3dwin->vs.up[1] = .0;
-                        g3dwin->vs.up[2] = 1.0;
-			break;
-		}
-	}
-}
-
-void qt_change_mob_frame(G3D_Window* win,pp3d_matrix4 frame)
-{
-	p3d_matrix4 matr;
-	p3d_vector4 Xc,Xcnew,Xw,Xwnew;
-	
-	calc_cam_param(win,Xc,Xw);
-	win->cam_frame = frame;
-	p3d_matInvertXform(*win->cam_frame, matr);
-	p3d_matvec4Mult(matr, Xc, Xcnew);
-	p3d_matvec4Mult(matr, Xw, Xwnew);
-	recalc_mouse_param(win->vs,Xcnew,Xwnew);
-	recalc_cam_up(win->vs,matr);
-}
-
-void qt_reset_mob_frame(G3D_Window* win)
-{
-	p3d_vector4 Xc,Xcnew,Xw,Xwnew;
-	
-	calc_cam_param(win,Xc,Xw);
-	recalc_mouse_param(win->vs,Xc,Xw);
-	recalc_cam_up(win->vs,*win->cam_frame);
-	win->cam_frame = &Id;
-}
-
-
-#endif
-
 static void
 button_done(FL_OBJECT *ob, long data) {
   G3D_Window *win = (G3D_Window *)data;
@@ -2167,23 +1917,17 @@ g3d_draw_win(G3D_Window *win) {
 
 void
 g3d_draw_allwin(void) {
-#ifndef QT_GL
+
   G3D_Window *w = G3D_WINDOW_LST;
   while (w) {
     g3d_draw_win(w);
     w = w->next;
   }
-#else
-  if(pipe2openGl)
-    {
-      pipe2openGl->update();
-    }
-#endif
 }
 
 void
 g3d_draw_allwin_active(void) {
-#ifndef QT_GL
+
   G3D_Window *w = G3D_WINDOW_LST;
   while (w) {
     if (w->vs.ACTIVE == 1) {
@@ -2191,17 +1935,12 @@ g3d_draw_allwin_active(void) {
     }
     w = w->next;
   }
-#else
-  if(pipe2openGl)
-    {
-      pipe2openGl->update();
-    }
-#endif
+
 }
 
 void
 g3d_draw_allwin_active_back_buffer(void) {
-#ifndef QT_GL
+
   G3D_Window *w = G3D_WINDOW_LST;
   while (w) {
     if (w->vs.ACTIVE == 1) {
@@ -2209,12 +1948,6 @@ g3d_draw_allwin_active_back_buffer(void) {
     }
     w = w->next;
   }
-#else
-  if(pipe2openGl)
-    {
-      pipe2openGl->update();
-    }
-#endif
 }
 
 
