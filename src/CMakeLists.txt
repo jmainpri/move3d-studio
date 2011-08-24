@@ -3,7 +3,10 @@ IF(MOVE3D_XFORMS)
 	ADD_SUBDIRECTORY(move3d-xforms)
 ENDIF()
 
+
+
 IF(MOVE3D_QT)
+	ADD_SUBDIRECTORY(move3d-qt-gui-libs)
 	ADD_SUBDIRECTORY(move3d-qt)
 ENDIF()
 

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DistFieldWidget</class>
+ <widget class="QWidget" name="DistFieldWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>448</width>
+    <height>530</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QWidget" name="widget" native="true">
+       <widget class="QPushButton" name="pushButtonCreateDistanceField">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>10</y>
+          <width>191</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Create Distance Field</string>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="checkBoxDrawOccupVoxels">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>150</y>
+          <width>211</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Draw Occupation Cells</string>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="checkBoxDrawSampledPoints">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>120</y>
+          <width>201</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Draw Sampled Points</string>
+        </property>
+       </widget>
+       <widget class="QSpinBox" name="spinBoxNbMaxCells">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>50</y>
+          <width>57</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="singleStep">
+         <number>10</number>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>60</y>
+          <width>161</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Number Max Of Cells</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButtonAddAllPoints">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>240</y>
+          <width>191</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Add All Static to Field</string>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="doubleSpinBoxDrawingDistance">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>80</y>
+          <width>57</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="maximum">
+         <double>20.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_2">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>90</y>
+          <width>181</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Drawing distance threshold</string>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="checkBoxDrawStaticCells">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>180</y>
+          <width>201</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Draw Static Cells</string>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="checkBoxDrawBoundingVolumes">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>210</y>
+          <width>201</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Draw Bounding Vollumes</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButtonDeleteDistanceField">
+        <property name="geometry">
+         <rect>
+          <x>210</x>
+          <y>10</y>
+          <width>81</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Delete</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButtonGenerateRobotBoundingVolumes">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>280</y>
+          <width>261</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Generate Robot Bounding Volumes</string>
+        </property>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

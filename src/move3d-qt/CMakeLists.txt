@@ -1,5 +1,5 @@
 CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
-PROJECT (src CXX)
+PROJECT (move3d-qt-studio CXX)
 
 # ------------------------------------------------------------------------------
 # --- Default compilation option : ---------------------------------------------
@@ -31,13 +31,13 @@ ENDMACRO(Move3D_flag)
 
 MACRO(Move3D_CheckCompilationFlags)
   SET(Move3D_ActiveFlags "")
-  MESSAGE ("Active Flags :")
+  #MESSAGE ("Active Flags :")
   FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/smpFlags "#Generated File Do not modify!!!\n" )
   FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/smpFlags "Move3D_COMPILATION_FLAGS = ")
   FOREACH(flag ${Move3D_CompilationFlags})
     IF(${flag})
       FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/Move3DFlags "-D${flag} ")
-      MESSAGE("${flag}")
+      #MESSAGE("${flag}")
       ADD_DEFINITIONS("-D${flag}")
       LIST(APPEND Move3D_ActiveFlags ${flag})
     ENDIF()
@@ -69,7 +69,7 @@ Move3D_flag(USE_GLUT "Glut" OFF)
 
 Move3D_flag(MOVE3D_CORE "Compiles the planning API and planners" ON)
 
-Move3D_flag(HRI_COSTSPACE "With the hri work" OFF)
+Move3D_flag(HRI_COSTSPACE "With the hri work" ON)
 
 Move3D_flag(PQP "With PQP" ON)
 
@@ -138,12 +138,28 @@ INCLUDE_directories(${MOVE3D-MOTIONPLANNER_INCLUDE_DIR})
 SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${MOVE3D-MOTIONPLANNER_INCLUDE_DIR})
 SET(LIBS ${LIBS} ${MOVE3D-MOTIONPLANNER_LIBRARIES})
 
+
+
+
+
 #-------------- Move3D-Qt-Gui-libs --------------------------------------
 
-FIND_PACKAGE(MOVE3D-QTGUI REQUIRED)
+
+
+#FIND_PACKAGE(MOVE3D-QTGUI REQUIRED)
+#INCLUDE_directories(${MOVE3D-QTGUI_INCLUDE_DIR})
+#SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${MOVE3D-QTGUI_INCLUDE_DIR})
+#SET(LIBS ${LIBS} ${MOVE3D-QTGUI_LIBRARIES})
+
+SET(MOVE3D-QTGUI_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/../move3d-qt-gui-libs/src)
+SET(${MOVE3D-QTGUI_LIBRARIES} ${PROJECT_SOURCE_DIR}/../move3d-qt-gui-libs/lib/$ENV{HOSTTYPE}/libMove3D-Qt-Gui.so)
+
 INCLUDE_directories(${MOVE3D-QTGUI_INCLUDE_DIR})
 SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${MOVE3D-QTGUI_INCLUDE_DIR})
-SET(LIBS ${LIBS} ${MOVE3D-QTGUI_LIBRARIES})
+#SET(LIBS ${LIBS} ${MOVE3D-QTGUI_LIBRARIES})
+
+
+
 
 #message(1 LIBS:)
 #message(${LIBS})
@@ -272,14 +288,14 @@ ENDIF(USE_GBM)
 
 IF(QT_LIBRARY)
 QT4_WRAP_CPP(MOC_OUTFILES main.hpp)
-ADD_EXECUTABLE(move3d-studio main.cpp move3d.c ${MOC_OUTFILES})
+ADD_EXECUTABLE(move3d-qt-studio main.cpp move3d.c ${MOC_OUTFILES})
 ELSE()
-ADD_EXECUTABLE(move3d-studio main.cpp move3d.c)
+ADD_EXECUTABLE(move3d-qt-studio main.cpp move3d.c)
 ENDIF()
 
 
-SET_TARGET_PROPERTIES(move3d-studio PROPERTIES LINKER_LANGUAGE CXX)
-TARGET_LINK_LIBRARIES(move3d-studio ${LIBS} m)
+SET_TARGET_PROPERTIES(move3d-qt-studio PROPERTIES LINKER_LANGUAGE CXX)
+TARGET_LINK_LIBRARIES(move3d-qt-studio Move3D-Qt-Gui ${LIBS} m)
 
 # -------------------------------------------------------------
 # --- Installation --------------------------------------------
@@ -289,7 +305,7 @@ IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
 
-INSTALL(TARGETS move3d-studio
+INSTALL(TARGETS move3d-qt-studio
         RUNTIME DESTINATION bin PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE CONFIGURATIONS ${CMAKE_BUILD_TYPE}
         LIBRARY DESTINATION lib PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ GROUP_WRITE WORLD_READ CONFIGURATIONS ${CMAKE_BUILD_TYPE})
 

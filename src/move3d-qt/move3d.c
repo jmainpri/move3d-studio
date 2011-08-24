@@ -30,6 +30,8 @@
 #include <cppToQt.hpp>
 #endif
 
+#include "planner_handler.hpp"
+
 #ifdef LIGHT_PLANNER
 #include "../lightPlanner/proto/DlrPlanner.h"
 #include "../lightPlanner/proto/DlrParser.h"
