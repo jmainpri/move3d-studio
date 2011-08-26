@@ -15,6 +15,14 @@ MainWindowRemote::MainWindowRemote(QWidget *parent)
 
         m_ui->setupUi(this);
 
+
+        FetchEnvironment* posterHandler = new FetchEnvironment();
+
+        if( !posterHandler->init(this) )
+        {
+            std::cout << " YESSSS : Poster Found!!!" << endl;
+        }
+
 }
 
 MainWindowRemote::~MainWindowRemote()
@@ -38,16 +46,8 @@ void MainWindowRemote::drawAllWinActive()
 
 void MainWindowRemote::restoreView()
 {
-        //g3d_restore_win_camera(G3D_WIN->vs);
-        drawAllWinActive();
 
 
-        FetchEnvironment* posterHandler = new FetchEnvironment();
-
-        if( !posterHandler->init(this) )
-        {
-            std::cout << " YESSSS : Poster Found!!!" << endl;
-        }
 }
 
 
