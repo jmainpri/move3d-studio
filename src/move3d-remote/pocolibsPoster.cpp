@@ -46,7 +46,7 @@ typedef struct STRUCT_SPARK_CURRENT_ENVIRONMENT {
 } SPARK_CURRENT_ENVIRONMENT;
 
 
-GEN_STRING64 EnvPoster = { "sparkEnvironment" };
+GEN_STRING64 EnvPoster = { "sparkEnvironment"};
 
 //----------------------------------------------------
 // FETCH ENVIRONMENT
@@ -60,7 +60,7 @@ FetchEnvironment::FetchEnvironment(QWidget* obj)
 }
   
 
-bool FetchEnvironment::init(MainWindow *win)
+bool FetchEnvironment::init(MainWindowRemote *win)
 { 
   if(posterFind(EnvPoster.name, &posterEnvID)==ERROR)
     {

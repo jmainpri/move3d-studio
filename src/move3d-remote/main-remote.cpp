@@ -19,6 +19,9 @@ GLWidget* openGlWidget;
 #include "API/Graphic/drawModule.hpp"
 
 
+
+
+
 extern int mainMhp(int argc, char** argv);
 
 using namespace std;
@@ -30,8 +33,10 @@ QThread* global_PlanningThread(NULL);
 
 void draw_opengl()
 {
+
   if(global_w != NULL)
   {
+
     QMetaObject::invokeMethod(global_w->getOpenGL(),
                               "myPaintGL",
                               Qt::BlockingQueuedConnection);

@@ -5,6 +5,8 @@ class GLWidget;
 
 #include "qtLibrary.hpp"
 
+#include "../p3d/env.hpp"
+
 namespace Ui
 {
         class MainWindowRemote;
@@ -25,6 +27,12 @@ public:
         ~MainWindowRemote();
 
         GLWidget*		getOpenGL();
+
+public slots:
+    void drawAllWinActive();
+
+private slots:
+        void restoreView();
 
 protected:
         void keyPressEvent(QKeyEvent *e);

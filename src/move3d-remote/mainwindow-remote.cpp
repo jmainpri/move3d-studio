@@ -3,6 +3,11 @@
 
 #include "qtOpenGL/glwidget.hpp"
 
+#include "P3d-pkg.h"
+#include "Util-pkg.h"
+
+#include "pocolibsPoster.hpp"
+
 
 MainWindowRemote::MainWindowRemote(QWidget *parent)
 : QMainWindow(parent), m_ui(new Ui::MainWindowRemote)
@@ -21,6 +26,28 @@ MainWindowRemote::~MainWindowRemote()
 GLWidget* MainWindowRemote::getOpenGL()
 {
         return m_ui->OpenGL;
+}
+
+void MainWindowRemote::drawAllWinActive()
+{
+    if(!ENV.getBool(Env::isRunning))
+    {
+        m_ui->OpenGL->updateGL();
+    }
+}
+
+void MainWindowRemote::restoreView()
+{
+        //g3d_restore_win_camera(G3D_WIN->vs);
+        drawAllWinActive();
+
+
+        FetchEnvironment* posterHandler = new FetchEnvironment();
+
+        if( !posterHandler->init(this) )
+        {
+            std::cout << " YESSSS : Poster Found!!!" << endl;
+        }
 }
 
 

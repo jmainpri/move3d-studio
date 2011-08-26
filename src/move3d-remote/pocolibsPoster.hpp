@@ -9,7 +9,7 @@
 
 #include "qtLibrary.hpp"
 
-#include "mainwindow.hpp" 
+#include "mainwindow-remote.hpp"
 
 class FetchEnvironment : public QObject
 {
@@ -22,7 +22,7 @@ public:
   
   //! Initializes the poster
   //! returns true if OK
-  bool init(MainWindow* win);
+  bool init(MainWindowRemote* win);
   
 protected slots:
   //! Reads a pocolib poster
@@ -32,6 +32,6 @@ protected slots:
 
 private:
   //! Display functions
-  MainWindow* m_win;
+  MainWindowRemote* m_win;
 
 };
