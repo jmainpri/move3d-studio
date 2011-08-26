@@ -5,7 +5,7 @@ class GLWidget;
 
 #include "qtLibrary.hpp"
 
-#include "../p3d/env.hpp"
+
 
 namespace Ui
 {
