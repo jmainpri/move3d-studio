@@ -58,6 +58,7 @@ FIND_PACKAGE (PkgConfig REQUIRED)
 
 OPTION (MOVE3D_XFORMS "Use XForms toolkit for interface" OFF)
 OPTION (MOVE3D_QT "Use Qt toolkit for interface" OFF)
+OPTION (MOVE3D_QT_REMOTE "Use Qt toolkit for remote interface with pocolibs poster reading" OFF)
 
 OPTION (HRI_GUI "Enable Human-Robot Interaction related parts" OFF)
 OPTION (MIGHTABILITY_MAPS "Enable MigthabilityMaps interface" OFF)
