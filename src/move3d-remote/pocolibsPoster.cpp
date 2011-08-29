@@ -25,7 +25,8 @@ static POSTER_ID posterEnvID=NULL;
 // SPARK
 //----------------------------------------------------
 #define M3D_MAX_DOF 65
-#define SPARK_MAX_THINGS_NB 35
+#define SPARK_MAX_AGENT_NB 5
+#define SPARK_MAX_FREEFLYER_NB 30
 
 typedef struct GEN_STRING64 {
   char name[64];
@@ -38,11 +39,19 @@ typedef struct STRUCT_M3D_ROBOT {
   int unused;
 } M3D_ROBOT;
 
+typedef struct STRUCT_M3D_FREEFLYER {
+  GEN_STRING64 name;
+  double q[6];
+} M3D_FREEFLYER;
+
 typedef struct STRUCT_SPARK_CURRENT_ENVIRONMENT {
   GEN_STRING64 envName;
-  M3D_ROBOT robot[SPARK_MAX_THINGS_NB];
+  M3D_ROBOT robot[SPARK_MAX_AGENT_NB];
+  M3D_FREEFLYER freeflyer[SPARK_MAX_FREEFLYER_NB];
   int robotNb;
+  int freeflyerNb;
   int time;
+  int unused;
 } SPARK_CURRENT_ENVIRONMENT;
 
 
@@ -56,7 +65,7 @@ FetchEnvironment::FetchEnvironment(QWidget* obj)
 {
   QTimer *timer = new QTimer(this);
   connect(timer, SIGNAL(timeout()), this, SLOT(refresh()));
-  timer->start(100);
+  timer->start(50);
 }
   
 
@@ -80,11 +89,11 @@ bool FetchEnvironment::refresh()
   int i,j;
   p3d_rob *robotPt;
 
-  if(posterFind(EnvPoster.name, &posterEnvID)==ERROR)
-    {
-      printf("Can't find Environment Poster\n");
-      return false;
-    }
+  // if(posterFind(EnvPoster.name, &posterEnvID)==ERROR)
+  //   {
+  //     printf("Can't find Environment Poster\n");
+  //     return false;
+  //   }
 
   int size = posterRead(posterEnvID,0, &envPoster, sizeof(envPoster));
   
@@ -107,31 +116,42 @@ bool FetchEnvironment::refresh()
 	}
       else 
 	{
+	  // Set all Robots and Agents configurations
 	  for(i=0; i<envPoster.robotNb; i++) 
 	    {
-	      robotPt = XYZ_ENV->robot[i];
-        
-	      if(strcmp(envPoster.robot[i].name.name, robotPt->name) || (envPoster.robot[i].length!=robotPt->nb_dof)) 
-		{
-		  cout << "S_mhp_POSTER_NOT_COMPATIBLE (robot name or env nbOfRobot)" << endl;
-		  return false;
-		}
-	      else 
-		{
-		  if(strcasestr(robotPt->name,"HERAKLES"))
-		    {
-		      cout << "LOCAT HERAKLES" << endl;
-		    }
+	      robotPt = p3d_get_robot_by_name(envPoster.robot[i].name.name);
+      
+	      if( robotPt == NULL || (envPoster.robot[i].length!=robotPt->nb_dof)) {
+	
+		return false;
+	      }
 
-		  for(j=0; j<robotPt->nb_dof; j++) 
-		    {
-		      robotPt->ROBOT_POS[j] = envPoster.robot[i].q[j];
-		    }
-		  p3d_set_and_update_this_robot_conf(robotPt, robotPt->ROBOT_POS);
-		}
+	      for(j=0; j<robotPt->nb_dof; j++) {
+		robotPt->ROBOT_POS[j] = envPoster.robot[i].q[j];
+	      }
+
+	      p3d_set_and_update_this_robot_conf(robotPt, robotPt->ROBOT_POS);
+	    }    
+
+	  // Set all FreeFlyers and Objects configurations
+	  for(i=0; i<envPoster.freeflyerNb; i++) 
+	    {
+	      robotPt = p3d_get_robot_by_name(envPoster.freeflyer[i].name.name);
+      
+	      if( robotPt == NULL || (envPoster.robot[i].length!=robotPt->nb_dof)) {
+	
+		return false;
+	      }
+
+	      for(j=0; j<6; j++) {
+		robotPt->ROBOT_POS[j+6] = envPoster.robot[i].q[j];
+	      }
+
+	      p3d_set_and_update_this_robot_conf(robotPt, robotPt->ROBOT_POS);
 	    }
-	} 
+   
 
+	}
       m_win->drawAllWinActive();
       return true;
     }
