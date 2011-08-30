@@ -66,9 +66,13 @@ public:
   bool findPoster(std::string str, POSTER_ID *posterId);
   bool getSparkStatus(){return _sparkStatus;}
 
+
+  signals:
+  void statusChanged(bool st);
+
 public slots:
   void setSparkRefresh(bool checked);
-  
+
 protected slots:
   //! Reads a pocolib poster
   //! Sets every robot in Move3D to match the poster description

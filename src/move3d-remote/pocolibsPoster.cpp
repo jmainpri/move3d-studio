@@ -33,6 +33,7 @@ bool FetchEnvironment::init(MainWindowRemote *win)
   return findPoster(_EnvPoster, &_EnvPosterID);
 }
 
+
 bool FetchEnvironment::findPoster(std::string str, POSTER_ID *posterId)
 {
     if(posterFind(str.c_str(), posterId)==ERROR)
@@ -48,9 +49,10 @@ bool FetchEnvironment::findPoster(std::string str, POSTER_ID *posterId)
 
  void FetchEnvironment::setSparkRefresh(bool checked)
  {
-   _sparkRefrech = checked;
 
+     _sparkRefrech = checked;
  }
+
 
 bool FetchEnvironment::refresh()
 {
@@ -60,6 +62,7 @@ bool FetchEnvironment::refresh()
 
   if(!_sparkRefrech)
   {
+      emit statusChanged(false);
       _sparkStatus = false;
       return false;
   }
@@ -69,12 +72,14 @@ bool FetchEnvironment::refresh()
       if(init(m_win) == false)
       {
           /* spark is not updating */
+          emit statusChanged(false);
           _sparkStatus = false;
           return false;
       }
   }
 
   /* spark is updating */
+  emit statusChanged(true);
   _sparkStatus = true;
 
   int size = posterRead(_EnvPosterID,0, &envPoster, sizeof(envPoster));
@@ -103,12 +108,12 @@ bool FetchEnvironment::refresh()
               robotPt = p3d_get_robot_by_name(envPoster.robot[i].name.name);
 
               if( robotPt == NULL) {
-                  printf("robot not found %s toto\n",envPoster.robot[i].name.name );
-                  return false;
+                  printf("robot not found %s\n",envPoster.robot[i].name.name );
+                  continue;
               }
               if(envPoster.robot[i].length!=robotPt->nb_dof) {
-                printf("length is false for robot %s (%d) %d \n",envPoster.robot[i].name.name, envPoster.robot[i].length, robotPt->nb_dof);
-		return false;
+                printf("Length is false for robot %s (%d) %d \n",envPoster.robot[i].name.name, envPoster.robot[i].length, robotPt->nb_dof);
+                continue;
 	      }
 
 	      for(j=0; j<robotPt->nb_dof; j++) {
@@ -124,7 +129,8 @@ bool FetchEnvironment::refresh()
               robotPt = p3d_get_robot_by_name(envPoster.freeflyer[i].name.name);
       
               if(robotPt == NULL) {
-		return false;
+                printf("freeflyer %s not found\n",envPoster.freeflyer[i].name.name);
+                continue;
 	      }
               for(j=0; j<6; j++) {
                 robotPt->ROBOT_POS[j+6] = envPoster.freeflyer[i].q[j];
@@ -132,8 +138,6 @@ bool FetchEnvironment::refresh()
 
 	      p3d_set_and_update_this_robot_conf(robotPt, robotPt->ROBOT_POS);
 	    }
-   
-
 	}
       m_win->drawAllWinActive();
       return true;
