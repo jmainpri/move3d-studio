@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1024</width>
+    <height>768</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>move3d-remote</string>
@@ -42,9 +48,15 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="minimumSize">
+           <size>
+            <width>350</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="maximumSize">
            <size>
-            <width>500</width>
+            <width>600</width>
             <height>16777215</height>
            </size>
           </property>
@@ -56,8 +68,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>156</width>
-             <height>515</height>
+             <width>348</width>
+             <height>683</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout">
@@ -89,9 +101,9 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>-60</y>
-                     <width>343</width>
-                     <height>444</height>
+                     <y>0</y>
+                     <width>310</width>
+                     <height>552</height>
                     </rect>
                    </property>
                    <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -209,9 +221,27 @@
                           <string>Light</string>
                          </property>
                          <layout class="QGridLayout" name="gridLayout_21">
+                          <property name="leftMargin">
+                           <number>0</number>
+                          </property>
                           <item row="1" column="0">
                            <widget class="QWidget" name="widgetLightSliders" native="true">
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
+                            </property>
                             <layout class="QGridLayout" name="gridLayout_43">
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
                              <item row="0" column="0">
                               <widget class="QDoubleSpinBox" name="doubleSpinBoxLightX"/>
                              </item>
@@ -275,24 +305,24 @@
                             </layout>
                            </widget>
                           </item>
-                          <item row="1" column="1">
-                           <widget class="QWidget" name="widgetLightButtons" native="true">
-                            <layout class="QVBoxLayout" name="verticalLayout_22">
-                             <item>
-                              <widget class="QPushButton" name="pushButtonRestoreLight">
-                               <property name="text">
-                                <string>Restore Light</string>
-                               </property>
-                              </widget>
-                             </item>
-                             <item>
-                              <widget class="QCheckBox" name="checkBoxDrawLightSource">
-                               <property name="text">
-                                <string>Draw Light Source</string>
-                               </property>
-                              </widget>
-                             </item>
-                            </layout>
+                          <item row="0" column="0">
+                           <widget class="QCheckBox" name="checkBoxDrawLightSource">
+                            <property name="text">
+                             <string>Draw Light Source</string>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QWidget" name="widgetLightButtons" native="true">
+                         <layout class="QVBoxLayout" name="verticalLayout_22">
+                          <item>
+                           <widget class="QPushButton" name="pushButtonRestoreLight">
+                            <property name="text">
+                             <string>Restore Light</string>
+                            </property>
                            </widget>
                           </item>
                          </layout>
@@ -301,7 +331,7 @@
                        <item>
                         <widget class="QPushButton" name="pushButtonRestoreView">
                          <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                            <horstretch>0</horstretch>
                            <verstretch>0</verstretch>
                           </sizepolicy>
@@ -338,8 +368,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>138</width>
-                 <height>404</height>
+                 <width>380</width>
+                 <height>572</height>
                 </rect>
                </property>
                <attribute name="label">
@@ -431,8 +461,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>138</width>
-                 <height>404</height>
+                 <width>380</width>
+                 <height>572</height>
                 </rect>
                </property>
                <attribute name="label">
@@ -497,7 +527,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1024</width>
      <height>25</height>
     </rect>
    </property>
