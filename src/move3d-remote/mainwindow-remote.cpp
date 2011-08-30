@@ -1,33 +1,62 @@
 #include "mainwindow-remote.hpp"
 #include "ui_mainwindow-remote.h"
-
 #include "qtOpenGL/glwidget.hpp"
-
 #include "P3d-pkg.h"
 #include "Util-pkg.h"
-
 #include "pocolibsPoster.hpp"
-
+#include "planner_handler.hpp"
 
 MainWindowRemote::MainWindowRemote(QWidget *parent)
 : QMainWindow(parent), m_ui(new Ui::MainWindowRemote)
 {
-
         m_ui->setupUi(this);
+        m_posterHandler = new FetchEnvironment();
+        m_posterHandler->init(this);
+        QTimer *timer = new QTimer(this);
+        connect(timer, SIGNAL(timeout()), this, SLOT(myLoop()));
+        timer->start(50);
+
+        /* spark page */
+        m_posterHandler->setSparkRefresh(m_ui->sparkCheckBox->isChecked());
+        connect(m_ui->sparkCheckBox, SIGNAL(clicked()), this, SLOT(setSparkRefresh()));
+        connect(m_ui->sparkSaveSceBut,SIGNAL(clicked()),this,SLOT(sparkSaveScenario()));
+
+        /* nuit page */
 
 
-        FetchEnvironment* posterHandler = new FetchEnvironment();
+        /* viman page */
 
-        if( !posterHandler->init(this) )
-        {
-            std::cout << " YESSSS : Poster Found!!!" << endl;
-        }
 
 }
 
 MainWindowRemote::~MainWindowRemote()
 {
 
+}
+
+void MainWindowRemote::setSparkRefresh()
+{
+    m_posterHandler->setSparkRefresh(m_ui->sparkCheckBox->isChecked());
+}
+
+void MainWindowRemote::sparkSaveScenario()
+{
+    QString fileName = QFileDialog::getSaveFileName(this);
+    if (!fileName.isEmpty())
+    {
+        qt_fileName = fileName.toStdString().c_str();
+        qt_saveScenario();
+        this->drawAllWinActive();
+    }
+}
+
+void MainWindowRemote::myLoop() {
+    /* Set spark status */
+    if(m_posterHandler->getSparkStatus()) {
+     m_ui->sparkStatusLineEdit->setText(QString("updating"));
+    } else {
+     m_ui->sparkStatusLineEdit->setText(QString("not updating"));
+    }
 }
 
 //! Return the OpenGl display
@@ -44,13 +73,6 @@ void MainWindowRemote::drawAllWinActive()
     }
 }
 
-void MainWindowRemote::restoreView()
-{
-
-
-}
-
-
 void MainWindowRemote::keyPressEvent(QKeyEvent *event)
 {
         //    cout << "Key pressed" << endl;
@@ -65,14 +87,6 @@ void MainWindowRemote::keyPressEvent(QKeyEvent *event)
                         mouse_mode = 2;
                         //cout << "Switch to third" << endl;
                         break;
-
-                        //            if(mouse_mode == 2)
-                        //            {
-                        //                mouse_mode = 0;
-                        //                cout << "Switch to normal" << endl;
-                        //                return;
-                        //            }
-                        //                break;
         }
 }
 

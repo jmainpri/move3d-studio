@@ -2,9 +2,9 @@
 #define MAINWINDOWREMOTE_HPP
 
 class GLWidget;
+class FetchEnvironment;
 
 #include "qtLibrary.hpp"
-
 
 
 namespace Ui
@@ -32,7 +32,9 @@ public slots:
     void drawAllWinActive();
 
 private slots:
-        void restoreView();
+        void setSparkRefresh();
+        void sparkSaveScenario();
+        void myLoop();
 
 protected:
         void keyPressEvent(QKeyEvent *e);
@@ -40,10 +42,7 @@ protected:
 
 private:
         Ui::MainWindowRemote*	m_ui;
-
+        FetchEnvironment* m_posterHandler;
 };
-
-// Global MainWindowRemote Pointer
-//extern MainWindowRemote* global_w;
 
 #endif // MAINWINDOWREMOTE_HPP
