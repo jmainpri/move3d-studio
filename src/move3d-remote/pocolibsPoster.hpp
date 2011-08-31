@@ -15,6 +15,8 @@
 #include <portLib.h>
 #include <posterLib.h>
 
+
+#include "genomposter.hpp"
 //----------------------------------------------------
 // SPARK
 //----------------------------------------------------
@@ -86,5 +88,9 @@ private:
   POSTER_ID _EnvPosterID;
   bool _sparkRefrech;
   bool _sparkStatus;
+
+
+  GenomPoster * _sparkPoster;
+  SPARK_CURRENT_ENVIRONMENT envPoster;
 
 };

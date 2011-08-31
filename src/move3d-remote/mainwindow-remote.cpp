@@ -9,6 +9,9 @@
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
 #include <iostream>
 #include <vector>
+ #include <QPainter>
+
+#include "myimg.png.h"
 
 using namespace std;
 
@@ -33,8 +36,19 @@ MainWindowRemote::MainWindowRemote(QWidget *parent)
 
         /* viman page */
 
+        QPixmap pm("/home/xbroquer/myimg.png");
+            m_ui->labelImageLeft->setText (QString("Image Left"));
+          m_ui->labelImageLeft->setPixmap(pm);
+          m_ui->labelImageLeft->show();
+
+
+
+
 
 }
+
+
+
 
 MainWindowRemote::~MainWindowRemote()
 {

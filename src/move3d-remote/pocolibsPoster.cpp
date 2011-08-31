@@ -24,10 +24,13 @@ FetchEnvironment::FetchEnvironment(QWidget* obj)
   QTimer *timer = new QTimer(this);
   connect(timer, SIGNAL(timeout()), this, SLOT(refresh()));
   timer->start(100);
+  _sparkPoster = new GenomPoster("sparkEnvironment", (char*)(&envPoster), sizeof(SPARK_CURRENT_ENVIRONMENT), 100);
+  _sparkPoster->start();
 }
   
 bool FetchEnvironment::init(MainWindowRemote *win)
 { 
+
   m_win = win;
   _EnvPoster = "sparkEnvironment";
   return findPoster(_EnvPoster, &_EnvPosterID);
@@ -56,36 +59,32 @@ bool FetchEnvironment::findPoster(std::string str, POSTER_ID *posterId)
 
 bool FetchEnvironment::refresh()
 {
-  SPARK_CURRENT_ENVIRONMENT envPoster;
+
   int i,j;
   p3d_rob *robotPt;
 
-  if(!_sparkRefrech)
-  {
-      emit statusChanged(false);
-      _sparkStatus = false;
-      return false;
-  }
+//  if(!_sparkRefrech)
+//  {
+//      emit statusChanged(false);
+//      _sparkStatus = false;
+//      return false;
+//  }
+//
+//  if(_EnvPosterID == NULL)
+//  {
+//      if(init(m_win) == false)
+//      {
+//          /* spark is not updating */
+//          emit statusChanged(false);
+//          _sparkStatus = false;
+//          return false;
+//      }
+//  }
 
-  if(_EnvPosterID == NULL)
-  {
-      if(init(m_win) == false)
-      {
-          /* spark is not updating */
-          emit statusChanged(false);
-          _sparkStatus = false;
-          return false;
-      }
-  }
-
-  /* spark is updating */
-  emit statusChanged(true);
-  _sparkStatus = true;
-
-  int size = posterRead(_EnvPosterID,0, &envPoster, sizeof(envPoster));
-  if( size != sizeof(envPoster))
+cout << " try refresh " << endl;
+  if( _sparkPoster->getPosterStuct((char *)(&envPoster)) == false )
     {
-      cout << "ERROR: FetchEnvironment::refresh() poster size mismatch (" << size << " , " << sizeof(envPoster) <<  " )"  << endl;
+cout << " try refresh  retrun false" << endl;
       return false;
     }
   else
