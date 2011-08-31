@@ -6,11 +6,15 @@ using namespace std;
 
 PosterReader::PosterReader(MainWindowRemote* obj)
 {
+    m_win = obj;
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->start(10);
+
+
+    /* declaration of the poster reader threads */
     _sparkPoster = new GenomPoster("sparkEnvironment", (char*)(&_sparkPosterStruct), sizeof(SPARK_CURRENT_ENVIRONMENT), 100);
-m_win = obj;
+
 
 }
 
@@ -30,6 +34,9 @@ void PosterReader::update()
     updateSparkEnv();
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////  Add after here the functions specific to each poster reading /////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 bool PosterReader::updateSparkEnv()
 {
