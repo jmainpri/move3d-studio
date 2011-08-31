@@ -2,7 +2,7 @@
 #define MAINWINDOWREMOTE_HPP
 
 class GLWidget;
-class FetchEnvironment;
+class PosterReader;
 
 #include "qtLibrary.hpp"
 #include "p3d_sys.h"
@@ -51,7 +51,7 @@ private slots:
         void setBoolEnableLight(bool value);
         void setBoolEnableShaders(bool value);
         void restoreView();
-        void setSparkStatus(bool updating);
+        void setSparkStatusText(bool updating);
 
         void changeLightPosX();
         void changeLightPosY();
@@ -63,7 +63,7 @@ protected:
 
 private:
         Ui::MainWindowRemote*	m_ui;
-        FetchEnvironment* m_posterHandler;
+        PosterReader* m_posterHandler;
         void initLightSource();
         void connectCheckBoxes();
         /**

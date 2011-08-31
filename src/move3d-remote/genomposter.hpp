@@ -26,6 +26,7 @@ public:
     /* the main loop of the thread */
     void run();
 
+    void setRefreshStatus(bool b);
     //! Find the poster given a posterName
     //! returns true if OK and fill posterId
     bool findPoster();
@@ -37,12 +38,10 @@ public:
     bool setRate(int r);
     bool getPosterStuct(char *posterStruct);
 
-signals:
-    void statusChanged(bool st);
-
 public slots:
     //void setRefresh(bool checked);
     void stop();
+
 
 private:
     void update();

@@ -5,7 +5,8 @@ mainwindow-remote.cpp
 mainwindow-remote.hpp
 mainwindow-remote.ui
 move3d.c
-pocolibsPoster.cpp
-pocolibsPoster.hpp
 genomposter.hpp
 genomposter.cpp
+environmentStruct.h
+posterreader.hpp
+posterreader.cpp

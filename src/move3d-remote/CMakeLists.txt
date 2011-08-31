@@ -20,7 +20,11 @@ CMAKE_MINIMUM_REQUIRED (VERSION 2.6.4)
 
 PROJECT (MOVE3D_REMOTE CXX)
 
-file(GLOB source_files main-remote.cpp move3d.c mainwindow-remote.cpp pocolibsPoster.cpp genomposter.cpp)
+file(GLOB source_files main-remote.cpp move3d.c mainwindow-remote.cpp posterreader.cpp genomposter.cpp)
+
+file(GLOB header_files main-remote.hpp mainwindow-remote.hpp posterreader.hpp environmentStruct.h genomposter.hpp)
+
+file(GLOB ui_files mainwindow-remote.ui)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/move3d-qt-gui-libs/src)
 
@@ -198,8 +202,8 @@ ENDMACRO(SMP_QT_GENERATE_UI_HEADERS)
 # -------------------------------------------------------------
 # --- Directories to include ----------------------------------
 # -------------------------------------------------------------
-SMP_QT_GENERATE_MOC(main-remote.hpp mainwindow-remote.hpp pocolibsPoster.hpp genomposter.hpp)
-SMP_QT_GENERATE_UI_HEADERS(mainwindow-remote.ui)
+SMP_QT_GENERATE_MOC(${header_files})
+SMP_QT_GENERATE_UI_HEADERS(${ui_files})
 
 # necessary for the UI headers
 BM3D_INC_DIR_PROCESS(${CMAKE_CURRENT_BINARY_DIR})

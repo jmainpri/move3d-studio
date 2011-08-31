@@ -3,7 +3,9 @@
 #include "qtOpenGL/glwidget.hpp"
 #include "P3d-pkg.h"
 #include "Util-pkg.h"
-#include "pocolibsPoster.hpp"
+
+#include "posterreader.hpp"
+
 #include "planner_handler.hpp"
 #include "move3d-gui.h"
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
@@ -19,18 +21,18 @@ MainWindowRemote::MainWindowRemote(QWidget *parent)
 : QMainWindow(parent), m_ui(new Ui::MainWindowRemote)
 {
         m_ui->setupUi(this);
-        m_posterHandler = new FetchEnvironment();
-        m_posterHandler->init(this);
+        m_posterHandler = new PosterReader(this);
+        m_posterHandler->init();
 
         /* viewer page */
         connectCheckBoxes();
         initLightSource();
 
         /* spark page */
-        m_posterHandler->setSparkRefresh(m_ui->sparkCheckBox->isChecked());
+        m_posterHandler->getSparkPoster()->setRefreshStatus(m_ui->sparkCheckBox->isChecked());
         connect(m_ui->sparkCheckBox, SIGNAL(clicked()), this, SLOT(setSparkRefresh()));
         connect(m_ui->sparkSaveSceBut,SIGNAL(clicked()),this,SLOT(sparkSaveScenario()));
-        connect(m_posterHandler, SIGNAL(statusChanged(bool)),this, SLOT(setSparkStatus(bool)));
+        connect(m_posterHandler, SIGNAL(sparkStatus(bool)),this, SLOT(setSparkStatusText(bool)));
         /* nuit page */
 
 
@@ -40,10 +42,6 @@ MainWindowRemote::MainWindowRemote(QWidget *parent)
             m_ui->labelImageLeft->setText (QString("Image Left"));
           m_ui->labelImageLeft->setPixmap(pm);
           m_ui->labelImageLeft->show();
-
-
-
-
 
 }
 
@@ -57,7 +55,7 @@ MainWindowRemote::~MainWindowRemote()
 
 void MainWindowRemote::setSparkRefresh()
 {
-    m_posterHandler->setSparkRefresh(m_ui->sparkCheckBox->isChecked());
+    m_posterHandler->getSparkPoster()->setRefreshStatus(m_ui->sparkCheckBox->isChecked());
 }
 
 void MainWindowRemote::sparkSaveScenario()
@@ -71,7 +69,7 @@ void MainWindowRemote::sparkSaveScenario()
     }
 }
 
-void MainWindowRemote::setSparkStatus(bool updating)
+void MainWindowRemote::setSparkStatusText(bool updating)
 {
     if(updating)
     {
