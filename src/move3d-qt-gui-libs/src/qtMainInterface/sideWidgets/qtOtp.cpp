@@ -1026,16 +1026,21 @@ void OtpWidget::on_radioButtonOldHuman_toggled(bool checked)
 
 void OtpWidget::on_pushButtonTestCompute_clicked()
 {
-	if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
-	{
-		std::vector<pair<double,double> > traj;
-		configPt handConf = 0;
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->InitMhpObjectTransfert("HERAKLES_HUMAN1");
-		if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getOtp("HERAKLES_HUMAN1",traj,handConf,
-																			PlanEnv->getBool(PlanParam::env_isStanding),
-																			PlanEnv->getDouble(PlanParam::env_objectNessecity)))
-		{
-			cout << "success" << endl;
-		}
-	}
+    if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
+    {
+        std::vector<pair<double,double> > traj;
+        configPt handConf = 0;
+        Eigen::Vector3d dockPos;
+        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->InitMhpObjectTransfert("HERAKLES_HUMAN1");
+        if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getOtp("HERAKLES_HUMAN1",dockPos,traj,handConf,
+                                                                            PlanEnv->getBool(PlanParam::env_isStanding),
+                                                                            PlanEnv->getDouble(PlanParam::env_objectNessecity)))
+        {
+            cout << dockPos << endl;
+            cout << "success" << endl;
+            ENV.setBool(Env::drawOTPTraj,true);
+        }
+
+    }
 }
