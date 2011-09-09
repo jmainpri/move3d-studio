@@ -20,14 +20,15 @@ CMAKE_MINIMUM_REQUIRED (VERSION 2.6.4)
 
 PROJECT (MOVE3D_REMOTE CXX)
 
-file(GLOB source_files main-remote.cpp move3d.c mainwindow-remote.cpp posterreader.cpp genomposter.cpp)
+file(GLOB source_files main-remote.cpp move3d.c mainwindow-remote.cpp posterreader.cpp genomposter.cpp genomimageposter.cpp myopencv.cpp)
 
-file(GLOB header_files main-remote.hpp mainwindow-remote.hpp posterreader.hpp environmentStruct.h genomposter.hpp)
+file(GLOB header_files duplicatedGenomStruct.hpp main-remote.hpp mainwindow-remote.hpp posterreader.hpp genomposter.hpp genomimageposter.hpp myopencv.hpp)
 
 file(GLOB ui_files mainwindow-remote.ui)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/move3d-qt-gui-libs/src)
-
+INCLUDE_DIRECTORIES(/home/xbroquer/openrobots/include/pom)
+INCLUDE_DIRECTORIES(/home/xbroquer/openrobots/include/viam)
 #################################################################
 #### Add here a library to include (custom FindPackage.cmake ####
 #### are in MOVE3D_REMOTE/.cmakeScripts. Use the template to     ####

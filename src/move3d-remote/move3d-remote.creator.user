@@ -1,6 +1,51 @@
 <!DOCTYPE QtCreatorProject>
 <qtcreator>
  <data>
+  <variable>RunConfiguration0-Arguments</variable>
+  <valuelist type="QVariantList">
+   <value type="QString">-f</value>
+   <value type="QString">/home/xbroquer/openrobots/share/move3d/assets/GS/gsPr2Test.p3d</value>
+  </valuelist>
+ </data>
+ <data>
+  <variable>RunConfiguration0-BaseEnvironmentBase</variable>
+  <value type="int">2</value>
+ </data>
+ <data>
+  <variable>RunConfiguration0-Executable</variable>
+  <value type="QString">/home/xbroquer/openrobots/src/move3d-studio/buildremote/src/move3d-remote/Debug/bin/move3d-remote</value>
+ </data>
+ <data>
+  <variable>RunConfiguration0-RunConfiguration.name</variable>
+  <value type="QString">Run /home/xbroquer/openrobots/src/move3d-studio/buildremote/src/move3d-remote/Debug/bin/move3d-remote</value>
+ </data>
+ <data>
+  <variable>RunConfiguration0-UseTerminal</variable>
+  <value type="bool">false</value>
+ </data>
+ <data>
+  <variable>RunConfiguration0-UserEnvironmentChanges</variable>
+  <valuelist type="QVariantList">
+   <value type="QString">POSTER_PATH=pr2c2</value>
+  </valuelist>
+ </data>
+ <data>
+  <variable>RunConfiguration0-UserName</variable>
+  <value type="QString"></value>
+ </data>
+ <data>
+  <variable>RunConfiguration0-UserSetName</variable>
+  <value type="bool">false</value>
+ </data>
+ <data>
+  <variable>RunConfiguration0-WorkingDirectory</variable>
+  <value type="QString">$BUILDDIR</value>
+ </data>
+ <data>
+  <variable>RunConfiguration0-type</variable>
+  <value type="QString">ProjectExplorer.CustomExecutableRunConfiguration</value>
+ </data>
+ <data>
   <variable>activeRunConfiguration</variable>
   <value type="int">0</value>
  </data>
@@ -12,16 +57,51 @@
   <variable>buildConfiguration-all</variable>
   <valuemap type="QVariantMap">
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString">all</value>
-   <value key="buildDirectory" type="QString">/home/xbroquer/openrobots/src/move3d-studio/src/move3d-remote</value>
+   <value key="buildDirectory" type="QString">/home/xbroquer/openrobots/src/move3d-studio/buildremote</value>
   </valuemap>
  </data>
  <data>
   <variable>buildconfiguration-all-buildstep0</variable>
   <valuemap type="QVariantMap">
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString">all</value>
-   <valuelist key="buildTargets" type="QVariantList">
-    <value type="QString">all</value>
+   <valuelist key="abstractProcess.Environment" type="QVariantList">
+    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-TSaor0rPCk,guid=3d5e612a885b814bb429659b4e68c89b</value>
+    <value type="QString">DEFAULTS_PATH=/usr/share/gconf/gnome.default.path</value>
+    <value type="QString">DESKTOP_SESSION=gnome</value>
+    <value type="QString">DISPLAY=:0.0</value>
+    <value type="QString">GDMSESSION=gnome</value>
+    <value type="QString">GDM_KEYBOARD_LAYOUT=fr</value>
+    <value type="QString">GDM_LANG=en_US.UTF-8</value>
+    <value type="QString">GNOME_DESKTOP_SESSION_ID=this-is-deprecated</value>
+    <value type="QString">GNOME_KEYRING_CONTROL=/tmp/keyring-jyexR9</value>
+    <value type="QString">GNOME_KEYRING_PID=1501</value>
+    <value type="QString">GTK_MODULES=canberra-gtk-module</value>
+    <value type="QString">HOME=/home/xbroquer</value>
+    <value type="QString">LANG=en_US.UTF-8</value>
+    <value type="QString">LANGUAGE=</value>
+    <value type="QString">LD_LIBRARY_PATH=/usr/lib/qtcreator</value>
+    <value type="QString">LOGNAME=xbroquer</value>
+    <value type="QString">MANDATORY_PATH=/usr/share/gconf/gnome.mandatory.path</value>
+    <value type="QString">ORBIT_SOCKETDIR=/tmp/orbit-xbroquer</value>
+    <value type="QString">PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</value>
+    <value type="QString">PWD=/home/xbroquer</value>
+    <value type="QString">SESSION_MANAGER=local/pit:@/tmp/.ICE-unix/1519,unix/pit:/tmp/.ICE-unix/1519</value>
+    <value type="QString">SHELL=/bin/bash</value>
+    <value type="QString">SPEECHD_PORT=8557</value>
+    <value type="QString">SSH_AGENT_PID=1553</value>
+    <value type="QString">SSH_AUTH_SOCK=/tmp/keyring-jyexR9/ssh</value>
+    <value type="QString">USER=xbroquer</value>
+    <value type="QString">USERNAME=xbroquer</value>
+    <value type="QString">XAUTHORITY=/var/run/gdm/auth-for-xbroquer-LXVOcR/database</value>
+    <value type="QString">XDG_CONFIG_DIRS=/etc/xdg/xdg-gnome:/etc/xdg</value>
+    <value type="QString">XDG_DATA_DIRS=/usr/share/gnome:/usr/local/share/:/usr/share/</value>
+    <value type="QString">XDG_SESSION_COOKIE=08b75a727e710470009fdb884e2582d1-1315489946.972912-1749324250</value>
    </valuelist>
+   <valuelist key="abstractProcess.arguments" type="QVariantList"/>
+   <value key="abstractProcess.command" type="QString">make</value>
+   <value key="abstractProcess.enabled" type="bool">true</value>
+   <value key="abstractProcess.workingDirectory" type="QString">/home/xbroquer/openrobots/src/move3d-studio/buildremote</value>
+   <valuelist key="buildTargets" type="QVariantList"/>
   </valuemap>
  </data>
  <data>

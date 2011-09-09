@@ -1,8 +1,8 @@
 #include "genomposter.hpp"
 #include <iostream>
 #include <unistd.h>
-
 #include <QTimer>
+
 
 using namespace std;
 
@@ -48,6 +48,8 @@ void GenomPoster::stop()
 }
 
 void GenomPoster::update() {
+
+    cout << " update from GenomPoster" << endl;
     if(_posterID == NULL)
     {
         if(findPoster() == false)
@@ -55,16 +57,16 @@ void GenomPoster::update() {
             _updatingStatus = false;
         }
     } else {
-
-        int size = posterRead(_posterID,0, _posterStruct, _posterSize);
-        if( size != _posterSize)
-        {
-            _updatingStatus = false;
-            cout << "ERROR: GenomPoster::refresh() poster size mismatch (" << size << " , " << sizeof(_posterStruct) <<  " )"  << endl;
+            int size = posterRead(_posterID,0, _posterStruct, _posterSize);
+            if( size != _posterSize)
+            {
+                _updatingStatus = false;
+                cout << "ERROR: GenomPoster::refresh() poster " << _posterName << " size mismatch (" << size << " , " << _posterSize << " ) for posterID " << _posterID << endl;
+                QThread::msleep(2000);
+            }
+            /* poster is updated */
+            _updatingStatus = true;
         }
-        /* poster is updated */
-        _updatingStatus = true;
-    }   
     return;
 }
 
@@ -89,11 +91,11 @@ bool GenomPoster::findPoster()
 {
     if(posterFind(_posterName.c_str(), &(_posterID))==ERROR)
     {
-        cout << "ERROR: GenomPoster::findPoster can't find poster, retry within 2 sec. " << _posterName << endl;
+        cout << "ERROR: GenomPoster::findPoster can't find poster \""<< _posterName << "\", retry within 2 sec. " << endl;
         _posterID = NULL;
         QThread::msleep(2000);
         return false;
     }
-    cout << "INFO: GenomPoster::findPoster: Poster " <<  _posterName << " found" << endl;
+    cout << "*********************  INFO: GenomPoster::findPoster: Poster " <<  _posterName << " found ***********************" << endl;
     return true;
 }

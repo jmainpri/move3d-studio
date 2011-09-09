@@ -13,13 +13,19 @@
 #include <vector>
  #include <QPainter>
 
-#include "myimg.png.h"
-
 using namespace std;
 
 MainWindowRemote::MainWindowRemote(QWidget *parent)
 : QMainWindow(parent), m_ui(new Ui::MainWindowRemote)
 {
+
+    _qimageLeft = NULL;
+    _qimageRight = NULL;
+
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(looptest()));
+    timer->start(100);
+
         m_ui->setupUi(this);
         m_posterHandler = new PosterReader(this);
         m_posterHandler->init();
@@ -29,28 +35,51 @@ MainWindowRemote::MainWindowRemote(QWidget *parent)
         initLightSource();
 
         /* spark page */
-        m_posterHandler->getSparkPoster()->setRefreshStatus(m_ui->sparkCheckBox->isChecked());
+        //m_posterHandler->getSparkPoster()->setRefreshStatus(m_ui->sparkCheckBox->isChecked());
         connect(m_ui->sparkCheckBox, SIGNAL(clicked()), this, SLOT(setSparkRefresh()));
         connect(m_ui->sparkSaveSceBut,SIGNAL(clicked()),this,SLOT(sparkSaveScenario()));
         connect(m_posterHandler, SIGNAL(sparkStatus(bool)),this, SLOT(setSparkStatusText(bool)));
         /* nuit page */
 
 
-        /* viman page */
-
-        QPixmap pm("/home/xbroquer/myimg.png");
-            m_ui->labelImageLeft->setText (QString("Image Left"));
-          m_ui->labelImageLeft->setPixmap(pm);
-          m_ui->labelImageLeft->show();
-
 }
 
+void MainWindowRemote::looptest()
+{
+    QPixmap pm;
 
+   //  QPixmap pm2("/home/xbroquer/VIMAN_Right.png");
+
+    if(m_posterHandler->_viamImagePoster->iplImgLeft()) {
+        _qimageLeft = IplImage2QImage(m_posterHandler->_viamImagePoster->iplImgLeft());
+        *_qimageLeft =  _qimageLeft->scaled(256, 180);
+        m_ui->labelImageLeft->setPixmap(pm.fromImage(*_qimageLeft, 0));
+        m_ui->labelImageLeft->show();
+    }
+//    m_ui->labelImageLeft->setPixmap(pm2);
+//m_ui->labelImageLeft->show();
+    if(m_posterHandler->_viamImagePoster->iplImgRight()) {
+        _qimageRight = IplImage2QImage(m_posterHandler->_viamImagePoster->iplImgRight());
+        *_qimageRight =  _qimageRight->scaled(256, 180);
+       m_ui->labelImageRight->setPixmap(pm.fromImage(*_qimageRight, 0));
+        m_ui->labelImageRight->show();
+    }
+ //   m_ui->labelImageRight->setPixmap(pm2);
+  //  m_ui->labelImageRight->show();
+}
 
 
 MainWindowRemote::~MainWindowRemote()
 {
-
+    if(_qimageLeft)
+    {
+        delete _qimageLeft;
+    }
+    if(_qimageRight)
+    {
+        delete _qimageRight;
+    }
+    delete m_posterHandler;
 }
 
 void MainWindowRemote::setSparkRefresh()
@@ -116,6 +145,7 @@ void MainWindowRemote::keyPressEvent(QKeyEvent *event)
 void MainWindowRemote::keyReleaseEvent(QKeyEvent *e)
 {
         mouse_mode = 0;
+
 }
 
 void MainWindowRemote::connectCheckBoxes()

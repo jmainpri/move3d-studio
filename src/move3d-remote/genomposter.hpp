@@ -43,10 +43,10 @@ public slots:
     void stop();
 
 
-private:
-    void update();
+protected:
+    virtual void update();
 
-private:
+protected:
     std::string _posterName;
     POSTER_ID _posterID;
      /* _refresh status is specified by the user to

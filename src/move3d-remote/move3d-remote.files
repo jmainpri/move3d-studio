@@ -7,6 +7,10 @@ mainwindow-remote.ui
 move3d.c
 genomposter.hpp
 genomposter.cpp
-environmentStruct.h
 posterreader.hpp
 posterreader.cpp
+genomimageposter.hpp
+genomimageposter.cpp
+myopencv.cpp
+myopencv.hpp
+duplicatedGenomStruct.hpp

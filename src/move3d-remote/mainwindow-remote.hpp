@@ -57,6 +57,9 @@ private slots:
         void changeLightPosY();
         void changeLightPosZ();
 
+
+        void looptest();
+
 protected:
         void keyPressEvent(QKeyEvent *e);
         void keyReleaseEvent(QKeyEvent *e);
@@ -64,8 +67,11 @@ protected:
 private:
         Ui::MainWindowRemote*	m_ui;
         PosterReader* m_posterHandler;
+        QImage* _qimageLeft;
+        QImage* _qimageRight;
         void initLightSource();
         void connectCheckBoxes();
+
         /**
          * Function tro create sliders and checkboxes TODO move somwhere else
          */

@@ -4,7 +4,9 @@
 #include "qtLibrary.hpp"
 #include "mainwindow-remote.hpp"
 #include "genomposter.hpp"
-#include "environmentStruct.h"
+#include "genomimageposter.hpp"
+
+#include "duplicatedGenomStruct.hpp"
 
 
 class PosterReader : public QObject
@@ -15,7 +17,11 @@ public:
     ~PosterReader();
 
     void init();
+    //const GenomPoster & getSparkPoster(){return *_sparkPoster;}
     GenomPoster *getSparkPoster(){return _sparkPoster;}
+
+//    GenomPoster *getVimanImageLeftPoster(){return _vimanImageLeftPoster;}
+//    GenomPoster *getVimanImageRightPoster(){return _vimanImageRightPoster;}
 
 private slots:
     void update();
@@ -28,12 +34,14 @@ private:
 signals:
     void sparkStatus(bool st);
 
-private:
+public:
     //! Display functions
     MainWindowRemote* m_win;
 
     GenomPoster * _sparkPoster;
     SPARK_CURRENT_ENVIRONMENT _sparkPosterStruct;
+
+    GenomImagePoster * _viamImagePoster;
 
 };
 
