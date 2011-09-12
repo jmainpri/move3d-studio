@@ -12,6 +12,7 @@
 #include <iostream>
 #include <vector>
  #include <QPainter>
+#include "qtipl.hpp"
 
 using namespace std;
 
@@ -47,22 +48,40 @@ MainWindowRemote::MainWindowRemote(QWidget *parent)
 void MainWindowRemote::looptest()
 {
     QPixmap pm;
-
+    return;
    //  QPixmap pm2("/home/xbroquer/VIMAN_Right.png");
 
     if(m_posterHandler->_viamImagePoster->iplImgLeft()) {
-        _qimageLeft = IplImage2QImage(m_posterHandler->_viamImagePoster->iplImgLeft());
-        *_qimageLeft =  _qimageLeft->scaled(256, 180);
+      //cout << " image Left nbChannel " << m_posterHandler->_viamImagePoster->iplImgLeft()->nChannels << endl;
+     uchar *data;  
+  _qimageLeft = IplImageToQImage(m_posterHandler->_viamImagePoster->iplImgLeft(), &data);
+
+  delete(data);
+
+  //        _qimageLeft = IplImage2QImage(m_posterHandler->_viamImagePoster->iplImgLeft());
+  QImage *_qimageLeftSc;
+	 *_qimageLeftSc =  _qimageLeft->scaled(256, 180);
         m_ui->labelImageLeft->setPixmap(pm.fromImage(*_qimageLeft, 0));
         m_ui->labelImageLeft->show();
+	delete(_qimageLeft);
+	delete(_qimageLeftSc);
     }
+
+
+
+
 //    m_ui->labelImageLeft->setPixmap(pm2);
 //m_ui->labelImageLeft->show();
     if(m_posterHandler->_viamImagePoster->iplImgRight()) {
-        _qimageRight = IplImage2QImage(m_posterHandler->_viamImagePoster->iplImgRight());
-        *_qimageRight =  _qimageRight->scaled(256, 180);
+  uchar *data;
+      _qimageRight = IplImageToQImage(m_posterHandler->_viamImagePoster->iplImgRight(), &data);
+ delete(data);
+  QImage *_qimageRightSc;
+        *_qimageRightSc =  _qimageRight->scaled(256, 180);
        m_ui->labelImageRight->setPixmap(pm.fromImage(*_qimageRight, 0));
         m_ui->labelImageRight->show();
+	delete(_qimageRight);
+	delete(_qimageRightSc);
     }
  //   m_ui->labelImageRight->setPixmap(pm2);
   //  m_ui->labelImageRight->show();
