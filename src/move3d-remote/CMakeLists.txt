@@ -20,9 +20,9 @@ CMAKE_MINIMUM_REQUIRED (VERSION 2.6.4)
 
 PROJECT (MOVE3D_REMOTE CXX)
 
-file(GLOB source_files main-remote.cpp move3d.c mainwindow-remote.cpp posterreader.cpp genomposter.cpp genomimageposter.cpp myopencv.cpp)
+file(GLOB source_files main-remote.cpp move3d.c mainwindow-remote.cpp posterreader.cpp genomposter.cpp genomimageposter.cpp myopencv.cpp qtipl.cpp)
 
-file(GLOB header_files duplicatedGenomStruct.hpp main-remote.hpp mainwindow-remote.hpp posterreader.hpp genomposter.hpp genomimageposter.hpp myopencv.hpp)
+file(GLOB header_files duplicatedGenomStruct.hpp main-remote.hpp mainwindow-remote.hpp posterreader.hpp genomposter.hpp genomimageposter.hpp myopencv.hpp qtipl.hpp)
 
 file(GLOB ui_files mainwindow-remote.ui)
 
