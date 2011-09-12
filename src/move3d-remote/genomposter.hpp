@@ -9,12 +9,14 @@
 
 #ifndef GENOMPOSTER_HPP
 #define GENOMPOSTER_HPP
-
+#include <QSemaphore>
 #include <portLib.h>
 #include <posterLib.h>
 
  #include <string>
  #include <QThread>
+
+extern QSemaphore mySem;
 
 class GenomPoster : public QThread
 {

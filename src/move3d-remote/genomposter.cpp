@@ -3,12 +3,15 @@
 #include <unistd.h>
 #include <QTimer>
 
-
+#include <stdio.h>
 using namespace std;
+
+QSemaphore mySem(1);
 
 GenomPoster::GenomPoster(std::string name, char* posterStruct, int posterSize, unsigned long rate)
 {
     _posterName = name;
+    setStackSize (10000000);
     _posterStruct = posterStruct;
     _posterSize = posterSize;
     /* rate is 100 ms by default */
@@ -48,25 +51,30 @@ void GenomPoster::stop()
 }
 
 void GenomPoster::update() {
-
-    cout << " update from GenomPoster" << endl;
+  mySem.acquire();
+  cout << "GenomPoster posterID" << _posterID << endl;
     if(_posterID == NULL)
     {
+      printf("find poster 1\n");
         if(findPoster() == false)
         {
             _updatingStatus = false;
         }
     } else {
+      //printf("read poster %p \n", _posterID);
             int size = posterRead(_posterID,0, _posterStruct, _posterSize);
+ 
             if( size != _posterSize)
             {
                 _updatingStatus = false;
                 cout << "ERROR: GenomPoster::refresh() poster " << _posterName << " size mismatch (" << size << " , " << _posterSize << " ) for posterID " << _posterID << endl;
                 QThread::msleep(2000);
             }
+ printf("read poster OK \n");
             /* poster is updated */
             _updatingStatus = true;
         }
+    mySem.release();
     return;
 }
 

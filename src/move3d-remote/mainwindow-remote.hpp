@@ -69,6 +69,8 @@ private:
         PosterReader* m_posterHandler;
         QImage* _qimageLeft;
         QImage* _qimageRight;
+  uchar *_dataImageLeft; 
+  uchar *_dataImageRight; 
         void initLightSource();
         void connectCheckBoxes();
 

@@ -1,6 +1,6 @@
 #include "genomimageposter.hpp"
 #include <iostream>
-
+#include <stdio.h>
 using namespace std;
 
 GenomImagePoster::GenomImagePoster(std::string name, unsigned long rate) :
@@ -22,15 +22,15 @@ bool GenomImagePoster::myPosterTake()
 {
     if(_posterTaked == false)
     {
-        cout << "try to take the poster " << endl;
+      printf( "try to take the poster %p\n", _posterID);
         if (posterTake(_posterID, POSTER_READ) != OK )
         {
             cout << " posterTake error " << endl;
             return false;
         }
+	printf(" poster taked \n");
+	_posterTaked = true;
     }
-    cout << " poster taked " << endl;
-    _posterTaked = true;
     return true;
 }
 
@@ -39,14 +39,13 @@ bool GenomImagePoster::myPosterGive()
     if(_posterTaked == true)
     {
         posterGive(_posterID);
+	_posterTaked = false;
     }
-    _posterTaked = false;
     return true;
 }
 
 void GenomImagePoster::update() {
-
-        cout << " update from GenomImagePoster" << endl;
+  mySem.acquire();
     if(_posterID == NULL)
     {
         if(findPoster() == false)
@@ -57,21 +56,23 @@ void GenomImagePoster::update() {
 
         if (myPosterTake() == false)
         {
+	 mySem.release();
             return;
         }
-    cout << " get the poster address" << endl;
         _viamImageBank =(ViamImageBank *)posterAddr(_posterID);
 
         if(_viamImageBank == NULL)
         {
             myPosterGive();
             cout << " poster viam is NULL" << endl;
+	    mySem.release();
             return;
         }
         if(_viamImageBank->nImages <= 0)
         {
             printf("There is no image acquired!\n");
             myPosterGive();
+	     mySem.release();
             return;
         }
 
@@ -93,6 +94,7 @@ void GenomImagePoster::update() {
         }
         myPosterGive();
     }
+    mySem.release();
     return;
 }
 

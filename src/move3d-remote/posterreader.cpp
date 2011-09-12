@@ -3,7 +3,13 @@
 #include "Graphic-pkg.h"
 #include <unistd.h>
 
+#include "../lightPlanner/proto/lightPlanner.h"
+#include "../lightPlanner/proto/lightPlannerApi.h"
+#include "../lightPlanner/proto/ManipulationPlanner.hpp"
+
+
 using namespace std;
+
 
 PosterReader::PosterReader(MainWindowRemote* obj)
 {
@@ -17,8 +23,8 @@ PosterReader::PosterReader(MainWindowRemote* obj)
    _sparkPoster = new GenomPoster("sparkEnvironment", (char*)(&_sparkPosterStruct), sizeof(SPARK_CURRENT_ENVIRONMENT), 100);
     _sparkPoster->setRefreshStatus(false);
 
-    _viamImagePoster = new GenomImagePoster("vimanBridgeImage", 1000);;
-   //_viamImagePoster = new GenomImagePoster("viamBankTop", 1000);;
+    // _viamImagePoster = new GenomImagePoster("vimanBridgeImage", 1000);
+   _viamImagePoster = new GenomImagePoster("viamBankTop", 1000);
     _viamImagePoster->setRefreshStatus(true);
 }
 
@@ -41,7 +47,7 @@ void PosterReader::init()
 
 void PosterReader::update()
 {
-    updateSparkEnv();
+  updateSparkEnv();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,6 +64,7 @@ bool PosterReader::updateSparkEnv()
         return false;
     }
 
+
     if( _sparkPoster->getPosterStuct((char *)(&_sparkPosterStruct)) == false )
     {
         emit sparkStatus(false);
@@ -73,28 +80,31 @@ bool PosterReader::updateSparkEnv()
                     sleep(2);
             return false;
         }
+
         else
         {
             // Set all Robots and Agents configurations
             for(i=0; i<_sparkPosterStruct.robotNb; i++)
             {
                 robotPt = p3d_get_robot_by_name(_sparkPosterStruct.robot[i].name.name);
-
+		
                 if( robotPt == NULL) {
-                    printf("robot not found %s\n",_sparkPosterStruct.robot[i].name.name );
-                    continue;
+		  //printf("robot not found %s\n",_sparkPosterStruct.robot[i].name.name );
+		  continue;
                 }
                 if(_sparkPosterStruct.robot[i].length!=robotPt->nb_dof) {
                     printf("Length is false for robot %s (%d) %d \n",_sparkPosterStruct.robot[i].name.name, _sparkPosterStruct.robot[i].length, robotPt->nb_dof);
                     continue;
                 }
-
+		for (uint k = 0; k < (*robotPt->armManipulationData).size(); k++) {     
+		  deactivateCcCntrts(robotPt, k);
+		}
                 for(j=0; j<robotPt->nb_dof; j++) {
                     robotPt->ROBOT_POS[j] = _sparkPosterStruct.robot[i].q[j];
                 }
 
                 p3d_set_and_update_this_robot_conf(robotPt, robotPt->ROBOT_POS);
-            }
+	    }
 
             // Set all FreeFlyers and Objects configurations
             for(i=0; i<_sparkPosterStruct.freeflyerNb; i++)
@@ -102,8 +112,8 @@ bool PosterReader::updateSparkEnv()
                 robotPt = p3d_get_robot_by_name(_sparkPosterStruct.freeflyer[i].name.name);
 
                 if(robotPt == NULL) {
-                    printf("freeflyer %s not found\n",_sparkPosterStruct.freeflyer[i].name.name);
-                    continue;
+		  //printf("freeflyer %s not found\n",_sparkPosterStruct.freeflyer[i].name.name);
+		  continue;
                 }
                 for(j=0; j<6; j++) {
                     robotPt->ROBOT_POS[j+6] = _sparkPosterStruct.freeflyer[i].q[j];
