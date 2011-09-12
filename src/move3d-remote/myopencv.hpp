@@ -3,6 +3,16 @@
 
  #include <QPainter>
 
+#define IPL_DEPTH_1U 1
+#define IPL_DEPTH_8U 8
+#define IPL_DEPTH_16U 16
+#define IPL_DEPTH_32F 32
+
+#define IPL_DEPTH_8S (IPL_DEPTH_SIGN| 8)
+#define IPL_DEPTH_16S (IPL_DEPTH_SIGN|16)
+#define IPL_DEPTH_32S (IPL_DEPTH_SIGN|32)
+#define IPL_DEPTH_64F 64 
+
 //#ifndef VIAM_OPENCV_SUPPORT
 
 /* Provide our simple replacement for the missing opencv structures and
@@ -44,9 +54,5 @@ IplImage *	cvLoadImage(const char* filename, int iscolor);
 void		cvReleaseImage(IplImage **image);
 
 //#endif /* !VIAM_OPENCV_SUPPORT */
-
-IplImage* QImage2IplImage(QImage *qimg);
-
-QImage*  IplImage2QImage(IplImage *iplImg);
 
 #endif // MYOPENCV_HPP
