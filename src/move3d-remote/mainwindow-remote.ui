@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1024</width>
+    <width>1546</width>
     <height>768</height>
    </rect>
   </property>
@@ -26,7 +26,7 @@
    <string>move3d-remote</string>
   </property>
   <widget class="QWidget" name="widget_2">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_5">
     <item>
      <widget class="QWidget" name="widget" native="true">
       <property name="sizePolicy">
@@ -74,7 +74,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>380</width>
+             <width>348</width>
              <height>685</height>
             </rect>
            </property>
@@ -95,7 +95,7 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>362</width>
+                 <width>330</width>
                  <height>574</height>
                 </rect>
                </property>
@@ -116,7 +116,7 @@
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>342</width>
+                     <width>310</width>
                      <height>554</height>
                     </rect>
                    </property>
@@ -382,7 +382,7 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>362</width>
+                 <width>330</width>
                  <height>574</height>
                 </rect>
                </property>
@@ -475,7 +475,7 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>362</width>
+                 <width>330</width>
                  <height>574</height>
                 </rect>
                </property>
@@ -512,38 +512,12 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
-            <widget class="QTabWidget" name="tabWidget">
-             <property name="currentIndex">
-              <number>0</number>
-             </property>
-             <widget class="QWidget" name="tab">
-              <attribute name="title">
-               <string>Spark</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_5">
-               <item>
-                <widget class="GLWidget" name="OpenGL" native="true">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tab_2">
-              <attribute name="title">
-               <string>Viman</string>
-              </attribute>
-              <layout class="QVBoxLayout" name="verticalLayout_5">
+            <widget class="QMdiArea" name="mdiArea">
+             <widget class="QWidget" name="sparkSubWindow">
+              <property name="windowTitle">
+               <string>Subwindow</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_8">
                <item>
                 <widget class="QLabel" name="label">
                  <property name="sizePolicy">
@@ -558,19 +532,13 @@
                 </widget>
                </item>
                <item>
-                <widget class="QWidget" name="widget_4" native="true">
-                 <layout class="QVBoxLayout" name="verticalLayout_6">
-                  <item>
-                   <widget class="QLabel" name="labelImageLeft">
-                    <property name="text">
-                     <string>Image Left Display</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
+                <widget class="QLabel" name="labelImageLeft">
+                 <property name="text">
+                  <string>Image Left Display</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
                 </widget>
                </item>
                <item>
@@ -587,19 +555,36 @@
                 </widget>
                </item>
                <item>
-                <widget class="QWidget" name="widget_5" native="true">
-                 <layout class="QHBoxLayout" name="horizontalLayout_7">
-                  <item>
-                   <widget class="QLabel" name="labelImageRight">
-                    <property name="text">
-                     <string>Image Right Display Display</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
+                <widget class="QLabel" name="labelImageRight">
+                 <property name="text">
+                  <string>Image Right Display Display</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="cameraSubWindow">
+              <property name="windowTitle">
+               <string>Subwindow</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_6">
+               <item>
+                <widget class="GLWidget" name="OpenGL" native="true">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
                 </widget>
                </item>
               </layout>
@@ -620,7 +605,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1024</width>
+     <width>1546</width>
      <height>23</height>
     </rect>
    </property>
