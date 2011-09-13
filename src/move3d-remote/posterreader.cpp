@@ -20,11 +20,11 @@ PosterReader::PosterReader(MainWindowRemote* obj)
 
 
     /* declaration of the poster reader threads */
-   _sparkPoster = new GenomPoster("sparkEnvironment", (char*)(&_sparkPosterStruct), sizeof(SPARK_CURRENT_ENVIRONMENT), 100);
+   _sparkPoster = new GenomPoster("sparkEnvironment", (char*)(&_sparkPosterStruct), sizeof(SPARK_CURRENT_ENVIRONMENT), 10);
     _sparkPoster->setRefreshStatus(false);
 
     // _viamImagePoster = new GenomImagePoster("vimanBridgeImage", 1000);
-   _viamImagePoster = new GenomImagePoster("viamBankTop", 1000);
+   _viamImagePoster = new GenomImagePoster("vimanImages", 10);
     _viamImagePoster->setRefreshStatus(true);
 }
 

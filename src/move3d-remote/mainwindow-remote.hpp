@@ -29,6 +29,8 @@ public:
         ~MainWindowRemote();
         GLWidget*		getOpenGL();
 
+
+        void initRobotsMenu();
    
 
 public slots:
@@ -38,9 +40,11 @@ private slots:
         void setSparkRefresh();
         void sparkSaveScenario();
 
+        void setRobotAsCurrent();
         void setBoolGhost(bool value);
         void setBoolBb(bool value);
         void setBoolFloor(bool value);
+        void setBoolSky(bool value);
         void setBoolTiles(bool value);
         void setBoolWalls(bool value);
         void setBoolSmooth(bool value);
@@ -69,8 +73,9 @@ private:
         PosterReader* m_posterHandler;
         QImage* _qimageLeft;
         QImage* _qimageRight;
-  uchar *_dataImageLeft; 
-  uchar *_dataImageRight; 
+        std::vector<QAction*> m_RobotsInMenu;
+        uchar *_dataImageLeft;
+        uchar *_dataImageRight;
         void initLightSource();
         void connectCheckBoxes();
 
@@ -78,6 +83,7 @@ private:
          * Function tro create sliders and checkboxes TODO move somwhere else
          */
         void connectCheckBoxToEnv(QCheckBox* box, Env::boolParameter p);
+        
 };
 
 #endif // MAINWINDOWREMOTE_HPP

@@ -84,7 +84,7 @@ int Simple_threads::run(int argc, char** argv)
 //    w.setGeometry( g_window );
 
     w.show();
-   // w.showMaximized();
+    w.showMaximized();
     w.raise();
 
     return app->exec();

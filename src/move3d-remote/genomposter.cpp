@@ -52,10 +52,8 @@ void GenomPoster::stop()
 
 void GenomPoster::update() {
   mySem.acquire();
-  cout << "GenomPoster posterID" << _posterID << endl;
     if(_posterID == NULL)
     {
-      printf("find poster 1\n");
         if(findPoster() == false)
         {
             _updatingStatus = false;
@@ -70,7 +68,6 @@ void GenomPoster::update() {
                 cout << "ERROR: GenomPoster::refresh() poster " << _posterName << " size mismatch (" << size << " , " << _posterSize << " ) for posterID " << _posterID << endl;
                 QThread::msleep(2000);
             }
- printf("read poster OK \n");
             /* poster is updated */
             _updatingStatus = true;
         }

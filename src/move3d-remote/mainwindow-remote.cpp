@@ -1,18 +1,22 @@
 #include "mainwindow-remote.hpp"
 #include "ui_mainwindow-remote.h"
 #include "qtOpenGL/glwidget.hpp"
-#include "P3d-pkg.h"
-#include "Util-pkg.h"
 
 #include "posterreader.hpp"
 
-#include "planner_handler.hpp"
-#include "move3d-gui.h"
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
 #include <iostream>
 #include <vector>
 #include <QPainter>
 #include "qtipl.hpp"
+
+#include "planner_handler.hpp"
+#include "move3d-gui.h"
+#include "API/scene.hpp"
+#include "API/project.hpp"
+#include "P3d-pkg.h"
+#include "Graphic-pkg.h"
+#include "Util-pkg.h"
 
 using namespace std;
 
@@ -37,12 +41,16 @@ MainWindowRemote::MainWindowRemote(QWidget *parent)
   connectCheckBoxes();
   initLightSource();
 
+  /* menu robots */
+  initRobotsMenu();
+
   /* spark page */
   //m_posterHandler->getSparkPoster()->setRefreshStatus(m_ui->sparkCheckBox->isChecked());
   connect(m_ui->sparkCheckBox, SIGNAL(clicked()), this, SLOT(setSparkRefresh()));
   connect(m_ui->sparkSaveSceBut,SIGNAL(clicked()),this,SLOT(sparkSaveScenario()));
   connect(m_posterHandler, SIGNAL(sparkStatus(bool)),this, SLOT(setSparkStatusText(bool)));
   /* nuit page */
+
 
 
 }
@@ -91,9 +99,9 @@ void MainWindowRemote::looptest()
     m_ui->labelImageRight->setPixmap(pm.fromImage(qimageRight, 0));
     m_ui->labelImageRight->show();
 
+
   }
 }
-
 
 MainWindowRemote::~MainWindowRemote()
 {
@@ -107,6 +115,46 @@ MainWindowRemote::~MainWindowRemote()
     }
   delete m_posterHandler;
 }
+
+void MainWindowRemote::initRobotsMenu()
+{
+    QActionGroup* robotActionGroup = new QActionGroup(this);
+
+    for (int i=0; i<XYZ_ENV->nr; i++)
+    {
+        QString name(XYZ_ENV->robot[i]->name);
+        QAction* robotAction = new QAction(name,this);
+        robotAction->setCheckable(true);
+        robotAction->setActionGroup(robotActionGroup);
+        m_RobotsInMenu.push_back( robotAction );
+        connect(robotAction,SIGNAL(triggered()),this,SLOT(setRobotAsCurrent()));
+        m_ui->menuRobot->addAction(robotAction);
+    }
+
+    for (int i=0; i<XYZ_ENV->nr; i++)
+    {
+        if( ((p3d_rob *) p3d_get_desc_curid(P3D_ROBOT)) == XYZ_ENV->robot[i] )
+        {
+            m_RobotsInMenu[i]->setChecked ( true );
+            break;
+        }
+    }
+}
+
+void MainWindowRemote::setRobotAsCurrent()
+{
+    Scene* sc = global_Project->getActiveScene();
+
+    for (int i=0; i<XYZ_ENV->nr; i++)
+    {
+        if( m_RobotsInMenu[i]->isChecked() )
+        {
+            sc->setActiveRobot( XYZ_ENV->robot[i]->name );
+            global_ActiveRobotName = XYZ_ENV->robot[i]->name;
+        }
+    }
+}
+
 
 void MainWindowRemote::setSparkRefresh()
 {
@@ -147,6 +195,7 @@ void MainWindowRemote::drawAllWinActive()
   //    if(!ENV.getBool(Env::isRunning))
   //    {
   //    std::cout << "update" << std::endl;
+
   m_ui->OpenGL->updateGL();
   //    }
 }
@@ -253,6 +302,10 @@ void MainWindowRemote::setBoolFloor(bool value)
   G3D_WIN->vs.displayFloor = value;
 }
 
+void MainWindowRemote::setBoolSky(bool value)
+{
+  G3D_WIN->vs.displaySky = value;
+}
 
 void MainWindowRemote::setBoolTiles(bool value)
 {
@@ -347,7 +400,12 @@ void MainWindowRemote::initLightSource()
   m_ui->doubleSpinBoxLightY->setValue(G3D_WIN->vs.lightPosition[1]);
   m_ui->doubleSpinBoxLightZ->setValue(G3D_WIN->vs.lightPosition[2]);
 
+
+  setBoolSky(true);
+
+  g3d_set_win_camera(G3D_WIN->vs, 7.0, -4.0,  1.0, 17, -0.7, 0.7, 0.0, 0.0, 1.0);
 }
+
 
 void MainWindowRemote::changeLightPosX()
 {

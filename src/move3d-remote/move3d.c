@@ -595,7 +595,6 @@ int mainMhp(int argc, char ** argv) {
 	//  g3d_rgb_from_hue(c, color);
 	//  g3d_set_win_floor_color(g3d_get_cur_win(), color[0], color[1], color[2]);
 	
-
 #if defined( LIGHT_PLANNER ) && !defined( QT_GL )
 	if (manip_test_run) 
 	{

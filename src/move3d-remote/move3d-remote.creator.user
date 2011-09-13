@@ -65,37 +65,45 @@
   <valuemap type="QVariantMap">
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString">all</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList">
-    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-TSaor0rPCk,guid=3d5e612a885b814bb429659b4e68c89b</value>
+    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-j6FMIJIANd,guid=308946f43c7f426a6612f2a64e6dba11</value>
     <value type="QString">DEFAULTS_PATH=/usr/share/gconf/gnome.default.path</value>
     <value type="QString">DESKTOP_SESSION=gnome</value>
     <value type="QString">DISPLAY=:0.0</value>
+    <value type="QString">EDITOR=emacs</value>
     <value type="QString">GDMSESSION=gnome</value>
-    <value type="QString">GDM_KEYBOARD_LAYOUT=fr</value>
+    <value type="QString">GDM_KEYBOARD_LAYOUT=us	alt-intl</value>
     <value type="QString">GDM_LANG=en_US.UTF-8</value>
     <value type="QString">GNOME_DESKTOP_SESSION_ID=this-is-deprecated</value>
-    <value type="QString">GNOME_KEYRING_CONTROL=/tmp/keyring-jyexR9</value>
-    <value type="QString">GNOME_KEYRING_PID=1501</value>
+    <value type="QString">GNOME_KEYRING_CONTROL=/tmp/keyring-5FgSSc</value>
+    <value type="QString">GNOME_KEYRING_PID=17701</value>
     <value type="QString">GTK_MODULES=canberra-gtk-module</value>
     <value type="QString">HOME=/home/xbroquer</value>
+    <value type="QString">HOSTTYPE=unknown</value>
     <value type="QString">LANG=en_US.UTF-8</value>
-    <value type="QString">LANGUAGE=</value>
     <value type="QString">LD_LIBRARY_PATH=/usr/lib/qtcreator</value>
     <value type="QString">LOGNAME=xbroquer</value>
+    <value type="QString">LPDEST=votre_imprimante</value>
+    <value type="QString">MACHTYPE=unknown</value>
     <value type="QString">MANDATORY_PATH=/usr/share/gconf/gnome.mandatory.path</value>
+    <value type="QString">MANPATH=:/usr/local/X11_Contrib/man</value>
+    <value type="QString">NNTPSERVER=news</value>
     <value type="QString">ORBIT_SOCKETDIR=/tmp/orbit-xbroquer</value>
-    <value type="QString">PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</value>
+    <value type="QString">OSTYPE=unknown</value>
+    <value type="QString">PATH=/home/xbroquer/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:.:/usr/local/X11_Contrib/bin/unknown</value>
+    <value type="QString">PRINTER=votre_imprimante</value>
     <value type="QString">PWD=/home/xbroquer</value>
-    <value type="QString">SESSION_MANAGER=local/pit:@/tmp/.ICE-unix/1519,unix/pit:/tmp/.ICE-unix/1519</value>
-    <value type="QString">SHELL=/bin/bash</value>
+    <value type="QString">SESSION_MANAGER=local/mneme:@/tmp/.ICE-unix/17719,unix/mneme:/tmp/.ICE-unix/17719</value>
+    <value type="QString">SHELL=/usr/local/bin/tcsh</value>
     <value type="QString">SPEECHD_PORT=8557</value>
-    <value type="QString">SSH_AGENT_PID=1553</value>
-    <value type="QString">SSH_AUTH_SOCK=/tmp/keyring-jyexR9/ssh</value>
+    <value type="QString">SSH_AGENT_PID=17764</value>
+    <value type="QString">SSH_AUTH_SOCK=/tmp/keyring-5FgSSc/ssh</value>
     <value type="QString">USER=xbroquer</value>
     <value type="QString">USERNAME=xbroquer</value>
-    <value type="QString">XAUTHORITY=/var/run/gdm/auth-for-xbroquer-LXVOcR/database</value>
+    <value type="QString">WWW_HOME=http://www.laas.fr/</value>
+    <value type="QString">XAUTHORITY=/var/run/gdm/auth-for-xbroquer-hXdWFy/database</value>
     <value type="QString">XDG_CONFIG_DIRS=/etc/xdg/xdg-gnome:/etc/xdg</value>
     <value type="QString">XDG_DATA_DIRS=/usr/share/gnome:/usr/local/share/:/usr/share/</value>
-    <value type="QString">XDG_SESSION_COOKIE=08b75a727e710470009fdb884e2582d1-1315489946.972912-1749324250</value>
+    <value type="QString">XDG_SESSION_COOKIE=769d60f0271ec74ff06702634d8246d9-1315813904.972682-745085932</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList"/>
    <value key="abstractProcess.command" type="QString">make</value>

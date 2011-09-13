@@ -22,13 +22,11 @@ bool GenomImagePoster::myPosterTake()
 {
     if(_posterTaked == false)
     {
-      printf( "try to take the poster %p\n", _posterID);
         if (posterTake(_posterID, POSTER_READ) != OK )
         {
             cout << " posterTake error " << endl;
             return false;
         }
-	printf(" poster taked \n");
 	_posterTaked = true;
     }
     return true;

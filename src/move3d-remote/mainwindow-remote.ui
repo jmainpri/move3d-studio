@@ -75,7 +75,7 @@
              <x>0</x>
              <y>0</y>
              <width>380</width>
-             <height>683</height>
+             <height>685</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout">
@@ -95,8 +95,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>98</width>
-                 <height>96</height>
+                 <width>362</width>
+                 <height>574</height>
                 </rect>
                </property>
                <attribute name="label">
@@ -116,8 +116,8 @@
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>290</width>
-                     <height>514</height>
+                     <width>342</width>
+                     <height>554</height>
                     </rect>
                    </property>
                    <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -383,7 +383,7 @@
                  <x>0</x>
                  <y>0</y>
                  <width>362</width>
-                 <height>572</height>
+                 <height>574</height>
                 </rect>
                </property>
                <attribute name="label">
@@ -475,8 +475,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>111</width>
-                 <height>45</height>
+                 <width>362</width>
+                 <height>574</height>
                 </rect>
                </property>
                <attribute name="label">
@@ -621,11 +621,22 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>25</height>
+     <height>23</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuRobot">
+    <property name="title">
+     <string>Robots</string>
+    </property>
+   </widget>
+   <addaction name="menuRobot"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionRobots">
+   <property name="text">
+    <string>Robots</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
