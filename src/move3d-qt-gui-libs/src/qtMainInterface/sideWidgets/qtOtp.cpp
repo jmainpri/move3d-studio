@@ -20,6 +20,7 @@
 
 #include <QMessageBox>
 #include <QDateTime>
+#include <QDebug>
 
 using namespace std;
 using namespace tr1;
@@ -109,7 +110,7 @@ void OtpWidget::initOTP()
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawSlice,PlanParam::env_drawSlice);
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawPoint,PlanParam::env_drawRandomPoint);
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxHumanTraj,PlanParam::env_showHumanTraj);
-        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxRobotBaseCostGrid,Env::DrawRobotBaseGridCosts);
+
 
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawOnlyBest,PlanParam::env_drawOnlyBest);
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxIsStanding,PlanParam::env_isStanding);
@@ -146,7 +147,6 @@ void OtpWidget::initSliders()
         connect(m_ui->pushButton_ComputeCosts,SIGNAL(clicked()),m_mainWindow,SLOT(drawAllWinActive()));
 
 
-        on_pushButton_RobotBaseGrid_clicked();
 
 }
 
@@ -208,82 +208,7 @@ void OtpWidget::on_pushButton_clicked()
 
 }
 
-void OtpWidget::on_pushButtonFastComputing_toggled(bool checked)
-{
-	ENV.setBool(Env::FastComputingRobotBase,checked);
-}
 
-void OtpWidget::on_pushButton_RobotBaseGrid_clicked()
-{
-	HRICS::Natural* reachSpace = HRICS_MotionPL->getReachability();
-	vector<double> box(4);
-
-	box[0]  = -2.5; box[1]  = 2.5;
-	box[2]  = -2.5; box[3]  = 2.5;
-	reachSpace->initRobotBaseGrid(box);
-
-	m_mainWindow->drawAllWinActive();
-	m_ui->pushButton_ComputeCosts->setDisabled(false);
-
-//	if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
-//	{
-//		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->initHumanCenteredGrid(0.1);
-//	}
-}
-
-void OtpWidget::on_pushButton_ComputeCosts_clicked()
-{
-    HRICS::Natural* reachSpace = HRICS_MotionPL->getReachability();
-    reachSpace->getRobotBaseGrid()->recomputeAllCosts();
-}
-
-void OtpWidget::on_pushButton_ShowOptions_toggled(bool checked)
-{
-	if (checked)
-	{
-		m_ui->groupBoxGridComputing->show();
-		m_ui->pushButton_ShowOptions->setText("Hide Options");
-	}
-	else
-	{
-		m_ui->groupBoxGridComputing->hide();
-		m_ui->pushButton_ShowOptions->setText("Show Options");
-	}
-}
-
-void OtpWidget::on_radioButtonAll_toggled(bool checked)
-{
-    m_ui->groupBoxWeightedSum->setDisabled(!checked);
-    if (checked)
-    {
-        ENV.setInt(Env::typeRobotBaseGrid,0);
-    }
-
-}
-
-void OtpWidget::on_radioButtonHumanDist_toggled(bool checked)
-{
-    if (checked)
-    {
-        ENV.setInt(Env::typeRobotBaseGrid,1);
-    }
-}
-
-void OtpWidget::on_radioButtonRobotDist_toggled(bool checked)
-{
-    if (checked)
-    {
-        ENV.setInt(Env::typeRobotBaseGrid,2);
-    }
-}
-
-void OtpWidget::on_radioButtonFieldOfVision_toggled(bool checked)
-{
-    if (checked)
-    {
-        ENV.setInt(Env::typeRobotBaseGrid,3);
-    }
-}
 
 void OtpWidget::on_pushButtonPR2RestPose_clicked()
 {
@@ -750,18 +675,35 @@ void OtpWidget::on_pushButtonInit_clicked()
 		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->setReachability(HRICS_activeNatu);
 	}
 
-	QString home( getenv("HOME_MOVE3D") );
-	QString fileNameStand = "/statFiles/OtpComputing/conf.xml";
-	QString fileNameSit = "/statFiles/OtpComputing/confSit.xml";
-	QString fileNameStandSlice = "/statFiles/OtpComputing/confTranche.xml";
-	QString fileNameSitSlice = "/statFiles/OtpComputing/confSitTranche.xml";
-	if (PlanEnv->getBool(PlanParam::env_useOldDude))
-	{
-		fileNameStand = "/statFiles/OtpComputing/confOldDude.xml";
-		fileNameSit = "/statFiles/OtpComputing/confOldDude.xml";
-		fileNameStandSlice = "/statFiles/OtpComputing/confOldDude.xml";
-		fileNameSitSlice = "/statFiles/OtpComputing/confOldDude.xml";
-	}
+        QString home( getenv("HOME_MOVE3D") );
+        Robot* hum = dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getHuman();
+
+
+        QString fileNameStand;
+        QString fileNameSit;
+        QString fileNameStandSlice;
+        QString fileNameSitSlice;
+        if (hum->getName().find("HERAKLES")!= string::npos)
+            {
+                fileNameStand = "/statFiles/OtpComputing/confHerakles.xml";
+                fileNameSit = "/statFiles/OtpComputing/confHeraklesSit.xml";
+                fileNameStandSlice = "/statFiles/OtpComputing/confHerakles.xml";
+                fileNameSitSlice = "/statFiles/OtpComputing/confHeraklesSit.xml";
+            }
+            else if (hum->getName().find("OLDDUDE")!= string::npos)
+            {
+                fileNameStand = "/statFiles/OtpComputing/confOldDude.xml";
+                fileNameSit = "/statFiles/OtpComputing/confOldDudeSit.xml";
+                fileNameStandSlice = "/statFiles/OtpComputing/confOldDude.xml";
+                fileNameSitSlice = "/statFiles/OtpComputing/confOldDudeSit.xml";
+            }
+            else if (hum->getName().find("ACHILE")!= string::npos)
+            {
+                fileNameStand = "/statFiles/OtpComputing/confAchile.xml";
+                fileNameSit = "/statFiles/OtpComputing/confAchileSit.xml";
+                fileNameStandSlice = "/statFiles/OtpComputing/confAchileTranche.xml";
+                fileNameSitSlice = "/statFiles/OtpComputing/confAchileTrancheSit.xml";
+            }
 
 	fileNameStand = home + fileNameStand;
 	fileNameSit = home + fileNameSit;

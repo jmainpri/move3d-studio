@@ -102,14 +102,6 @@ private slots:
         void on_pushButtonComputeGIK_clicked();
         void on_pushButtonInitHumanPR2_clicked();
         void on_pushButtonPR2RestPose_clicked();
-        void on_radioButtonFieldOfVision_toggled(bool checked);
-        void on_radioButtonRobotDist_toggled(bool checked);
-        void on_radioButtonHumanDist_toggled(bool checked);
-        void on_radioButtonAll_toggled(bool checked);
-        void on_pushButton_ShowOptions_toggled(bool checked);
-        void on_pushButton_ComputeCosts_clicked();
-        void on_pushButton_RobotBaseGrid_clicked();
-        void on_pushButtonFastComputing_toggled(bool checked);
         void on_pushButton_clicked();
         void computeTheOtp();
         void drawAllWinActive();
