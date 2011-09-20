@@ -10,11 +10,11 @@
 ## Check for the header files
 
 find_path (MOVE3D-MOTIONPLANNER_INCLUDE_DIR planner/planner.hpp
- PATHS $ENV{HOME}/workspace/Move3D-motionPlanner-libs/src $ENV{HOME}/Devel/Move3D-motionPlanner-libs/src $ENV{ROBOTPKG_BASE}/include/Move3D-motionPlanner/src/
+ PATHS $ENV{ROBOTPKG_BASE}/include/libmove3d-motionplanner
  )
 
-find_library (MOVE3D-MOTIONPLANNER_LIBRARIES Move3D-motionPlanner
-  PATHS ${MOVE3D-MOTIONPLANNER_LIB} $ENV{HOME}/workspace/Move3D-motionPlanner-libs/lib/$ENV{HOSTTYPE} $ENV{HOME}/Devel/Move3D-motionPlanner-libs/lib/$ENV{HOSTTYPE} $ENV{ROBOTPKG_BASE}/lib
+find_library (MOVE3D-MOTIONPLANNER_LIBRARIES move3d-motionplanner
+  PATHS ${MOVE3D-MOTIONPLANNER_LIB}  $ENV{ROBOTPKG_BASE}/lib
   )
 
 ## -----------------------------------------------------------------------------
