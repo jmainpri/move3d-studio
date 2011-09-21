@@ -23,7 +23,6 @@ using namespace std;
 MainWindowRemote::MainWindowRemote(QWidget *parent)
   : QMainWindow(parent), m_ui(new Ui::MainWindowRemote)
 {
-
   _qimageLeft = NULL;
   _qimageRight = NULL;
   _dataImageLeft = NULL; 
@@ -49,10 +48,9 @@ MainWindowRemote::MainWindowRemote(QWidget *parent)
   connect(m_ui->sparkCheckBox, SIGNAL(clicked()), this, SLOT(setSparkRefresh()));
   connect(m_ui->sparkSaveSceBut,SIGNAL(clicked()),this,SLOT(sparkSaveScenario()));
   connect(m_posterHandler, SIGNAL(sparkStatus(bool)),this, SLOT(setSparkStatusText(bool)));
+  
   /* nuit page */
-
-
-
+  initNiut();
 }
 
 void MainWindowRemote::looptest()
@@ -440,3 +438,79 @@ void MainWindowRemote::changeLightPosZ()
   this->drawAllWinActive();
   //               cout << " light pose " << lightPosition[0]<< " " << lightPosition[1]<< " " <<lightPosition[2] << endl;
 }
+
+// Niut Window --------------------------------------------------
+// --------------------------------------------------------------
+void MainWindowRemote::initNiut()
+{
+  _niutLabels.push_back( m_ui->labelNiut1 );
+  _niutLabels.push_back( m_ui->labelNiut2 );
+  _niutLabels.push_back( m_ui->labelNiut3 );
+  _niutLabels.push_back( m_ui->labelNiut4 );
+  _niutLabels.push_back( m_ui->labelNiut5 );
+  _niutLabels.push_back( m_ui->labelNiut6 );
+  _niutLabels.push_back( m_ui->labelNiut7 );
+  _niutLabels.push_back( m_ui->labelNiut8 );
+
+  _niutLabels.push_back( m_ui->labelNiut9 );
+  _niutLabels.push_back( m_ui->labelNiut10 );
+  _niutLabels.push_back( m_ui->labelNiut11 );
+  _niutLabels.push_back( m_ui->labelNiut12 );
+  _niutLabels.push_back( m_ui->labelNiut13 );
+  _niutLabels.push_back( m_ui->labelNiut14 );
+  _niutLabels.push_back( m_ui->labelNiut15 );
+  _niutLabels.push_back( m_ui->labelNiut16 );
+  
+  _niutPmDead = QPixmap("/Users/jmainpri/workspace/move3d-studio/src/move3d-remote/yellow-death.jpg");;
+  
+  _niutPmRed = QPixmap("/Users/jmainpri/workspace/move3d-studio/src/move3d-remote/red-man.jpg");
+  _niutPmOrange = QPixmap("/Users/jmainpri/workspace/move3d-studio/src/move3d-remote/orange-man.jpg");
+  _niutPmYellow = QPixmap("/Users/jmainpri/workspace/move3d-studio/src/move3d-remote/yellow-man.jpg");
+  _niutPmGreen = QPixmap("/Users/jmainpri/workspace/move3d-studio/src/move3d-remote/green-man.jpg");
+  
+  _niutPmRed = _niutPmRed.scaledToHeight(70);
+  _niutPmOrange = _niutPmOrange.scaledToHeight(70);
+  _niutPmYellow = _niutPmYellow.scaledToHeight(70);
+  _niutPmGreen = _niutPmGreen.scaledToHeight(70);
+  
+  for (unsigned int i=0; i<_niutLabels.size(); i++) 
+  {
+    _niutLabels[i]->setPixmap(_niutPmRed);
+    _niutLabels[i]->show();
+  }
+}
+
+void MainWindowRemote::setNiutIsAlive(bool state)
+{
+  
+}
+
+void MainWindowRemote::setNiutColorLabel(int id, int color)
+{
+  if (id<0 || id>=((int)_niutLabels.size())) {
+    cout << "Error in " << __FILE__ << __func__ << endl;
+    return;
+  }
+  
+  switch (color) {
+    case 0:
+      _niutLabels[id]->setPixmap(_niutPmRed);
+      break;
+      
+    case 1:
+      _niutLabels[id]->setPixmap(_niutPmYellow);
+      break;
+      
+    case 2:
+      _niutLabels[id]->setPixmap(_niutPmOrange);
+      break;
+      
+    case 3:
+      _niutLabels[id]->setPixmap(_niutPmGreen);
+      break;
+      
+    default:
+      break;
+  }
+}
+

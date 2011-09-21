@@ -29,13 +29,12 @@ public:
         ~MainWindowRemote();
         GLWidget*		getOpenGL();
 
-
-        void initRobotsMenu();
-   
-
 public slots:
-    void drawAllWinActive();
+        void drawAllWinActive();
 
+        void setNiutIsAlive(bool state);
+        void setNiutColorLabel(int idLabel, int color);
+  
 private slots:
         void setSparkRefresh();
         void sparkSaveScenario();
@@ -73,16 +72,27 @@ private:
         PosterReader* m_posterHandler;
         QImage* _qimageLeft;
         QImage* _qimageRight;
+  
+        std::vector<QLabel*> _niutLabels;
+        QPixmap _niutPmDead;
+        QPixmap _niutPmRed;
+        QPixmap _niutPmOrange;
+        QPixmap _niutPmYellow;
+        QPixmap _niutPmGreen;
+  
         std::vector<QAction*> m_RobotsInMenu;
         uchar *_dataImageLeft;
         uchar *_dataImageRight;
+  
         void initLightSource();
-        void connectCheckBoxes();
+        void initRobotsMenu();
+        void initNiut();
 
         /**
          * Function tro create sliders and checkboxes TODO move somwhere else
          */
         void connectCheckBoxToEnv(QCheckBox* box, Env::boolParameter p);
+        void connectCheckBoxes();
         
 };
 

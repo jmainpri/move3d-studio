@@ -26,23 +26,32 @@ public:
 private slots:
     void update();
 
-
-
 private:
+    // Spark ftc and data
     bool updateSparkEnv();
-
+  
+    // Niut fct and data
+    bool updateNiut();
+    void setNiutIsAlive(bool state);
+    int _niutWatchDog;
+    int _niutDeathCounter;
+    int _niutPrevId;
+  
 signals:
     void sparkStatus(bool st);
 
 public:
     //! Display functions
     MainWindowRemote* m_win;
-
+  
+    //! Posters
     GenomPoster * _sparkPoster;
     SPARK_CURRENT_ENVIRONMENT _sparkPosterStruct;
 
     GenomImagePoster * _viamImagePoster;
-
+  
+    GenomPoster * _niutPoster;
+    NIUT_HUMAN_LIST _niutPosterStruct;
 };
 
 #endif // POSTERREADER_HPP
