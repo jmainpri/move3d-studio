@@ -63,6 +63,8 @@ private slots:
 
         void looptest();
 
+        void on_checkBox_clicked(bool checked);
+
 protected:
         void keyPressEvent(QKeyEvent *e);
         void keyReleaseEvent(QKeyEvent *e);

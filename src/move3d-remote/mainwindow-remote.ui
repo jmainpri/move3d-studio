@@ -88,21 +88,28 @@
                </sizepolicy>
               </property>
               <property name="currentIndex">
-               <number>1</number>
+               <number>0</number>
               </property>
               <widget class="QWidget" name="page_3">
                <property name="geometry">
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>324</width>
-                 <height>549</height>
+                 <width>330</width>
+                 <height>580</height>
                 </rect>
                </property>
                <attribute name="label">
                 <string>Viewer configuration</string>
                </attribute>
-               <layout class="QHBoxLayout" name="horizontalLayout_6">
+               <layout class="QVBoxLayout" name="verticalLayout_7">
+                <item>
+                 <widget class="QCheckBox" name="checkBox">
+                  <property name="text">
+                   <string>show menu bar</string>
+                  </property>
+                 </widget>
+                </item>
                 <item>
                  <widget class="QScrollArea" name="scrollAreaViewer">
                   <property name="horizontalScrollBarPolicy">

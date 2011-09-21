@@ -42,6 +42,7 @@ MainWindowRemote::MainWindowRemote(QWidget *parent)
 
   /* menu robots */
   initRobotsMenu();
+  this->menuBar()->setVisible(false);
 
   /* spark page */
   //m_posterHandler->getSparkPoster()->setRefreshStatus(m_ui->sparkCheckBox->isChecked());
@@ -439,6 +440,7 @@ void MainWindowRemote::changeLightPosZ()
   //               cout << " light pose " << lightPosition[0]<< " " << lightPosition[1]<< " " <<lightPosition[2] << endl;
 }
 
+<<<<<<< HEAD
 // Niut Window --------------------------------------------------
 // --------------------------------------------------------------
 void MainWindowRemote::initNiut()
@@ -512,5 +514,11 @@ void MainWindowRemote::setNiutColorLabel(int id, int color)
     default:
       break;
   }
+}
+
+
+void MainWindowRemote::on_checkBox_clicked(bool checked)
+{
+    this->menuBar()->setVisible(checked);
 }
 
