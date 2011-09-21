@@ -18,6 +18,12 @@
 #include "Graphic-pkg.h"
 #include "Util-pkg.h"
 
+#include "images/green-man-xpm.h"
+#include "images/orange-man-xpm.h"
+#include "images/red-man-xpm.h"
+#include "images/yellow-death-xpm.h"
+#include "images/yellow-man-xpm.h"
+
 using namespace std;
 
 MainWindowRemote::MainWindowRemote(QWidget *parent)
@@ -440,7 +446,7 @@ void MainWindowRemote::changeLightPosZ()
   //               cout << " light pose " << lightPosition[0]<< " " << lightPosition[1]<< " " <<lightPosition[2] << endl;
 }
 
-<<<<<<< HEAD
+
 // Niut Window --------------------------------------------------
 // --------------------------------------------------------------
 void MainWindowRemote::initNiut()
@@ -463,12 +469,11 @@ void MainWindowRemote::initNiut()
   _niutLabels.push_back( m_ui->labelNiut15 );
   _niutLabels.push_back( m_ui->labelNiut16 );
   
-  _niutPmDead = QPixmap("/home/jmainpri/workspace/move3d-studio/src/move3d-remote/yellow-death.jpg");;
-  
-  _niutPmRed = QPixmap("/home/jmainpri/workspace/move3d_machine_gs/move3d-studio/src/move3d-remote/red-man.jpg");
-  _niutPmOrange = QPixmap("/home/jmainpri/workspace/move3d_machine_gs/move3d-studio/src/move3d-remote/orange-man.jpg");
-  _niutPmYellow = QPixmap("/home/jmainpri/workspace/move3d_machine_gs/move3d-studio/src/move3d-remote/yellow-man.jpg");
-  _niutPmGreen = QPixmap("/home/jmainpri/workspace/move3d_machine_gs/move3d-studio/src/move3d-remote/green-man.jpg");
+  _niutPmDead = QPixmap(yellow_death);
+  _niutPmRed = QPixmap(red_man);
+  _niutPmOrange = QPixmap(orange_man);
+  _niutPmYellow = QPixmap(yellow_man);
+  _niutPmGreen = QPixmap(green_man);
   
   _niutPmRed = _niutPmRed.scaledToHeight(70);
   _niutPmOrange = _niutPmOrange.scaledToHeight(70);
