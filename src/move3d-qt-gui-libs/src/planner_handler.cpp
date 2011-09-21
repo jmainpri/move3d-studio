@@ -353,10 +353,10 @@ void qt_showTraj()
 	}
 	else
 	{
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,false);
+//		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,false);
 		g3d_show_tcur_rob(robotPt,default_drawtraj_fct_qt_pipe);
-		g3d_show_tcur_rob(hum_robotPt,default_drawtraj_fct_qt_pipe);
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->showBestConf();
+//		g3d_show_tcur_rob(hum_robotPt,default_drawtraj_fct_qt_pipe);
+//		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->showBestConf();
 	}
 
 

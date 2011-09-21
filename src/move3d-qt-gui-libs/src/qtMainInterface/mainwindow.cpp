@@ -66,7 +66,6 @@ MainWindow::MainWindow(QWidget *parent)
 	m_ui->tabCost->getHriWidget()->setMainWindow(this);
 	m_ui->tabCost->getHriWidget()->setMotionWidget(this->m_ui->tabMotionPlanner);	
 	m_ui->tabCost->getHriWidget()->initHRI();
-  
   m_ui->tabCost->getOtpWidget()->setMainWindow(this);
 #endif
   

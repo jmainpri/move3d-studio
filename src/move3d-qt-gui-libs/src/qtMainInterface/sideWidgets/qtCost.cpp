@@ -173,8 +173,8 @@ void CostWidget::initCostSpace()
   m_mainWindow->Ui()->tabCost->m_ui->tabHri->Ui()->HRICSPlanner->setDisabled(false);
   m_mainWindow->Ui()->tabCost->m_ui->tabHri->Ui()->pushButtonMakeGrid->setDisabled(true);
   m_mainWindow->Ui()->tabCost->m_ui->tabHri->Ui()->pushButtonDeleteGrid->setDisabled(false);
-  m_mainWindow->Ui()->tabCost->m_ui->tabHri->Ui()->HRICSNatural->setDisabled(false);
-  m_mainWindow->Ui()->tabCost->m_ui->tabHri->Ui()->pushButtonNewNaturalCostSpace->setDisabled(true);
+//  m_mainWindow->Ui()->tabCost->m_ui->tabHri->Ui()->HRICSNatural->setDisabled(false);
+//  m_mainWindow->Ui()->tabCost->m_ui->tabHri->Ui()->pushButtonNewNaturalCostSpace->setDisabled(true);
 
   m_mainWindow->Ui()->tabCost->m_ui->tabOTP->initSliders();
   

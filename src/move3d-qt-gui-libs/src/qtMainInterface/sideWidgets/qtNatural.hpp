@@ -1,51 +1,48 @@
-/*
- *  qtCost.h
- *  BioMove3D
- *
- *  Created by Jim Mainprice on 01/04/10.
- *  Copyright 2010 LAAS/CNRS. All rights reserved.
- *
- */
+//
+//  qtNatural.h
+//  move3d-studio
+//
+//  Created by Jim Mainprice on 21/09/11.
+//  Copyright 2011 LAAS/CNRS. All rights reserved.
+//
 
-#ifndef QT_HRICS_H
-#define QT_HRICS_H
+#ifndef QT_NATURAL_H
+#define QT_NATURAL_H
 
 #include "qtLibrary.hpp"
 #include "qtMainInterface/mainwindow.hpp"
-#include "qtMainInterface/sideWidgets/qtMotionPlanner.hpp"
 #include "API/Grids/gridsAPI.hpp"
 
 namespace Ui
 {
-	class HricsWidget;
+	class NaturalWidget;
 };
 
 /**
  * @ingroup qtMainWindow
  * @brief Qt Motion Planner
  */
-class HricsWidget : public QWidget
+class NaturalWidget : public QWidget
 {
 	Q_OBJECT
 	
 public:
-	HricsWidget(QWidget *parent = 0);
-	~HricsWidget();
-	
-	void initHRI();
+	NaturalWidget(QWidget *parent = 0);
+	~NaturalWidget();
+
 	//void initCost();
-	void initVectorField();
-	void initDrawOneLineInGrid();
-	void initObjectTransferPoint();
+  void initNatural();
+  void initNaturalSpace();
 	void initHumanLike();
   void initGrids();
-	
+
 	void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
-	void setMotionWidget(MotionPlanner* ptrMLPW) { m_motionWidget = ptrMLPW; }
+	//void setMotionWidget(MotionPlanner* ptrMLPW) { m_motionWidget = ptrMLPW; }
 	
-	Ui::HricsWidget* Ui() { return m_ui; }
+	Ui::NaturalWidget* Ui() { return m_ui; }
 	
-	private slots:
+  
+private slots:
 	// Vector Field
 	void computeVectorField();
 	
@@ -58,6 +55,7 @@ public:
 	
 	void saveActiveGridToFile();
 	void loadActiveGridFromFile();
+  
 	// HRI ----------------------------------------
 	// Natural
 	void newNaturalCostSpace();
@@ -72,7 +70,7 @@ public:
 	void on_pushButtonInitBaseGrid_clicked();
 	void drawAllWinActive();
 	void on_pushButton_initColPos_clicked();
-
+  
 	void on_horizontalSlider_zmax_sliderMoved(int position);
 	void on_horizontalSlider_ymax_sliderMoved(int position);
 	void on_horizontalSlider_xmax_sliderMoved(int position);
@@ -80,34 +78,6 @@ public:
 	void on_horizontalSlider_ymin_sliderMoved(int position);
 	void on_horizontalSlider_xmin_sliderMoved(int position);
 
-
-
-	// CSpace
-	void newHRIConfigSpace();
-	void deleteHRIConfigSpace();
-	void makeGridHRIConfigSpace();
-	void makePlanHRIConfigSpace();
-	void AStarInPlanHRIConfigSpace();
-	void writeToOBPlane();
-	void hriPlanRRT();
-	
-	// Workspace
-	void make3DHriGrid();
-	void delete3DHriGrid();
-	void computeGridCost();
-	void resetGridCost();
-	void AStarIn3DGrid();
-	void HRICSRRT();
-	void zoneSizeChanged();
-	void resetRandomPoints();
-	
-	// Taskspace
-	void computeWorkspacePath();
-	void computeHoleMotion();
-	void KDistance(double value);
-	void KVisibility(double value);
-	void make2DGrid();
-	
 	void enableHriSpace();
 	void setWhichTestSlot(int test);
 	void setActiveGrid(int grid);
@@ -115,15 +85,8 @@ public:
 	void cellToShowChanged();
 	
 private:
-	QtShiva::SpinBoxSliderConnector*	m_k_distance;
-	QtShiva::SpinBoxSliderConnector*	m_k_visbility;
-	QtShiva::SpinBoxSliderConnector*	m_k_reachability;
-	QtShiva::SpinBoxSliderConnector*	m_k_naturality;
-	
-	Ui::HricsWidget*					m_ui;
-	
-	MotionPlanner*						m_motionWidget;
-
+	Ui::NaturalWidget*					m_ui;
+	//MotionPlanner*						m_motionWidget;
 	MainWindow*               m_mainWindow;
 };
 

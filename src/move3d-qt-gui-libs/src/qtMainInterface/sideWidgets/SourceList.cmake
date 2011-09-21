@@ -34,14 +34,17 @@ IF(HRI_COSTSPACE)
 BM3D_QT_GENERATE_MOC(
 qtHrics.hpp
 qtOtp.hpp
+qtNatural.hpp
 )
 BM3D_QT_GENERATE_UI_HEADERS(
 qtHrics.ui
 qtOtp.ui
+qtNatural.ui
 )
 BM3D_SRC_SUBDIR_PROCESS(
 qtHrics.cpp
 qtOtp.cpp
+qtNatural.cpp
 )
 ENDIF(HRI_COSTSPACE)
 
