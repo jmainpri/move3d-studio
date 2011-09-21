@@ -25,11 +25,11 @@ PosterReader::PosterReader(MainWindowRemote* obj)
 
   // _viamImagePoster = new GenomImagePoster("vimanBridgeImage", 1000);
    _viamImagePoster = new GenomImagePoster("vimanImages", 10);
-   _viamImagePoster->setRefreshStatus(true);
+   _viamImagePoster->setRefreshStatus(false);
   
   // Niut reader
   _niutPoster = new GenomPoster("niutHuman", (char*)(&_niutPosterStruct), sizeof(NIUT_HUMAN_LIST), 10);
-  _niutPoster->setRefreshStatus(false);
+  _niutPoster->setRefreshStatus(true);
   _niutWatchDog = 0;
   _niutDeathCounter = 0;
   _niutPrevId = 0;
@@ -50,6 +50,9 @@ void PosterReader::init()
     cout << "start thread for viamImage ..." << endl;
     _viamImagePoster->start();
     cout << "   ... viamImage thread started" << endl;
+    cout << "start niut for humans ..." << endl;
+    _niutPoster->start();
+    cout << "   ... niut thread started" << endl;
 }
 
 void PosterReader::update()
@@ -139,22 +142,27 @@ bool PosterReader::updateNiut()
 {
   if( _niutPoster == NULL )
   {
+    cout << "Niut : NULL Poster" << endl;
     m_win->setNiutIsAlive( false );
     return false;
   }
   
   // We keep track of niut's counter
   // if the value doesn't change for a while it's set as dead
-  _niutPrevId = _niutPosterStruct.watch_dog;
+  //_niutPrevId = _niutPosterStruct.watch_dog;
   
   if(_niutPosterStruct.watch_dog != _niutWatchDog) 
   { _niutDeathCounter = 0; }
   else
   { _niutDeathCounter++; }
   
+//  cout << "_niutWatchDog : " << _niutWatchDog ;
+//  cout << " , _niutPosterStruct.watch_dog : " << _niutPosterStruct.watch_dog << endl;
+
   _niutWatchDog = _niutPosterStruct.watch_dog;
-  
-  if( _niutDeathCounter > 100 )
+
+
+  if( _niutDeathCounter > 1000 )
   {
     m_win->setNiutIsAlive( false );
     return false;
@@ -163,22 +171,30 @@ bool PosterReader::updateNiut()
   // Associtating mode
   for(unsigned int i=0; i<16;i++)
   {
+    m_win->setNiutColorLabel(i,0);
+  }
+
+  // Associtating mode
+  for(unsigned int i=0; i<16;i++)
+  {
+   int id = _niutPosterStruct.users[i].id;
+
     switch (_niutPosterStruct.users[i].state) 
     {
       case NIUT_NO_TRACKING:
-        m_win->setNiutColorLabel(i,0);
+        m_win->setNiutColorLabel(id,0);
         break;
       
       case NIUT_POSE_SEARCH:
-        m_win->setNiutColorLabel(i,1);
+        m_win->setNiutColorLabel(id,1);
         break;
         
       case NIUT_CALIBRATE:
-        m_win->setNiutColorLabel(i,2);
+        m_win->setNiutColorLabel(id,2);
         break;
         
       case NIUT_TRACKING:
-        m_win->setNiutColorLabel(i,2);
+        m_win->setNiutColorLabel(id,3);
         break;
         
       default:
@@ -187,6 +203,7 @@ bool PosterReader::updateNiut()
     }
   }
   
+//  cout << "Niut is alive association done!!!" <<endl;
   m_win->setNiutIsAlive( true );
   return true;
 }
