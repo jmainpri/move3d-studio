@@ -1,0 +1,5 @@
+Convert image into xpm to be inserted in a header file
+
+> convert img.jpg img.xpm
+
+then copy the structure in img-xpm.h
