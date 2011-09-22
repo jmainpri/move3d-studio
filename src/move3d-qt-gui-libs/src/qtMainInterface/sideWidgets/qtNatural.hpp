@@ -31,10 +31,11 @@ public:
 	~NaturalWidget();
 
 	//void initCost();
-  void initNatural();
-  void initNaturalSpace();
+        void initNatural();
+        void initNaturalSpace();
 	void initHumanLike();
-  void initGrids();
+        void initGrids();
+	void drawAllWinActive();
 
 	void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
 	//void setMotionWidget(MotionPlanner* ptrMLPW) { m_motionWidget = ptrMLPW; }
@@ -43,20 +44,9 @@ public:
 	
   
 private slots:
-	// Vector Field
-	void computeVectorField();
-	
-	// OTP
-	void computeObjectTransferPoint();
-	
-	void set_X_line(bool enable);
-	void set_Y_line(bool enable);
-	void set_Z_line(bool enable);
-	
 	void saveActiveGridToFile();
 	void loadActiveGridFromFile();
   
-	// HRI ----------------------------------------
 	// Natural
 	void newNaturalCostSpace();
 	void deleteNaturalCostSpace();
@@ -68,8 +58,6 @@ private slots:
 	void on_pushButton_NaturalParam_toggled(bool checked);
 	void on_pushButton_gridProperties_toggled(bool checked);
 	void on_pushButtonInitBaseGrid_clicked();
-	void drawAllWinActive();
-	void on_pushButton_initColPos_clicked();
   
 	void on_horizontalSlider_zmax_sliderMoved(int position);
 	void on_horizontalSlider_ymax_sliderMoved(int position);
@@ -78,8 +66,6 @@ private slots:
 	void on_horizontalSlider_ymin_sliderMoved(int position);
 	void on_horizontalSlider_xmin_sliderMoved(int position);
 
-	void enableHriSpace();
-	void setWhichTestSlot(int test);
 	void setActiveGrid(int grid);
 	void mergeGrids();
 	void cellToShowChanged();
