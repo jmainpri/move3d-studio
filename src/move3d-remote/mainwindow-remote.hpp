@@ -60,22 +60,34 @@ private slots:
         void changeLightPosY();
         void changeLightPosZ();
 
+        void updateImageLeft();
+        void updateImageRight();
 
         void looptest();
 
         void on_checkBox_clicked(bool checked);
 
+public:
+        QLabel *labelImgLeft(){return _labelImageLeft;}
+        QLabel *labelImgRight(){return _labelImageRight;}
+
 protected:
         void keyPressEvent(QKeyEvent *e);
         void keyReleaseEvent(QKeyEvent *e);
 
+public:
+        QLabel* _labelImageLeft;
+        QLabel* _labelImageRight;
 private:
         Ui::MainWindowRemote*	m_ui;
+
         PosterReader* m_posterHandler;
         QImage* _qimageLeft;
         QImage* _qimageRight;
+
   
         std::vector<QLabel*> _niutLabels;
+        QPixmap _niutPmAlive;
         QPixmap _niutPmDead;
         QPixmap _niutPmRed;
         QPixmap _niutPmOrange;
@@ -90,6 +102,7 @@ private:
         void initRobotsMenu();
         void initNiut();
 
+        void initCamera();
         /**
          * Function tro create sliders and checkboxes TODO move somwhere else
          */

@@ -6,7 +6,7 @@
 #include "../lightPlanner/proto/lightPlanner.h"
 #include "../lightPlanner/proto/lightPlannerApi.h"
 #include "../lightPlanner/proto/ManipulationPlanner.hpp"
-
+#include <stdlib.h>
 
 using namespace std;
 
@@ -19,14 +19,31 @@ PosterReader::PosterReader(MainWindowRemote* obj)
     timer->start(10);
 
 
+
     /* declaration of the poster reader threads */
   _sparkPoster = new GenomPoster("sparkEnvironment", (char*)(&_sparkPosterStruct), sizeof(SPARK_CURRENT_ENVIRONMENT), 10);
-  _sparkPoster->setRefreshStatus(false);
+  _sparkPoster->setRefreshStatus(true);
 
-  // _viamImagePoster = new GenomImagePoster("vimanBridgeImage", 1000);
-   _viamImagePoster = new GenomImagePoster("vimanImages", 10);
-   _viamImagePoster->setRefreshStatus(false);
-  
+  // Camera
+
+  std::string host;
+  char * posterPath;
+  posterPath = getenv ("POSTER_PATH");
+  printf("posterPath is %s", posterPath);
+  if(strncmp(posterPath,"jido-arm",4) == 0) {
+      host = "jido-arm.laas.fr";
+      cout << "poster path is jido" << endl;
+  } else if(strncmp(getenv("POSTER_PATH"),"pr2c2",5) == 0) {
+      host = "pr2c2.laas.fr";
+      _picowebLeftImg = new PicowebImage(QString(host.c_str()), 8080, QString("/viman?bank=Images&image=CAMERA_TOP_LEFT&quality=25"));
+     _picowebRightImg = new PicowebImage(QString(host.c_str()), 8080, QString("/viman?bank=Images&image=CAMERA_TOP_RIGHT&quality=25"));
+      cout << "poster path is pr2" << endl;
+  } else {
+              cout << "ERROR CANNOT DETERMINE POSTER_PATH" << endl;
+
+  }
+
+
   // Niut reader
   _niutPoster = new GenomPoster("niutHuman", (char*)(&_niutPosterStruct), sizeof(NIUT_HUMAN_LIST), 10);
   _niutPoster->setRefreshStatus(true);
@@ -38,19 +55,24 @@ PosterReader::PosterReader(MainWindowRemote* obj)
 PosterReader::~PosterReader()
 {
     delete _sparkPoster;
-    delete _viamImagePoster;
     delete _niutPoster;
+    delete _picowebLeftImg;
+    delete _picowebRightImg;
 }
+
 
 void PosterReader::init()
 {
     cout << "start thread for spark ..." << endl;
     _sparkPoster->start();
     cout << "   ... spark thread started" << endl;
-    cout << "start thread for viamImage ..." << endl;
-    _viamImagePoster->start();
-    cout << "   ... viamImage thread started" << endl;
-    cout << "start niut for humans ..." << endl;
+    cout << "start thread for picowebLeftImg ..." << endl;
+    _picowebLeftImg->start();
+    cout << "   ... picowebLeftImg thread started" << endl;
+    cout << "start thread for _picowebRightImg ..." << endl;
+    _picowebRightImg->start();
+    cout << "   ... _picowebRightImg thread started" << endl;
+    cout << "start thread for niut ..." << endl;
     _niutPoster->start();
     cout << "   ... niut thread started" << endl;
 }

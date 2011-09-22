@@ -3,8 +3,10 @@
 
 #include "qtLibrary.hpp"
 #include "mainwindow-remote.hpp"
+
+
 #include "genomposter.hpp"
-#include "genomimageposter.hpp"
+#include "picowebimage.hpp"
 
 #include "duplicatedGenomStruct.hpp"
 
@@ -43,13 +45,13 @@ signals:
 public:
     //! Display functions
     MainWindowRemote* m_win;
-  
     //! Posters
     GenomPoster * _sparkPoster;
     SPARK_CURRENT_ENVIRONMENT _sparkPosterStruct;
 
-    GenomImagePoster * _viamImagePoster;
-  
+    PicowebImage * _picowebLeftImg;
+    PicowebImage * _picowebRightImg;
+
     GenomPoster * _niutPoster;
     NIUT_HUMAN_LIST _niutPosterStruct;
 };

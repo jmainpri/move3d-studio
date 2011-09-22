@@ -20,11 +20,11 @@ CMAKE_MINIMUM_REQUIRED (VERSION 2.6.4)
 
 PROJECT (MOVE3D_REMOTE CXX)
 
-file(GLOB source_files main-remote.cpp move3d.c mainwindow-remote.cpp posterreader.cpp genomposter.cpp genomimageposter.cpp myopencv.cpp qtipl.cpp)
+file(GLOB source_files main-remote.cpp move3d.c mainwindow-remote.cpp posterreader.cpp genomposter.cpp genomimageposter.cpp myopencv.cpp qtipl.cpp picowebimage.cpp)
 
 file(GLOB image_files images/green-man-xpm.h   images/orange-man-xpm.h   images/red-man-xpm.h   images/yellow-death-xpm.h   images/yellow-man-xpm.h)
 
-file(GLOB header_files duplicatedGenomStruct.hpp main-remote.hpp mainwindow-remote.hpp posterreader.hpp genomposter.hpp genomimageposter.hpp myopencv.hpp qtipl.hpp )
+file(GLOB header_files duplicatedGenomStruct.hpp main-remote.hpp mainwindow-remote.hpp posterreader.hpp genomposter.hpp genomimageposter.hpp myopencv.hpp qtipl.hpp picowebimage.hpp )
 
 file(GLOB ui_files mainwindow-remote.ui)
 
@@ -258,7 +258,7 @@ ENDIF(${CMAKE_BUILD_TYPE} MATCHES "Debug")
 ADD_EXECUTABLE(move3d-remote ${source_files} ${SMP_QT_MOC} ${SMP_QT_UI_HEADERS})
 SET_TARGET_PROPERTIES(move3d-remote PROPERTIES LINKER_LANGUAGE CXX)
 SET_TARGET_PROPERTIES(move3d-remote PROPERTIES COMPILE_FLAGS ${POCOLIBS_CFLAGS})
-TARGET_LINK_LIBRARIES(move3d-remote Move3D-Qt-Gui ${POCOLIBS_LDFLAGS} ${LIBS} m)
+TARGET_LINK_LIBRARIES(move3d-remote Move3D-Qt-Gui ${POCOLIBS_LDFLAGS} ${LIBS} ${QT_QTNETWORK_LIBRARY} m)
 
 
 # -------------------------------------------------------------
