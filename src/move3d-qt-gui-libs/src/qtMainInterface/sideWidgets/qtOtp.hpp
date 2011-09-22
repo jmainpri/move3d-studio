@@ -78,36 +78,15 @@ private slots:
         void on_spinBoxNavigate_valueChanged(int value);
         void on_pushButtoRemoveLastconf_clicked();
         void on_pushButtonAddToconfList_clicked();
-        void on_PushButtonSaveConfs_clicked();
         void on_pushButtonPlaceHuman_clicked();
         void on_pushButtonDrawOTPs_toggled(bool checked);
         void on_pushButtonPlaceRobot_clicked();
         void on_pushButtonLoadFromFile_clicked();
         void on_spinBoxNextOTP_valueChanged(int value);
-        void on_pushButtonSaveToFile_clicked();
-        void on_pushButtonShowList_clicked();
-        void on_pushButtonRemoveLast_clicked();
-        void on_pushButtonAddOTP_clicked();
-        void on_spinBoxOTPth_valueChanged(int value);
-        void on_pushButtonOTPth_clicked();
         void on_pushButton_2_clicked();
-        void on_pushButtonShowTraj_clicked();
-        void on_pushButtonNewComputeOTP_clicked();
-        void on_pushButtonRecomputeAStarGridCosts_clicked();
-        void on_pushButtonComputeAStar_clicked();
-        void on_pushButtonCreateGrid_clicked();
-        void on_spinBoxThreshold_valueChanged(int value);
-        void on_RobotPosValuechanged(double value);
         void on_pushButtonGiveConf_clicked();
-        void on_pushButtonComputeGIK_clicked();
-        void on_pushButtonInitHumanPR2_clicked();
         void on_pushButtonPR2RestPose_clicked();
-        void on_pushButton_clicked();
-        void computeTheOtp();
         void drawAllWinActive();
-        void launchOrStopTimer(bool isLaunched);
-        void timerOrNot(bool isChecked);
-        void moveRobots();
 
 
     signals:
@@ -120,16 +99,6 @@ private:
         QtShiva::SpinBoxSliderConnector*	m_k_reachability;
         QtShiva::SpinBoxSliderConnector*	m_k_naturality;
 
-        QtShiva::SpinBoxSliderConnector*	m_k_OptimalDist;
-        QtShiva::SpinBoxSliderConnector*	m_k_RobotDistMax;
-        QtShiva::SpinBoxSliderConnector*	m_k_GazeAngle;
-        QtShiva::SpinBoxSliderConnector*	m_k_LimitRot;
-
-        QtShiva::SpinBoxSliderConnector*	m_k_OptimalDistFactor;
-        QtShiva::SpinBoxSliderConnector*	m_k_RobotDistMaxFactor;
-        QtShiva::SpinBoxSliderConnector*	m_k_GazeAngleFactor;
-
-        QtShiva::SpinBoxSliderConnector*	m_k_RobotPos;
         QtShiva::SpinBoxSliderConnector*	m_k_Obj;
 
         QtShiva::SpinBoxSliderConnector*	m_k_MaxIter;
@@ -153,13 +122,12 @@ private:
 
         QtShiva::SpinBoxSliderConnector*	m_k_sittingOffset;
         QtShiva::SpinBoxSliderConnector*	m_k_sleep;
+        QtShiva::SpinBoxSliderConnector*        m_k_timeLimit;
+        QtShiva::SpinBoxSliderConnector*        m_k_timeLimitSit;
         QtShiva::SpinBoxSliderConnector*	m_k_pow;
 
         QtShiva::SpinBoxSliderConnector*	m_k_nbComputeOTP;
         QtShiva::SpinBoxSliderConnector*	m_k_cellSize;
-
-        QTimer *timer;
-        QTimer *timerTraj;
 
         QString confFileName;
 

@@ -48,16 +48,6 @@ void OtpWidget::initOTP()
         m_k_naturality   = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxNatural,	m_ui->horizontalSliderNatural ,		Env::Knatural );
         m_k_reachability = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxReachable,	m_ui->horizontalSliderReachable ,	Env::Kreachable );
 
-        m_k_OptimalDist = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxHumanDistance,	m_ui->horizontalSliderHumanDistance,	Env::optimalDist);
-        m_k_RobotDistMax= new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxRobotDistance,	m_ui->horizontalSliderRobotDistance,	Env::robotMaximalDist);
-        m_k_GazeAngle   = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxAngle,           m_ui->horizontalSliderAngle,            Env::gazeAngle);
-        m_k_LimitRot    = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxLimitRot,           m_ui->horizontalSliderLimitRot,         PlanParam::env_limitRot);
-
-        m_k_OptimalDistFactor  = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxHumanDistFactor,	m_ui->horizontalSliderHumanDistFactor,	Env::optimalDistFactor);
-        m_k_RobotDistMaxFactor = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxDistFactor,		m_ui->horizontalSliderDistFactor,		Env::robotMaximalDistFactor);
-        m_k_GazeAngleFactor    = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxFieldFactor,		m_ui->horizontalSliderFieldFactor,		Env::gazeAngleFactor);
-
-
         m_k_Obj =  new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxObj, m_ui->horizontalSliderObj, PlanParam::env_objectNessecity);
         m_k_Obj->setValue(0.5);
 
@@ -85,25 +75,11 @@ void OtpWidget::initOTP()
         m_k_nbComputeOTP  = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxMOTP,          m_ui->horizontalSliderMOTP,         PlanParam::env_MOTP);
         m_k_cellSize  =     new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxCellsize,      m_ui->horizontalSliderCellsize,     PlanParam::env_Cellsize);
 
-        m_k_sleep = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxSleep,	m_ui->horizontalSliderSleep,PlanParam::env_timeShow);
-        m_k_sleep = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxPow,	m_ui->horizontalSliderPow  ,PlanParam::env_pow);
+        m_k_sleep = new QtShiva::SpinBoxSliderConnector(this,         m_ui->doubleSpinBoxSleep,         m_ui->horizontalSliderSleep,        PlanParam::env_timeShow);
+        m_k_timeLimit = new QtShiva::SpinBoxSliderConnector(this,     m_ui->doubleSpinBoxTimeLimit,     m_ui->horizontalSliderTimeLimit,    PlanParam::env_timeLimitation);
+        m_k_timeLimit = new QtShiva::SpinBoxSliderConnector(this,     m_ui->doubleSpinBoxTimeLimitSit,  m_ui->horizontalSliderTimeLimitSit, PlanParam::env_sitTimeLimitation);
+        m_k_sleep = new QtShiva::SpinBoxSliderConnector(this,         m_ui->doubleSpinBoxPow,           m_ui->horizontalSliderPow,          PlanParam::env_pow);
 
-        m_k_RobotPos = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxPR2Position,		m_ui->horizontalSliderPR2Position);
-        m_k_RobotPos->setValue(1.5);
-        connect(m_k_RobotPos,SIGNAL(valueChanged(double)),this,SLOT(on_RobotPosValuechanged(double)));
-
-
-        connect( m_ui->pushButtonComputeTheOtp, SIGNAL( clicked()),this, SLOT(computeTheOtp()));
-        connect(m_ui->pushButton_TimerUse, SIGNAL(toggled(bool)),this, SLOT(timerOrNot(bool)) );
-        connect(m_ui->pushButtonComputeTheOtp, SIGNAL(toggled(bool)),this, SLOT(launchOrStopTimer(bool)) );
-
-        timer = new QTimer();
-        timer->setInterval(300);
-        connect(timer,SIGNAL(timeout()),this,SLOT(computeTheOtp()));
-
-        timerTraj = new QTimer(this);
-        timerTraj->setInterval(300);
-        connect(timerTraj,SIGNAL(timeout()),this,SLOT(moveRobots()));
 
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxReach,Env::drawGrid);
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxrandomLimits,PlanParam::drawRandomMap);
@@ -115,100 +91,19 @@ void OtpWidget::initOTP()
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawOnlyBest,PlanParam::env_drawOnlyBest);
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxIsStanding,PlanParam::env_isStanding);
 
-        m_ui->groupBoxGridComputing->hide();
-        m_ui->spinBoxOTPth->setDisabled(true);
 
-}
 
-void OtpWidget::launchOrStopTimer(bool isLaunched)
-{
-
-        if (isLaunched)
-        {
-                timer->start();
-        }
-        else
-        {
-             if (timer->isActive())
-            {
-                timer->stop();
-            }
-        }
 }
 
 void OtpWidget::initSliders()
 {
-        m_ui->otp_widget->setDisabled(false);
-        m_ui->pushButtonComputeTheOtp->setDisabled(false);
-        m_ui->sliders_widget->setDisabled(false);
-
         connect(m_ui->checkBoxReach,SIGNAL(clicked()),m_mainWindow,SLOT(drawAllWinActive()));
-        connect(m_ui->checkBoxRobotBaseCostGrid,SIGNAL(clicked()),m_mainWindow,SLOT(drawAllWinActive()));
-        connect(m_ui->pushButton_ComputeCosts,SIGNAL(clicked()),m_mainWindow,SLOT(drawAllWinActive()));
-
-
-
 }
-
-void OtpWidget::computeTheOtp()
-{
-  Eigen::Vector3d WSPoint;
-        int type = -1;
-        // this variable allow to choose between 3 fonctions :
-        if (m_ui->radioButtonBest->isChecked())
-                // either you don't take into account the environment
-        {
-                type = 0;
-        }
-        else if (m_ui->radioButtonBestFeasable->isChecked())
-                // or you take into account only obstacles for human posture
-        {
-                type = 1;
-        }
-        else if (m_ui->radioButtonChoose->isChecked())
-                // or you take into account the whole envirenment for both human and rbot to compute the transfert point
-        {
-                type = 2;
-        }
-        if (type > -1 && type < 3)
-        {
-                dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->ComputeTheObjectTransfertPoint(
-                                    m_ui->pushButton_Move->isChecked(),type,WSPoint, m_ui->spinBoxThreshold->value());
-                cout << "WSPoint = " << WSPoint << endl;
-                m_mainWindow->drawAllWinActive();
-        }
-}
-
 
 void OtpWidget::drawAllWinActive()
 {
 	m_mainWindow->drawAllWinActive();	
 }
-
-void OtpWidget::timerOrNot(bool isChecked)
-{
-        m_ui->pushButtonComputeTheOtp->setCheckable(isChecked);
-        m_ui->pushButtonComputeTheOtp->setChecked(false);
-        launchOrStopTimer(false);
-}
-
-void OtpWidget::on_pushButton_clicked()
-{
-        Robot* Object = global_Project->getActiveScene()->getRobotByNameContaining("HUMAN");
-        if (Object != NULL)
-        {
-//                        qDebug() << "load initial configuration" ;
-                Object->setAndUpdate(*Object->getInitialPosition());
-        }
-        m_mainWindow->drawAllWinActive();
-
-
-//        Eigen::Vector3d WSPoint;
-//        dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->chooseBestTransferPoint(WSPoint,false, 0);
-
-}
-
-
 
 void OtpWidget::on_pushButtonPR2RestPose_clicked()
 {
@@ -217,23 +112,6 @@ void OtpWidget::on_pushButtonPR2RestPose_clicked()
         dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->initPR2RepoConf();
         m_mainWindow->drawAllWinActive();
     }
-}
-
-void OtpWidget::on_pushButtonInitHumanPR2_clicked()
-{
-    if (dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getActivRobot()->getName().find("PR2") != string::npos)
-    {
-        dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->initPR2AndHumanTest();
-        m_k_RobotPos->setValue(1.5);
-        m_ui->widgetPR2Position->setDisabled(false);
-        m_mainWindow->drawAllWinActive();
-    }
-}
-
-void OtpWidget::on_pushButtonComputeGIK_clicked()
-{
-        cout << "Boutton don't work anymore!!!" << endl;
-       // emit(selectedPlanner(QString("otp")));
 }
 
 void OtpWidget::on_pushButtonGiveConf_clicked()
@@ -245,98 +123,6 @@ void OtpWidget::on_pushButtonGiveConf_clicked()
     }
 }
 
-void OtpWidget::on_RobotPosValuechanged(double value)
-{
-    if (dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getActivRobot()->getName().find("PR2") != string::npos)
-    {
-        dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->ChangeRobotPos(value);
-        m_mainWindow->drawAllWinActive();
-    }
-}
-
-void OtpWidget::on_spinBoxThreshold_valueChanged(int value)
-{
-//    computeTheOtp();
-	on_pushButton_2_clicked();
-}
-
-void OtpWidget::on_pushButtonCreateGrid_clicked()
-{
-	HRICS_MotionPLConfig  = new HRICS::OTPMotionPl;
-	HRICS_activeDist = HRICS_MotionPL->getDistance();
-
-	ENV.setBool(Env::HRIPlannerCS,true);
-	ENV.setBool(Env::enableHri,true);
-	ENV.setBool(Env::isCostSpace,true);
-
-	ENV.setBool(Env::useBallDist,false);
-	ENV.setBool(Env::useBoxDist,true);
-
-	if(ENV.getBool(Env::HRIPlannerCS))
-	{
-		API_activeGrid = dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid();
-
-		ENV.setBool(Env::drawGrid,true);
-		m_mainWindow->setBoolFloor(false);
-		m_mainWindow->drawAllWinActive();
-	}
-
-	m_ui->spinBoxXCell->setMaximum(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid()->getNbCellX()-1);
-	m_ui->spinBoxYCell->setMaximum(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid()->getNbCellY()-1);
-
-	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->changeHumanByName("HERAKLES_HUMAN1");
-}
-
-void OtpWidget::on_pushButtonComputeAStar_clicked()
-{
-	cout << "Computing 2D A* for EnvGrid" << endl;
-	if(ENV.getBool(Env::HRIPlannerCS))
-	{
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->computeAStarIn2DGrid();
-		ENV.setBool(Env::drawOTPTraj,true);
-		m_mainWindow->drawAllWinActive();
-	}
-}
-
-void OtpWidget::on_pushButtonRecomputeAStarGridCosts_clicked()
-{
-	if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
-	{
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid()->setCellsToblankCost();
-	}
-	m_mainWindow->drawAllWinActive();
-}
-
-void OtpWidget::on_pushButtonNewComputeOTP_clicked()
-{
-	if (!dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig) )
-	{
-		on_pushButtonCreateGrid_clicked();
-	}
-	if (!dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getReachability())
-	{
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->setReachability(HRICS_activeNatu);
-	}
-	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->computeObjectTransfertPoint();
-	ENV.setBool(Env::drawOTPTraj,true);
-	m_mainWindow->drawAllWinActive();
-
-}
-
-void OtpWidget::on_pushButtonShowTraj_clicked()
-{
-	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->SetPathIndexNull();
-	timerTraj->start(400);
-}
-
-void OtpWidget::moveRobots()
-{
-	if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->moveToNextPos())
-	{
-		timerTraj->stop();
-	}
-	m_mainWindow->drawAllWinActive();
-}
 
 void OtpWidget::on_pushButtonMultipleOTP_clicked()
 {
@@ -354,91 +140,6 @@ void OtpWidget::on_pushButton_2_clicked()
 		emit(selectedPlanner(QString("otp")));
 		ENV.setBool(Env::drawOTPTraj,true);
 	}
-
-//	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
-//	QTime timeB = QTime::currentTime();
-//	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->initGrid();
-////	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->simpleComputeBaseAndOTP();
-//	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid()->setCellsToblankCost();
-//	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->newComputeOTP(m_ui->checkBoxIsStanding->isChecked(), m_ui->doubleSpinBoxObj->value());
-//	QTime timeE = QTime::currentTime();
-
-
-//	int msec = timeE.msec() - timeB.msec();
-//	int sec = timeB.secsTo(timeE);
-//	cout << "time for computing the OTP is : " << sec << "s " << msec << "msec" << endl;
-
-//	ENV.setBool(Env::drawOTPTraj,true);
-//	m_ui->spinBoxOTPNav->setMaximum(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getNbConf() - 1);
-
-//	m_mainWindow->drawAllWinActive();
-}
-
-void OtpWidget::on_pushButtonOTPth_clicked()
-{
-	if (!dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
-	{
-		on_pushButtonCreateGrid_clicked();
-	}
-	if (!dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getReachability())
-	{
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->setReachability(HRICS_activeNatu);
-		m_ui->spinBoxOTPth->setMaximum(HRICS_activeNatu->getGrid()->getNumberOfCells());
-	}
-	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->OTPonly(m_ui->spinBoxOTPth->value());
-	m_ui->spinBoxOTPth->setEnabled(true);
-	m_ui->checkBoxReach->setChecked(false);
-//	API_activeGrid = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getReachability()->getGrid();
-	m_mainWindow->drawAllWinActive();
-
-}
-
-void OtpWidget::on_spinBoxOTPth_valueChanged(int value)
-{
-	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->OTPonly(value);
-	m_mainWindow->drawAllWinActive();
-}
-
-void OtpWidget::on_pushButtonAddOTP_clicked()
-{
-	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->addToList();
-	m_ui->spinBoxNextOTP->setMaximum(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getOTPList().size() - 1);
-}
-
-void OtpWidget::on_pushButtonRemoveLast_clicked()
-{
-	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->removeLastFromOTPList();
-	m_ui->spinBoxNextOTP->setMaximum(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getOTPList().size() - 1);
-}
-
-void OtpWidget::on_pushButtonShowList_clicked()
-{
-	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->showOTPList();
-}
-
-void OtpWidget::on_pushButtonSaveToFile_clicked()
-{
-  vector<Eigen::Vector3d> OTPList = dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getOTPList();
-    QString fileName = QFileDialog::getSaveFileName(this,
-                                tr("Save otp list to file"));
-    if (!fileName.isEmpty())
-    {
-        QFile file(fileName);
-        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-            return;
-
-        for (unsigned int i =0 ; i < OTPList.size(); i++)
-        {
-            QTextStream out(&file);
-            out << OTPList.at(i)[0] << endl;
-            out << OTPList.at(i)[1] << endl;
-            out << OTPList.at(i)[2] << endl;
-            out <<  "-----------------" << endl;
-        }
-    }
-
-
-
 }
 
 void OtpWidget::on_spinBoxNextOTP_valueChanged(int value)
@@ -494,7 +195,6 @@ void OtpWidget::on_pushButtonPlaceRobot_clicked()
 	m_mainWindow->drawAllWinActive();
 }
 
-
 void OtpWidget::on_pushButtonDrawOTPs_toggled(bool checked)
 {
 	if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
@@ -511,49 +211,6 @@ void OtpWidget::on_pushButtonPlaceHuman_clicked()
 		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->placeHuman();
 	}
 	m_mainWindow->drawAllWinActive();
-}
-
-void OtpWidget::on_PushButtonSaveConfs_clicked()
-{
-	if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
-	{
-		shared_ptr<Configuration> q = dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getActivRobot()->getCurrentPos();
-		shared_ptr<Configuration> q_human = dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getReachability()->getRobot()->getCurrentPos();
-		q->print();
-
-		if (confFileName.isEmpty())
-		{
-			confFileName = QFileDialog::getSaveFileName(this,
-										tr("Save conf to file"));
-		}
-		if (!confFileName.isEmpty())
-		{
-			QFile file(confFileName);
-			if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
-				return;
-
-			for (int i =0 ; i < q->getRobot()->getRobotStruct()->njoints; i++)
-			{
-				QTextStream out(&file);
-				if (i == 6){ out << q->at(i) - q_human->at(i) << " ";}
-				else if (i == 7){ out << q->at(i) - q_human->at(i) << " ";}
-				else if (i == 11){ out << q->at(i) << " ";}
-
-				else if (i == 12){ out << q->at(i) << " ";}
-
-				else if (i == 16){ out << q->at(i) << " ";}
-				else if (i == 17){ out << q->at(i) << " ";}
-				else if (i == 18){ out << q->at(i) << " ";}
-				else if (i == 19){ out << q->at(i) << " ";}
-				else if (i == 20){ out << q->at(i) << " ";}
-				else if (i == 21){ out << q->at(i) << " ";}
-				else if (i == 22){ out << q->at(i) << " ";}
-			}
-			QTextStream out(&file);
-			out << "\n";
-
-		}
-	}
 }
 
 void OtpWidget::on_pushButtonAddToconfList_clicked()
@@ -616,12 +273,6 @@ void OtpWidget::on_pushButtonComputeConfortCost_clicked()
 {
 	if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
 	{
-//		double cost = dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getReachability()->getConfigCost();
-//		double cost = dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->testComputeConfigCost();
-
-//		QString str("Cost of human configuration is : ");
-
-
 
 		QString str("");
 		if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->testCol(true,true))
@@ -664,64 +315,84 @@ void OtpWidget::on_pushButtonComputeConfortCost_clicked()
 	}
 }
 
-
 void OtpWidget::on_pushButtonInit_clicked()
 {
 
-	on_pushButtonCreateGrid_clicked();
+    HRICS_MotionPLConfig  = new HRICS::OTPMotionPl;
+    HRICS_activeDist = HRICS_MotionPL->getDistance();
 
-	if (!dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getReachability())
-	{
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->setReachability(HRICS_activeNatu);
-	}
+    ENV.setBool(Env::HRIPlannerCS,true);
+    ENV.setBool(Env::enableHri,true);
+    ENV.setBool(Env::isCostSpace,true);
 
-        QString home( getenv("HOME_MOVE3D") );
-        Robot* hum = dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getHuman();
+    ENV.setBool(Env::useBallDist,false);
+    ENV.setBool(Env::useBoxDist,true);
+
+    if(ENV.getBool(Env::HRIPlannerCS))
+    {
+            API_activeGrid = dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid();
+
+            ENV.setBool(Env::drawGrid,true);
+            m_mainWindow->setBoolFloor(false);
+            m_mainWindow->drawAllWinActive();
+    }
+
+    m_ui->spinBoxXCell->setMaximum(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid()->getNbCellX()-1);
+    m_ui->spinBoxYCell->setMaximum(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid()->getNbCellY()-1);
+
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->changeHumanByName("HERAKLES_HUMAN1");
+
+    if (!dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getReachability())
+    {
+            dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->setReachability(HRICS_activeNatu);
+    }
+
+    QString home( getenv("HOME_MOVE3D") );
+    Robot* hum = dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getHuman();
 
 
-        QString fileNameStand;
-        QString fileNameSit;
-        QString fileNameStandSlice;
-        QString fileNameSitSlice;
-        if (hum->getName().find("HERAKLES")!= string::npos)
-            {
-                fileNameStand = "/statFiles/OtpComputing/confHerakles.xml";
-                fileNameSit = "/statFiles/OtpComputing/confHeraklesSit.xml";
-                fileNameStandSlice = "/statFiles/OtpComputing/confHerakles.xml";
-                fileNameSitSlice = "/statFiles/OtpComputing/confHeraklesSit.xml";
-            }
-            else if (hum->getName().find("OLDDUDE")!= string::npos)
-            {
-                fileNameStand = "/statFiles/OtpComputing/confOldDude.xml";
-                fileNameSit = "/statFiles/OtpComputing/confOldDudeSit.xml";
-                fileNameStandSlice = "/statFiles/OtpComputing/confOldDude.xml";
-                fileNameSitSlice = "/statFiles/OtpComputing/confOldDudeSit.xml";
-            }
-            else if (hum->getName().find("ACHILE")!= string::npos)
-            {
-                fileNameStand = "/statFiles/OtpComputing/confAchile.xml";
-                fileNameSit = "/statFiles/OtpComputing/confAchileSit.xml";
-                fileNameStandSlice = "/statFiles/OtpComputing/confAchileTranche.xml";
-                fileNameSitSlice = "/statFiles/OtpComputing/confAchileTrancheSit.xml";
-            }
+    QString fileNameStand;
+    QString fileNameSit;
+    QString fileNameStandSlice;
+    QString fileNameSitSlice;
+    if (hum->getName().find("HERAKLES")!= string::npos)
+        {
+            fileNameStand = "/statFiles/OtpComputing/confHerakles.xml";
+            fileNameSit = "/statFiles/OtpComputing/confHeraklesSit.xml";
+            fileNameStandSlice = "/statFiles/OtpComputing/confHerakles.xml";
+            fileNameSitSlice = "/statFiles/OtpComputing/confHeraklesSit.xml";
+        }
+        else if (hum->getName().find("OLDDUDE")!= string::npos)
+        {
+            fileNameStand = "/statFiles/OtpComputing/confOldDude.xml";
+            fileNameSit = "/statFiles/OtpComputing/confOldDudeSit.xml";
+            fileNameStandSlice = "/statFiles/OtpComputing/confOldDude.xml";
+            fileNameSitSlice = "/statFiles/OtpComputing/confOldDudeSit.xml";
+        }
+        else if (hum->getName().find("ACHILE")!= string::npos)
+        {
+            fileNameStand = "/statFiles/OtpComputing/confAchile.xml";
+            fileNameSit = "/statFiles/OtpComputing/confAchileSit.xml";
+            fileNameStandSlice = "/statFiles/OtpComputing/confAchileTranche.xml";
+            fileNameSitSlice = "/statFiles/OtpComputing/confAchileTrancheSit.xml";
+        }
 
-	fileNameStand = home + fileNameStand;
-	fileNameSit = home + fileNameSit;
-	fileNameStandSlice = home + fileNameStandSlice;
-	fileNameSitSlice = home + fileNameSitSlice;
+    fileNameStand = home + fileNameStand;
+    fileNameSit = home + fileNameSit;
+    fileNameStandSlice = home + fileNameStandSlice;
+    fileNameSitSlice = home + fileNameSitSlice;
 
-	if ( dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
-	{
-		m_ui->spinBoxNavigate->setMaximum(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadConfsFromXML(fileNameStand.toStdString(),true, false) - 1);
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadConfsFromXML(fileNameSit.toStdString(),false, false);
+    if ( dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
+    {
+            m_ui->spinBoxNavigate->setMaximum(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadConfsFromXML(fileNameStand.toStdString(),true, false) - 1);
+            dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadConfsFromXML(fileNameSit.toStdString(),false, false);
 
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadConfsFromXML(fileNameStandSlice.toStdString(),true, true);
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadConfsFromXML(fileNameSitSlice.toStdString(),false, true);
-	}
-	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->initGrid();
-	m_ui->spinBoxOTPth->setEnabled(true);
-	m_ui->checkBoxReach->setChecked(false);
-	m_mainWindow->drawAllWinActive();
+            dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadConfsFromXML(fileNameStandSlice.toStdString(),true, true);
+            dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadConfsFromXML(fileNameSitSlice.toStdString(),false, true);
+    }
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->initGrid();
+    m_ui->checkBoxReach->setChecked(false);
+    m_mainWindow->drawAllWinActive();
 }
 
 void OtpWidget::on_pushButtonConfCost_clicked()
@@ -767,7 +438,6 @@ void OtpWidget::on_spinBoxOTPNav_valueChanged(int value)
 	}
 	m_mainWindow->drawAllWinActive();
 }
-
 
 void OtpWidget::on_radioButtonHumGrid_toggled(bool checked)
 {
@@ -858,7 +528,6 @@ void OtpWidget::changeDistCost()
 	}
 }
 
-
 void OtpWidget::on_pushButtonnbConfs_clicked()
 {
 	if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
@@ -867,10 +536,10 @@ void OtpWidget::on_pushButtonnbConfs_clicked()
 	}
 }
 
-
 void OtpWidget::on_pushButtonEraseTraj_clicked()
 {
-	ENV.setBool(Env::drawOTPTraj,false);
+    ENV.setBool(Env::drawOTPTraj,false);
+    m_mainWindow->drawAllWinActive();
 }
 
 void OtpWidget::on_pushButtonDump_clicked()
@@ -901,7 +570,6 @@ void OtpWidget::on_pushButtonComputeHumanRobotDist_clicked()
 	}
 }
 
-
 void OtpWidget::on_radioButtonNormalRandom_toggled(bool checked)
 {
     PlanEnv->setBool(PlanParam::env_normalRand,checked);
@@ -930,8 +598,6 @@ void OtpWidget::on_radioButtonOrientedSlice_toggled(bool checked)
 {
 	PlanEnv->setBool(PlanParam::env_useOrientedSlice,checked);
 }
-
-
 
 void OtpWidget::on_radioButtonAllGrid_toggled(bool checked)
 {

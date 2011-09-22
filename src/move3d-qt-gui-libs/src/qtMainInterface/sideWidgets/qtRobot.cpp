@@ -156,7 +156,7 @@ void RobotWidget::printAbsPos()
   
   cout << "Print Matrix for robot " << r->getName() << endl;
   
-  int joint = m_ui->spinBoxPrintAbsPos->value();
+  unsigned int joint = m_ui->spinBoxPrintAbsPos->value();
   
   if( joint <= r->getNumberOfJoints() )
      cout << r->getJoint(joint)->getMatrixPos().matrix() << endl;
