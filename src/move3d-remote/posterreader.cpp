@@ -36,8 +36,8 @@ PosterReader::PosterReader(MainWindowRemote* obj)
         cout << "poster path is jido" << endl;
     } else if(strncmp(getenv("POSTER_PATH"),"pr2c2",5) == 0) {
         host = "pr2c2.laas.fr";
-        _picowebLeftImg = new PicowebImage(QString(host.c_str()), 8080, QString("/viman?bank=Images&image=CAMERA_TOP_LEFT&quality=25"));
-        _picowebRightImg = new PicowebImage(QString(host.c_str()), 8080, QString("/viman?bank=Images&image=CAMERA_TOP_RIGHT&quality=25"));
+        _picowebLeftImg = new PicowebImage(QString(host.c_str()), 8080, QString("/viman?bank=Images&image=CAMERA_TOP_LEFT&quality=50"));
+        _picowebRightImg = new PicowebImage(QString(host.c_str()), 8080, QString("/viman?bank=Images&image=CAMERA_TOP_RIGHT&quality=50"));
         cout << "poster path is pr2" << endl;
     } else {
         cout << "ERROR CANNOT DETERMINE POSTER_PATH" << endl;

@@ -37,13 +37,12 @@ void PicowebImage::flushImage(int requestId, bool error)
         _bytes = _http->readAll();
         qimg.loadFromData(_bytes);
         _image = _image.fromImage(qimg, 0);
-        _image = _image.scaledToHeight(200);
         QThread::msleep(60);
         _Request =_http->get(_pathWithQuery);
-        cout << "request send" << endl;
     } else {
         _image = QPixmap(jimmy_img);
-        _image = _image.scaledToHeight(200);
+        QThread::msleep(2000);
+        _Request =_http->get(_pathWithQuery);
     }
     emit imageReady();
 }

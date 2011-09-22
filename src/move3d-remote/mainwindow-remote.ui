@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1626</width>
-    <height>768</height>
+    <width>1720</width>
+    <height>1069</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -86,8 +86,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>398</width>
-             <height>715</height>
+             <width>348</width>
+             <height>1016</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout">
@@ -107,8 +107,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>380</width>
-                 <height>610</height>
+                 <width>330</width>
+                 <height>905</height>
                 </rect>
                </property>
                <attribute name="label">
@@ -135,8 +135,8 @@
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>360</width>
-                     <height>563</height>
+                     <width>310</width>
+                     <height>857</height>
                     </rect>
                    </property>
                    <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -401,8 +401,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>111</width>
-                 <height>161</height>
+                 <width>330</width>
+                 <height>905</height>
                 </rect>
                </property>
                <attribute name="label">
@@ -494,8 +494,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>103</width>
-                 <height>45</height>
+                 <width>330</width>
+                 <height>905</height>
                 </rect>
                </property>
                <attribute name="label">
@@ -533,7 +533,7 @@
            <item>
             <widget class="QMdiArea" name="mdiArea">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
@@ -570,6 +570,12 @@
                </item>
                <item>
                 <widget class="QLabel" name="labelImageLeft">
+                 <property name="minimumSize">
+                  <size>
+                   <width>300</width>
+                   <height>200</height>
+                  </size>
+                 </property>
                  <property name="text">
                   <string>Image Left Display</string>
                  </property>
@@ -593,6 +599,12 @@
                </item>
                <item>
                 <widget class="QLabel" name="labelImageRight">
+                 <property name="minimumSize">
+                  <size>
+                   <width>300</width>
+                   <height>200</height>
+                  </size>
+                 </property>
                  <property name="text">
                   <string>Image Right Display Display</string>
                  </property>
@@ -604,6 +616,12 @@
               </layout>
              </widget>
              <widget class="QWidget" name="sparkSubWindow">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="windowTitle">
                <string>Spark</string>
               </property>
@@ -618,8 +636,8 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
-                   <height>0</height>
+                   <width>600</width>
+                   <height>400</height>
                   </size>
                  </property>
                 </widget>
@@ -628,10 +646,16 @@
              </widget>
              <widget class="QWidget" name="niutSubWindow">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>600</width>
+                <height>200</height>
+               </size>
               </property>
               <property name="windowTitle">
                <string>Niut Genom Module</string>
@@ -798,7 +822,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1626</width>
+     <width>1720</width>
      <height>23</height>
     </rect>
    </property>

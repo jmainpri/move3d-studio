@@ -66,20 +66,41 @@ MainWindowRemote::MainWindowRemote(QWidget *parent)
     connect( m_posterHandler->_picowebLeftImg, SIGNAL(imageReady()), this,SLOT(updateImageLeft()));
     connect( m_posterHandler->_picowebRightImg, SIGNAL(imageReady()), this,SLOT(updateImageRight()));
 
-    m_ui->mdiArea->tileSubWindows();
+    //m_ui->mdiArea->tileSubWindows();
 
-//m_ui->mdiArea->setViewMode( QMdiArea::TabbedView);
-//m_ui->mdiArea->setOption(Qt::FramelessWindowHint, true);
+    //m_ui->mdiArea->setViewMode( QMdiArea::TabbedView);
+    //m_ui->mdiArea->setOption(Qt::FramelessWindowHint, true);
+
+    QRect geom = m_ui->mdiArea->geometry();
+
+    QList<int> list;
+    list.clear();
+    list.push_back( 0 );
+    list.push_back( geom.width() );
+
+    m_ui->splitter->setSizes ( list );
+   // m_ui->mdiArea->tileSubWindows();
+
+  //m_ui->sparkSubWindow->setMinimumSize(1200, 1000);
+  //    m_ui->sparkSubWindow->setMinimumSize(0, 0);
 }
 
 void MainWindowRemote::updateImageLeft()
 {
-m_ui->labelImageLeft->setPixmap(m_posterHandler->_picowebLeftImg->image());
+    m_ui->labelImageLeft->setPixmap(m_posterHandler->_picowebLeftImg->image().scaled(QSize(400, 400),Qt::KeepAspectRatio,Qt::FastTransformation));
+    QSizePolicy labelSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    labelSizePolicy.setHeightForWidth(true);
+    m_ui->labelImageLeft->setSizePolicy(labelSizePolicy);
+    m_ui->labelImageLeft->setScaledContents(true);
 }
 
 void MainWindowRemote::updateImageRight()
 {
-m_ui->labelImageRight->setPixmap(m_posterHandler->_picowebRightImg->image());
+    m_ui->labelImageRight->setPixmap(m_posterHandler->_picowebRightImg->image().scaled(QSize(400, 400),Qt::KeepAspectRatio,Qt::FastTransformation));
+    QSizePolicy labelSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    labelSizePolicy.setHeightForWidth(true);
+    m_ui->labelImageRight->setSizePolicy(labelSizePolicy);
+    m_ui->labelImageRight->setScaledContents(true);
 }
 
 void MainWindowRemote::looptest()
@@ -386,11 +407,11 @@ void MainWindowRemote::initLightSource()
 
 
     QtShiva::SpinBoxSliderConnector *connectorLightX = new QtShiva::SpinBoxSliderConnector(
-                this, m_ui->doubleSpinBoxLightX, m_ui->horizontalSliderLightX);
+            this, m_ui->doubleSpinBoxLightX, m_ui->horizontalSliderLightX);
     QtShiva::SpinBoxSliderConnector *connectorLightY = new QtShiva::SpinBoxSliderConnector(
-                this, m_ui->doubleSpinBoxLightY, m_ui->horizontalSliderLightY);
+            this, m_ui->doubleSpinBoxLightY, m_ui->horizontalSliderLightY);
     QtShiva::SpinBoxSliderConnector *connectorLightZ = new QtShiva::SpinBoxSliderConnector(
-                this, m_ui->doubleSpinBoxLightZ, m_ui->horizontalSliderLightZ);
+            this, m_ui->doubleSpinBoxLightZ, m_ui->horizontalSliderLightZ);
 
     connect(connectorLightX,SIGNAL(valueChanged(double)),this,SLOT(changeLightPosX()));
     connect(connectorLightY,SIGNAL(valueChanged(double)),this,SLOT(changeLightPosY()));
