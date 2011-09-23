@@ -8,6 +8,8 @@
 #include <iostream>
 #include <vector>
 #include <QPainter>
+#include <QSettings>
+#include <QMessageBox>
 #include "qtipl.hpp"
 
 #include "planner_handler.hpp"
@@ -66,23 +68,8 @@ MainWindowRemote::MainWindowRemote(QWidget *parent)
     connect( m_posterHandler->_picowebLeftImg, SIGNAL(imageReady()), this,SLOT(updateImageLeft()));
     connect( m_posterHandler->_picowebRightImg, SIGNAL(imageReady()), this,SLOT(updateImageRight()));
 
-    //m_ui->mdiArea->tileSubWindows();
 
-    //m_ui->mdiArea->setViewMode( QMdiArea::TabbedView);
-    //m_ui->mdiArea->setOption(Qt::FramelessWindowHint, true);
 
-    QRect geom = m_ui->mdiArea->geometry();
-
-    QList<int> list;
-    list.clear();
-    list.push_back( 0 );
-    list.push_back( geom.width() );
-
-    m_ui->splitter->setSizes ( list );
-   // m_ui->mdiArea->tileSubWindows();
-
-  //m_ui->sparkSubWindow->setMinimumSize(1200, 1000);
-  //    m_ui->sparkSubWindow->setMinimumSize(0, 0);
 }
 
 void MainWindowRemote::updateImageLeft()
@@ -472,7 +459,7 @@ void MainWindowRemote::changeLightPosZ()
 void MainWindowRemote::initNiut()
 {
 
-    m_ui->niutSubWindow->setWindowTitle(QString("Niut Genom Module"));
+    //m_ui->niutSubWindow->setWindowTitle(QString("Niut Genom Module"));
 
     _niutLabels.push_back( m_ui->labelNiut1 );
     _niutLabels.push_back( m_ui->labelNiut2 );
@@ -552,13 +539,122 @@ void MainWindowRemote::setNiutColorLabel(int id, int color)
 void MainWindowRemote::initCamera()
 {
 
-
-
-
-
-
     // WebBrowser example
     // view = new QWebView(parent);
     // view->load(QUrl("http://www.google.fr";));
     // view->show();
+}
+
+void MainWindowRemote::closeEvent(QCloseEvent *event)
+{
+    if (userReallyWantsToQuit()) {
+        on_pushButtonSaveSettings_clicked();
+        event->accept();
+    } else {
+        event->ignore();
+    }
+}
+
+bool MainWindowRemote::userReallyWantsToQuit()
+{
+
+    switch( QMessageBox::information( this, "move3d-remote",
+                                      "Do you want to save settings it before exiting?",
+                                      "&Save", "&Don't Save", "&Cancel",
+                                      0,      // Enter == button Save 0
+                                      2 ) ) { // Escape == button Cancel
+                                      case 0: // Save clicked, Alt-S or Enter pressed.
+                                          on_pushButtonSaveSettings_clicked();
+                                          return true;
+                                          break;
+                                      case 1: // Don't Save clicked or Alt-D pressed
+                                          return true;
+                                          break;
+                                      case 2: // Cancel clicked, Alt-C or Escape pressed
+                                          return false;
+                                          break;
+                                      }
+}
+
+bool MainWindowRemote::userWantsToLoadSettings()
+{
+
+    switch( QMessageBox::information( this, "move3d-remote",
+                                      "Do you want to load your settings ?",
+                                      "&Yes", "&Maybe", "&No",
+                                      0,      // Enter == button Save 0
+                                      2 ) ) { // Escape == button Cancel
+                                      case 0: // Save clicked, Alt-S or Enter pressed.
+                                          on_pushButtonLoadSettings_clicked();
+                                          return true;
+                                          break;
+                                      case 1: // Don't Save clicked or Alt-D pressed
+                                          userWantsToLoadSettings();
+                                          return true;
+                                          break;
+                                      case 2: // Cancel clicked, Alt-C or Escape pressed
+                                          return false;
+                                          break;
+                                      }
+}
+
+
+
+void MainWindowRemote::on_pushButtonLoadSettings_clicked()
+{ 
+    string file, home;
+    char * homec;
+    homec = getenv ("HOME");
+    home = homec;
+    file = home + "/.move3d-remote";
+    QSettings settings(QString(file.c_str()), QSettings::IniFormat, this); 
+    loadDockSettings(settings, QString("dockSpark"), m_ui->dockSpark);
+    loadDockSettings(settings, QString("dockViewer"), m_ui->dockViewer);
+    loadDockSettings(settings, QString("dockCamera"), m_ui->dockCamera);
+    loadDockSettings(settings, QString("dockNiut"), m_ui->dockNiut);
+
+    m_ui->dockSpark->showFullScreen();
+}
+
+
+
+void MainWindowRemote::loadDockSettings(QSettings & settings, QString dockName, QDockWidget * dockWidget)
+{
+    settings.beginGroup(dockName);
+    dockWidget->setFloating(settings.value(dockName + QString("/isFloating"), false).toBool());
+    dockWidget->move(settings.value(dockName + QString("/pos"), QPoint(1,1)).toPoint());
+    dockWidget->resize(settings.value(dockName + QString("/size"), QSize(640, 480)).toSize());
+    //dockWidget->restoreGeometry(settings.value(dockName + QString("/geometry")).toByteArray());
+    addDockWidget((Qt::DockWidgetArea)settings.value(dockName + QString("/dockarea"), Qt::RightDockWidgetArea).toInt(), dockWidget);
+    settings.endGroup();
+}
+
+void MainWindowRemote::on_pushButtonSaveSettings_clicked()
+{
+    string file, home;
+    char * homec;
+    homec = getenv ("HOME");
+    home = homec;
+    file = home + "/.move3d-remote";
+    QSettings settings(QString(file.c_str()), QSettings::IniFormat, this);
+    saveDockSettings(settings, QString("dockSpark"), m_ui->dockSpark);
+    saveDockSettings(settings, QString("dockViewer"), m_ui->dockViewer);
+    saveDockSettings(settings, QString("dockCamera"), m_ui->dockCamera);
+    saveDockSettings(settings, QString("dockNiut"), m_ui->dockNiut);
+}
+
+void MainWindowRemote::saveDockSettings(QSettings & settings, QString dockName, QDockWidget * dockWidget)
+{
+    settings.beginGroup(dockName);
+    settings.setValue(dockName + QString("/dockarea"), dockWidgetArea(dockWidget));
+    settings.setValue(dockName +  QString("/isFloating"), dockWidget->isFloating());
+   // settings.setValue(dockName + QString("/geometry"), dockWidget->saveGeometry());
+    settings.setValue(dockName + QString("/size"), dockWidget->size());
+    settings.setValue(dockName + QString("/pos"), dockWidget->pos());
+    settings.endGroup();
+}
+
+void MainWindowRemote::on_switchSparkView_clicked(bool checked)
+{
+
 }

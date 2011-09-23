@@ -5,6 +5,7 @@ class GLWidget;
 class PosterReader;
 
 #include "qtLibrary.hpp"
+#include <QSettings>
 #include "p3d_sys.h"
 #include "../p3d/env.hpp"
 #include "../p3d/ParametersEnv.hpp"
@@ -36,6 +37,10 @@ public slots:
         void setNiutColorLabel(int idLabel, int color);
   
 private slots:
+
+        void on_switchSparkView_clicked(bool checked);
+        void on_pushButtonSaveSettings_clicked();
+        void on_pushButtonLoadSettings_clicked();
         void setSparkRefresh();
         void sparkSaveScenario();
 
@@ -74,7 +79,7 @@ public:
 protected:
         void keyPressEvent(QKeyEvent *e);
         void keyReleaseEvent(QKeyEvent *e);
-
+        void closeEvent(QCloseEvent *event);
 public:
         QLabel* _labelImageLeft;
         QLabel* _labelImageRight;
@@ -101,8 +106,13 @@ private:
         void initLightSource();
         void initRobotsMenu();
         void initNiut();
-
+        bool userReallyWantsToQuit();
+        bool userWantsToLoadSettings();
         void initCamera();
+        void saveDockSettings(QSettings & settings, QString dockName, QDockWidget * dockWidget);
+        void loadDockSettings(QSettings & settings, QString dockName, QDockWidget * dockWidget);
+
+
         /**
          * Function tro create sliders and checkboxes TODO move somwhere else
          */
