@@ -68,7 +68,7 @@ MainWindowRemote::MainWindowRemote(QWidget *parent)
     connect( m_posterHandler->_picowebLeftImg, SIGNAL(imageReady()), this,SLOT(updateImageLeft()));
     connect( m_posterHandler->_picowebRightImg, SIGNAL(imageReady()), this,SLOT(updateImageRight()));
 
-
+on_pushButtonLoadSettings_clicked();
 
 }
 
