@@ -1,7 +1,7 @@
 #include "P3d-pkg.h"
 #include "Localpath-pkg.h"
 
-#include <libmove3d/include/move3d-gui.h>
+#include <move3d-gui.h>
 
 extern FL_OBJECT  *steering_obj;
 

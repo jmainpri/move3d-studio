@@ -7,7 +7,7 @@
 #include <Bio-pkg.h>
 #include <sys/stat.h>
 
-#include <libmove3d/include/move3d-gui.h>
+#include <move3d-gui.h>
 
 #ifdef CXX_PLANNER
 #include <planner_cxx/plannerFunctions.hpp>

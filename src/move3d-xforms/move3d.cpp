@@ -1,7 +1,7 @@
 #include <Util-pkg.h>
 #include <P3d-pkg.h>
 
-#include <libmove3d-viewer/include/move3d-gui.h>
+#include <move3d-gui.h>
 
 #ifdef P3D_PLANNER
 #include <Planner-pkg.h>
@@ -27,12 +27,12 @@
 
 
 #ifdef LIGHT_PLANNER
-#include <libmove3d/lightPlanner/proto/DlrPlanner.h>
-#include <libmove3d/lightPlanner/proto/DlrParser.h>
-#include <libmove3d/lightPlanner/proto/lightPlannerApi.h>
+#include <lightPlanner/proto/DlrPlanner.h>
+#include <lightPlanner/proto/DlrParser.h>
+#include <lightPlanner/proto/lightPlannerApi.h>
 
   #if defined( MULTILOCALPATH ) && defined( GRASP_PLANNING )
-  #include <libmove3d/lightPlanner/proto/ManipulationTestFunctions.hpp>
+  #include <lightPlanner/proto/ManipulationTestFunctions.hpp>
   #endif
 
 #endif
@@ -49,7 +49,7 @@
 #include "proto/FORMmain_proto.h"
 #endif
 
-#include <libmove3d/graphic/proto/g3d_glut.hpp>
+#include <graphic/proto/g3d_glut.hpp>
 
 static int FILTER_TO_BE_SET_ACTIVE = FALSE;
 //extern void g3d_create_main_form(void);
@@ -361,8 +361,8 @@ int main(int argc, char ** argv) {
 
   /* lecture du fichier environnement */
   p3d_set_directory(file_directory);
-#ifdef MOVE3D_XFORMS
-  int fontsize = 8;
+  
+  int fontsize = 6;
   FL_IOPT fl_cntl;
   fl_cntl.buttonFontSize = fontsize;
   fl_set_defaults(FL_PDButtonFontSize, &fl_cntl);
@@ -379,7 +379,7 @@ int main(int argc, char ** argv) {
   
   fl_initialize(&argc, argv, "FormDemo", 0, 0);
   fl_set_border_width(1);
-#endif
+
   
 #if defined( USE_GLUT ) && !defined( QT_GL_WIDGET ) 
   GlutWindowDisplay glut_win(argc,argv);

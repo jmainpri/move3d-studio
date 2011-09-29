@@ -11,17 +11,17 @@
 #include <Localpath-pkg.h>
 #include <GraspPlanning-pkg.h>
 #include <gbM/Proto_gbModeles.h>
-//#include <libmove3d/lightPlanner.h>
-//#include <libmove3d/lightPlannerApi.h>
-#include <libmove3d/lightPlanner/proto/ManipulationViaConfPlanner.hpp>
+//#include <lightPlanner.h>
+//#include <lightPlannerApi.h>
+#include <lightPlanner/proto/ManipulationViaConfPlanner.hpp>
 #include <LightPlanner-pkg.h>
-#include <libmove3d/graspPlanning/proto/gp_grasp_generation_proto.h>
+#include <graspPlanning/proto/gp_grasp_generation_proto.h>
 #ifdef DPG
 #include <p3d_chanEnv_proto.h>
 #endif
 
 #ifdef CXX_PLANNER
-#include <libmove3d/planner_cxx/plannerFunctions.hpp>
+#include <planner_cxx/plannerFunctions.hpp>
 #endif
 
 #include "proto/FORMrobot_proto.h"

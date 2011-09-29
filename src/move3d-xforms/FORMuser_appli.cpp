@@ -8,20 +8,20 @@
 #include <Util-pkg.h>
 
 #ifdef LIGHT_PLANNER
-  #include <libmove3d/lightPlanner/proto/DlrPlanner.h>
-  #include <libmove3d/lightPlanner/proto/DlrParser.h>
-  #include <libmove3d/lightPlanner/proto/lightPlanner.h>
-  #include <libmove3d/lightPlanner/proto/lightPlannerApi.h>
-  #include <libmove3d/lightPlanner/proto/ManipulationTestFunctions.hpp>
-  #include <libmove3d/lightPlanner/proto/robotPos.h>
+  #include <lightPlanner/proto/DlrPlanner.h>
+  #include <lightPlanner/proto/DlrParser.h>
+  #include <lightPlanner/proto/lightPlanner.h>
+  #include <lightPlanner/proto/lightPlannerApi.h>
+  #include <lightPlanner/proto/ManipulationTestFunctions.hpp>
+  #include <lightPlanner/proto/robotPos.h>
 #endif
 #ifdef DPG
-  #include <libmove3d/planner/dpg/proto/p3d_chanEnv_proto.h>
+  #include <planner/dpg/proto/p3d_chanEnv_proto.h>
 #endif
 #ifdef GRASP_PLANNING
   #include <GraspPlanning-pkg.h>
   #ifdef LIGHT_PLANNER
-    #include <libmove3d/lightPlanner/proto/Manipulation.h>
+    #include <lightPlanner/proto/Manipulation.h>
   #endif
 #endif
 
