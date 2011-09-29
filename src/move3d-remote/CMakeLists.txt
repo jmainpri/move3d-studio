@@ -136,7 +136,7 @@ ENDIF(APPLE)
 #-------------- Pocolibs -------------------------------------------------------
 
 Message(Find Pocolibs)
-FIND_PACKAGE (Pkgconfig)
+FIND_PACKAGE (PkgConfig)
 pkg_check_modules(POCOLIBS REQUIRED "pocolibs")
 
 MESSAGE( "------------------ POCOLIBS -----------------------" )
@@ -156,12 +156,12 @@ ADD_DEFINITIONS(${MOVE3D_CFLAGS})
 
 #MESSAGE( MOVE3D_LIBRARIES = ${MOVE3D_LIBRARIES})
 
-#-------------- Move3D-motionPlanner-libs --------------------------------------
+#-------------- move3d-planners --------------------------------------
 
-FIND_PACKAGE(MOVE3D-MOTIONPLANNER REQUIRED)
-INCLUDE_directories(${MOVE3D-MOTIONPLANNER_INCLUDE_DIR})
-SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${MOVE3D-MOTIONPLANNER_INCLUDE_DIR})
-SET(LIBS ${LIBS} ${MOVE3D-MOTIONPLANNER_LIBRARIES})
+FIND_PACKAGE(MOVE3D-PLANNERS REQUIRED)
+INCLUDE_directories(${MOVE3D-PLANNERS_INCLUDE_DIR})
+SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${MOVE3D-PLANNERS_INCLUDE_DIR})
+SET(LIBS ${LIBS} ${MOVE3D-PLANNERS_LIBRARIES})
 
 
 #####################################################################
