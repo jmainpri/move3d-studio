@@ -9,7 +9,7 @@
 #include <Collision-pkg.h>
 #include <Graphic-pkg.h>
 
-#include <hri/hri.h>
+#include <libmove3d/hri/hri.h>
 
 #ifdef USE_SYM_GEO_PLAN
 #include "include/Geo_Sym_Sys.h"

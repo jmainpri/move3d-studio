@@ -18,11 +18,10 @@ GLWidget* openGlWidget;
 
 #include "API/Graphic/drawModule.hpp"
 
-#ifdef USE_GLUT
-#include "glutWindow.hpp"
-#include "glut.h"
-#endif
-
+//#ifdef USE_GLUT
+//#include "glutWindow.hpp"
+//#include <glut.h>
+//#endif
 
 extern int mainMhp(int argc, char** argv);
 
@@ -225,12 +224,12 @@ int main(int argc, char *argv[])
 	{
     case Glut:
 		{
-#ifdef USE_GLUT
-			GlutWindowDisplay win(argc,argv);
-			glutMainLoop ();
-#else
-			cout << "Error : Glut is not linked" << endl;
-#endif
+//#ifdef USE_GLUT
+//			GlutWindowDisplay win(argc,argv);
+//			glutMainLoop ();
+//#else
+//			cout << "Error : Glut is not linked" << endl;
+//#endif
 		}
 #ifdef QT_GL
     case qtWindow:

@@ -5,7 +5,7 @@
 #include <Graphic-pkg.h>
 #include <GroundHeight-pkg.h>
 
-#include <hri/hri.h>
+#include <libmove3d/hri/hri.h>
 
 #include "g3d_draw_navigation_proto.h"
 /*

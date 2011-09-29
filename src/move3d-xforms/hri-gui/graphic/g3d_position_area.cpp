@@ -4,7 +4,7 @@
 #include <Graphic-pkg.h>
 #include <Util-pkg.h>
 
-#include <hri/hri.h>
+#include <libmove3d/hri/hri.h>
 
 #include "../p3d_perspective_proto.h"
 #include "g3d_position_area_proto.h"

@@ -41,7 +41,7 @@
 
 #ifdef HRI_PLANNER
 #include "P3d-pkg.h"
-#include <hri/hri.h>
+#include <libmove3d/hri/hri.h>
 #endif
 
 using namespace std;

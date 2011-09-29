@@ -5,7 +5,7 @@
 #include <Collision-pkg.h>
 #include <Graphic-pkg.h>
 
-#include <hri/hri.h>
+#include <libmove3d/hri/hri.h>
 
 #include "perspective.h"
 #include "hri_wave_exp_proto.h"

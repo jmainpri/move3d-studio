@@ -16,7 +16,7 @@
 //////// GUI forms includes ////////
 
 #ifdef HRI_PLANNER
-#include <hri/hri.h>
+#include <libmove3d/hri/hri.h>
 #include "hri-gui/FORMhri_planner_proto.h"
 
 #ifdef USE_MIGHTABILITY_MAPS

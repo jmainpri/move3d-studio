@@ -6,7 +6,7 @@
 #include <Graphic-pkg.h>
 #include <Planner-pkg.h>
 
-#include <hri/hri.h>
+#include <libmove3d/hri/hri.h>
 
 #include "hri_wave_exp_proto.h"
 

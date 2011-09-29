@@ -5,7 +5,7 @@
 #include <Util-pkg.h>
 #include <iostream>
 
-#include <hri/hri.h>
+#include <libmove3d/hri/hri.h>
 
 #include "g3d_draw_camera_proto.h"
 

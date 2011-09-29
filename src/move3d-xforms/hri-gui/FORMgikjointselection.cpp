@@ -5,7 +5,7 @@
 #include <Collision-pkg.h>
 #include <Graphic-pkg.h>
 
-#include <hri/hri.h>
+#include <libmove3d/hri/hri.h>
 
 #include "FORMgikjointselection_proto.h"
 

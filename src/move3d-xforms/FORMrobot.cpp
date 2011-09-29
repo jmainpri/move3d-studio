@@ -12,7 +12,7 @@
 #include <move3d-gui.h>
 
 #ifdef HRI_PLANNER
-#include <hri/hri.h>
+#include <libmove3d/hri/hri.h>
 #endif
 
 #ifdef HRI_COSTSPACE

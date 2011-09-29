@@ -55,10 +55,6 @@ QWidget(parent),
 m_ui(new Ui::CostWidget)
 {
 	m_ui->setupUi(this);
-	
-	//initCost();
-	//initHRI();
-	//initHumanLike();
 }
 
 CostWidget::~CostWidget()

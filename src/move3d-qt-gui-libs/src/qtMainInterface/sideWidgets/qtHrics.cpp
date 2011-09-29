@@ -67,6 +67,8 @@ void HricsWidget::initHRI()
 //    global_costSpace->addCost("costHRI",boost::bind(HRICS_getConfigCost,_1));
 //    global_costSpace->setCost("costHRI");
 //  }
+  
+  cout << "Init HRICS widget" << endl;
 	
 	m_mainWindow->connectCheckBoxToEnv(m_ui->enableHri_2,										Env::enableHri);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawGrid,							Env::drawGrid);

@@ -51,6 +51,18 @@ void ReplanningWidget::init()
   connect(m_ui->pushButtonInitialize, SIGNAL(clicked()), this, SLOT(initReplanning()));
   connect(m_ui->pushButtonExecuteSimu, SIGNAL(clicked()), this, SLOT(executeReplanTraj()));
   
+  // Smooth And Obstacle Weigth
+  connect(m_ui->doubleSpinBoxSmoothWeight,SIGNAL(valueChanged(double)),PlanEnv->getObject(PlanParam::trajOptimSmoothWeight),SLOT(set(double)));
+	m_ui->doubleSpinBoxSmoothWeight->setValue(PlanEnv->getDouble(PlanParam::trajOptimSmoothWeight));
+  
+  connect(m_ui->doubleSpinBoxObstacWeight,SIGNAL(valueChanged(double)),PlanEnv->getObject(PlanParam::trajOptimObstacWeight),SLOT(set(double)));
+	m_ui->doubleSpinBoxObstacWeight->setValue(PlanEnv->getDouble(PlanParam::trajOptimObstacWeight));
+  
+  //---------------------------------------
+  
+  // Test the multi gaussian
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxTestMultiGauss, PlanParam::trajOptimTestMultiGauss );
+  
   // Draw the traj
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxDrawTraj, Env::drawTraj );
   
@@ -67,6 +79,10 @@ void ReplanningWidget::init()
   // Set the duration of the optimized trajectory
   connect(m_ui->doubleSpinBoxDuration,SIGNAL(valueChanged(double)),PlanEnv->getObject(PlanParam::trajDuration),SLOT(set(double)));
 	m_ui->doubleSpinBoxDuration->setValue(PlanEnv->getDouble(PlanParam::trajDuration));
+  
+  // Set the standard deviation of the perturbations
+  connect(m_ui->doubleSpinBoxStdDev,SIGNAL(valueChanged(double)),PlanEnv->getObject(PlanParam::trajOptimStdDev),SLOT(set(double)));
+	m_ui->doubleSpinBoxStdDev->setValue(PlanEnv->getDouble(PlanParam::trajOptimStdDev));
 }
 
 //---------------------------------------------------------
