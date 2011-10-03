@@ -121,9 +121,9 @@ ELSE(APPLE)
 ENDIF(APPLE)
 
 
-# ------------------- libmove3D-viewer ----------------------------------------------
+# ------------------- libmove3d ----------------------------------------------
 
-PKG_CHECK_MODULES(MOVE3D REQUIRED libmove3d-viewer)
+PKG_CHECK_MODULES(MOVE3D REQUIRED libmove3d)
 INCLUDE_DIRECTORIES(${MOVE3D_INCLUDE_DIRS})
 LINK_DIRECTORIES( ${MOVE3D_LIBRARY_DIRS} )
 SET(LIBS ${LIBS} ${MOVE3D_LIBRARIES})
