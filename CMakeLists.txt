@@ -111,9 +111,7 @@ IF   (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/move3d-studio.pc.in")
 	)
 ENDIF(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/move3d-studio.pc.in")
 
-##########################################
-##       HRI library                 ###
-##########################################
+
 
 ADD_SUBDIRECTORY (src)
 

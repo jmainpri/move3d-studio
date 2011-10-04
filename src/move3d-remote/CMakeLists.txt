@@ -38,97 +38,56 @@ INCLUDE_DIRECTORIES(/home/xbroquer/openrobots/include/viam)
 #################################################################
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/script/CMake")
 
+FIND_PACKAGE(MOVE3D-PLANNERS REQUIRED)
+INCLUDE_directories(${MOVE3D-PLANNERS_INCLUDE_DIR})
+LINK_DIRECTORIES( ${MOVE3D-PLANNERS_LIBRARY_DIRS} )
+SET(LIBS ${LIBS} ${MOVE3D-PLANNERS_LIBRARIES})
 
-SET(Move3D_CompilationFlags "")
-SET(Move3D_LinkedCompilationFlags "")
 
-MACRO(Move3D_flag flagName description status)
-  SET(flagName "${flagName}")
-  SET(description "${description}")
-  SET(status "${status}")
-  OPTION(${flagName} ${description} ${status})
-  LIST(APPEND Move3D_CompilationFlags ${flagName})
-  FOREACH(linkFlag ${ARGN})
-    LIST(APPEND Move3D_LinkedCompilationFlags "${flagName}:${linkFlag}")
-  ENDFOREACH(linkFlag)
-#  set_property(CACHE ANIMATION PROPERTY VALUE ON)
-ENDMACRO(Move3D_flag)
 
-MACRO(Move3D_CheckCompilationFlags)
-  SET(Move3D_ActiveFlags "")
-  #MESSAGE ("Active Flags :")
-  FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/smpFlags "#Generated File Do not modify!!!\n" )
-  FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/smpFlags "Move3D_COMPILATION_FLAGS = ")
-  FOREACH(flag ${Move3D_CompilationFlags})
-    IF(${flag})
-      FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/Move3DFlags "-D${flag} ")
-      #MESSAGE("${flag}")
-      ADD_DEFINITIONS("-D${flag}")
-      LIST(APPEND Move3D_ActiveFlags ${flag})
-    ENDIF()
-  ENDFOREACH(flag)
-ENDMACRO(Move3D_CheckCompilationFlags)
-
-#-------------------------------------------------------------------------------
-# ------------------------------------------------------------------------------
-# --- Compilation Flags --------------------------------------------------------
-# ------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------
-
-Move3D_flag(QT_LIBRARY "Sets QtLibrary compiling mode" ON)
-Move3D_flag(QT_GL "Sets QtLibrary compiling mode" ON QT_LIBRARY)
-Move3D_flag(QT_UI_XML_FILES "Sets QtLibrary compiling mode" ON QT_LIBRARY)
-
-Move3D_flag(P3D_CONSTRAINTS "Compilation with module Constraints" ON)
-Move3D_flag(P3D_COLLISION_CHECKING "Compilation with module Collision Checking" ON)
-Move3D_flag(P3D_LOCALPATH "Compilation with module Localpath" ON)
-Move3D_flag(P3D_PLANNER "Compilation with module Planner" ON)
-
-Move3D_flag(LIGHT_PLANNER "Compilation with module Light Planner" ON)
-Move3D_flag(GRASP_PLANNING "Compilation with module Gasp Planner" ON)
-Move3D_flag(MULTILOCALPATH "Compilation with module Multi-local Planner" ON)
-Move3D_flag(MULTIGRAPH "Compilation with module Multi-Graph" ON)
-
-Move3D_flag(USE_GBM "Compilation with module GBM for IK computation" ON)
-Move3D_flag(USE_GLUT "Glut" OFF)
-
-Move3D_flag(MOVE3D_CORE "Compiles the planning API and planners" ON)
-
-Move3D_flag(HRI_COSTSPACE "With the hri work" ON)
-
-Move3D_flag(PQP "With PQP" ON)
-
-Move3D_CheckCompilationFlags()
-
-#-------------- Qt Library -----------------------------------------------------
-
-      FIND_PACKAGE(Qt4 REQUIRED)
-      INCLUDE_DIRECTORIES(${QT_INCLUDE_DIR})
-      SET(QT_USE_QTOPENGL TRUE)
-      INCLUDE(${QT_USE_FILE})
-      SET(LIBS ${LIBS} ${QT_LIBRARIES})
-
-      FIND_PACKAGE(X11 REQUIRED)
-      INCLUDE_directories(${X11_INCLUDE_DIR})
-      SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${X11_INCLUDE_DIR})
-      SET(LIBS ${LIBS} ${X11_LIBRARIES})
-      FIND_PACKAGE(LibXml2 REQUIRED)
-      INCLUDE_directories(${LIBXML2_INCLUDE_DIR})
-      SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR})
-      SET(LIBS ${LIBS} ${LIBXML2_LIBRARIES})
-
+#-------------- Qt Library -----------------
+IF(QT_LIBRARY)
+  FIND_PACKAGE(Qt4 REQUIRED)
+  INCLUDE_DIRECTORIES(${QT_INCLUDE_DIR})
+  SET(Move3DGUI_COMPILATION_INCLUDES ${Move3DGUI_COMPILATION_INCLUDES} ${QT_INCLUDE_DIR})
+  IF(QT_GL)
+    SET(QT_USE_QTOPENGL TRUE)
+  ENDIF(QT_GL)
+  INCLUDE(${QT_USE_FILE})
+  SET(LIBS ${LIBS} ${QT_LIBRARIES})
+ENDIF(QT_LIBRARY)
+FIND_PACKAGE(X11 REQUIRED)
+INCLUDE_directories(${X11_INCLUDE_DIR})
+SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${X11_INCLUDE_DIR})
+SET(LIBS ${LIBS} ${X11_LIBRARIES})
+FIND_PACKAGE(LibXml2 REQUIRED)
+INCLUDE_directories(${LIBXML2_INCLUDE_DIR})
+SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR})
+SET(LIBS ${LIBS} ${LIBXML2_LIBRARIES})
 IF(APPLE)
-                FIND_PACKAGE(OpenGL REQUIRED)
-                INCLUDE_directories("${OPENGL_INCLUDE_DIR}/Headers")
-                SET(INCLUDE_DIRS ${INCLUDE_DIRS} "${OPENGL_INCLUDE_DIR}/Headers")
-                SET(LIBS ${LIBS} ${OPENGL_LIBRARIES})
-                Message(${OPENGL_INCLUDE_DIR})
-                Message(${OPENGL_LIBRARIES})
+	IF(QT_LIBRARY)
+  		FIND_PACKAGE(OpenGL REQUIRED)
+  		INCLUDE_directories("${OPENGL_INCLUDE_DIR}/Headers")
+  		SET(INCLUDE_DIRS ${INCLUDE_DIRS} "${OPENGL_INCLUDE_DIR}/Headers")
+  		SET(LIBS ${LIBS} ${OPENGL_LIBRARIES})
+  		#Message(${OPENGL_INCLUDE_DIR})
+  		#Message(${OPENGL_LIBRARIES})
+  		IF(WITH_XFORMS)
+  			FIND_PACKAGE(GLU REQUIRED)
+  			INCLUDE_directories(${GLU_INCLUDE_DIR})
+  			SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${GLU_INCLUDE_DIR})
+  			SET(LIBS ${LIBS} ${GLU_LIBRARIES})
+  			FIND_PACKAGE(GL REQUIRED)
+  			INCLUDE_directories(${GL_INCLUDE_DIR})
+  			SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${GL_INCLUDE_DIR})
+  			SET(LIBS ${LIBS} ${GL_LIBRARIES})
+  		ENDIF(WITH_XFORMS)
+	ENDIF(QT_LIBRARY)
 ELSE(APPLE)
-                  FIND_PACKAGE(OpenGL REQUIRED)
-                  INCLUDE_directories(${OPENGL_INCLUDE_DIR})
-                  SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR})
-                  SET(LIBS ${LIBS} ${OPENGL_LIBRARIES})
+  FIND_PACKAGE(OpenGL REQUIRED)
+  INCLUDE_directories(${OPENGL_INCLUDE_DIR})
+  SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR})
+  SET(LIBS ${LIBS} ${OPENGL_LIBRARIES})
 ENDIF(APPLE)
 
 
@@ -143,46 +102,6 @@ MESSAGE( "------------------ POCOLIBS -----------------------" )
 MESSAGE( "${POCOLIBS_CFLAGS}" )
 MESSAGE( "${POCOLIBS_LDFLAGS}" )
 
-#SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${POCOLIBS_INCLUDE_DIR})
-#SET(LIBS ${LIBS} ${POCOLIBS_LDFLAGS})
-
-# ------------------- libmove3D-viewer ----------------------------------------------
-
-PKG_CHECK_MODULES(MOVE3D REQUIRED libmove3d)
-INCLUDE_DIRECTORIES(${MOVE3D_INCLUDE_DIRS})
-LINK_DIRECTORIES( ${MOVE3D_LIBRARY_DIRS} )
-SET(LIBS ${LIBS} ${MOVE3D_LIBRARIES})
-ADD_DEFINITIONS(${MOVE3D_CFLAGS})
-
-#MESSAGE( MOVE3D_LIBRARIES = ${MOVE3D_LIBRARIES})
-
-#-------------- move3d-planners --------------------------------------
-
-FIND_PACKAGE(MOVE3D-PLANNERS REQUIRED)
-INCLUDE_directories(${MOVE3D-PLANNERS_INCLUDE_DIR})
-SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${MOVE3D-PLANNERS_INCLUDE_DIR})
-SET(LIBS ${LIBS} ${MOVE3D-PLANNERS_LIBRARIES})
-
-
-#####################################################################
-#### Add here a src directory containing a SourceList.cmake file ####
-#####################################################################
-
-MACRO(BM3D_SRC_SUBDIR_PROCESS)
-  FOREACH(srcfile ${ARGV})
-    LIST(APPEND BM3D_src "${BM3D_MODULE_NAME}/${srcfile}")
-    SOURCE_GROUP(${BM3D_MODULE_NAME} FILES ${BM3D_MODULE_NAME}/${srcfile})
-  ENDFOREACH(srcfile)
-ENDMACRO(BM3D_SRC_SUBDIR_PROCESS)
-MACRO(BM3D_INC_DIR_PROCESS directory)
-  include_directories (${directory})
-  file (GLOB incfiles "${directory}/*.h")
-  LIST(APPEND BM3D_inc "${incfiles}")
-  SOURCE_GROUP(${BM3D_MODULE_NAME} FILES ${incfiles})
-  file (GLOB incfiles "${directory}/*.hpp")
-  LIST(APPEND BM3D_inc "${incfiles}")
-  SOURCE_GROUP(${BM3D_MODULE_NAME} FILES ${incfiles})
-ENDMACRO(BM3D_INC_DIR_PROCESS)
 
 # -------------------------------------------------------------
 # --- QT4 SUBDIR PROCESS (same but for preprocessing qt4 files)

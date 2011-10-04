@@ -5,7 +5,6 @@
 #                          have been found.
 #  BioMove3D_INCLUDE_DIR   = Include path for the header files of BioMove3D
 #  BioMove3D_LIBRARIES  = Link these to use ooMove3d-motionPlanner
-
 ## -----------------------------------------------------------------------------
 ## Check for the header files
 
@@ -19,7 +18,6 @@ find_library (MOVE3D-PLANNERS_LIBRARIES move3d-planners
 
 ## -----------------------------------------------------------------------------
 ## Actions taken when all components have been found
-
 if (MOVE3D-PLANNERS_INCLUDE_DIR AND MOVE3D-PLANNERS_LIBRARIES)
  set (HAVE_MOVE3D-PLANNERS TRUE)
 else (MOVE3D-PLANNERS_INCLUDE_DIR)
@@ -32,13 +30,13 @@ endif (MOVE3D-PLANNERS_INCLUDE_DIR AND MOVE3D-PLANNERS_LIBRARIES)
 
 if (HAVE_MOVE3D-PLANNERS)
  if (NOT MOVE3D-PLANNERS_FIND_QUIETLY)
-   message (STATUS "Found components for Move3D-motionPlanner")
+   message (STATUS "Found components for libmove3d-planners")
    message (STATUS "MOVE3D-PLANNERS_INCLUDE_DIR = ${MOVE3D-PLANNERS_INCLUDE_DIR}")
    message (STATUS "MOVE3D-PLANNERS_LIBRARIES = ${MOVE3D-PLANNERS_LIBRARIES}")
  endif (NOT MOVE3D-PLANNERS_FIND_QUIETLY)
 else (HAVE_MOVE3D-PLANNERS)
  if (MOVE3D-PLANNERS_FIND_REQUIRED)
-   message (FATAL_ERROR "Could not find Move3d-motionPlanner!")
+   message (FATAL_ERROR "Could not find libmove3d-planner!")
  endif (MOVE3D-PLANNERS_FIND_REQUIRED)
 endif (HAVE_MOVE3D-PLANNERS)
 
