@@ -20,79 +20,85 @@ CMAKE_MINIMUM_REQUIRED (VERSION 2.6.4)
 
 PROJECT (Move3DGUI C CXX)
 
-# --- Scripts to search source files -------
 
-SET(Move3DGUI_CompilationFlags "")
-SET(Move3DGUI_LinkedCompilationFlags "")
 
-MACRO(Move3DGUI_flag flagName description status)
+
+#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+# --- Scripts to search source files -------------------------------------------
+# ------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+SET(Move3D_CompilationFlags "")
+SET(Move3D_LinkedCompilationFlags "")
+
+MACRO(Move3D_flag flagName description status)
   SET(flagName "${flagName}")
   SET(description "${description}")
   SET(status "${status}")
   OPTION(${flagName} ${description} ${status})
-  LIST(APPEND Move3DGUI_CompilationFlags ${flagName})
-
+  LIST(APPEND Move3D_CompilationFlags ${flagName})
   FOREACH(linkFlag ${ARGN})
-    LIST(APPEND Move3DGUI_LinkedCompilationFlags "${flagName}:${linkFlag}")
+    LIST(APPEND Move3D_LinkedCompilationFlags "${flagName}:${linkFlag}")
   ENDFOREACH(linkFlag)
 #  set_property(CACHE ANIMATION PROPERTY VALUE ON)
-ENDMACRO(Move3DGUI_flag)
+ENDMACRO(Move3D_flag)
 
-MACRO(Move3DGUI_CheckCompilationFlags)
-  SET(Move3DGUI_ActiveFlags "")
+MACRO(Move3D_CheckCompilationFlags)
+  SET(Move3D_ActiveFlags "")
   #MESSAGE ("Active Flags :")
   FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/smpFlags "#Generated File Do not modify!!!\n" )
-  FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/smpFlags "Move3DGUI_COMPILATION_FLAGS = ")
-
-  FOREACH(flag ${Move3DGUI_CompilationFlags})
-
+  FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/smpFlags "Move3D_COMPILATION_FLAGS = ")
+  FOREACH(flag ${Move3D_CompilationFlags})
     IF(${flag})
-      FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/Move3DGUIFlags "-D${flag} ")
+      FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/Move3DFlags "-D${flag} ")
       #MESSAGE("${flag}")
       ADD_DEFINITIONS("-D${flag}")
-      LIST(APPEND Move3DGUI_ActiveFlags ${flag})
+      LIST(APPEND Move3D_ActiveFlags ${flag})
     ENDIF()
   ENDFOREACH(flag)
-ENDMACRO(Move3DGUI_CheckCompilationFlags)
+ENDMACRO(Move3D_CheckCompilationFlags)
 
+
+
+#
 #-------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 # --- Compilation Flags --------------------------------------------------------
 # ------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 
-Move3DGUI_flag(QT_LIBRARY "Sets QtLibrary compiling mode" ON)
-Move3DGUI_flag(QT_GL "Sets QtLibrary compiling mode" ON QT_LIBRARY)
-Move3DGUI_flag(QT_UI_XML_FILES "Sets QtLibrary compiling mode" ON QT_LIBRARY)
+Move3D_flag(QT_LIBRARY "Sets QtLibrary compiling mode" ON)
+Move3D_flag(QT_GL "Sets QtLibrary compiling mode" ON QT_LIBRARY)
+Move3D_flag(QT_UI_XML_FILES "Sets QtLibrary compiling mode" ON QT_LIBRARY)
 
-Move3DGUI_flag(HRI_COSTSPACE "With the hri work" ON)
-
-
-Move3DGUI_flag(P3D_CONSTRAINTS "Compilation with module Constraints" ON)
-Move3DGUI_flag(P3D_COLLISION_CHECKING "Compilation with module Collision Checking" ON)
-Move3DGUI_flag(P3D_LOCALPATH "Compilation with module Localpath" ON)
-Move3DGUI_flag(P3D_PLANNER "Compilation with module Planner" ON)
-Move3DGUI_flag(LIGHT_PLANNER "Compilation with module Light Planner" ON)
-Move3DGUI_flag(GRASP_PLANNING "Compilation with module Manipulation Planner" ON)
-Move3DGUI_flag(MULTILOCALPATH "Compilation with module Multilocalpath" ON)
-Move3DGUI_flag(MULTIGRAPH "Compilation with module Multi-Graph" ON)
+Move3D_flag(HRI_COSTSPACE "With the hri work" ON)
 
 
-
-Move3DGUI_flag(MOVE3D_CORE "Compiles the planning API and planners" ON)
+Move3D_flag(P3D_CONSTRAINTS "Compilation with module Constraints" ON)
+Move3D_flag(P3D_COLLISION_CHECKING "Compilation with module Collision Checking" ON)
+Move3D_flag(P3D_LOCALPATH "Compilation with module Localpath" ON)
+Move3D_flag(P3D_PLANNER "Compilation with module Planner" ON)
+Move3D_flag(LIGHT_PLANNER "Compilation with module Light Planner" ON)
+Move3D_flag(GRASP_PLANNING "Compilation with module Manipulation Planner" ON)
+Move3D_flag(MULTILOCALPATH "Compilation with module Multilocalpath" ON)
+Move3D_flag(MULTIGRAPH "Compilation with module Multi-Graph" ON)
 
 
 
-Move3DGUI_flag(HRI_PLANNER "Human Robot Interaction planner module" ON USE_GSL PQP)
-
-Move3DGUI_flag(USE_GBM "Compilation with module Multilocalpath" ON)
-Move3DGUI_flag(USE_GLUT "Compilation with a glut window" OFF)
-Move3DGUI_flag(USE_GSL "Mathematic Library" OFF)
-Move3DGUI_flag(USE_POCOLIBS "Laas/poster mechanism" OFF)
-Move3DGUI_flag(USE_QWT "Compilation with technical widget" ON)
+Move3D_flag(MOVE3D_CORE "Compiles the planning API and planners" ON)
 
 
-Move3DGUI_CheckCompilationFlags()
+
+Move3D_flag(HRI_PLANNER "Human Robot Interaction planner module" ON USE_GSL PQP)
+
+Move3D_flag(USE_GBM "Compilation with module Multilocalpath" ON)
+Move3D_flag(USE_GLUT "Compilation with a glut window" OFF)
+Move3D_flag(USE_GSL "Mathematic Library" OFF)
+Move3D_flag(USE_POCOLIBS "Laas/poster mechanism" OFF)
+Move3D_flag(USE_QWT "Compilation with technical widget" ON)
+
+
+Move3D_CheckCompilationFlags()
 
 
 

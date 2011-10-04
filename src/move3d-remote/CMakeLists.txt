@@ -31,6 +31,77 @@ file(GLOB ui_files mainwindow-remote.ui)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/move3d-qt-gui-libs/src)
 INCLUDE_DIRECTORIES(/home/xbroquer/openrobots/include/pom)
 INCLUDE_DIRECTORIES(/home/xbroquer/openrobots/include/viam)
+
+
+# --- Scripts to search source files -------
+
+SET(Move3DGUI_CompilationFlags "")
+SET(Move3DGUI_LinkedCompilationFlags "")
+
+MACRO(Move3DGUI_flag flagName description status)
+  SET(flagName "${flagName}")
+  SET(description "${description}")
+  SET(status "${status}")
+  OPTION(${flagName} ${description} ${status})
+  LIST(APPEND Move3DGUI_CompilationFlags ${flagName})
+
+  FOREACH(linkFlag ${ARGN})
+    LIST(APPEND Move3DGUI_LinkedCompilationFlags "${flagName}:${linkFlag}")
+  ENDFOREACH(linkFlag)
+#  set_property(CACHE ANIMATION PROPERTY VALUE ON)
+ENDMACRO(Move3DGUI_flag)
+
+MACRO(Move3DGUI_CheckCompilationFlags)
+  SET(Move3DGUI_ActiveFlags "")
+  #MESSAGE ("Active Flags :")
+  FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/smpFlags "#Generated File Do not modify!!!\n" )
+  FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/smpFlags "Move3DGUI_COMPILATION_FLAGS = ")
+
+  FOREACH(flag ${Move3DGUI_CompilationFlags})
+
+    IF(${flag})
+      FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/Move3DGUIFlags "-D${flag} ")
+      #MESSAGE("${flag}")
+      ADD_DEFINITIONS("-D${flag}")
+      LIST(APPEND Move3DGUI_ActiveFlags ${flag})
+    ENDIF()
+  ENDFOREACH(flag)
+ENDMACRO(Move3DGUI_CheckCompilationFlags)
+
+
+# ------------------------------------------------------------------------------
+# --- Compilation Flags --------------------------------------------------------
+# ------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+
+Move3D_flag(QT_LIBRARY "Sets QtLibrary compiling mode" ON)
+Move3D_flag(QT_GL "Sets QtLibrary compiling mode" ON QT_LIBRARY)
+Move3D_flag(QT_UI_XML_FILES "Sets QtLibrary compiling mode" ON QT_LIBRARY)
+
+Move3D_flag(P3D_CONSTRAINTS "Compilation with module Constraints" ON)
+Move3D_flag(P3D_COLLISION_CHECKING "Compilation with module Collision Checking" ON)
+Move3D_flag(P3D_LOCALPATH "Compilation with module Localpath" ON)
+Move3D_flag(P3D_PLANNER "Compilation with module Planner" ON)
+
+Move3D_flag(LIGHT_PLANNER "Compilation with module Light Planner" ON)
+Move3D_flag(GRASP_PLANNING "Compilation with module Gasp Planner" ON)
+Move3D_flag(MULTILOCALPATH "Compilation with module Multi-local Planner" ON)
+Move3D_flag(MULTIGRAPH "Compilation with module Multi-Graph" ON)
+
+Move3D_flag(USE_GBM "Compilation with module GBM for IK computation" ON)
+Move3D_flag(USE_GLUT "Glut" OFF)
+
+Move3D_flag(MOVE3D_CORE "Compiles the planning API and planners" ON)
+
+Move3D_flag(HRI_COSTSPACE "With the hri work" ON)
+
+Move3D_flag(PQP "With PQP" ON)
+
+Move3D_CheckCompilationFlags()
+
+
+
+
 #################################################################
 #### Add here a library to include (custom FindPackage.cmake ####
 #### are in MOVE3D_REMOTE/.cmakeScripts. Use the template to     ####
