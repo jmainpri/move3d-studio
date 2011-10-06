@@ -271,7 +271,7 @@ void GLWidget::paintGL()
     return;
   }
   
-  cout << "g3d draw " << endl;
+  //cout << "g3d draw " << endl;
   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glPushMatrix();
 	

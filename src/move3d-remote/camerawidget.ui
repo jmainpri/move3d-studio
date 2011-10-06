@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>camera</string>
+   <string>Camera</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

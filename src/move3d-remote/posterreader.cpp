@@ -167,8 +167,6 @@ bool PosterReader::updateNiut()
     {
         cout << "Niut : NULL Poster" << endl;
         emit niutIsAlive(false);
-
-       // m_win->setNiutIsAlive( false );
         return false;
     }
 
@@ -186,21 +184,16 @@ bool PosterReader::updateNiut()
 
     _niutWatchDog = _niutPosterStruct.watch_dog;
 
-
     if( _niutDeathCounter > 1000 )
     {
         emit niutIsAlive(false);
-        //m_win->setNiutIsAlive( false );
         return false;
     }
-
     // Associtating mode
     for(unsigned int i=0; i<16;i++)
     {
         emit setNiutColorLabel(i,0);
-        //m_win->setNiutColorLabel(i,0);
     }
-
     // Associtating mode
     for(unsigned int i=0; i<16;i++)
     {
@@ -210,22 +203,18 @@ bool PosterReader::updateNiut()
         {
         case NIUT_NO_TRACKING:
             emit setNiutColorLabel(id,0);
-            //m_win->setNiutColorLabel(id,0);
             break;
 
         case NIUT_POSE_SEARCH:
             emit setNiutColorLabel(id,1);
-            //m_win->setNiutColorLabel(id,1);
             break;
 
         case NIUT_CALIBRATE:
             emit setNiutColorLabel(id,2);
-            //_win->setNiutColorLabel(id,2);
             break;
 
         case NIUT_TRACKING:
             emit setNiutColorLabel(id,3);
-            //m_win->setNiutColorLabel(id,3);
             break;
 
         default:
@@ -233,10 +222,8 @@ bool PosterReader::updateNiut()
             break;
         }
     }
-
     //  cout << "Niut is alive association done!!!" <<endl;
     emit niutIsAlive(true);
-    //m_win->setNiutIsAlive( true );
     return true;
 }
 
