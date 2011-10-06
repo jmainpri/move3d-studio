@@ -1,6 +1,11 @@
 #include "niutwidget.h"
 #include "ui_niutwidget.h"
-
+#include "images/green-man-xpm.h"
+#include "images/orange-man-xpm.h"
+#include "images/red-man-xpm.h"
+#include "images/yellow-death-xpm.h"
+#include "images/yellow-man-xpm.h"
+#include "images/im_still_alive-xpm.h"
 #include <iostream>
 
 using namespace std;

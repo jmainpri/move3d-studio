@@ -4,12 +4,7 @@
 #include <QWidget>
 #include "qtLibrary.hpp"
 
-#include "images/green-man-xpm.h"
-#include "images/orange-man-xpm.h"
-#include "images/red-man-xpm.h"
-#include "images/yellow-death-xpm.h"
-#include "images/yellow-man-xpm.h"
-#include "images/im_still_alive-xpm.h"
+
 
 namespace Ui {
     class niutWidget;
