@@ -4,7 +4,8 @@
 #include <QWidget>
 #include "qtLibrary.hpp"
 
-
+#include "posterreader.hpp"
+#include "ui_mainwindow-remote.h"
 
 namespace Ui {
     class niutWidget;
@@ -13,7 +14,7 @@ namespace Ui {
 class niutWidget : public QWidget {
     Q_OBJECT
 public:
-    niutWidget(QWidget *parent = 0);
+    niutWidget(PosterReader *pr, Ui::MainWindowRemote *m_ui_parent, QWidget *parent = 0);
     ~niutWidget();
 
 public slots:
@@ -25,6 +26,8 @@ protected:
 
 private:
     Ui::niutWidget *m_ui;
+    Ui::MainWindowRemote *m_ui_p;
+    PosterReader *m_pr;
     std::vector<QLabel*> _niutLabels;
     QPixmap _niutPmAlive;
     QPixmap _niutPmDead;

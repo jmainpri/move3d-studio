@@ -10,11 +10,17 @@
 
 using namespace std;
 
-niutWidget::niutWidget(QWidget *parent) :
+niutWidget::niutWidget(PosterReader *pr, Ui::MainWindowRemote *m_ui_parent, QWidget *parent) :
+    m_pr(pr),
     QWidget(parent),
+    m_ui_p(m_ui_parent),
     m_ui(new Ui::niutWidget)
 {
     m_ui->setupUi(this);
+
+initNiut();
+    connect(m_pr,SIGNAL(niutIsAlive(bool)), this, SLOT(setNiutIsAlive(bool)));
+      connect(m_pr,SIGNAL(setNiutColorLabel(int,int)), this, SLOT(setNiutColorLabel(int,int)));
 }
 
 niutWidget::~niutWidget()
@@ -85,12 +91,19 @@ void niutWidget::initNiut()
 
 void niutWidget::setNiutIsAlive(bool state)
 {
+    if(state) {
+    m_ui->labelNiutDead->setPixmap(_niutPmAlive);
+} else {
+     m_ui->labelNiutDead->setPixmap(_niutPmDead);
+}
+
     //    cout << "Niut is : " << state << endl;
 }
 
 void niutWidget::setNiutColorLabel(int id, int color)
 {
     if (id<0 || id>=((int)_niutLabels.size())) {
+        cout << "id : " << id << " color : " << color << "lable.size : "<< (int)_niutLabels.size()<< endl;
         cout << "Error in " << __FILE__ << __func__ << endl;
         return;
     }

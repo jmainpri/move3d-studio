@@ -8,6 +8,9 @@
 #include "camerawidget.h"
 #include "ui_camerawidget.h"
 
+#include "niutwidget.h"
+#include "ui_niutwidget.h"
+
 #include "planner_handler.hpp"
 
 #include "API/scene.hpp"
@@ -87,6 +90,7 @@ int Simple_threads::run(int argc, char** argv)
 
     sparkWidget wSpark(m_posterHandler, w.m_ui);
     cameraWidget wCam(m_posterHandler, w.m_ui);
+    niutWidget wNiut(m_posterHandler, w.m_ui);
 
     global_w = &wSpark;
 
@@ -104,9 +108,7 @@ int Simple_threads::run(int argc, char** argv)
     w.show();
     wSpark.show();
     wCam.show();
-
-   // w.showMaximized();
-    //w.raise();
+    wNiut.show();
 
     return app->exec();
 }
