@@ -30,15 +30,11 @@ MainWindowRemote::MainWindowRemote(PosterReader *pr, QWidget *parent) :
         QMainWindow(parent),
         m_ui(new Ui::MainWindowRemote)
 {
-
-
-    QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(looptest()));
-    timer->start(100);
+    //    QTimer *timer = new QTimer(this);
+    //    connect(timer, SIGNAL(timeout()), this, SLOT(looptest()));
+    //    timer->start(100);
 
     m_ui->setupUi(this);
-
-
 
 
     /* menu robots */
@@ -51,19 +47,13 @@ MainWindowRemote::MainWindowRemote(PosterReader *pr, QWidget *parent) :
     connect(m_ui->sparkSaveSceBut,SIGNAL(clicked()),this,SLOT(sparkSaveScenario()));
     connect(m_pr, SIGNAL(sparkStatus(bool)),this, SLOT(setSparkStatusText(bool)));
 
-
-
-
-on_pushButtonLoadSettings_clicked();
+    on_pushButtonLoadSettings_clicked();
 
 }
 
 
 
-void MainWindowRemote::looptest()
-{
 
-}
 
 MainWindowRemote::~MainWindowRemote()
 {
@@ -240,50 +230,50 @@ void MainWindowRemote::on_pushButtonLoadSettings_clicked()
     home = homec;
     file = home + "/.move3d-remote";
     QSettings settings(QString(file.c_str()), QSettings::IniFormat, this); 
-//    loadDockSettings(settings, QString("dockSpark"), m_ui->dockSpark);
-//    loadDockSettings(settings, QString("dockViewer"), m_ui->dockViewer);
-//    loadDockSettings(settings, QString("dockCamera"), m_ui->dockCamera);
-//    loadDockSettings(settings, QString("dockNiut"), m_ui->dockNiut);
-//
-//    m_ui->dockSpark->showFullScreen();
+    //    loadDockSettings(settings, QString("dockSpark"), m_ui->dockSpark);
+    //    loadDockSettings(settings, QString("dockViewer"), m_ui->dockViewer);
+    //    loadDockSettings(settings, QString("dockCamera"), m_ui->dockCamera);
+    //    loadDockSettings(settings, QString("dockNiut"), m_ui->dockNiut);
+    //
+    //    m_ui->dockSpark->showFullScreen();
 }
 
 
 
 void MainWindowRemote::loadDockSettings(QSettings & settings, QString dockName, QDockWidget * dockWidget)
 {
-//    settings.beginGroup(dockName);
-//    dockWidget->setFloating(settings.value(dockName + QString("/isFloating"), false).toBool());
-//    dockWidget->move(settings.value(dockName + QString("/pos"), QPoint(1,1)).toPoint());
-//    dockWidget->resize(settings.value(dockName + QString("/size"), QSize(640, 480)).toSize());
-//    //dockWidget->restoreGeometry(settings.value(dockName + QString("/geometry")).toByteArray());
-//    addDockWidget((Qt::DockWidgetArea)settings.value(dockName + QString("/dockarea"), Qt::RightDockWidgetArea).toInt(), dockWidget);
-//    settings.endGroup();
+    //    settings.beginGroup(dockName);
+    //    dockWidget->setFloating(settings.value(dockName + QString("/isFloating"), false).toBool());
+    //    dockWidget->move(settings.value(dockName + QString("/pos"), QPoint(1,1)).toPoint());
+    //    dockWidget->resize(settings.value(dockName + QString("/size"), QSize(640, 480)).toSize());
+    //    //dockWidget->restoreGeometry(settings.value(dockName + QString("/geometry")).toByteArray());
+    //    addDockWidget((Qt::DockWidgetArea)settings.value(dockName + QString("/dockarea"), Qt::RightDockWidgetArea).toInt(), dockWidget);
+    //    settings.endGroup();
 }
 
 void MainWindowRemote::on_pushButtonSaveSettings_clicked()
 {
-//    string file, home;
-//    char * homec;
-//    homec = getenv ("HOME");
-//    home = homec;
-//    file = home + "/.move3d-remote";
-//    QSettings settings(QString(file.c_str()), QSettings::IniFormat, this);
-//    saveDockSettings(settings, QString("dockSpark"), m_ui->dockSpark);
-//    saveDockSettings(settings, QString("dockViewer"), m_ui->dockViewer);
-//    saveDockSettings(settings, QString("dockCamera"), m_ui->dockCamera);
-//    saveDockSettings(settings, QString("dockNiut"), m_ui->dockNiut);
+    //    string file, home;
+    //    char * homec;
+    //    homec = getenv ("HOME");
+    //    home = homec;
+    //    file = home + "/.move3d-remote";
+    //    QSettings settings(QString(file.c_str()), QSettings::IniFormat, this);
+    //    saveDockSettings(settings, QString("dockSpark"), m_ui->dockSpark);
+    //    saveDockSettings(settings, QString("dockViewer"), m_ui->dockViewer);
+    //    saveDockSettings(settings, QString("dockCamera"), m_ui->dockCamera);
+    //    saveDockSettings(settings, QString("dockNiut"), m_ui->dockNiut);
 }
 
 void MainWindowRemote::saveDockSettings(QSettings & settings, QString dockName, QDockWidget * dockWidget)
 {
-//    settings.beginGroup(dockName);
-//    settings.setValue(dockName + QString("/dockarea"), dockWidgetArea(dockWidget));
-//    settings.setValue(dockName +  QString("/isFloating"), dockWidget->isFloating());
-//   // settings.setValue(dockName + QString("/geometry"), dockWidget->saveGeometry());
-//    settings.setValue(dockName + QString("/size"), dockWidget->size());
-//    settings.setValue(dockName + QString("/pos"), dockWidget->pos());
-//    settings.endGroup();
+    //    settings.beginGroup(dockName);
+    //    settings.setValue(dockName + QString("/dockarea"), dockWidgetArea(dockWidget));
+    //    settings.setValue(dockName +  QString("/isFloating"), dockWidget->isFloating());
+    //   // settings.setValue(dockName + QString("/geometry"), dockWidget->saveGeometry());
+    //    settings.setValue(dockName + QString("/size"), dockWidget->size());
+    //    settings.setValue(dockName + QString("/pos"), dockWidget->pos());
+    //    settings.endGroup();
 }
 
 void MainWindowRemote::on_switchSparkView_clicked(bool checked)

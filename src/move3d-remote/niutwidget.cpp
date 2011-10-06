@@ -11,16 +11,16 @@
 using namespace std;
 
 niutWidget::niutWidget(PosterReader *pr, Ui::MainWindowRemote *m_ui_parent, QWidget *parent) :
-    m_pr(pr),
-    QWidget(parent),
-    m_ui_p(m_ui_parent),
-    m_ui(new Ui::niutWidget)
+        m_pr(pr),
+        QWidget(parent),
+        m_ui_p(m_ui_parent),
+        m_ui(new Ui::niutWidget)
 {
     m_ui->setupUi(this);
 
-initNiut();
+    initNiut();
     connect(m_pr,SIGNAL(niutIsAlive(bool)), this, SLOT(setNiutIsAlive(bool)));
-      connect(m_pr,SIGNAL(setNiutColorLabel(int,int)), this, SLOT(setNiutColorLabel(int,int)));
+    connect(m_pr,SIGNAL(setNiutColorLabel(int,int)), this, SLOT(setNiutColorLabel(int,int)));
 }
 
 niutWidget::~niutWidget()
@@ -40,14 +40,8 @@ void niutWidget::changeEvent(QEvent *e)
     }
 }
 
-
-// Niut Window --------------------------------------------------
-// --------------------------------------------------------------
 void niutWidget::initNiut()
 {
-
-    //m_ui->niutSubWindow->setWindowTitle(QString("Niut Genom Module"));
-
     _niutLabels.push_back( m_ui->labelNiut1 );
     _niutLabels.push_back( m_ui->labelNiut2 );
     _niutLabels.push_back( m_ui->labelNiut3 );
@@ -92,12 +86,10 @@ void niutWidget::initNiut()
 void niutWidget::setNiutIsAlive(bool state)
 {
     if(state) {
-    m_ui->labelNiutDead->setPixmap(_niutPmAlive);
-} else {
-     m_ui->labelNiutDead->setPixmap(_niutPmDead);
-}
-
-    //    cout << "Niut is : " << state << endl;
+        m_ui->labelNiutDead->setPixmap(_niutPmAlive);
+    } else {
+        m_ui->labelNiutDead->setPixmap(_niutPmDead);
+    }
 }
 
 void niutWidget::setNiutColorLabel(int id, int color)
