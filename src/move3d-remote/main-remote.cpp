@@ -1,34 +1,34 @@
+#include "tcpserver.hpp"
+#include <QtNetwork/QTcpServer>
+#include <QtNetwork/QTcpSocket>
+#include "posterreader.hpp"
+
 #include "main-remote.hpp"
 
 #include "mainwindow-remote.hpp"
 #include "ui_mainwindow-remote.h"
-
 #include "sparkwidget.hpp"
 #include "ui_sparkwidget.h"
 #include "camerawidget.h"
 #include "ui_camerawidget.h"
-
 #include "niutwidget.h"
 #include "ui_niutwidget.h"
+
+
 
 #include "planner_handler.hpp"
 
 #include "API/scene.hpp"
 #include "API/project.hpp"
+#include "API/Graphic/drawModule.hpp"
 
 #include <iostream>
 #include <QDesktopWidget>
-
-#include "posterreader.hpp"
+#include <QMessageBox>
+ #include <QtNetwork/QNetworkProxy>
 
 QSemaphore* sem;
 GLWidget* openGlWidget;
-
-
-#include "API/Graphic/drawModule.hpp"
-
-
-
 
 
 extern int mainMhp(int argc, char** argv);
@@ -66,6 +66,8 @@ Simple_threads::~Simple_threads()
 
 }
 
+
+
 int Simple_threads::run(int argc, char** argv)
 {
     app = new QApplication(argc, argv);
@@ -79,6 +81,7 @@ int Simple_threads::run(int argc, char** argv)
     global_Project = new Project(new Scene(XYZ_ENV));
 
 
+    TcpServer tcpServer;
 
 
 

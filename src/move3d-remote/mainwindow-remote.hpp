@@ -1,6 +1,7 @@
 #ifndef MAINWINDOWREMOTE_HPP
 #define MAINWINDOWREMOTE_HPP
 
+
 class GLWidget;
 class PosterReader;
 
@@ -69,7 +70,6 @@ private:
         PosterReader *m_pr;
   
 
-  
         std::vector<QAction*> m_RobotsInMenu;
 
 

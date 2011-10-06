@@ -36,10 +36,9 @@ MainWindowRemote::MainWindowRemote(PosterReader *pr, QWidget *parent) :
 
     m_ui->setupUi(this);
 
-
     /* menu robots */
     initRobotsMenu();
-    this->menuBar()->setVisible(false);
+    this->menuBar()->setVisible(true);
 
     /* spark page */
     //m_pr->getSparkPoster()->setRefreshStatus(m_ui->sparkCheckBox->isChecked());
@@ -48,6 +47,12 @@ MainWindowRemote::MainWindowRemote(PosterReader *pr, QWidget *parent) :
     connect(m_pr, SIGNAL(sparkStatus(bool)),this, SLOT(setSparkStatusText(bool)));
 
     on_pushButtonLoadSettings_clicked();
+
+
+
+
+
+
 
 }
 
@@ -128,7 +133,6 @@ void MainWindowRemote::setSparkStatusText(bool updating)
 }
 
 
-
 //void MainWindowRemote::keyPressEvent(QKeyEvent *event)
 //{
 //    //    cout << "Key pressed" << endl;
@@ -151,7 +155,6 @@ void MainWindowRemote::keyReleaseEvent(QKeyEvent *e)
 
 
 }
-
 
 
 
