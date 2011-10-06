@@ -15,7 +15,7 @@ class PosterReader : public QObject
 {
       Q_OBJECT
 public:
-    PosterReader(MainWindowRemote* win);
+    PosterReader();
     ~PosterReader();
 
     void init();
@@ -41,10 +41,12 @@ private:
   
 signals:
     void sparkStatus(bool st);
+    void niutIsAlive(bool st);
+    void setNiutColorLabel(int i, int v);
+
+    void drawAllWinActive();
 
 public:
-    //! Display functions
-    MainWindowRemote* m_win;
     //! Posters
     GenomPoster * _sparkPoster;
     SPARK_CURRENT_ENVIRONMENT _sparkPosterStruct;

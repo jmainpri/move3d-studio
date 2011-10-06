@@ -3,6 +3,11 @@
 #include "mainwindow-remote.hpp"
 #include "ui_mainwindow-remote.h"
 
+#include "sparkwidget.hpp"
+#include "ui_sparkwidget.h"
+#include "camerawidget.h"
+#include "ui_camerawidget.h"
+
 #include "planner_handler.hpp"
 
 #include "API/scene.hpp"
@@ -11,6 +16,7 @@
 #include <iostream>
 #include <QDesktopWidget>
 
+#include "posterreader.hpp"
 
 QSemaphore* sem;
 GLWidget* openGlWidget;
@@ -28,7 +34,7 @@ using namespace std;
 
 
 PlannerHandler* global_plannerHandler(NULL);
-MainWindowRemote* global_w(NULL);
+sparkWidget* global_w(NULL);
 QThread* global_PlanningThread(NULL);
 
 void draw_opengl()
@@ -69,8 +75,20 @@ int Simple_threads::run(int argc, char** argv)
     // Be carefull to initialize in the right thread
     global_Project = new Project(new Scene(XYZ_ENV));
 
-    MainWindowRemote w;
-    global_w = &w;
+
+
+
+
+    PosterReader* m_posterHandler;
+    m_posterHandler = new PosterReader();
+    m_posterHandler->init();
+
+    MainWindowRemote w(m_posterHandler);
+
+    sparkWidget wSpark(m_posterHandler, w.m_ui);
+    cameraWidget wCam(m_posterHandler, w.m_ui);
+
+    global_w = &wSpark;
 
 //    QRect g = QApplication::desktop()->screenGeometry();
 //    cout << " x = " << g.x() << " y = " << g.y() << endl;
@@ -84,8 +102,11 @@ int Simple_threads::run(int argc, char** argv)
 //    w.setGeometry( g_window );
 
     w.show();
+    wSpark.show();
+    wCam.show();
+
    // w.showMaximized();
-    w.raise();
+    //w.raise();
 
     return app->exec();
 }

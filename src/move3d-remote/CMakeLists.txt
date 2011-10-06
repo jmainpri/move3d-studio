@@ -20,13 +20,47 @@ CMAKE_MINIMUM_REQUIRED (VERSION 2.6.4)
 
 PROJECT (MOVE3D_REMOTE CXX)
 
-file(GLOB source_files main-remote.cpp move3d.c mainwindow-remote.cpp posterreader.cpp genomposter.cpp genomimageposter.cpp myopencv.cpp qtipl.cpp picowebimage.cpp)
+file(GLOB source_files
+main-remote.cpp
+move3d.c
+sparkwidget.cpp
+niutwidget.cpp
+camerawidget.cpp
+mainwindow-remote.cpp
+posterreader.cpp
+genomposter.cpp
+genomimageposter.cpp
+myopencv.cpp
+qtipl.cpp
+picowebimage.cpp)
 
-file(GLOB image_files images/green-man-xpm.h   images/orange-man-xpm.h   images/red-man-xpm.h   images/yellow-death-xpm.h   images/yellow-man-xpm.h)
+file(GLOB image_files
+images/green-man-xpm.h
+images/orange-man-xpm.h
+images/red-man-xpm.h
+images/yellow-death-xpm.h
+images/yellow-man-xpm.h)
 
-file(GLOB header_files duplicatedGenomStruct.hpp main-remote.hpp mainwindow-remote.hpp posterreader.hpp genomposter.hpp genomimageposter.hpp myopencv.hpp qtipl.hpp picowebimage.hpp )
+file(GLOB header_files
+duplicatedGenomStruct.hpp
+main-remote.hpp
+sparkwidget.hpp
+niutwidget.h
+camerawidget.h
+mainwindow-remote.hpp
+posterreader.hpp
+genomposter.hpp
+genomimageposter.hpp
+myopencv.hpp
+qtipl.hpp
+picowebimage.hpp )
 
-file(GLOB ui_files mainwindow-remote.ui)
+file(GLOB
+ui_files
+mainwindow-remote.ui
+sparkwidget.ui
+niutwidget.ui
+camerawidget.ui)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/move3d-qt-gui-libs/src)
 INCLUDE_DIRECTORIES(/home/xbroquer/openrobots/include/pom)
