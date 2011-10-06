@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1720</width>
-    <height>1069</height>
+    <width>505</width>
+    <height>778</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -46,8 +46,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1702</width>
-         <height>913</height>
+         <width>487</width>
+         <height>620</height>
         </rect>
        </property>
        <attribute name="label">
@@ -101,8 +101,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1682</width>
-             <height>814</height>
+             <width>467</width>
+             <height>521</height>
             </rect>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_8">
@@ -367,7 +367,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>128</width>
+         <width>127</width>
          <height>168</height>
         </rect>
        </property>
@@ -460,7 +460,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>111</width>
+         <width>110</width>
          <height>45</height>
         </rect>
        </property>
@@ -486,8 +486,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1720</width>
-     <height>23</height>
+     <width>505</width>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuRobot">
