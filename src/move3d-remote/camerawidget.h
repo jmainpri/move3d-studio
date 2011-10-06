@@ -27,6 +27,7 @@ public slots:
 
 
 public:
+
     QLabel *labelImgLeft(){return _labelImageLeft;}
     QLabel *labelImgRight(){return _labelImageRight;}
     QLabel* _labelImageLeft;
