@@ -51,7 +51,7 @@ private slots:
 
 
 
-        void looptest();
+
 
         //void on_checkBox_clicked(bool checked);
 

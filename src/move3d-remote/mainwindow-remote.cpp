@@ -52,9 +52,6 @@ MainWindowRemote::MainWindowRemote(PosterReader *pr, QWidget *parent) :
 }
 
 
-
-
-
 MainWindowRemote::~MainWindowRemote()
 {
 
