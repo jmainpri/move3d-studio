@@ -23,6 +23,7 @@ sparkWidget::sparkWidget(PosterReader *pr,  Ui::MainWindowRemote *m_ui_parent, Q
 {
     m_ui->setupUi(this);
 
+       connect(m_pr,SIGNAL(drawAllWinActive()), this, SLOT(drawAllWinActive()));
     /* viewer page */
     connectCheckBoxes();
     initLightSource();

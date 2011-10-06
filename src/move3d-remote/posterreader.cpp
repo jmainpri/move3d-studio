@@ -157,7 +157,6 @@ bool PosterReader::updateSparkEnv()
         }
         emit sparkStatus(true);
         emit drawAllWinActive();
-        //m_win->drawAllWinActive();
         return true;
     }
 }

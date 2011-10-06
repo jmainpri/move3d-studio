@@ -19,6 +19,7 @@ public:
     ~sparkWidget();
     GLWidget* getOpenGL();
 
+private slots:
     void drawAllWinActive();
 
 private slots:
