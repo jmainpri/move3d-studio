@@ -25,31 +25,36 @@
 #include <iostream>
 #include <QDesktopWidget>
 #include <QMessageBox>
- #include <QtNetwork/QNetworkProxy>
-
-QSemaphore* sem;
-GLWidget* openGlWidget;
-
-
-extern int mainMhp(int argc, char** argv);
+#include <QtNetwork/QNetworkProxy>
 
 using namespace std;
 
+QSemaphore* sem;
 
+extern int mainMhp(int argc, char** argv);
+
+// Worker thread
 PlannerHandler* global_plannerHandler(NULL);
-sparkWidget* global_w(NULL);
 QThread* global_PlanningThread(NULL);
+
+// Drawing widget
+GLWidget* openGlWidget;
+sparkWidget* global_w(NULL);
+vector<sparkWidget*> openGlWidgets;
 
 void draw_opengl()
 {
-
-  if(global_w != NULL)
-  {
-
-    QMetaObject::invokeMethod(global_w->getOpenGL(),
-                              "myPaintGL",
-                              Qt::BlockingQueuedConnection);
-  }
+    cout << "draw_opengl" << endl;
+    if(global_w != NULL)
+    {
+        for(unsigned int i=0;i<openGlWidgets.size();i++)
+        {
+            cout << "Draw window : " << i << endl;
+            QMetaObject::invokeMethod(openGlWidgets[i]->getOpenGL(),
+                                      "myPaintGL",
+                                      Qt::BlockingQueuedConnection);
+        }
+    }
 }
 
 
@@ -58,7 +63,7 @@ void draw_opengl()
  */
 Simple_threads::Simple_threads()
 {
-        sem = new QSemaphore(0);
+    sem = new QSemaphore(0);
 }
 
 Simple_threads::~Simple_threads()
@@ -67,12 +72,10 @@ Simple_threads::~Simple_threads()
 }
 
 
-
 int Simple_threads::run(int argc, char** argv)
 {
     app = new QApplication(argc, argv);
     app->setWindowIcon(QIcon(QPixmap(molecule_xpm)));
-
 
     mainMhp(argc, argv);
 
@@ -80,10 +83,7 @@ int Simple_threads::run(int argc, char** argv)
     // Be carefull to initialize in the right thread
     global_Project = new Project(new Scene(XYZ_ENV));
 
-
     TcpServer tcpServer;
-
-
 
     PosterReader* m_posterHandler;
     m_posterHandler = new PosterReader();
@@ -91,25 +91,35 @@ int Simple_threads::run(int argc, char** argv)
 
     MainWindowRemote w(m_posterHandler);
 
-    sparkWidget wSpark(m_posterHandler, w.m_ui);
     cameraWidget wCam(m_posterHandler, w.m_ui);
     niutWidget wNiut(m_posterHandler, w.m_ui);
 
-    global_w = &wSpark;
+    sparkWidget wSpark1(m_posterHandler, w.m_ui);
+    sparkWidget wSpark2(m_posterHandler, w.m_ui);
+    sparkWidget wSpark3(m_posterHandler, w.m_ui);
 
-//    QRect g = QApplication::desktop()->screenGeometry();
-//    cout << " x = " << g.x() << " y = " << g.y() << endl;
-//    cout << " width = " << g.width() << " height = " << g.height() << endl;
-//
-//    QRect g_window = w.geometry();
-//    g_window.setWidth( g.width() );
-//    g_window.setHeight( 0.707*g.height() ); // sqrt(2) / 2
-//    g_window.moveTo( 0, 0 );
-//
-//    w.setGeometry( g_window );
+    global_w = &wSpark1;
+
+    openGlWidgets.push_back(&wSpark1);
+    openGlWidgets.push_back(&wSpark2);
+    openGlWidgets.push_back(&wSpark3);
+
+    //    QRect g = QApplication::desktop()->screenGeometry();
+    //    cout << " x = " << g.x() << " y = " << g.y() << endl;
+    //    cout << " width = " << g.width() << " height = " << g.height() << endl;
+    //
+    //    QRect g_window = w.geometry();
+    //    g_window.setWidth( g.width() );
+    //    g_window.setHeight( 0.707*g.height() ); // sqrt(2) / 2
+    //    g_window.moveTo( 0, 0 );
+    //
+    //    w.setGeometry( g_window );
 
     w.show();
-    wSpark.show();
+    wSpark1.show();
+    wSpark2.show();
+    wSpark3.show();
+
     wCam.show();
     wNiut.show();
 
@@ -122,6 +132,6 @@ int Simple_threads::run(int argc, char** argv)
  */
 int main(int argc, char *argv[])
 {    
-  Simple_threads main;
-  return main.run(argc, argv);
+    Simple_threads main;
+    return main.run(argc, argv);
 }

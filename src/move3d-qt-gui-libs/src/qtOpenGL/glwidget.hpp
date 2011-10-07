@@ -68,6 +68,9 @@ protected:
 	void mouseDoubleClickEvent(QMouseEvent *event);
 
 private:
+        // Viewer ID
+        int m_id;
+
 	// Pointer that allows resizing
 	MainWindow*	m_mainWindow;
 	
