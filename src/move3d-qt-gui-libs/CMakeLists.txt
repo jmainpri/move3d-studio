@@ -383,7 +383,8 @@ ENDIF()
 # Intallation
 # ------------------------------------------------------------------------------
 IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  SET(CMAKE_INSTALL_PREFIX "${Move3DGUI_BINARY_DIR}/install" CACHE PATH "Move3DGUI install prefix" FORCE)
+#  SET(CMAKE_INSTALL_PREFIX "${Move3DGUI_BINARY_DIR}/install" CACHE PATH "Move3DGUI install prefix" FORCE)
+  SET(CMAKE_INSTALL_PREFIX "$ENV{ROBOTPKG_BASE}" CACHE PATH "Move3DGUI install prefix" FORCE)
 ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
 INSTALL(TARGETS Move3D-Qt-Gui
