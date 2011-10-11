@@ -107,6 +107,7 @@ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/script/CMake")
 
 #-------------- Qt Library -----------------
 IF(QT_LIBRARY)
+  # This also fails if qt4 is installed, but system is configured for qt3 qmake
   FIND_PACKAGE(Qt4 REQUIRED)
   INCLUDE_DIRECTORIES(${QT_INCLUDE_DIR})
   SET(Move3DGUI_COMPILATION_INCLUDES ${Move3DGUI_COMPILATION_INCLUDES} ${QT_INCLUDE_DIR})
