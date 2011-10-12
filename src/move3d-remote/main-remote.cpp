@@ -12,6 +12,9 @@
 #include "camerawidget.h"
 #include "ui_camerawidget.h"
 
+#include "camerasolo.hpp"
+#include "ui_camerasolo.h"
+
 #include "niutwidget.h"
 #include "ui_niutwidget.h"
 
@@ -91,8 +94,9 @@ int Simple_threads::run(int argc, char** argv)
     MainWindowRemote w(m_posterHandler);
 
     sparkWidget wSpark(m_posterHandler, w.m_ui);
-    cameraWidget wCam(m_posterHandler, w.m_ui);
+    //cameraWidget wCam(m_posterHandler, w.m_ui);
     niutWidget wNiut(m_posterHandler, w.m_ui);
+   CameraSolo wCamSolo(m_posterHandler, w.m_ui);
 
     global_w = &wSpark;
 
@@ -109,7 +113,8 @@ int Simple_threads::run(int argc, char** argv)
 
     w.show();
     wSpark.show();
-    wCam.show();
+    //wCam.show();
+    wCamSolo.show();
     wNiut.show();
 
     return app->exec();
