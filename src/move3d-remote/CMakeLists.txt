@@ -54,7 +54,7 @@ genomposter.hpp
 genomimageposter.hpp
 myopencv.hpp
 qtipl.hpp
-picowebimage.hpp
+picowebimage.hpp 
 tcpserver.hpp)
 
 file(GLOB

@@ -11,7 +11,7 @@ QSemaphore mySem(1);
 GenomPoster::GenomPoster(std::string name, char* posterStruct, int posterSize, unsigned long rate)
 {
     _posterName = name;
-    setStackSize (10000000);
+    //setStackSize (10000000);
     _posterStruct = posterStruct;
     _posterSize = posterSize;
     /* rate is 100 ms by default */
@@ -30,7 +30,6 @@ void GenomPoster::run()
 {
     while(!_stopThread)
     {
-
         if( _stopThread )
         {
             return;
