@@ -1,3 +1,7 @@
+#include "tcpserver.hpp"
+#include <QtNetwork/QTcpServer>
+#include <QtNetwork/QTcpSocket>
+
 #include "main-remote.hpp"
 
 #include "mainwindow-remote.hpp"
@@ -78,9 +82,7 @@ int Simple_threads::run(int argc, char** argv)
     // Be carefull to initialize in the right thread
     global_Project = new Project(new Scene(XYZ_ENV));
 
-
-
-
+    TcpServer server;
 
     PosterReader* m_posterHandler;
     m_posterHandler = new PosterReader();
