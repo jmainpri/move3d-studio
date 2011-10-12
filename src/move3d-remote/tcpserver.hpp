@@ -6,18 +6,24 @@
 
 class TcpServer : public QTcpServer
 {
-Q_OBJECT
+  Q_OBJECT
+  
 public :
-        TcpServer(QObject *parent=0);
-        ~TcpServer();
+  TcpServer(QObject *parent=0);
+  ~TcpServer();
+  
 private slots :
-        void demande_connexion() ;
-        void lecture();
+  void demande_connexion() ;
+  void lecture();
+  
 signals :
-        void vers_IHM_connexion();
-        void vers_IHM_texte(QString);
+  void vers_IHM_connexion();
+  void vers_IHM_texte(QString);
+  
 private :
-        QTcpSocket *clientConnection;
+  QTcpSocket *clientConnection;
+  
+  void changeCamera(bool reset);
 };
 
 
