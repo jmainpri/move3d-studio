@@ -23,13 +23,15 @@ void spark_camera_change(bool reset)
     p3d_rob* r = (p3d_rob *) p3d_get_robot_by_name("PR2_ROBOT");
     p3d_jnt* j = r->joints[3];
     p3d_matrix4* m_transf = &(j->abs_pos);
-    p3d_matrix4 T1,T2,T3,offset;
+    p3d_matrix4 T0,T1,Tbis,T2,T3,offset;
     
     p3d_mat4Copy(*m_transf,offset);
     //    p3d_mat4Pos(T1, 0, 0, 0, 0, 0.0, 0.4);
-    p3d_mat4Pos(T1, 0, 0, 0, 0, 0.4, 0.0);
-    p3d_mat4Pos(T2, -1.5, 0, 0, 0, 0, 0);
-    p3d_mat4Mult(T1,T2,T3);
+    p3d_mat4Pos(T0, 0, 0, 0.3, 0, 0.0, 0.0);
+    p3d_mat4Pos(T1, 0, 0, 0, 0, 0.5, 0.0);
+    p3d_mat4Pos(T2, -1.3, 0, 0, 0, 0, 0);
+    p3d_mat4Mult(T0,T1,Tbis);
+    p3d_mat4Mult(Tbis,T2,T3);
     p3d_mat4Mult(*m_transf,T3,offset);
     
     cout << "Change camera" << endl;
