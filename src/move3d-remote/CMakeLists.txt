@@ -33,7 +33,8 @@ genomimageposter.cpp
 myopencv.cpp
 qtipl.cpp
 picowebimage.cpp
-tcpserver.cpp)
+tcpserver.cpp
+sparkcamera.cpp)
 
 file(GLOB image_files
 images/green-man-xpm.h
@@ -55,7 +56,8 @@ genomimageposter.hpp
 myopencv.hpp
 qtipl.hpp
 picowebimage.hpp 
-tcpserver.hpp)
+tcpserver.hpp
+sparkcamera.hpp)
 
 file(GLOB
 ui_files
