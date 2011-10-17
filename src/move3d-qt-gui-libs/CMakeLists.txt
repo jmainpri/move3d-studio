@@ -181,15 +181,18 @@ LINK_DIRECTORIES( ${MOVE3D-PLANNERS_LIBRARY_DIRS} )
 SET(LIBS ${LIBS} ${MOVE3D-PLANNERS_LIBRARIES})
 
 PKG_CHECK_MODULES(HRI REQUIRED libmove3d-hri)
-INCLUDE_directories(${HRI_INCLUDE_DIR})
+INCLUDE_directories(${HRI_INCLUDE_DIRS})
 LINK_DIRECTORIES( ${HRI_LIBRARY_DIRS} )
 SET(LIBS ${LIBS} ${HRI_LIBRARIES})
+message("libhri headers : ${HRI_INCLUDE_DIRS}")
+message("libhri lib : ${HRI_LIBRARY_DIRS}")
 
 PKG_CHECK_MODULES(MOVE3D REQUIRED libmove3d)
-message("totot22 ${MOVE3D_INCLUDE_DIR}")
-INCLUDE_directories(${MOVE3D_INCLUDE_DIR})
-LINK_DIRECTORIES( ${MOVE3D_LIBRARY_DIRS} )
+INCLUDE_directories(${MOVE3D_INCLUDE_DIRS})
+LINK_DIRECTORIES(${MOVE3D_LIBRARY_DIRS} )
 SET(LIBS ${LIBS} ${MOVE3D_LIBRARIES})
+message("libmove3d headers :  ${MOVE3D_INCLUDE_DIRS}")
+message("libmove3d lib :  ${MOVE3D_LIBRARY_DIRS}")
 
 #-------------- Eigen ----------------------------------------------------------
 
