@@ -48,12 +48,6 @@ MainWindowRemote::MainWindowRemote(PosterReader *pr, QWidget *parent) :
 
     on_pushButtonLoadSettings_clicked();
 
-
-
-
-
-
-
 }
 
 

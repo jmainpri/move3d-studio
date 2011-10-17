@@ -303,7 +303,7 @@ void GLWidget::paintGL()
     G3D_WIN->vs.cameraPosition[1]= Xc[1];
     G3D_WIN->vs.cameraPosition[2]= Xc[2];
 
-    cout << "g3d_draw in ::GLWidget(" << m_id << ")" << endl;
+    //cout << "g3d_draw in ::GLWidget(" << m_id << ")" << endl;
 
     g3d_draw(m_id);
 

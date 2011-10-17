@@ -21,6 +21,8 @@ void spark_camera_change(bool reset)
   if( reset )
   {
     p3d_rob* r = (p3d_rob *) p3d_get_robot_by_name("PR2_ROBOT");
+    
+    
     p3d_jnt* j = r->joints[3];
     p3d_matrix4* m_transf = &(j->abs_pos);
     p3d_matrix4 T0,T1,Tbis,T2,T3,offset;

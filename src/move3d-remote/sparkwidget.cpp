@@ -15,23 +15,38 @@
 
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
 
+using namespace std;
+
 sparkWidget::sparkWidget(PosterReader *pr,  Ui::MainWindowRemote *m_ui_parent, QWidget *parent) :
     m_pr(pr),
     m_ui_p(m_ui_parent),
     QWidget(parent),
     m_ui(new Ui::sparkWidget)
 {
-    m_ui->setupUi(this);
-
-       connect(m_pr,SIGNAL(drawAllWinActive()), this, SLOT(drawAllWinActive()));
-    /* viewer page */
-    connectCheckBoxes();
-    initLightSource();
+  m_ui->setupUi(this);
+  init(m_pr,m_ui_p);
 }
 
 sparkWidget::~sparkWidget()
 {
     delete m_ui;
+}
+
+void sparkWidget::init(PosterReader *pr, Ui::MainWindowRemote *ui_parent)
+{
+  if( (!pr) || (!ui_parent))
+  {
+    cout << "cameraWidget not well initialized!!!" << endl;
+    return;
+  }
+  
+  m_pr = pr;
+  m_ui_p = ui_parent;
+    
+  connect(m_pr,SIGNAL(drawAllWinActive()), this, SLOT(drawAllWinActive()));
+  /* viewer page */
+  connectCheckBoxes();
+  initLightSource();
 }
 
 void sparkWidget::changeEvent(QEvent *e)

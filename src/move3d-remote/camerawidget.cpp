@@ -1,26 +1,41 @@
 #include "camerawidget.h"
 #include "ui_camerawidget.h"
 
+#include <iostream>
+
+using namespace std;
+
 cameraWidget::cameraWidget(PosterReader *pr,  Ui::MainWindowRemote *m_ui_parent, QWidget *parent) :
     m_pr(pr),
     QWidget(parent),
     m_ui_p(m_ui_parent),
     m_ui(new Ui::cameraWidget)
 {
-
-
     m_ui->setupUi(this);
-    _qimageLeft = NULL;
-    _qimageRight = NULL;
-    _dataImageLeft = NULL;
-    _dataImageRight = NULL;
-    _labelImageLeft = m_ui->labelImageLeft;
-    _labelImageRight = m_ui->labelImageRight;
+  
+  _qimageLeft = NULL;
+  _qimageRight = NULL;
+  _dataImageLeft = NULL;
+  _dataImageRight = NULL;
+  _labelImageLeft = m_ui->labelImageLeft;
+  _labelImageRight = m_ui->labelImageRight;
+  
+  init(m_pr,m_ui_p);
+}
 
-
-    connect( m_pr->_picowebLeftImg, SIGNAL(imageReady()), this,SLOT(updateImageLeft()));
-    connect( m_pr->_picowebRightImg, SIGNAL(imageReady()), this,SLOT(updateImageRight()));
-
+void cameraWidget::init(PosterReader *pr, Ui::MainWindowRemote *ui_parent)
+{
+  if( (!pr) || (!ui_parent))
+  {
+    cout << "cameraWidget not well initialized!!!" << endl;
+    return;
+  }
+  
+  m_pr = pr;
+  m_ui_p = ui_parent;
+  
+  connect( m_pr->_picowebLeftImg, SIGNAL(imageReady()), this,SLOT(updateImageLeft()));
+  connect( m_pr->_picowebRightImg, SIGNAL(imageReady()), this,SLOT(updateImageRight()));
 }
 
 cameraWidget::~cameraWidget()

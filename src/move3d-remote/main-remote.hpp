@@ -6,6 +6,9 @@
 
 #include <QtCore/QString>
 
+#include "mainwindow-remote.hpp"
+#include "posterreader.hpp"
+
 /**
  * @ingroup qtWindow
  * @brief Simple OpenGl display with Qt
@@ -22,8 +25,13 @@ public:
         Simple_threads();
         ~Simple_threads();
 
-  int run(int argc, char** argv);
-
+        int run(int argc, char** argv);
+  
+private:        
+        void initSeperatedWidgets(MainWindowRemote& w);
+        void initDockWidget(MainWindowRemote& w);
+  
+        PosterReader* m_posterHandler;
 };
 
 /**

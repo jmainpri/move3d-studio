@@ -11,11 +11,13 @@ namespace Ui {
     class niutWidget;
 }
 
-class niutWidget : public QWidget {
+class niutWidget : public QWidget 
+{
     Q_OBJECT
 public:
-    niutWidget(PosterReader *pr, Ui::MainWindowRemote *m_ui_parent, QWidget *parent = 0);
+    niutWidget(PosterReader *pr = NULL, Ui::MainWindowRemote *m_ui_parent = NULL, QWidget *parent = 0);
     ~niutWidget();
+    void init(PosterReader *pr, Ui::MainWindowRemote *m_ui_parent);
 
 public slots:
     void setNiutIsAlive(bool state);
@@ -25,8 +27,9 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
-    Ui::niutWidget *m_ui;
     Ui::MainWindowRemote *m_ui_p;
+    Ui::niutWidget *m_ui;
+    
     PosterReader *m_pr;
     std::vector<QLabel*> _niutLabels;
     QPixmap _niutPmAlive;
@@ -35,8 +38,6 @@ private:
     QPixmap _niutPmOrange;
     QPixmap _niutPmYellow;
     QPixmap _niutPmGreen;
-
-    void initNiut();
 };
 
 #endif // niutWIDGET_H

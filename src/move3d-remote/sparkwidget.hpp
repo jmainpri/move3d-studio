@@ -12,12 +12,15 @@ namespace Ui {
     class sparkWidget;
 }
 
-class sparkWidget : public QWidget {
+class sparkWidget : public QWidget 
+{
     Q_OBJECT
 public:
-    sparkWidget(PosterReader *pr,  Ui::MainWindowRemote *m_ui_parent, QWidget *parent = 0);
+    sparkWidget(PosterReader *pr = NULL,  Ui::MainWindowRemote *m_ui_parent = NULL, QWidget *parent = 0);
     ~sparkWidget();
     GLWidget* getOpenGL();
+  
+   void init(PosterReader *pr, Ui::MainWindowRemote *m_ui_parent);
 
 private slots:
     void drawAllWinActive();
@@ -47,8 +50,9 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
-    Ui::sparkWidget *m_ui;
     Ui::MainWindowRemote *m_ui_p;
+    Ui::sparkWidget *m_ui;
+    
     PosterReader *m_pr;
 
 

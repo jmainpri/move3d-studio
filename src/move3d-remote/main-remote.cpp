@@ -5,15 +5,11 @@
 #include "main-remote.hpp"
 
 #include "mainwindow-remote.hpp"
-#include "ui_mainwindow-remote.h"
+
 #include "sparkwidget.hpp"
-#include "ui_sparkwidget.h"
 #include "camerawidget.h"
-#include "ui_camerawidget.h"
 #include "niutwidget.h"
-#include "ui_niutwidget.h"
-
-
+#include "dockwidget.hpp"
 
 #include "planner_handler.hpp"
 
@@ -43,17 +39,17 @@ vector<sparkWidget*> openGlWidgets;
 
 void draw_opengl()
 {
-    cout << "draw_opengl" << endl;
-    if(global_w != NULL)
+  cout << "draw_opengl" << endl;
+  if(global_w != NULL)
+  {
+    for(unsigned int i=0;i<openGlWidgets.size();i++)
     {
-        for(unsigned int i=0;i<openGlWidgets.size();i++)
-        {
-            cout << "Draw window : " << i << endl;
-            QMetaObject::invokeMethod(openGlWidgets[i]->getOpenGL(),
-                                      "myPaintGL",
-                                      Qt::BlockingQueuedConnection);
-        }
+      cout << "Draw window : " << i << endl;
+      QMetaObject::invokeMethod(openGlWidgets[i]->getOpenGL(),
+                                "myPaintGL",
+                                Qt::BlockingQueuedConnection);
     }
+  }
 }
 
 
@@ -62,67 +58,88 @@ void draw_opengl()
  */
 Simple_threads::Simple_threads()
 {
-    sem = new QSemaphore(0);
+  sem = new QSemaphore(0);
 }
 
 Simple_threads::~Simple_threads()
 {
-
+  
 }
 
+void Simple_threads::initSeperatedWidgets(MainWindowRemote& w)
+{
+  cameraWidget* wCam = new cameraWidget(m_posterHandler, w.m_ui);
+  niutWidget* wNiut = new niutWidget(m_posterHandler, w.m_ui);
+  //
+  sparkWidget* wSpark1 = new sparkWidget(m_posterHandler, w.m_ui);
+  //    sparkWidget wSpark2(m_posterHandler, w.m_ui);
+  //    sparkWidget wSpark3(m_posterHandler, w.m_ui);
+  
+  global_w = wSpark1;
+  
+  openGlWidgets.push_back(wSpark1);
+  //    openGlWidgets.push_back(&wSpark2);
+  //    openGlWidgets.push_back(&wSpark3);
+  
+  //    QRect g = QApplication::desktop()->screenGeometry();
+  //    cout << " x = " << g.x() << " y = " << g.y() << endl;
+  //    cout << " width = " << g.width() << " height = " << g.height() << endl;
+  //
+  //    QRect g_window = w.geometry();
+  //    g_window.setWidth( g.width() );
+  //    g_window.setHeight( 0.707*g.height() ); // sqrt(2) / 2
+  //    g_window.moveTo( 0, 0 );
+  //
+  //    w.setGeometry( g_window );
+  
+  wCam->show();
+  wNiut->show();
+  wSpark1->show();
+  //    wSpark2.show();
+  //    wSpark3.show();
+  
+  w.show();
+}
+
+void Simple_threads::initDockWidget(MainWindowRemote& w)
+{
+  DockWindow* severalWidgets = new DockWindow(m_posterHandler, w.m_ui);
+  severalWidgets->showMaximized();
+  w.show();
+}
 
 int Simple_threads::run(int argc, char** argv)
 {
-    app = new QApplication(argc, argv);
-    app->setWindowIcon(QIcon(QPixmap(molecule_xpm)));
-
-    mainMhp(argc, argv);
-
-    // Creates the wrapper to the project
-    // Be carefull to initialize in the right thread
-    global_Project = new Project(new Scene(XYZ_ENV));
-
-    TcpServer server;
-
-    PosterReader* m_posterHandler;
-    m_posterHandler = new PosterReader();
-    m_posterHandler->init();
-
-    MainWindowRemote w(m_posterHandler);
-
-    cameraWidget wCam(m_posterHandler, w.m_ui);
-    niutWidget wNiut(m_posterHandler, w.m_ui);
-
-    sparkWidget wSpark1(m_posterHandler, w.m_ui);
-    sparkWidget wSpark2(m_posterHandler, w.m_ui);
-    sparkWidget wSpark3(m_posterHandler, w.m_ui);
-
-    global_w = &wSpark1;
-
-    openGlWidgets.push_back(&wSpark1);
-    openGlWidgets.push_back(&wSpark2);
-    openGlWidgets.push_back(&wSpark3);
-
-    //    QRect g = QApplication::desktop()->screenGeometry();
-    //    cout << " x = " << g.x() << " y = " << g.y() << endl;
-    //    cout << " width = " << g.width() << " height = " << g.height() << endl;
-    //
-    //    QRect g_window = w.geometry();
-    //    g_window.setWidth( g.width() );
-    //    g_window.setHeight( 0.707*g.height() ); // sqrt(2) / 2
-    //    g_window.moveTo( 0, 0 );
-    //
-    //    w.setGeometry( g_window );
-
-    w.show();
-    wSpark1.show();
-    wSpark2.show();
-    wSpark3.show();
-
-    wCam.show();
-    wNiut.show();
-
-    return app->exec();
+  app = new QApplication(argc, argv);
+  app->setWindowIcon(QIcon(QPixmap(molecule_xpm)));
+  
+  mainMhp(argc, argv);
+  
+  // Creates the wrapper to the project
+  // Be carefull to initialize in the right thread
+  global_Project = new Project(new Scene(XYZ_ENV));
+  
+  TcpServer server;
+  
+  m_posterHandler = new PosterReader();
+  m_posterHandler->init();
+  
+  MainWindowRemote w(m_posterHandler);
+  
+  const bool several_widgets = true;
+  
+  if(several_widgets)
+  {
+    cout << "Init Seperated" << endl;
+    initSeperatedWidgets(w);
+  }
+  else
+  {
+    cout << "Init Dock" << endl;
+    initDockWidget(w);
+  }
+  
+  return app->exec();
 }
 
 /**
@@ -131,6 +148,6 @@ int Simple_threads::run(int argc, char** argv)
  */
 int main(int argc, char *argv[])
 {    
-    Simple_threads main;
-    return main.run(argc, argv);
+  Simple_threads main;
+  return main.run(argc, argv);
 }

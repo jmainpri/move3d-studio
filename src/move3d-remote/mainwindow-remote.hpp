@@ -50,10 +50,6 @@ private slots:
         void setRobotAsCurrent();
 
 
-
-
-
-
         //void on_checkBox_clicked(bool checked);
 
 

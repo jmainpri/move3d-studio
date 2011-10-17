@@ -34,7 +34,8 @@ myopencv.cpp
 qtipl.cpp
 picowebimage.cpp
 tcpserver.cpp
-sparkcamera.cpp)
+sparkcamera.cpp
+dockwidget.cpp)
 
 file(GLOB image_files
 images/green-man-xpm.h
@@ -57,16 +58,19 @@ myopencv.hpp
 qtipl.hpp
 picowebimage.hpp 
 tcpserver.hpp
-sparkcamera.hpp)
+sparkcamera.hpp
+dockwidget.hpp)
 
 file(GLOB
 ui_files
 mainwindow-remote.ui
 sparkwidget.ui
 niutwidget.ui
-camerawidget.ui)
+camerawidget.ui
+dockwidget.ui)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/move3d-qt-gui-libs/src)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/move3d-remote)
 INCLUDE_DIRECTORIES(/home/xbroquer/openrobots/include/pom)
 INCLUDE_DIRECTORIES(/home/xbroquer/openrobots/include/viam)
 
