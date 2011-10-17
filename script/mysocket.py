@@ -29,7 +29,3 @@ def move3d_remote_reset_camera() :
     s.close()
     print 'Received', repr(data)
     
-
-#move3d_remote_hello();
-#move3d_remote_change_camera();
-#move3d_remote_reset_camera();
