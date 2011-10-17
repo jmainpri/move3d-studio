@@ -26,6 +26,7 @@ move3d.c
 sparkwidget.cpp
 niutwidget.cpp
 camerawidget.cpp
+camerasolo.cpp 
 mainwindow-remote.cpp
 posterreader.cpp
 genomposter.cpp
@@ -50,6 +51,7 @@ main-remote.hpp
 sparkwidget.hpp
 niutwidget.h
 camerawidget.h
+camerasolo.hpp 
 mainwindow-remote.hpp
 posterreader.hpp
 genomposter.hpp
@@ -67,6 +69,7 @@ mainwindow-remote.ui
 sparkwidget.ui
 niutwidget.ui
 camerawidget.ui
+camerasolo.ui
 dockwidget.ui)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/move3d-qt-gui-libs/src)
