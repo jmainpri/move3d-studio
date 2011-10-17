@@ -31,9 +31,10 @@ public:
     QLabel* _labelImage;
 
 private:
-    Ui::CameraSolo *m_ui;
-    Ui::MainWindowRemote *m_ui_p;
     PosterReader *m_pr;
+    Ui::MainWindowRemote *m_ui_p;
+    Ui::CameraSolo *m_ui;
+    
     uchar *_dataImage;
     QImage* _qimage;
 };

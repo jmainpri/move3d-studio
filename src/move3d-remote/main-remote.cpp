@@ -52,7 +52,6 @@ void draw_opengl()
   }
 }
 
-
 /**
  * @ingroup qtWindow
  */
@@ -61,11 +60,14 @@ Simple_threads::Simple_threads()
   sem = new QSemaphore(0);
 }
 
+//! Destructor
 Simple_threads::~Simple_threads()
 {
   
 }
 
+//! function that initialize the remote viewer with  
+//! seperated windows
 void Simple_threads::initSeperatedWidgets(MainWindowRemote& w)
 {
   cameraWidget* wCam = new cameraWidget(m_posterHandler, w.m_ui);
@@ -101,6 +103,8 @@ void Simple_threads::initSeperatedWidgets(MainWindowRemote& w)
   w.show();
 }
 
+//! function that initialize the remote viewer with  
+//! docked windows
 void Simple_threads::initDockWidget(MainWindowRemote& w)
 {
   DockWindow* severalWidgets = new DockWindow(m_posterHandler, w.m_ui);
@@ -108,6 +112,8 @@ void Simple_threads::initDockWidget(MainWindowRemote& w)
   w.show();
 }
 
+//! Main application function of the  
+//! remote viewer
 int Simple_threads::run(int argc, char** argv)
 {
   app = new QApplication(argc, argv);
@@ -126,7 +132,7 @@ int Simple_threads::run(int argc, char** argv)
   
   MainWindowRemote w(m_posterHandler);
   
-  const bool several_widgets = true;
+  const bool several_widgets = false;
   
   if(several_widgets)
   {

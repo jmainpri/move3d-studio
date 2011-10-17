@@ -34,10 +34,10 @@ public:
     QLabel* _labelImageRight;
 
 private:
+    PosterReader *m_pr;
     Ui::MainWindowRemote *m_ui_p;
     Ui::cameraWidget *m_ui;
     
-    PosterReader *m_pr;
     uchar *_dataImageLeft;
     uchar *_dataImageRight;
     QImage* _qimageLeft;

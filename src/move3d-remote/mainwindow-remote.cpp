@@ -26,8 +26,8 @@ using namespace std;
 
 
 MainWindowRemote::MainWindowRemote(PosterReader *pr, QWidget *parent) :
-        m_pr(pr),
         QMainWindow(parent),
+        m_pr(pr),
         m_ui(new Ui::MainWindowRemote)
 {
     //    QTimer *timer = new QTimer(this);
@@ -144,11 +144,11 @@ void MainWindowRemote::setSparkStatusText(bool updating)
 //    }
 //}
 
-void MainWindowRemote::keyReleaseEvent(QKeyEvent *e)
-{
-
-
-}
+//void MainWindowRemote::keyReleaseEvent(QKeyEvent *e)
+//{
+//
+//
+//}
 
 
 
@@ -190,6 +190,8 @@ bool MainWindowRemote::userReallyWantsToQuit()
                                           return false;
                                           break;
                                       }
+  
+  return true;
 }
 
 bool MainWindowRemote::userWantsToLoadSettings()
@@ -212,6 +214,8 @@ bool MainWindowRemote::userWantsToLoadSettings()
                                           return false;
                                           break;
                                       }
+  
+    return true;
 }
 
 
@@ -234,8 +238,8 @@ void MainWindowRemote::on_pushButtonLoadSettings_clicked()
 
 
 
-void MainWindowRemote::loadDockSettings(QSettings & settings, QString dockName, QDockWidget * dockWidget)
-{
+//void MainWindowRemote::loadDockSettings(QSettings & settings, QString dockName, QDockWidget * dockWidget)
+//{
     //    settings.beginGroup(dockName);
     //    dockWidget->setFloating(settings.value(dockName + QString("/isFloating"), false).toBool());
     //    dockWidget->move(settings.value(dockName + QString("/pos"), QPoint(1,1)).toPoint());
@@ -243,7 +247,7 @@ void MainWindowRemote::loadDockSettings(QSettings & settings, QString dockName, 
     //    //dockWidget->restoreGeometry(settings.value(dockName + QString("/geometry")).toByteArray());
     //    addDockWidget((Qt::DockWidgetArea)settings.value(dockName + QString("/dockarea"), Qt::RightDockWidgetArea).toInt(), dockWidget);
     //    settings.endGroup();
-}
+//}
 
 void MainWindowRemote::on_pushButtonSaveSettings_clicked()
 {
@@ -259,8 +263,8 @@ void MainWindowRemote::on_pushButtonSaveSettings_clicked()
     //    saveDockSettings(settings, QString("dockNiut"), m_ui->dockNiut);
 }
 
-void MainWindowRemote::saveDockSettings(QSettings & settings, QString dockName, QDockWidget * dockWidget)
-{
+//void MainWindowRemote::saveDockSettings(QSettings & settings, QString dockName, QDockWidget * dockWidget)
+//{
     //    settings.beginGroup(dockName);
     //    settings.setValue(dockName + QString("/dockarea"), dockWidgetArea(dockWidget));
     //    settings.setValue(dockName +  QString("/isFloating"), dockWidget->isFloating());
@@ -268,9 +272,9 @@ void MainWindowRemote::saveDockSettings(QSettings & settings, QString dockName, 
     //    settings.setValue(dockName + QString("/size"), dockWidget->size());
     //    settings.setValue(dockName + QString("/pos"), dockWidget->pos());
     //    settings.endGroup();
-}
+//}
 
-void MainWindowRemote::on_switchSparkView_clicked(bool checked)
-{
-
-}
+//void MainWindowRemote::on_switchSparkView_clicked(bool checked)
+//{
+//
+//}

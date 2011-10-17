@@ -1,16 +1,12 @@
 #include "camerasolo.hpp"
 #include "ui_camerasolo.h"
 
-
-
 CameraSolo::CameraSolo(PosterReader *pr,  Ui::MainWindowRemote *m_ui_parent, QWidget *parent) :
-    m_pr(pr),
     QWidget(parent),
+    m_pr(pr),
     m_ui_p(m_ui_parent),
     m_ui(new Ui::CameraSolo)
 {
-
-
     m_ui->setupUi(this);
     _qimage = NULL;
 

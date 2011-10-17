@@ -6,8 +6,8 @@
 using namespace std;
 
 cameraWidget::cameraWidget(PosterReader *pr,  Ui::MainWindowRemote *m_ui_parent, QWidget *parent) :
-    m_pr(pr),
     QWidget(parent),
+    m_pr(pr),
     m_ui_p(m_ui_parent),
     m_ui(new Ui::cameraWidget)
 {

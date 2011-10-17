@@ -27,10 +27,10 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
+    PosterReader *m_pr;
     Ui::MainWindowRemote *m_ui_p;
     Ui::niutWidget *m_ui;
     
-    PosterReader *m_pr;
     std::vector<QLabel*> _niutLabels;
     QPixmap _niutPmAlive;
     QPixmap _niutPmDead;

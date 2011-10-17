@@ -50,12 +50,10 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
+    PosterReader *m_pr;
     Ui::MainWindowRemote *m_ui_p;
     Ui::sparkWidget *m_ui;
     
-    PosterReader *m_pr;
-
-
     void initLightSource();
     /**
      * Function tro create sliders and checkboxes TODO move somwhere else

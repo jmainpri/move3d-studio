@@ -35,37 +35,31 @@ public slots:
 
         void setSparkStatusText(bool updating);
 
-
 signals:
     void drawAllWinActive();
   
 private slots:
 
-        void on_switchSparkView_clicked(bool checked);
+        //void on_switchSparkView_clicked(bool checked);
         void on_pushButtonSaveSettings_clicked();
         void on_pushButtonLoadSettings_clicked();
         void setSparkRefresh();
         void sparkSaveScenario();
-
         void setRobotAsCurrent();
-
-
         //void on_checkBox_clicked(bool checked);
-
-
 
 protected:
         //void keyPressEvent(QKeyEvent *e);
-        void keyReleaseEvent(QKeyEvent *e);
+        //void keyReleaseEvent(QKeyEvent *e);
         void closeEvent(QCloseEvent *event);
-
-public:
-        Ui::MainWindowRemote*	m_ui;
 
 private:
         PosterReader *m_pr;
   
+public:
+        Ui::MainWindowRemote*	m_ui;
 
+private:  
         std::vector<QAction*> m_RobotsInMenu;
 
 
@@ -76,10 +70,6 @@ private:
         void initCamera();
         void saveDockSettings(QSettings & settings, QString dockName, QDockWidget * dockWidget);
         void loadDockSettings(QSettings & settings, QString dockName, QDockWidget * dockWidget);
-
-
-
-        
 };
 
 #endif // MAINWINDOWREMOTE_HPP

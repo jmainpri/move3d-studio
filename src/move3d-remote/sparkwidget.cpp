@@ -1,7 +1,5 @@
 #include "sparkwidget.hpp"
-
 #include "ui_sparkwidget.h"
-
 
 #include <QPainter>
 
@@ -18,13 +16,13 @@
 using namespace std;
 
 sparkWidget::sparkWidget(PosterReader *pr,  Ui::MainWindowRemote *m_ui_parent, QWidget *parent) :
+    QWidget(parent),
     m_pr(pr),
     m_ui_p(m_ui_parent),
-    QWidget(parent),
     m_ui(new Ui::sparkWidget)
 {
-  m_ui->setupUi(this);
-  init(m_pr,m_ui_p);
+    m_ui->setupUi(this);
+    init(m_pr,m_ui_p);
 }
 
 sparkWidget::~sparkWidget()
