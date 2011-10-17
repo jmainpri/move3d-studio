@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DockWindow</class>
+ <widget class="QWidget" name="DockWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>780</width>
+    <height>840</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QDockWidget" name="dockWidget2">
+     <widget class="sparkWidget" name="spark"/>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDockWidget" name="dockWidget1">
+     <widget class="niutWidget" name="niut"/>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDockWidget" name="dockWidget3">
+     <widget class="cameraWidget" name="camera"/>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>niutWidget</class>
+   <extends>QWidget</extends>
+   <header>niutwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>sparkWidget</class>
+   <extends>QWidget</extends>
+   <header>sparkwidget.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>cameraWidget</class>
+   <extends>QWidget</extends>
+   <header>camerawidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
