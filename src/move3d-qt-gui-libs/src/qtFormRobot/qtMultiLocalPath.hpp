@@ -26,7 +26,7 @@ class GroupValidator : public QObject
 	
 public:
 	
-	GroupValidator(QWidget *parent = 0, p3d_rob* rob = NULL);
+	GroupValidator(QWidget *parent = 0, p3d_rob* rob = NULL, int group = 0);
 	~GroupValidator();
 	
 	public slots:
