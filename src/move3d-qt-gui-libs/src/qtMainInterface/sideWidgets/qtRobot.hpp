@@ -40,15 +40,16 @@ public:
 	void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
 	
 	void initRobot();
+  void initTrajectoryFromConfig();
 	
 	MoveRobot* getMoveRobot();
 	
 private slots:
   
 	// Test Model -------------------------
- void on_pushButtonrefrech_clicked();
- void on_spinBoxNavigate_valueChanged(int value);
- void costTest();
+  void on_pushButtonrefrech_clicked();
+  void on_spinBoxNavigate_valueChanged(int value);
+  void costTest();
 	void collisionsTest();
 	void localpathsTest();
 	void allTests();
@@ -80,6 +81,10 @@ private slots:
 	void printPQPColPair();
 	
 	// Manipulation -----------------------
+  void objectNameChanged(int id);
+  void placementNameChanged(int id);
+  void supportNameChanged(int id);
+  
   void isDebugManip(bool value);
   void isCartesianMode(bool on);
   void resetManipulationData();
@@ -98,7 +103,7 @@ private slots:
 	 void deleteVoxelCC();
 	 
 	 void voxelCCTest();*/
-
+  
   void launch();
   void saveConfig();
   void clearConfigs();
@@ -108,14 +113,22 @@ signals:
   void selectedPlanner(QString);
 	
 private:
+  void initModel();
+	void initManipulation();
+  void initObjectSupportAndPlacementCombo();
+  std::string getNameOfFreeFlyerFromIndex(int id);
+  
 	Ui::RobotWidget *m_ui;
 	
 	MainWindow *m_mainWindow;
 	
-	std::vector<QString> mFreeFlyers;
-	
-	void initModel();
-	void initManipulation();
+	std::vector<QString> m_FreeFlyers;
+  
+  QString m_ObjectName;
+  QString m_SupportName;
+  QString m_PlacementName;
+  
+	int m_configNum;
 };
 
 #endif

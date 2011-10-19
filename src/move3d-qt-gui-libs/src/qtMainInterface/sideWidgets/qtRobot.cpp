@@ -43,16 +43,23 @@ using namespace std;
 using namespace tr1;
 
 extern string global_ActiveRobotName;
+extern ManipulationTestFunctions* global_manipPlanTest;
+
+shared_ptr<Configuration> qInit;
+shared_ptr<Configuration> qGoal;
+
 
 RobotWidget::RobotWidget(QWidget *parent) :
 QWidget(parent),
-m_ui(new Ui::RobotWidget)
+m_ui(new Ui::RobotWidget),
+m_mainWindow(NULL)
 {
 	m_ui->setupUi(this);
 	
 	initModel();
 	initManipulation();
 	//initVoxelCollisionChecker();
+  initTrajectoryFromConfig();
 }
 
 RobotWidget::~RobotWidget()
@@ -110,7 +117,7 @@ void RobotWidget::initModel()
 			{
 				QString FFname(XYZ_ENV->robot[i]->name);
 				m_ui->comboBoxGrabObject->addItem(FFname);
-				mFreeFlyers.push_back(FFname);
+				m_FreeFlyers.push_back(FFname);
 				//                cout<< " FreeFlyer = "  << XYZ_ENV->robot[i]->name << endl;
 			}
 		}
@@ -308,18 +315,17 @@ void RobotWidget::computeHriGik(bool leftArm)
 
 void RobotWidget::currentObjectChange(int i)
 {
-	if((mFreeFlyers.size() > 0) && (i != 0))
+	if((m_FreeFlyers.size() > 0) && (i != 0))
 	{
-		
-		//        cout << "Env::ObjectToCarry  is "<< mFreeFlyers[i-1] << endl;
-		ENV.setString(Env::ObjectToCarry,mFreeFlyers[i-1]);
+		//        cout << "Env::ObjectToCarry  is "<< m_FreeFlyers[i-1] << endl;
+		ENV.setString(Env::ObjectToCarry,m_FreeFlyers[i-1]);
 	}
 }
 
 void RobotWidget::SetObjectToCarry()
 {
 #ifdef LIGHT_PLANNER
-	if(mFreeFlyers.size() > 0)
+	if(m_FreeFlyers.size() > 0)
 	{
 		p3d_rob *robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
                 //p3d_set_object_to_carry(robotPt,ENV.getString(Env::ObjectToCarry).toStdString().c_str());
@@ -364,7 +370,7 @@ void RobotWidget::GrabObject()
         //p3d_set_object_to_carry(robotPt,ENV.getString(Env::ObjectToCarry).toStdString().c_str());
 	p3d_grab_object2(robotPt,0);
 	
-	//    if(mFreeFlyers.size() > 0)
+	//    if(m_FreeFlyers.size() > 0)
 	//    {
 	//        p3d_rob *robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
 	//		//        p3d_rob *carriedObject;
@@ -503,12 +509,114 @@ void RobotWidget::initManipulation()
   
   connect(this, SIGNAL(selectedPlanner(QString)),
           global_plannerHandler, SLOT(startPlanner(QString)));
+  
+  initObjectSupportAndPlacementCombo();
 }
 
-shared_ptr<Configuration> qInit;
-shared_ptr<Configuration> qGoal;
+void RobotWidget::initObjectSupportAndPlacementCombo()
+{
+  m_ui->comboBoxObjectName->addItem( "No Object" );
+  m_ui->comboBoxPlacementName->addItem( "No Object" );
+  m_ui->comboBoxSupportName->addItem( "No Object" );
+  
+  // Object To Grasp 
+	for(int i =0;i<int(m_FreeFlyers.size());i++)
+	{
+    m_ui->comboBoxObjectName->addItem( m_FreeFlyers[i] );
+    m_ui->comboBoxPlacementName->addItem( m_FreeFlyers[i] );
+    m_ui->comboBoxSupportName->addItem( m_FreeFlyers[i] );
+	}
+	
+	m_ui->comboBoxObjectName->setCurrentIndex(0);
+	connect(m_ui->comboBoxObjectName, SIGNAL(currentIndexChanged(int)),this, SLOT(objectNameChanged(int)));
+  
+	m_ui->comboBoxPlacementName->setCurrentIndex(0);
+	connect(m_ui->comboBoxPlacementName, SIGNAL(currentIndexChanged(int)),this, SLOT(placementNameChanged(int)));
+  
+  m_ui->comboBoxSupportName->setCurrentIndex(0);
+	connect(m_ui->comboBoxSupportName, SIGNAL(currentIndexChanged(int)),this, SLOT(supportNameChanged(int)));
+}
 
-extern ManipulationTestFunctions* global_manipPlanTest;
+std::string RobotWidget::getNameOfFreeFlyerFromIndex(int id)
+{
+  string name("");
+  
+  if((id >= 0) && (id < int(m_FreeFlyers.size())))
+	{
+    if( id == 0 )
+    {
+      name = "No Object";
+    }
+    else
+    {
+      name = m_FreeFlyers[id-1].toStdString();
+    }
+    
+    cout << "Set object name to : " << name << endl;
+  }
+  
+  return name;
+}
+
+void RobotWidget::objectNameChanged(int id)
+{
+  string name = getNameOfFreeFlyerFromIndex( id );
+ 
+  if( name == "" || global_manipPlanTest == NULL )
+  {
+    cout << "Object doesn't exist or global_manipPlanTest is not set" << endl;
+    return;
+  }
+  
+  if( name == "No Object" )
+  {
+    global_manipPlanTest->resetObject();
+  }
+  else
+  {
+    global_manipPlanTest->setObject( name );
+  }
+}
+
+void RobotWidget::placementNameChanged(int id)
+{
+  string name = getNameOfFreeFlyerFromIndex( id );
+  
+  if( name == "" || global_manipPlanTest == NULL )
+  {
+    cout << "Placement doesn't exist or global_manipPlanTest is not set" << endl;
+    return;
+  }
+  
+  if( name == "No Object" )
+  {
+    global_manipPlanTest->resetPlacement();
+  }
+  else
+  {
+    global_manipPlanTest->setPlacement( name );
+  }
+}
+
+void RobotWidget::supportNameChanged(int id)
+{
+  string name = getNameOfFreeFlyerFromIndex( id );
+  
+  if( name == "" || global_manipPlanTest == NULL )
+  {
+    cout << "Support doesn't exist or global_manipPlanTest is not set" << endl;
+    return;
+  }
+  
+  if( name == "No Object" )
+  {
+    global_manipPlanTest->resetSupport();
+  }
+  else
+  {
+    global_manipPlanTest->setSupport( name );
+  }
+}
 
 // ------------------------------------------------------------------------------
 // The Manip namespace holds the function
@@ -518,8 +626,6 @@ extern ManipulationTestFunctions* global_manipPlanTest;
 namespace Manip
 {
   ManipulationPlanner* manipulation = NULL;
-  
-  char OBJECT_NAME[] = "GREY_TAPE";
   
   // Manip locals
   typedef enum ManipulationType
@@ -568,15 +674,17 @@ namespace Manip
     {
       case Manip::armFree :
       {
+        cout << "Manip::armFree" << endl;
         global_manipPlanTest->runTest(1);
       }
         break;
         
       case Manip::pickGoto :
       {
+        cout << "Manip::pickGoto" << endl;
         global_manipPlanTest->runTest(2);
       }
-      break;
+        break;
         
       case Manip::rePlanning :
       {
@@ -591,7 +699,7 @@ namespace Manip
         const double t_rep = 0.0; // in second
         const double tau = 0.0;
         p3d_getQSwitchIDFromMidCVS(tau, t_rep, &id_localpath); 
-      
+        
         global_manipPlanTest->getManipulationPlanner()->armReplan(otp,id_localpath,traj);
       }
         break;
@@ -851,12 +959,19 @@ void RobotWidget::loadWorkspace()
   global_manipPlanTest->readWorkspaceFromFile( fileName );
 }
 
-
+//-----------------------------------------------------------------------
+//---------
+//---------  Trajectory generation
+//---------
 //-----------------------------------------------------------------------
 
 //  connect(this, SIGNAL(selectedPlanner(QString)), global_plannerHandler, SLOT(startPlanner(QString)));
 
-int configNum = 0;
+void RobotWidget::initTrajectoryFromConfig()
+{
+  m_configNum = 0;
+  on_pushButtonrefrech_clicked();
+}
 
 void RobotWidget::launch()
 {
@@ -872,7 +987,7 @@ void RobotWidget::saveConfig()
 	string num;
 
 	stringstream out;
-	out << configNum++;
+	out << m_configNum++;
 	num = out.str();
 
 	name = name + num;
@@ -882,7 +997,6 @@ void RobotWidget::saveConfig()
 
 	p3d_set_new_robot_config( name.c_str() , q, NULL, config);
 	m_ui->spinBoxNavigate->setMaximum(robot->nconf - 1);
-
 }
 
 void RobotWidget::clearConfigs()
@@ -909,19 +1023,26 @@ void RobotWidget::on_spinBoxNavigate_valueChanged(int value)
 {
 	p3d_rob* robot = p3d_get_robot_by_name(global_ActiveRobotName.c_str());
 	Robot* rob = new Robot(robot);
-	if (value < robot->nconf)
+	if ( (value < robot->nconf) && (value > 0)) 
 	{
 		configPt conf = robot->conf[value]->q;
 		shared_ptr<Configuration> q(new Configuration(rob,conf));
 		q->print();
 		rob->setAndUpdate(*q);
+    
+    if( m_mainWindow )
+      m_mainWindow->drawAllWinActive();
 	}
-	m_mainWindow->drawAllWinActive();
 }
 
 void RobotWidget::on_pushButtonrefrech_clicked()
 {
 	p3d_rob* robot = p3d_get_robot_by_name(global_ActiveRobotName.c_str());
-	m_ui->spinBoxNavigate->setMaximum(robot->nconf - 1);
-	m_mainWindow->drawAllWinActive();
+  
+  if (robot != NULL) {
+    m_ui->spinBoxNavigate->setMaximum(robot->nconf - 1);
+    
+    if( m_mainWindow )
+      m_mainWindow->drawAllWinActive();
+  }
 }
