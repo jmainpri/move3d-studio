@@ -32,10 +32,11 @@ SpinBoxSliderConnector::SpinBoxSliderConnector( QObject* _parent,
                                                QSlider* _slider) :
 QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
 {
-    setValue(numeric_limits<double>::max());
     
     connect( m_spinBox, SIGNAL(valueChanged( double )), SLOT(spinBoxValueChanged( double ) ) );
     connect( m_slider, SIGNAL(valueChanged( int )), SLOT(sliderValueChanged( int ) ) );
+
+    emit( this->valueChanged( m_spinBox->value() ) );
     
     _init = false;
 }
