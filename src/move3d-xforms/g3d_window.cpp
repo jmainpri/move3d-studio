@@ -485,7 +485,7 @@ void g3d_draw_win(G3D_Window *win) {
 	//     glPopMatrix();
 	//   }
   
-  if(win->fct_draw) (*win->fct_draw)();
+  if(win->fct_draw) (*win->fct_draw)(0);
 
 
   glPopMatrix();
@@ -522,7 +522,7 @@ void g3d_draw_win_back_buffer(G3D_Window *win) {
 	//     glPopMatrix();
 	//   }
   
-  if(win->fct_draw) (*win->fct_draw)();
+  if(win->fct_draw) (*win->fct_draw)(0);
   
   
   glPopMatrix();
@@ -541,6 +541,7 @@ canvas_expose(FL_OBJECT *ob, Window win, int w, int h, XEvent *xev, void *ud) {
 
   glViewport(0,0,(GLint)w,(GLint)h);
 
+  G3D_WIN = g3dwin;
   g3d_set_projection_matrix(g3dwin->vs.projection_mode);
 
   glMatrixMode(GL_MODELVIEW);
@@ -2022,7 +2023,7 @@ g3d_set_mobile_camera_activate(G3D_Window *win, int mode)
 
 
 void
-g3d_set_win_drawer(G3D_Window *win, void (*fct)(void)) {
+g3d_set_win_drawer(G3D_Window *win, void (*fct)(int)) {
   win->fct_draw = fct;
 }
 

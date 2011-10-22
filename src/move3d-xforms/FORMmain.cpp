@@ -628,7 +628,7 @@ static void CB_envcur_obj(FL_OBJECT *ob, long arg)
 
 
       //HERE
-      g3d_reinit_graphics();
+      g3d_reinit_graphics(0);
 
 
 

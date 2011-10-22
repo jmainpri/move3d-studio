@@ -419,7 +419,7 @@ static void CB_double_grasp(FL_OBJECT *obj, long arg)
 
    gpDouble_grasp_generation(hand1, hand2, object, graspList1, graspList2, DOUBLE_GRASP_LIST);
    firstTime= false;  
-   printf("%d double grasps\n",DOUBLE_GRASP_LIST.size());
+   printf("%d double grasps\n",int(DOUBLE_GRASP_LIST.size()));
   }
 
   std::list<gpDoubleGrasp>::iterator iter;
