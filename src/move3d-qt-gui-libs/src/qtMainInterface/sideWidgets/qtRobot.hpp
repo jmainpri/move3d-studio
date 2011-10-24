@@ -23,6 +23,7 @@ namespace Ui
 namespace Manip
 {
   void runManipulation();
+  void runNavigation();
   void runCurrentTest();
 }
 #endif
@@ -48,7 +49,8 @@ public:
 	
 private slots:
   
-	// Test Model -------------------------
+        void on_pushButtonPlanNavigation_clicked();
+ // Test Model -------------------------
   void on_pushButtonrefrech_clicked();
   void on_spinBoxNavigate_valueChanged(int value);
   void costTest();

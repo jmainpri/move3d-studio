@@ -718,8 +718,81 @@ namespace Manip
     ENV.setBool(Env::isRunning,false);
     cout << "Ends Manipulation Thread" << endl;
   }
+
+
+  //! Main function for launching the manipulation planner
+  //! it is based on the testing class
+  //! it reads the Cartesian mode variable to determine
+  //! which type of method will be used (it is called from the planner thread)
+  void runNavigation()
+  {
+    p3d_rob* rob =  global_manipPlanTest->getManipulationPlanner()->robot();
+
+  //  if(Manip::isCartesianMode)
+  //  {
+  //    for(unsigned int i=0; i < rob->armManipulationData->size(); i++)
+  //      global_manipPlanTest->getManipulationPlanner()->setArmCartesian(i, true);
+  //  }
+  //  else
+  //  {
+  //    for(unsigned int i=0; i < rob->armManipulationData->size(); i++)
+  //      global_manipPlanTest->getManipulationPlanner()->setArmCartesian(i, false);
+  //  }
+  //
+  //  switch (Phase)
+  //  {
+  //    case Manip::armFree :
+  //    {
+  //      cout << "Manip::armFree" << endl;
+  //      global_manipPlanTest->runTest(1);
+  //    }
+  //      break;
+  //
+  //    case Manip::pickGoto :
+  //    {
+  //      cout << "Manip::pickGoto" << endl;
+  //      global_manipPlanTest->runTest(2);
+  //    }
+  //      break;
+  //
+  //    case Manip::rePlanning :
+  //    {
+  //      p3d_vector3 otp;
+  //      otp[0] = 4.250;
+  //      otp[1] = -2.60;
+  //      otp[2] = 1.000;
+  //
+  //      SM_TRAJ traj;
+  //
+  //      int id_localpath;
+  //      const double t_rep = 0.0; // in second
+  //      const double tau = 0.0;
+  //      p3d_getQSwitchIDFromMidCVS(tau, t_rep, &id_localpath);
+  //
+  //      global_manipPlanTest->getManipulationPlanner()->armReplan(otp,id_localpath,traj);
+        std::vector <MANPIPULATION_TRAJECTORY_CONF_STR> confs;
+        std::vector <SM_TRAJ> smTrajs;
+
+        global_manipPlanTest->getManipulationPlanner()->planNavigation(rob->ROBOT_POS, rob->ROBOT_GOTO, confs, smTrajs);
+  //    }
+  //      break;
+  //
+  //    default:
+  //      cout << "Manip::Test not implemented" << endl;
+  //      break;
+  //  }
+  //
+  //  g3d_draw_allwin_active();
+  //  ENV.setBool(Env::isRunning,false);
+    cout << "Ends Manipulation Thread" << endl;
+  }
+
 };
 #endif
+
+
+
+
 
 // ------------------------------------------------------------------------------
 // All buttons callbacks are defined here
@@ -1068,4 +1141,21 @@ void RobotWidget::on_pushButtonrefrech_clicked()
     if( m_mainWindow )
       m_mainWindow->drawAllWinActive();
   }
+}
+
+void RobotWidget::on_pushButtonPlanNavigation_clicked()
+{
+    cout << "Navigation softmotion" << endl;
+
+//if (!global_manipPlanTest)
+//{
+//resetManipulationData();
+//}
+
+//Manip::Phase = Manip::armFree;
+m_mainWindow->isPlanning();
+
+global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
+
+emit(selectedPlanner(QString("NavigationSM")));
 }

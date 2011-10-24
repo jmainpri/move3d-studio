@@ -32,7 +32,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <property name="usesScrollButtons">
       <bool>true</bool>
@@ -79,8 +79,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>483</width>
-            <height>1170</height>
+            <width>482</width>
+            <height>1128</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -595,7 +595,7 @@
             <x>0</x>
             <y>0</y>
             <width>498</width>
-            <height>704</height>
+            <height>697</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -792,6 +792,13 @@
                <widget class="QPushButton" name="pushButtonLoadWorkspaceFile">
                 <property name="text">
                  <string>Load Workspace File</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonPlanNavigation">
+                <property name="text">
+                 <string>Plan Navigation</string>
                 </property>
                </widget>
               </item>
