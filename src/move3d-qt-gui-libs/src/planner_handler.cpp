@@ -250,7 +250,26 @@ void qt_runPRM()
 	ENV.setBool(Env::isRunning,false);
 }
 
+
 #ifdef MULTILOCALPATH
+
+void qt_runManipTest()
+{
+  Manip::runCurrentTest();
+}
+
+void qt_runManipulation()
+{
+  Manip::runManipulation();
+}
+
+void qt_runNavigation()
+{
+    Manip::runNavigation();
+}
+
+
+
 void qt_runReplanning()
 {
   Robot* rob =	global_Project->getActiveScene()->getActiveRobot();
@@ -268,7 +287,28 @@ void qt_handover()
   //  compute_handOver();
 }
 
+
 #ifdef HRI_PLANNER
+
+void qtRealTimeOtp()
+{
+    int tmp = PlanEnv->getInt(PlanParam::env_timeShow);
+    PlanEnv->setInt(PlanParam::env_timeShow,0);
+    ENV.setBool(Env::drawGraph,false);
+    while (PlanEnv->getBool(PlanParam::env_realTime))
+    {
+        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+        if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->newComputeOTP())
+        {
+            dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->showBestConf();
+            g3d_draw_allwin_active();
+            ENV.setBool(Env::drawOTPTraj,true);
+        }
+    }
+    ENV.setBool(Env::drawGraph,true);
+    PlanEnv->setInt(PlanParam::env_timeShow,tmp);
+}
+
 void qtOTP()
 {
 	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
@@ -683,6 +723,11 @@ void PlannerHandler::startPlanner(QString plannerName)
       //      pthread_attr_getstacksize (&attr, &stacksize);
       Manip::runManipulation();
     }
+    else if(plannerName == "NavigationSM")
+    {
+      std::cout << "Navigation thread : starting navigation." << std::endl;
+      qt_runNavigation();
+    }
     else if (plannerName == "ManipCurrentTest"){
       std::cout << "Manipulation Test :" << std::endl;
       Manip::runCurrentTest();
@@ -717,7 +762,12 @@ void PlannerHandler::startPlanner(QString plannerName)
       std::cout << "Shortcut trajectory : " << std::endl;
       qt_shortCut();
     }
+
 #ifdef HRI_PLANNER
+
+    else if( plannerName == "realTimeOtp"){
+          qtRealTimeOtp();
+    }
     else if( plannerName == "otp"){
       qtOTP();
     }

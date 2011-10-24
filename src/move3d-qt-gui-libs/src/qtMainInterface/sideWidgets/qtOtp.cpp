@@ -462,7 +462,7 @@ void OtpWidget::on_pushButtonInitEnvGrid_clicked()
 	if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
 	{
 		QTime timeB = QTime::currentTime();
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid()->initGrid();
+                dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->initGrid();
 		QTime timeE = QTime::currentTime();
 
 		int msec = timeE.msec() - timeB.msec();
@@ -651,4 +651,14 @@ void OtpWidget::on_pushButtonTestCompute_clicked()
         }
 
     }
+}
+
+void OtpWidget::on_pushButton_toggled(bool checked)
+{
+    PlanEnv->setBool(PlanParam::env_realTime,checked);
+    if (checked)
+    {
+        emit(selectedPlanner(QString("realTimeOtp")));
+    }
+
 }
