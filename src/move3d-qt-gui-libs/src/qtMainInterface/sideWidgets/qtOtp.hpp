@@ -14,6 +14,8 @@
 #include "qtMainInterface/mainwindow.hpp"
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
 
+#include "qtFormRobot/qtmovinghuman.hpp"
+
 
 namespace Ui
 {
@@ -131,6 +133,8 @@ private:
         QtShiva::SpinBoxSliderConnector*	m_k_cellSize;
 
         QString confFileName;
+
+        MovingHuman* m_mh;
 
 
 };

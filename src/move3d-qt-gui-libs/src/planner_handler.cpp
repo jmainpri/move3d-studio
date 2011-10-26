@@ -292,12 +292,25 @@ void qt_handover()
 
 void qtRealTimeOtp()
 {
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getInputs();
     int tmp = PlanEnv->getInt(PlanParam::env_timeShow);
     PlanEnv->setInt(PlanParam::env_timeShow,0);
     ENV.setBool(Env::drawGraph,false);
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid()->setAsNotSorted();
+    PlanEnv->setBool(PlanParam::env_drawHumanModel,true);
     while (PlanEnv->getBool(PlanParam::env_realTime))
     {
         dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+//        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getInputs();
+        Eigen::Vector3d pos;
+        pos[0] = PlanEnv->getDouble(PlanParam::env_futurX);
+        pos[1] = PlanEnv->getDouble(PlanParam::env_futurY);
+        pos[2] = PlanEnv->getDouble(PlanParam::env_futurRZ);
+        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->setInputs(pos,
+                                                                           dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getRobotPos(),
+                                                                           PlanEnv->getBool(PlanParam::env_isStanding),
+                                                                           PlanEnv->getDouble(PlanParam::env_objectNessecity));
+
         if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->newComputeOTP())
         {
             dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->showBestConf();
@@ -305,6 +318,8 @@ void qtRealTimeOtp()
             ENV.setBool(Env::drawOTPTraj,true);
         }
     }
+
+    PlanEnv->setBool(PlanParam::env_drawHumanModel,false);
     ENV.setBool(Env::drawGraph,true);
     PlanEnv->setInt(PlanParam::env_timeShow,tmp);
 }
@@ -312,10 +327,10 @@ void qtRealTimeOtp()
 void qtOTP()
 {
 	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
-  
-  //	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->initGrid();
-  //	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->simpleComputeBaseAndOTP();
-  //	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid()->setCellsToblankCost();
+
+//	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->initGrid();
+//	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->simpleComputeBaseAndOTP();
+        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid()->setAsNotSorted();
 	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->newComputeOTP();
 	ENV.setBool(Env::drawOTPTraj,true);
   //	dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->computePR2GIK();

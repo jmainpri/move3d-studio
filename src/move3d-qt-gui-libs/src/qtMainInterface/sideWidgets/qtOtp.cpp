@@ -18,6 +18,7 @@
 #include "planner_handler.hpp"
 #include "planner/planEnvironment.hpp"
 
+
 #include <QMessageBox>
 #include <QDateTime>
 #include <QDebug>
@@ -656,9 +657,23 @@ void OtpWidget::on_pushButtonTestCompute_clicked()
 void OtpWidget::on_pushButton_toggled(bool checked)
 {
     PlanEnv->setBool(PlanParam::env_realTime,checked);
+    Eigen::Vector3d pos = dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getHumanActualPos();
+
     if (checked)
     {
+        m_mh = new MovingHuman(pos[0],pos[1],pos[2]);
+        m_mh->show();
+        m_mh->setMainWindow(m_mainWindow);
+
         emit(selectedPlanner(QString("realTimeOtp")));
     }
-
+    else
+    {
+        cout << "killing the window" << endl;
+        if (m_mh)
+        {
+            m_mh->close();
+            delete m_mh;
+        }
+    }
 }
