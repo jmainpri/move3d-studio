@@ -90,7 +90,7 @@ void ReplanningWidget::init()
 //---------------------------------------------------------
 void ReplanningWidget::setLocalpath()
 {
-  traj_optim_set_localpath_and_cntrts();
+  //traj_optim_set_localpath_and_cntrts();
 }
 
 void ReplanningWidget::computeHandOver()

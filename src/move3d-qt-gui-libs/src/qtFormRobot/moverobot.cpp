@@ -989,7 +989,7 @@ void DofSlider::dofValueChanged(double value)
 	//	cout << "XYZ_ROBOT = " << XYZ_ROBOT->name << endl;
 	
 #ifdef P3D_COLLISION_CHECKING
-  if( global_CollisionSpace )
+	/*	if( global_CollisionSpace )
   {
     ncol = global_CollisionSpace->isRobotColliding();
     
@@ -1007,7 +1007,7 @@ void DofSlider::dofValueChanged(double value)
       cout << "Robot not colliding" << endl;
     }
   }
-  else
+  else*/
   {
     ncol = mRobot->isInCollision();
   }
