@@ -43,7 +43,9 @@ using namespace std;
 using namespace tr1;
 
 extern string global_ActiveRobotName;
+#ifdef MULTILOCALPATH
 extern ManipulationTestFunctions* global_manipPlanTest;
+#endif
 
 shared_ptr<Configuration> qInit;
 shared_ptr<Configuration> qGoal;
@@ -558,6 +560,8 @@ std::string RobotWidget::getNameOfFreeFlyerFromIndex(int id)
   return name;
 }
 
+
+#ifdef MULTILOCALPATH
 void RobotWidget::objectNameChanged(int id)
 {
   string name = getNameOfFreeFlyerFromIndex( id );
@@ -958,6 +962,7 @@ void RobotWidget::loadWorkspace()
   ;
   global_manipPlanTest->readWorkspaceFromFile( fileName );
 }
+#endif // MULTILOCALPATH
 
 //-----------------------------------------------------------------------
 //---------

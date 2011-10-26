@@ -285,7 +285,8 @@ void MotionPlanner::cutTrajAndOptimizeSM()
 // 	traj.cutTrajInSmallLP( floor( traj.getRangeMax() / dmax ) );
 // 	traj.replaceP3dTraj();
   //qt_add_traj("smallLP",__traj_id);
-  
+
+#ifdef LIGHT_PLANNER
   MANPIPULATION_TRAJECTORY_CONF_STR confs;
   SM_TRAJ smTraj;
   
@@ -299,6 +300,7 @@ void MotionPlanner::cutTrajAndOptimizeSM()
     cout << "Robot tcur is converted to SoftMotion" << endl;
   }
   __traj_id++;
+#endif
   
 #if defined(USE_QWT)
 	cout << "Plot speed --------------------------------" << endl;

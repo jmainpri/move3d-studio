@@ -19,11 +19,13 @@ namespace Ui
 	class RobotWidget;
 }
 
+#ifdef MULTILOCALPATH
 namespace Manip
 {
   void runManipulation();
   void runCurrentTest();
 }
+#endif
 
 /**
  * @ingroup qtMainWindow
@@ -81,6 +83,7 @@ private slots:
 	void printPQPColPair();
 	
 	// Manipulation -----------------------
+#ifdef MULTILOCALPATH
   void objectNameChanged(int id);
   void placementNameChanged(int id);
   void supportNameChanged(int id);
@@ -97,7 +100,7 @@ private slots:
 	void armPickGotoAndTakeToFree();
   void armReplanTask();
   void loadWorkspace();
-	
+#endif
 	/*void initVoxelCollisionChecker();
 	 void createVoxelCC();
 	 void deleteVoxelCC();

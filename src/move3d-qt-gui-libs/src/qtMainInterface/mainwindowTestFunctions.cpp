@@ -239,6 +239,7 @@ void MainWindowTestFunctions::test1()
   rob->setAndUpdate(*q);
    */
   
+#ifdef HRI_PLANNER
   global_Project->getActiveScene()->setActiveRobot("PR2_ROBOT");
   
   HRI_AGENTS* agents = hri_create_agents();
@@ -247,6 +248,7 @@ void MainWindowTestFunctions::test1()
   p3d_matrix4 mat_ID = {{1, 0, 0, 0.10}, {0, 1, 0, 0.10}, {0, 0, 1, 0}, {0, 0, 0, 1}};
   
   hri_agent_is_grasping_obj_at_center( pr2, "VISBALL" , 0 , mat_ID);
+#endif
 }
 
 void MainWindowTestFunctions::test2()
@@ -354,6 +356,7 @@ void Testthread::run()
 //	{
 //		cout << "Problem in Testthread" << endl;
 //	}
+#ifdef HRI_PLANNER
 	cout << "GLOBAL_AGENTS created" << endl;
 	
 //	p3d_rob * robot;
@@ -372,6 +375,7 @@ void Testthread::run()
 	}
 	
 	hri_is_object_visible(GLOBAL_AGENTS->humans[0], object, 50, TRUE, FALSE);
+#endif
 }
 
 void MainWindowTestFunctions::test3()

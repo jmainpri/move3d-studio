@@ -70,7 +70,9 @@ MainWindow::MainWindow(QWidget *parent)
 #endif
   
   m_ui->tabCost->getDistFieldWidget()->setMainWindow(this);
+#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
   m_ui->tabCost->getReplanningWidget()->setMainWindow(this);
+#endif
 	
 	m_ui->tabRobot->setMainWindow(this);
 	m_ui->tabRobot->initRobot();

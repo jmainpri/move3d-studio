@@ -5,7 +5,9 @@
 #include "qtMainInterface/mainwindow.hpp"
 #include "qtLibrary.hpp"
 #include "qtConstraints.hpp"
+#ifdef MULTILOCALPATH
 #include "qtMultiLocalPath.hpp"
+#endif
 
 #include <iostream>
 #include <tr1/memory>
@@ -686,6 +688,7 @@ void FormRobot::showConstraints()
   constraints->show();
 }
 
+#ifdef MULTILOCALPATH
 /*!
  * Show the multi-localpath
  */
@@ -694,6 +697,7 @@ void FormRobot::showMultiLocalpath()
   MultiLocalPathWidget* localPathGroups = new MultiLocalPathWidget( 0, mRobot->getRobotStruct() );
   localPathGroups->show();
 }
+#endif
 
 //---------------------------------------------------------------------
 // DofSlider

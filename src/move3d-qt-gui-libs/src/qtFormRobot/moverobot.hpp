@@ -166,7 +166,9 @@ public:
    * Shows the current constraints and multi-localpath
    */
   void showConstraints();
+#ifdef MULTILOCALPATH
   void showMultiLocalpath();
+#endif
 	
 private:
 	

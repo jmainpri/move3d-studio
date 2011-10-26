@@ -23,7 +23,7 @@
       <bool>true</bool>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>
@@ -58,8 +58,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>468</width>
-            <height>936</height>
+            <width>464</width>
+            <height>811</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -497,47 +497,33 @@
       <attribute name="title">
        <string>Hri</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
+      <layout class="QVBoxLayout" name="hriLayout">
        <property name="margin">
         <number>0</number>
        </property>
-       <item>
-        <widget class="HricsWidget" name="tabHri" native="true"/>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="Natural">
       <attribute name="title">
        <string>Musculo</string>
       </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <layout class="QHBoxLayout" name="naturalLayout">
        <property name="margin">
         <number>0</number>
        </property>
-       <item>
-        <widget class="NaturalWidget" name="tabNatural" native="true"/>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="ObjectTransferPoint">
       <attribute name="title">
        <string>OTP</string>
       </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="OtpWidget" name="tabOTP" native="true"/>
-       </item>
-      </layout>
+      <layout class="QHBoxLayout" name="otpLayout"/>
      </widget>
      <widget class="QWidget" name="Replanning">
       <attribute name="title">
        <string>Replanning</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="ReplanningWidget" name="tabReplan" native="true"/>
-       </item>
-      </layout>
+      <layout class="QVBoxLayout" name="replanningLayout"/>
      </widget>
      <widget class="QWidget" name="DistanceField">
       <attribute name="title">
@@ -555,33 +541,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>HricsWidget</class>
-   <extends>QWidget</extends>
-   <header>qtHrics.hpp</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>OtpWidget</class>
-   <extends>QWidget</extends>
-   <header>qtOtp.hpp</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>ReplanningWidget</class>
-   <extends>QWidget</extends>
-   <header>qtReplanning.hpp</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>DistFieldWidget</class>
    <extends>QWidget</extends>
    <header>qtDistanceField.hpp</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>NaturalWidget</class>
-   <extends>QWidget</extends>
-   <header location="global">qtNatural.hpp</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

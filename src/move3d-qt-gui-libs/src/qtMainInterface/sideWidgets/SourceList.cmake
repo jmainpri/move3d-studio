@@ -6,9 +6,14 @@ qtCost.cpp
 qtMotionPlanner.cpp
 qtUtil.cpp
 qtRobot.cpp
-qtReplanning.cpp
 qtDistanceField.cpp
 )
+
+IF(LIGHT_PLANNER AND MULTILOCALPATH)
+BM3D_SRC_SUBDIR_PROCESS(
+qtReplanning.cpp
+)
+ENDIF()
 
 BM3D_INC_DIR_PROCESS (${BM3D_MODULE_NAME})
 
@@ -17,18 +22,28 @@ qtCost.hpp
 qtMotionPlanner.hpp
 qtUtil.hpp
 qtRobot.hpp
-qtReplanning.hpp
 qtDistanceField.hpp
 )
+
+IF(LIGHT_PLANNER AND MULTILOCALPATH)
+BM3D_QT_GENERATE_MOC(
+qtReplanning.hpp
+)
+ENDIF()
 
 BM3D_QT_GENERATE_UI_HEADERS(
 qtCost.ui
 qtMotionPlanner.ui
 qtUtil.ui
 qtRobot.ui
-qtReplanning.ui
 qtDistanceField.ui
 )
+
+IF(LIGHT_PLANNER AND MULTILOCALPATH)
+BM3D_QT_GENERATE_UI_HEADERS(
+qtReplanning.ui
+)
+ENDIF()
 
 IF(HRI_COSTSPACE)
 BM3D_QT_GENERATE_MOC(

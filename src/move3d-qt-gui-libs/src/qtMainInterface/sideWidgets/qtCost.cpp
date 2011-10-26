@@ -25,6 +25,7 @@
 #if defined(HRI_COSTSPACE)
 #include "HRI_costspace/HRICS_costspace.hpp"
 #endif
+#include "API/Search/Dijkstra/dijkstra.hpp"
 
 #ifdef USE_QWT
 #include "qtPlot/basicPlot.hpp"
@@ -35,8 +36,10 @@
 #include "qtMainInterface/mainwindow.hpp"
 #include "qtMainInterface/mainwindowGenerated.hpp"
 
+#ifdef HRI_PLANNER
 #include "qtHrics.hpp"
 #include "ui_qtHrics.h"
+#endif
 
 #include "qtMotionPlanner.hpp"
 
@@ -55,6 +58,24 @@ QWidget(parent),
 m_ui(new Ui::CostWidget)
 {
 	m_ui->setupUi(this);
+#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
+// Initialize the replanning tab
+        ReplanningWidget* tabReplan = new ReplanningWidget(m_ui->Replanning);
+        tabReplan->setObjectName(QString::fromUtf8("tabReplan"));
+        m_ui->replanningLayout->addWidget(tabReplan);
+#endif
+#ifdef HRI_PLANNER
+// Initialize the hri, otp tab and natural tabs
+        HricsWidget* tabHri = new HricsWidget(m_ui->CostHri);
+        tabHri->setObjectName(QString::fromUtf8("tabHri"));
+        m_ui->hriLayout->addWidget(tabHri);
+        OtpWidget* tabOTP = new OtpWidget(m_ui->ObjectTransferPoint);
+        tabOTP->setObjectName(QString::fromUtf8("tabOTP"));
+        m_ui->otpLayout->addWidget(tabOTP);
+        OtpWidget* tabNatural = new NaturalWidget(m_ui->Natural);
+        tabNatural->setObjectName(QString::fromUtf8("tabNatural"));
+        m_ui->naturalLayout->addWidget(tabNatural);
+#endif
 }
 
 CostWidget::~CostWidget()
@@ -85,12 +106,13 @@ DistFieldWidget* CostWidget::getDistFieldWidget()
   return m_ui->tabDistField;
 }
 
+#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
 ReplanningWidget* CostWidget::getReplanningWidget()
 {
   cout << "Warning : not compiling well DistField interface" << endl;
-  return m_ui->tabReplan;
+  return((ReplanningWidget*) m_ui->tabReplan);
 }
-
+#endif
 //---------------------------------------------------------------------
 // COST
 //---------------------------------------------------------------------
@@ -160,7 +182,8 @@ void CostWidget::initCostSpace()
     cout << "Nothing to do" << endl;
     return;
   }
-  
+
+#ifdef HRI_PLANNER
   HRICS_init();
   
   this->initCostFunctions();
@@ -175,6 +198,7 @@ void CostWidget::initCostSpace()
   m_mainWindow->Ui()->tabCost->m_ui->tabOTP->initSliders();
   
   cout << "HRI_COSTSPACE OK -----------------------" << endl;
+#endif
 }
 
 // This function is called by the mainwindow

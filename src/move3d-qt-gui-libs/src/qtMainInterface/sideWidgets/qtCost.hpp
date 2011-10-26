@@ -60,8 +60,9 @@ public:
 	HricsWidget* getHriWidget();
   OtpWidget* getOtpWidget();
 #endif
-  
+#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
   ReplanningWidget* getReplanningWidget();
+#endif
   DistFieldWidget* getDistFieldWidget();
 	
 public slots:

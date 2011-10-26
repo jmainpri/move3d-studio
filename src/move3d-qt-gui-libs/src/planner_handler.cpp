@@ -37,7 +37,9 @@
 #include "planner/TrajectoryOptim/trajectoryOptim.hpp"
 #include "planner/planEnvironment.hpp"
 #include "planner/plannerFunctions.hpp"
+#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
 #include "planner/replanning.hpp"
+#endif
 
 #include "utils/MultiRun.hpp"
 #include "utils/MultiRun.hpp"
@@ -59,8 +61,9 @@
 #endif
 #endif
 
-
+#ifdef LIGHT_PLANNER
 #include "../lightPlanner/proto/ManipulationViaConfPlanner.hpp"
+#endif
 
 const char *qt_fileName = NULL;
 
@@ -247,6 +250,7 @@ void qt_runPRM()
 	ENV.setBool(Env::isRunning,false);
 }
 
+#ifdef LIGHT_PLANNER
 void qt_runManipTest()
 {
   Manip::runCurrentTest();
@@ -256,7 +260,8 @@ void qt_runManipulation()
 {
   Manip::runManipulation();
 }
-
+#endif
+#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
 void qt_runReplanning()
 {
   Robot* rob =	global_Project->getActiveScene()->getActiveRobot();
@@ -267,12 +272,14 @@ void qt_runReplanning()
   
   replanning_Function(rob->getRobotStruct(), rob->getRobotStruct()->tcur, otp, 5);
 }
+#endif
 
 void qt_handover()
 {
 //  compute_handOver();
 }
 
+#ifdef HRI_PLANNER
 void qtOTP()
 {
 	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
@@ -285,7 +292,9 @@ void qtOTP()
 //	dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->computePR2GIK();
 
 }
+#endif
 
+#ifdef MULTILOCALPATH
 void qt_runStomp()
 {
   if( traj_optim_runStomp() )
@@ -310,13 +319,16 @@ void qt_runChomp()
     //ChompTrajectory ( T, 2 );
     //cout << "Warning : CHOMP Not yet implemented" << endl;
 }
+#endif // MULTILOCALPATH
 
+#ifdef HRI_PLANNER
 void qtMultipleOTP()
 {
 	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
 	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
 	ENV.setBool(Env::drawOTPTraj,true);
 }
+#endif
 
 static int default_drawtraj_fct_qt_pipe(p3d_rob* robot, p3d_localpath* curLp)
 {
@@ -326,6 +338,7 @@ static int default_drawtraj_fct_qt_pipe(p3d_rob* robot, p3d_localpath* curLp)
 	return TRUE;
 }
 
+#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
 void qt_executeReplanSimu()
 {
   if( replan_plan_initial_path() )
@@ -334,10 +347,10 @@ void qt_executeReplanSimu()
   }
 	ENV.setBool(Env::isRunning,false);
 }
+#endif
 
 void qt_showTraj()
 {
-	p3d_rob *robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
 	p3d_rob *hum_robotPt;
 	Robot* rob =	global_Project->getActiveScene()->getRobotByNameContaining("HUMAN");
 	if (rob)
@@ -345,6 +358,8 @@ void qt_showTraj()
 		hum_robotPt = rob->getRobotStruct();
 	}
 
+#ifdef HRI_PLANNER
+	p3d_rob *robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
 	if (PlanEnv->getBool(PlanParam::env_showHumanTraj))
 	{
 		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,false);
@@ -358,7 +373,7 @@ void qt_showTraj()
 //		g3d_show_tcur_rob(hum_robotPt,default_drawtraj_fct_qt_pipe);
 //		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->showBestConf();
 	}
-
+#endif
 
 	ENV.setBool(Env::isRunning,false);
 }
@@ -454,6 +469,7 @@ void qt_removeRedundantNodes()
   return;	
 }
 
+#ifdef LIGHT_PLANNER
 /**
  * Make traj from via points
  */
@@ -478,7 +494,7 @@ void qt_makeTrajFromViaPoints()
 //    MainWindow::planningFinished();
 
 }
-
+#endif
 
 /**
  * Read Scenario
@@ -603,6 +619,7 @@ void qt_add_config_to_ui(char* name,p3d_rob* robot,double* q)
 #endif
 }
 
+#ifdef HRI_PLANNER
 void qt_test()
 {
  cout << "Running test" << endl; 
@@ -614,6 +631,7 @@ void qt_test()
   
   hri_agent_is_grasping_obj_at_center( pr2, "VISBALL" , 0 , mat_ID);
 }
+#endif
 
 //------------------------------------------------------------------------------
 // Planner handler
@@ -663,6 +681,7 @@ try
       std::cout << "Planning thread : starting PRM." << std::endl;
       qt_runPRM();
     }
+#ifdef LIGHT_PLANNER
     else if(plannerName == "Manipulation")
     {
       std::cout << "Planning thread : starting Manipulation." << std::endl;
@@ -675,6 +694,8 @@ try
       std::cout << "Manipulation Test :" << std::endl;
       qt_runManipTest();
     }
+#endif
+#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
     else if(plannerName == "Replanning")
     {
       std::cout << "Re-Planning thread : starting Re-planning." << std::endl;
@@ -685,6 +706,7 @@ try
       std::cout << "Re-Planning thread : starting simulation." << std::endl;
       qt_executeReplanSimu();
     }
+#endif
 //    else if(plannerName == "Replanning")
 //    {
 //      std::cout << "Compute Handover thread : starting Re-planning." << std::endl;
@@ -702,21 +724,27 @@ try
       std::cout << "Shortcut trajectory : " << std::endl;
       qt_shortCut();
     }
+#ifdef HRI_PLANNER
     else if( plannerName == "otp"){
           qtOTP();
     }
     else if( plannerName == "MultipleOtp"){
           qtMultipleOTP();
     }
+#endif
+#ifdef GRASP_PLANNING
     else if( plannerName == "makeTrajFromViaPoints"){
           qt_makeTrajFromViaPoints();
     }
+#endif
+#ifdef MULTILOCALPATH
     else if( plannerName == "runStomp"){
         qt_runStomp();
     }
     else if( plannerName == "runChomp"){
         qt_runChomp();
     }
+#endif // MULTILOCALPATH
   }
   catch(std::string what)
   {
