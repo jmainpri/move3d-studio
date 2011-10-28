@@ -996,7 +996,8 @@ void RobotWidget::makeNormalTraj()
   }
   
   if(traj.replaceP3dTraj())
-    cout << "Traj generated successfully" << endl;
+    cout << "Traj generated successfully for robot : " << robot->getName() 
+    << " with " << traj.getNbOfViaPoints() << " via points" << endl;
   else
     cout << "Error : replacing p3d traj" << endl;
 }

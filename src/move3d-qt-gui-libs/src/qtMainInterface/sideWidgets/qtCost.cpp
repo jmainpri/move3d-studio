@@ -30,7 +30,7 @@
 
 #ifdef USE_QWT
 #include "qtPlot/basicPlot.hpp"
-#include "qtPlot/doublePlot.hpp"
+#include "qtPlot/multiPlot.hpp"
 #include "qtPlot/tempWin.hpp"
 #endif
 
@@ -465,7 +465,7 @@ void CostWidget::showHRITrajCost()
 	ENV.setInt(Env::hriCostType,HRICS_Combine);
 #endif
 	
-	DoublePlot* myPlot = new DoublePlot(this->plot);
+	MultiPlot* myPlot = new MultiPlot(this->plot);
 	myPlot->setGeometry(this->plot->getPlot()->geometry());
 	int nbSample = myPlot->getPlotSize();
 	

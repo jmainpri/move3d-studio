@@ -22,7 +22,7 @@
 
 #ifdef USE_QWT
 #include "qtPlot/basicPlot.hpp"
-#include "qtPlot/doublePlot.hpp"
+#include "qtPlot/multiPlot.hpp"
 #include "qtPlot/tempWin.hpp"
 #endif
 

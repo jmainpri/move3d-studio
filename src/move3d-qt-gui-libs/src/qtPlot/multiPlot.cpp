@@ -7,7 +7,7 @@
 #include <qwt_legend.h>
 #include <qwt_scale_draw.h>
 #include <qwt_math.h>
-#include "doublePlot.hpp"
+#include "multiPlot.hpp"
 #include "../p3d/env.hpp"
 #include <iostream>
 #include <algorithm>
@@ -17,7 +17,7 @@
 
 using namespace std;
 
-DoublePlot::DoublePlot( QWidget *parent):
+MultiPlot::MultiPlot( QWidget *parent):
 QwtPlot(parent)
 
 {
@@ -59,7 +59,7 @@ QwtPlot(parent)
 //
 //  Set a plain canvas frame and align the scales to it
 //
-void DoublePlot::alignScales()
+void MultiPlot::alignScales()
 {
 	// The code below shows how to align the scales to
 	// the canvas frame, but is also a good example demonstrating
@@ -82,14 +82,14 @@ void DoublePlot::alignScales()
 	}
 }
 
-void DoublePlot::rescale()
+void MultiPlot::rescale()
 {
 	//    Max_y = *std::max_element(d_y,d_y+PLOT_SIZE);
 	//    setAxisScale(QwtPlot::yLeft, 0.0,Max_y*1.10);
 }
 
 //  Generate new values
-void DoublePlot::setData(const std::vector< std::string >& names , 
+void MultiPlot::setData(const std::vector< std::string >& names , 
 												 const std::vector< std::vector <double> >& data )
 {
 	vector< double > Max_y;

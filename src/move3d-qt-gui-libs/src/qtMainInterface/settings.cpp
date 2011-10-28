@@ -97,7 +97,7 @@ void qt_saveMultiLocalPath(bool print, Robot* rob, QSettings& settings)
 //! Load multilocalpath info in a QSetting struct
 void qt_loadMultiLocalPath(bool print, Robot* rob, QSettings& settings) 
 {	
-  if( rob->getRobotStruct()->cntrt_manager->ncntrts < 1 )
+  if( rob->getRobotStruct()->mlp->nblpGp < 1 )
     return;
   
   settings.beginGroup("ActiveRobotLocalpath");

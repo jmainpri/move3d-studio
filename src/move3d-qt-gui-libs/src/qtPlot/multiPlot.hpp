@@ -1,5 +1,5 @@
-#ifndef DOUBLEPLOT_HPP
-#define DOUBLEPLOT_HPP
+#ifndef MULTIPLOT_HPP
+#define MULTIPLOT_HPP
 
 #if defined( MOVE3D_CORE )
 #include "qtPlot/basicPlot.hpp"
@@ -13,12 +13,12 @@
  * @ingroup qtPlot
  * @brief Qt simple plot relies on qwt
  */
-class DoublePlot : public QwtPlot
+class MultiPlot : public QwtPlot
 {
 	Q_OBJECT
 	
 public:
-	DoublePlot(QWidget* = NULL);
+	MultiPlot(QWidget* = NULL);
 	
 	int getPlotSize() { return PLOT_SIZE; }
 	void setData(const std::vector< std::string >& names , 
@@ -37,4 +37,4 @@ private:
 	std::vector< QwtPlotCurve* > cData;
 };
 
-#endif // DOUBLEPLOT_HPP
+#endif // MultiPlot_HPP

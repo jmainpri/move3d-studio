@@ -16,7 +16,7 @@
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
 
 #ifdef USE_QWT
-#include "qtPlot/doublePlot.hpp"
+#include "qtPlot/multiPlot.hpp"
 #endif
 
 
@@ -304,7 +304,7 @@ void MotionPlanner::cutTrajAndOptimizeSM()
 #if defined(USE_QWT)
 	cout << "Plot speed --------------------------------" << endl;
   
-	DoublePlot* myPlot = new DoublePlot(this->plot);
+	MultiPlot* myPlot = new MultiPlot(this->plot);
 	myPlot->setGeometry(this->plot->getPlot()->geometry());
 	
 	vector< vector<double> > curves(7);

@@ -5,7 +5,7 @@ SET(BM3D_MODULE_NAME ${BM3D_MODULE_NAME}/qtPlot)
 BM3D_SRC_SUBDIR_PROCESS(
 basicPlot.cpp 
 basicPlotWindow.cpp
-doublePlot.cpp
+multiPlot.cpp
 dataPlot.cpp 
 tempWin.cpp 
 histoWin.cpp
@@ -18,7 +18,7 @@ BM3D_INC_DIR_PROCESS (${BM3D_MODULE_NAME})
 BM3D_QT_GENERATE_MOC(
 basicPlot.hpp
 basicPlotWindow.hpp 
-doublePlot.hpp
+multiPlot.hpp
 dataPlot.hpp 
 tempWin.hpp 
 histoWin.hpp
