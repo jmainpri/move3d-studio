@@ -6,6 +6,7 @@
 #include "qtLibrary.hpp"
 #include "qtMainInterface/mainwindow.hpp"
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
+#include "planner/planEnvironment.hpp"
 
 namespace Ui {
     class MovingHuman;
@@ -17,6 +18,16 @@ public:
     MovingHuman(QWidget *parent = 0);
     MovingHuman(double x, double y, double rz, QWidget *parent = 0);
     ~MovingHuman();
+
+    // getters and setters
+    void setX(double x);
+    void setY(double y);
+    void setRZ(double rz);
+
+    double getX();
+    double getY();
+    double getRZ();
+
 
     void init(double x, double y, double rz);
     void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
@@ -31,6 +42,7 @@ private:
     QtShiva::SpinBoxSliderConnector*	m_k_x;
     QtShiva::SpinBoxSliderConnector*	m_k_y;
     QtShiva::SpinBoxSliderConnector*	m_k_rz;
+
 
 private slots:
     void updateMainWindow(double );

@@ -14,6 +14,7 @@
 #include "qtMainInterface/mainwindow.hpp"
 #include "qtMainInterface/sideWidgets/qtMotionPlanner.hpp"
 #include "API/Grids/gridsAPI.hpp"
+#include "qtFormRobot/qtmovinghuman.hpp"
 
 namespace Ui
 {
@@ -47,12 +48,14 @@ public:
 	
 	Ui::HricsWidget* Ui() { return m_ui; }
 	
-  private slots:
-  void set_X_line(bool);
-  void set_Y_line(bool);
-  void set_Z_line(bool);
-  void on_pushButton_initColPos_clicked();
-  
+
+private slots:
+        void on_checkBoxPosOr_toggled(bool checked);
+        void set_X_line(bool);
+        void set_Y_line(bool);
+        void set_Z_line(bool);
+        void on_pushButton_initColPos_clicked();
+
 	// Vector Field
 	void computeVectorField();
 	
@@ -73,16 +76,18 @@ public:
   void setWhichTestSlot(int);
 	
 private:
-	QtShiva::SpinBoxSliderConnector*	m_k_distance;
-	QtShiva::SpinBoxSliderConnector*	m_k_visbility;
-	QtShiva::SpinBoxSliderConnector*	m_k_reachability;
-	QtShiva::SpinBoxSliderConnector*	m_k_naturality;
+        QtShiva::SpinBoxSliderConnector*	m_k_distance;
+        QtShiva::SpinBoxSliderConnector*        m_k_visbility;
+        QtShiva::SpinBoxSliderConnector*        m_k_reachability;
+        QtShiva::SpinBoxSliderConnector*        m_k_naturality;
 	
-	Ui::HricsWidget*					m_ui;
+        MovingHuman*                            m_mh;
+
+        Ui::HricsWidget*                        m_ui;
 	
-	MotionPlanner*						m_motionWidget;
-  
-	MainWindow*               m_mainWindow;
+        MotionPlanner*                          m_motionWidget;
+
+        MainWindow*                             m_mainWindow;
 };
 
 #endif

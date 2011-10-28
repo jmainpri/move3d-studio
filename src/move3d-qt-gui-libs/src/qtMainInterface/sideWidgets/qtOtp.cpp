@@ -50,7 +50,7 @@ void OtpWidget::initOTP()
         m_k_reachability = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxReachable,	m_ui->horizontalSliderReachable ,	Env::Kreachable );
 
         m_k_Obj =  new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxObj, m_ui->horizontalSliderObj, PlanParam::env_objectNessecity);
-        m_k_Obj->setValue(0.5);
+//        m_k_Obj->setValue(0.9);
 
         m_k_MaxIter           = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxMaxIter,		    m_ui->horizontalSliderMaxIter,      PlanParam::env_maxIter);
         m_k_TotMaxIter        = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxTotMaxIter,		m_ui->horizontalSliderTotMaxIter,	PlanParam::env_totMaxIter);

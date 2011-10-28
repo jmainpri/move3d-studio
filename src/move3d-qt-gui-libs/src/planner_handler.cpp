@@ -299,7 +299,7 @@ void qtRealTimeOtp()
     ENV.setBool(Env::drawGraph,false);
     dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid()->setAsNotSorted();
     dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->clearRealTreajectory();
-    PlanEnv->setBool(PlanParam::env_drawHumanModel,true);
+//    PlanEnv->setBool(PlanParam::env_drawHumanModel,true);
     PlanEnv->setBool(PlanParam::env_showText,false);
     bool first = true;
     while (PlanEnv->getBool(PlanParam::env_realTime))
@@ -339,7 +339,7 @@ void qtRealTimeOtp()
     }
 
     PlanEnv->setBool(PlanParam::env_showText,true);
-    PlanEnv->setBool(PlanParam::env_drawHumanModel,false);
+//    PlanEnv->setBool(PlanParam::env_drawHumanModel,false);
     ENV.setBool(Env::drawGraph,true);
     PlanEnv->setInt(PlanParam::env_timeShow,tmp);
 }

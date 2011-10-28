@@ -474,3 +474,17 @@ void HricsWidget::on_pushButton_initColPos_clicked()
     HRICS_activeNatu->setRobotColorFromConfiguration(false);
     m_mainWindow->drawAllWinActive();
 }
+
+void HricsWidget::on_checkBoxPosOr_toggled(bool checked)
+{
+    if (checked)
+    {
+        m_mh = new MovingHuman();
+        m_mh->setMainWindow(m_mainWindow);
+        m_mh->show();
+    }
+    else
+    {
+        delete m_mh;
+    }
+}

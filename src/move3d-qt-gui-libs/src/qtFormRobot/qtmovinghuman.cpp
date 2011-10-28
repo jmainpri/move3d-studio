@@ -5,7 +5,7 @@
 #include "qtMainInterface/mainwindow.hpp"
 #include "qtMainInterface/mainwindowGenerated.hpp"
 #include "planner_handler.hpp"
-#include "planner/planEnvironment.hpp"
+
 
 MovingHuman::MovingHuman(QWidget *parent) :
     QWidget(parent),
@@ -25,6 +25,7 @@ MovingHuman::MovingHuman(double x, double y, double rz, QWidget *parent) :
 
 MovingHuman::~MovingHuman()
 {
+    PlanEnv->setBool(PlanParam::env_drawHumanModel,false);
     delete ui;
 }
 
@@ -41,6 +42,9 @@ void MovingHuman::init(double x, double y, double rz)
     connect(m_k_x,SIGNAL(valueChanged(double)),this,SLOT(updateMainWindow(double)));
     connect(m_k_y,SIGNAL(valueChanged(double)),this,SLOT(updateMainWindow(double)));
     connect(m_k_rz,SIGNAL(valueChanged(double)),this,SLOT(updateMainWindow(double)));
+
+    PlanEnv->setBool(PlanParam::env_drawHumanModel,true);
+//    m_mainWindow->drawAllWinActive();
 }
 
 
@@ -57,8 +61,43 @@ void MovingHuman::changeEvent(QEvent *e)
 }
 
 
-
 void MovingHuman::updateMainWindow(double)
 {
     m_mainWindow->drawAllWinActive();
+}
+
+void MovingHuman::setX(double x)
+{
+    PlanEnv->setDouble(PlanParam::env_futurX,x);
+    m_k_x->setValue(x);
+    m_mainWindow->drawAllWinActive();
+}
+
+void MovingHuman::setY(double y)
+{
+    PlanEnv->setDouble(PlanParam::env_futurY,y);
+    m_k_y->setValue(y);
+    m_mainWindow->drawAllWinActive();
+}
+
+void MovingHuman::setRZ(double rz)
+{
+    PlanEnv->setDouble(PlanParam::env_futurRZ,rz);
+    m_k_rz->setValue(rz);
+    m_mainWindow->drawAllWinActive();
+}
+
+double getX()
+{
+    return PlanEnv->getDouble(PlanParam::env_futurX);
+}
+
+double getY()
+{
+    return PlanEnv->getDouble(PlanParam::env_futurY);
+}
+
+double getRZ()
+{
+    return PlanEnv->getDouble(PlanParam::env_futurRZ);
 }
