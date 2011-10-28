@@ -75,7 +75,7 @@ void qt_loadCameraAndAxis(bool print, g3d_states& vs, QSettings& settings)
 //! Save multilocalpath info in a QSetting struct
 void qt_saveMultiLocalPath(bool print, Robot* rob, QSettings& settings) 
 {	
-  if( rob->getRobotStruct()->cntrt_manager->ncntrts < 1 )
+  if( rob->getRobotStruct()->mlp->nblpGp < 1 )
     return;
   
   settings.beginGroup("ActiveRobotLocalpath");
