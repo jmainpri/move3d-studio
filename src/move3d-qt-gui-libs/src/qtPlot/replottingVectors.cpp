@@ -7,12 +7,13 @@
 #include <qwt_legend.h>
 #include <qwt_scale_draw.h>
 #include <qwt_math.h>
-#include "ReplottingVectors.hpp"
+#include "replottingVectors.hpp"
 
 #include "p3d/env.hpp"
 
 #include <iostream>
 #include <algorithm>
+#include <limits>
 //
 //  Initialize main window
 //
