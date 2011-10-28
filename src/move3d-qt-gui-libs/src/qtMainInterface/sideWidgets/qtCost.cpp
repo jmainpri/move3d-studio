@@ -19,9 +19,10 @@
 
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
 
-
-
 #include "planner/cost_space.hpp"
+#include "planner/Greedy/CollisionSpace.hpp"
+#include "planner/TrajectoryOptim/Stomp/stompOptimizer.hpp"
+
 #if defined(HRI_COSTSPACE)
 #include "HRI_costspace/HRICS_costspace.hpp"
 #endif
@@ -39,6 +40,7 @@
 #ifdef HRI_PLANNER
 #include "qtHrics.hpp"
 #include "ui_qtHrics.h"
+#include "qtNatural.hpp"
 #endif
 
 #include "qtMotionPlanner.hpp"
@@ -60,21 +62,23 @@ m_ui(new Ui::CostWidget)
 	m_ui->setupUi(this);
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
 // Initialize the replanning tab
-        ReplanningWidget* tabReplan = new ReplanningWidget(m_ui->Replanning);
-        tabReplan->setObjectName(QString::fromUtf8("tabReplan"));
-        m_ui->replanningLayout->addWidget(tabReplan);
+  m_tabReplan = new ReplanningWidget(m_ui->Replanning);
+  m_tabReplan->setObjectName(QString::fromUtf8("tabReplan"));
+  m_ui->replanningLayout->addWidget(m_tabReplan);
 #endif
 #ifdef HRI_PLANNER
 // Initialize the hri, otp tab and natural tabs
-        HricsWidget* tabHri = new HricsWidget(m_ui->CostHri);
-        tabHri->setObjectName(QString::fromUtf8("tabHri"));
-        m_ui->hriLayout->addWidget(tabHri);
-        OtpWidget* tabOTP = new OtpWidget(m_ui->ObjectTransferPoint);
-        tabOTP->setObjectName(QString::fromUtf8("tabOTP"));
-        m_ui->otpLayout->addWidget(tabOTP);
-        OtpWidget* tabNatural = new NaturalWidget(m_ui->Natural);
-        tabNatural->setObjectName(QString::fromUtf8("tabNatural"));
-        m_ui->naturalLayout->addWidget(tabNatural);
+  m_tabHri = new HricsWidget(m_ui->CostHri);
+  m_tabHri->setObjectName(QString::fromUtf8("tabHri"));
+  m_ui->hriLayout->addWidget(m_tabHri);
+  
+  m_tabOtp = new OtpWidget(m_ui->ObjectTransferPoint);
+  m_tabOtp->setObjectName(QString::fromUtf8("tabOTP"));
+  m_ui->otpLayout->addWidget(m_tabOtp);
+  
+  NaturalWidget* tabNatural = new NaturalWidget(m_ui->Natural);
+  tabNatural->setObjectName(QString::fromUtf8("tabNatural"));
+  m_ui->naturalLayout->addWidget(tabNatural);
 #endif
 }
 
@@ -90,13 +94,21 @@ CostWidget::~CostWidget()
 HricsWidget* CostWidget::getHriWidget()
 { 
 	cout << "Warning : not compiling well HRICS interface" << endl;
-	return m_ui->tabHri; 
+	return m_tabHri; 
 }
 
 OtpWidget* CostWidget::getOtpWidget()
 {
   cout << "Warning : not compiling well OTP interface" << endl;
-  return m_ui->tabOTP;
+  return m_tabOtp;
+}
+#endif
+
+#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
+ReplanningWidget* CostWidget::getReplanningWidget()
+{
+  cout << "Warning : not compiling well DistField interface" << endl;
+  return m_tabReplan;
 }
 #endif
 
@@ -105,14 +117,6 @@ DistFieldWidget* CostWidget::getDistFieldWidget()
   cout << "Warning : not compiling well DistField interface" << endl;
   return m_ui->tabDistField;
 }
-
-#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
-ReplanningWidget* CostWidget::getReplanningWidget()
-{
-  cout << "Warning : not compiling well DistField interface" << endl;
-  return((ReplanningWidget*) m_ui->tabReplan);
-}
-#endif
 //---------------------------------------------------------------------
 // COST
 //---------------------------------------------------------------------
@@ -189,13 +193,13 @@ void CostWidget::initCostSpace()
   this->initCostFunctions();
   this->setCostFunction("costHRI");
   
-  m_mainWindow->Ui()->tabCost->m_ui->tabHri->Ui()->HRICSPlanner->setDisabled(false);
-  m_mainWindow->Ui()->tabCost->m_ui->tabHri->Ui()->pushButtonMakeGrid->setDisabled(true);
-  m_mainWindow->Ui()->tabCost->m_ui->tabHri->Ui()->pushButtonDeleteGrid->setDisabled(false);
+  m_tabHri->Ui()->HRICSPlanner->setDisabled(false);
+  m_tabHri->Ui()->pushButtonMakeGrid->setDisabled(true);
+  m_tabHri->Ui()->pushButtonDeleteGrid->setDisabled(false);
 //  m_mainWindow->Ui()->tabCost->m_ui->tabHri->Ui()->HRICSNatural->setDisabled(false);
 //  m_mainWindow->Ui()->tabCost->m_ui->tabHri->Ui()->pushButtonNewNaturalCostSpace->setDisabled(true);
 
-  m_mainWindow->Ui()->tabCost->m_ui->tabOTP->initSliders();
+  m_tabOtp->initSliders();
   
   cout << "HRI_COSTSPACE OK -----------------------" << endl;
 #endif
@@ -359,12 +363,19 @@ void CostWidget::showTrajCost()
 	
 	cout << "Traj cost = " << traj.costDeltaAlongTraj() << endl;
 	
-	
-	for( double param=0; param<traj.getRangeMax(); param = param + step)
-	{
-		cost.push_back( traj.configAtParam(param)->cost() );
-		//cout << cost.back() << endl;
-	}
+	if (global_costSpace) 
+  {
+    for( double param=0; param<traj.getRangeMax(); param = param + step)
+    {
+      cost.push_back( traj.configAtParam(param)->cost() );
+      //cout << cost.back() << endl;
+    }
+  }
+  
+  if (optimizer)
+  {
+    optimizer->getTrajectoryCost(cost,step);
+  }
 	
 	myPlot->setData(cost);
 	delete this->plot->getPlot();
@@ -375,7 +386,6 @@ void CostWidget::showTrajCost()
 
 void CostWidget::showCostProfile()
 {
-  
 #if defined(USE_QWT)
 	cout << "showCostProfile" << endl;
 	p3d_rob *robotPt = (p3d_rob *) p3d_get_desc_curid(P3D_ROBOT);

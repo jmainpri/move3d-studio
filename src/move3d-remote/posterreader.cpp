@@ -44,7 +44,6 @@ PosterReader::PosterReader()
 
     }
 
-
     // Niut reader
     _niutPoster = new GenomPoster("niutHuman", (char*)(&_niutPosterStruct), sizeof(NIUT_HUMAN_LIST), 10);
     _niutPoster->setRefreshStatus(true);

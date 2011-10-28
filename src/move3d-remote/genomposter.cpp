@@ -90,7 +90,6 @@ bool GenomPoster::setRate(int r)
     return true;
 }
 
-
 bool GenomPoster::findPoster()
 {
     if(posterFind(_posterName.c_str(), &(_posterID))==ERROR)

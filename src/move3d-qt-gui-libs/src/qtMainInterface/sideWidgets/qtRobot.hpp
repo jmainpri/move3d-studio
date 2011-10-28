@@ -107,7 +107,8 @@ private slots:
 	 
 	 void voxelCCTest();*/
   
-  void launch();
+  void makeSoftmotionTraj();
+  void makeNormalTraj();
   void saveConfig();
   void clearConfigs();
   void deleteConfig();

@@ -17,6 +17,12 @@
 class FormRobot;
 #endif
 
+#include "API/Device/robot.hpp"
+#include <QtCore/QSettings>
+
+void qt_saveCntrts(Robot* rob, QSettings& settings);
+void qt_loadCntrts(Robot* rob, QSettings& settings);
+
 /**
  * Iner class for validating group
  */

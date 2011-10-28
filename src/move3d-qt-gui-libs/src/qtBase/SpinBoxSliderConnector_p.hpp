@@ -95,6 +95,31 @@ namespace QtShiva
         double _a,_b,_c,_d;
         double _Coeff, _Offset;
     };
+  
+  /**
+   * @ingroup qtMainWindow
+   * @brief Connects a SpinBox to Env Parameters
+   */
+  class SpinBoxConnector : public QObject
+  {
+    Q_OBJECT
+  public:
+    
+    SpinBoxConnector( QObject* _parent, QDoubleSpinBox* _spinBox, Env::doubleParameter p);
+    SpinBoxConnector( QObject* _parent, QDoubleSpinBox* _spinBox, Env::intParameter p);
+    SpinBoxConnector( QObject* _parent, QDoubleSpinBox* _spinBox, PlanParam::doubleParameter p);
+    SpinBoxConnector( QObject* _parent, QDoubleSpinBox* _spinBox, PlanParam::intParameter p);
+    
+    SpinBoxConnector( QObject* _parent, QSpinBox* _spinBox, Env::intParameter p);
+    SpinBoxConnector( QObject* _parent, QSpinBox* _spinBox, PlanParam::intParameter p);
+    
+    ~SpinBoxConnector() { }
+    
+  private:
+    QSpinBox*           m_spinBox;
+    QDoubleSpinBox*     m_doubleSpinBox;
+    bool _init;
+  };
 }
 
 #endif

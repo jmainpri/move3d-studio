@@ -15,14 +15,9 @@
 #include "P3d-pkg.h"
 #include "Collision-pkg.h"
 
-#include "planner/cost_space.hpp"
-#include "planner/Greedy/CollisionSpace.hpp"
+#include "sliderfunction.hpp"
 
 #include "API/project.hpp"
-
-#ifdef HRI_COSTSPACE
-#include "HRI_costspace/HRICS_costspace.hpp"
-#endif
 
 using namespace std;
 using namespace tr1;
@@ -777,10 +772,10 @@ void DofSlider::dofValueChanged(double value)
 	//    CB_position_obj(NULL,value);
 	
 	configPt p=NULL, p_deg=NULL;
-	int i,nb_dof,ir,i_dof;
+	int nb_dof,ir,i_dof;
 	p3d_rob *robotPt;
 	p3d_jnt *jntPt;
-	int ncol=0;
+	//int ncol=0;
 	int I_can;
 	int nreshoot;   // <-modif Juan
 	int *ikSol = NULL;
@@ -798,14 +793,13 @@ void DofSlider::dofValueChanged(double value)
 	
 //  cout << "robotPt = " << robotPt << endl;
   
-#ifdef HRI_PLANNER
-	if (GLOBAL_AGENTS) 
-	{
+//#ifdef HRI_PLANNER
+//	if (GLOBAL_AGENTS) 
+//	{
 		//double distance = 0.0;
 		//double cost = hri_distance_cost(GLOBAL_AGENTS,distance);
-	}
-  
-#endif
+//	}  
+//#endif
 	
 	p = p3d_alloc_config(robotPt);
 	//    p = mRobot->getNewConfig()->getConfigStruct();
@@ -862,13 +856,13 @@ void DofSlider::dofValueChanged(double value)
 		{
 			p3d_get_robot_config_into(robotPt, &p);
 			p3d_get_robot_config_deg_into(robotPt, &p_deg);
-			for(i=0; i<nb_dof; i++)
-			{
+			//for(i=0; i<nb_dof; i++)
+			//{
 				//                if (ROBOTS_FORM[ir].POSITION_OBJ[i] != NULL)
 				//                {
 				//                    fl_set_slider_value(ROBOTS_FORM[ir].POSITION_OBJ[i], p_deg[i]);
 				//                }
-			}
+			//}
 			
 			//print_config(robotPt,p);
 			//            p3d_copy_config_into(robotPt, p_deg, &last_p_deg[ir]);
@@ -877,148 +871,19 @@ void DofSlider::dofValueChanged(double value)
 		{
 			//            p3d_copy_config_into(robotPt, last_p_deg[ir], &p_deg);
 			p3d_convert_config_deg_to_rad(robotPt, p_deg, &p);
-			for(i=0; i<nb_dof; i++)
-			{
+			//for(i=0; i<nb_dof; i++)
+			//{
 				//                if (ROBOTS_FORM[ir].POSITION_OBJ[i] != NULL)
 				//                {
 				//                    fl_set_slider_value(ROBOTS_FORM[ir].POSITION_OBJ[i], p_deg[i]);
 				//                }
-			}
+			//}
 			jntPt = p3d_robot_dof_to_jnt(robotPt, arg, &i_dof);
 			p3d_jnt_set_dof_deg(jntPt, i_dof, p_deg[arg]);  /* ceneccasy lines for some cases of cntrts !!! */
 			p3d_update_this_robot_pos_without_cntrt(robotPt);
 		}
 	}
-  
-/*  if ( mRobot->getName().find("HUMAN") != string::npos ) 
-	{
-		shared_ptr<Configuration> qSeated = mRobot->getCurrentPos();
-		HRI_AGENTS* agents = hri_create_agents();
-//		Eigen::Vector3d head = mRobot->getJoint(5)->getVectorPos();
-    
-    hri_agent_set_human_seated_posture(agents->humans[0], qSeated->getConfigStruct());
-		//hri_agent_compute_posture(agents->humans[0],head[2],1.3,qSeated->getConfigStruct());
-		mRobot->setAndUpdate(*qSeated);
-		//hri_destroy_agents(agents);
-	}
-*/
-  
-	if (ENV.getBool(Env::isCostSpace))
-	{
-#ifdef P3D_PLANNER
-		p3d_rob* costRobot = robotPt;
-		configPt cost_q = p;
-#ifdef HRI_COSTSPACE
-		// Compute kinematic the object transfer point
-		if ( ENV.getBool(Env::HRIComputeOTP) )
-		{
-			Eigen::Vector3d WSPoint;
-			
-			if( dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->computeBestFeasableTransferPoint(WSPoint) )
-			{
-				Robot* Object = global_Project->getActiveScene()->getRobotByNameContaining("OBJECT");
-				
-				shared_ptr<Configuration> q_curr = Object->getCurrentPos();
-				
-				(*q_curr)[6] = WSPoint[0];
-				(*q_curr)[7] = WSPoint[1];
-				(*q_curr)[8] = WSPoint[2];
-				
-				Object->setAndUpdate(*q_curr);
-				
-				cout << "Set and update : " << Object->getName() << endl << WSPoint << endl;
-				
-				p3d_col_deactivate_rob_rob(Object->getRobotStruct(), 
-																	 dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getHuman()->getRobotStruct());
-			}
-		}
-		
-		// Change the cost robot
-		if ( ENV.getBool(Env::enableHri) && (!ENV.getBool(Env::HRINoRobot))) 
-		{
-			std::string robotName(costRobot->name);
-			
-			// If the Robot moved is not ROBOT
-			if( robotName.find("JIDOKUKA") == string::npos && 
-         (global_Project->getActiveScene()->getNumberOfRobots() > 1)  ) // Does not contain Robot
-			{
-				p3d_rob* robTmp = p3d_get_robot_by_name_containing("JIDOKUKA");
-        
-        if (robTmp) 
-        {
-          cost_q = p3d_get_robot_config(costRobot);
-          costRobot = robTmp;
-        }
-				//cout << "Change the robot position = " << robotPt->name << endl;
-			}
-			
-			// Compute kinematic transfer point
-			if ( ENV.getBool(Env::HRIcameraBehindHuman) )
-			{
-				//cout << "choseBestTransferPoint" << endl;
-				if( HRICS_MotionPL != NULL )
-				{
-					Eigen::Vector3d WSPoint;
-					
-					if( dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->chooseBestTransferPoint(WSPoint, false, 0) )
-					{
-						HRICS::Natural* reachSpace = HRICS_MotionPL->getReachability();
-                                                reachSpace->computeIsReachableAndMove(WSPoint,reachSpace->getGrid()->isReachableWithLA(WSPoint));
-					}
-				}
-			}
-		}
-#endif
-    
-    Robot* costR(global_Project->getActiveScene()->getRobotByName(costRobot->name));
-    
-		if ( /*true ||*/ !ENV.getBool(Env::HRINoRobot)) 
-		{
-			Configuration costConfig(costR,cost_q);
-			//std::cout << "Cost = " << p3d_GetConfigCost(costRobot,cost_q) << std::endl;
-			std::cout << "Cost = " << global_costSpace->cost(costConfig) << std::endl;
-		}
-
-//    if ( (costR->getName().find("HUMAN") != string::npos) && HRICS_activeNatu ) 
-//    {
-//      //if (HRICS_MotionPL) {
-////        //cout << "reachSpace->setRobotColorFromConfiguration(true)" << endl;;
-////        HRICS::Natural* reachSpace = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getReachability();
-////      }
-//      HRICS_activeNatu->setRobotColorFromConfiguration(true);
-//    }
-#endif
-	}
-	//	cout << "robotPt->name = " << robotPt->name << endl;
-	//	cout << "XYZ_ROBOT = " << XYZ_ROBOT->name << endl;
-	
-#ifdef P3D_COLLISION_CHECKING
-	/*	if( global_CollisionSpace )
-  {
-    ncol = global_CollisionSpace->isRobotColliding();
-    
-    if( ncol )
-    {
-      double colorvector[4];
-      
-      GroundColorMixGreenToRed(colorvector,1.0);
-      
-      g3d_set_custom_color_draw(mRobot->getRobotStruct(),true);
-      g3d_set_custom_color_vect(colorvector);
-    }
-    else {
-      g3d_set_custom_color_draw(mRobot->getRobotStruct(),false);
-      cout << "Robot not colliding" << endl;
-    }
-  }
-  else*/
-  {
-    ncol = mRobot->isInCollision();
-  }
-#endif
-  
-	g3d_set_draw_coll( ncol );
-	
+  	
 	/* update the field current position or goal position of the
 	 current robot depending on field GOTO_OBJ */
 	//    if(fl_get_choice(ROBOTS_FORM[ir].GOTO_OBJ) == 1){
@@ -1039,6 +904,8 @@ void DofSlider::dofValueChanged(double value)
 	//        }
 	//        p3d_set_and_update_robot_conf(p);
 	//    }
+  
+  qtSliderFunction(robotPt, p);
 	
 	p3d_destroy_config(robotPt, p);
 	p3d_destroy_config(robotPt, p_deg);

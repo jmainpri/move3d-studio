@@ -5,6 +5,7 @@ BM3D_SRC_SUBDIR_PROCESS(
 kcdpropertieswindow.cpp 
 mainwindow.cpp
 mainwindowTestFunctions.cpp
+settings.cpp
 )
 
 BM3D_INC_DIR_PROCESS (${BM3D_MODULE_NAME})
@@ -12,7 +13,6 @@ BM3D_INC_DIR_PROCESS (${BM3D_MODULE_NAME})
 BM3D_QT_GENERATE_MOC(
 kcdpropertieswindow.hpp 
 mainwindow.hpp
-mainwindowGenerated.hpp
 mainwindowTestFunctions.hpp
 )
 

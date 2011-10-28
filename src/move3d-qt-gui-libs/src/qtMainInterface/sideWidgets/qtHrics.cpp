@@ -78,6 +78,8 @@ void HricsWidget::initHRI()
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawGaze,							Env::drawGaze);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawVectorField,				Env::drawVectorField);
   m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawOnlyOneLine,				Env::drawOnlyOneLine);
+  m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawBox,               Env::drawBox);
+  
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxHRICS_MOPL,						Env::HRIPlannerWS);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxBBDist,								Env::useBoxDist);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxBallDist,							Env::useBallDist);
@@ -89,25 +91,48 @@ void HricsWidget::initHRI()
 	
 	connect(m_ui->checkBoxDrawGrid,SIGNAL(clicked()),m_mainWindow,SLOT(drawAllWinActive()));
 	connect(m_ui->checkBoxEntireGrid,SIGNAL(clicked()),m_mainWindow,SLOT(drawAllWinActive()));
+  
+  connect(m_ui->pushButtonInitAgentGrids,SIGNAL(clicked()),this,SLOT(initAgentGrids()));
 
 	
 	// -------------------------------
 	// K Sliders
 	// -------------------------------
-	m_k_distance = new QtShiva::SpinBoxSliderConnector(
-																										 this, m_ui->doubleSpinBoxDistance,		m_ui->horizontalSliderDistance,		Env::Kdistance);
+	m_k_distance = new QtShiva::SpinBoxSliderConnector(this, 
+                                                     m_ui->doubleSpinBoxDistance,		
+                                                     m_ui->horizontalSliderDistance,
+                                                     Env::Kdistance);
 	
-	m_k_visbility = new QtShiva::SpinBoxSliderConnector(
-																											this, m_ui->doubleSpinBoxVisibility,	m_ui->horizontalSliderVisibility,	Env::Kvisibility );
+	m_k_visbility = new QtShiva::SpinBoxSliderConnector(this,
+                                                      m_ui->doubleSpinBoxVisibility,
+                                                      m_ui->horizontalSliderVisibility,
+                                                      Env::Kvisibility );
 	
-	m_k_naturality = new QtShiva::SpinBoxSliderConnector(
-																											 this, m_ui->doubleSpinBoxNatural,		m_ui->horizontalSliderNatural ,		Env::Knatural );
+	m_k_naturality = new QtShiva::SpinBoxSliderConnector(this, 
+                                                       m_ui->doubleSpinBoxNatural,
+                                                       m_ui->horizontalSliderNatural,
+                                                       Env::Knatural );
 	
-	m_k_reachability = new QtShiva::SpinBoxSliderConnector(
-																												 this, m_ui->doubleSpinBoxReachable,		m_ui->horizontalSliderReachable ,	Env::Kreachable );
+	m_k_reachability = new QtShiva::SpinBoxSliderConnector(this, 
+                                                         m_ui->doubleSpinBoxReachable,		
+                                                         m_ui->horizontalSliderReachable,	
+                                                         Env::Kreachable );
 	
-	connect(m_k_distance,SIGNAL(valueChanged(double)),this,SLOT(KDistance(double)));
-	connect(m_k_visbility,SIGNAL(valueChanged(double)),this,SLOT(KVisibility(double)));
+//	connect(m_k_distance,SIGNAL(valueChanged(double)),this,SLOT(KDistance(double)));
+//	connect(m_k_visbility,SIGNAL(valueChanged(double)),this,SLOT(KVisibility(double)));
+  
+  // -------------------------------
+	// Cells	
+	// -------------------------------
+  new QtShiva::SpinBoxSliderConnector(this, 
+                                      m_ui->doubleSpinBoxCellSize,		
+                                      m_ui->horizontalSliderCellSize,
+                                      Env::CellSize);
+  
+//  new QtShiva::SpinBoxSliderConnector(this, 
+//                                      m_ui->doubleSpinBoxDistance,		
+//                                      m_ui->horizontalSliderDistance,
+//                                      Env::Kdistance);
 	
 	// -------------------------------
 	// Wich Test	
@@ -222,7 +247,7 @@ void HricsWidget::initDrawOneLineInGrid()
 	QtShiva::SpinBoxSliderConnector* connector =  new QtShiva::SpinBoxSliderConnector(
 																																										this, m_ui->doubleSpinBoxWhichGridLine, m_ui->horizontalSliderWhichGridLine , Env::hriShownGridLine );
 	
-	connect(connector,SIGNAL(valueChanged(double)),this,SLOT(drawAllWinActive()));
+	connect(connector,SIGNAL(valueChanged(double)),m_mainWindow,SLOT(drawAllWinActive()));
 	
 }
 
@@ -285,18 +310,19 @@ void HricsWidget::setWhichTestSlot(int test)
 void HricsWidget::make3DHriGrid()
 {
   Robot* Human = global_Project->getActiveScene()->getRobotByNameContaining("HUMAN");
-
+  
   shared_ptr<Configuration> q = Human->getCurrentPos();
-
+  
 	HRICS_MotionPL = new HRICS::Workspace;
 	dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->initGrid();
 	dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->initDistance();
 	dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->initVisibility();
 	dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->initNatural();
+  dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->initAgentGrids(ENV.getDouble(Env::CellSize));
   
   // Protective bubble
   QtShiva::SpinBoxSliderConnector* connectorZoneSize  = new QtShiva::SpinBoxSliderConnector(
-  this, m_ui->doubleSpinBoxZoneSize, m_ui->horizontalSliderZoneSize ,Env::zone_size );
+                                                                                            this, m_ui->doubleSpinBoxZoneSize, m_ui->horizontalSliderZoneSize ,Env::zone_size );
   connect(connectorZoneSize,SIGNAL(valueChanged(double)),this,SLOT(zoneSizeChanged()),Qt::DirectConnection);
 	
 	/*if (PointsToDraw != NULL) 
@@ -312,7 +338,8 @@ void HricsWidget::make3DHriGrid()
 	ENV.setDouble(Env::zone_size,0.5);
 	HRICS_activeDist = HRICS_MotionPL->getDistance();
 	
-	API_activeGrid = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getGrid();
+  //API_activeGrid = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getGrid();
+	//API_activeGrid = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getGrid();
 	//    enableHriSpace();
 	
 	m_ui->pushButtonMakeGrid->setDisabled(true);
@@ -324,33 +351,36 @@ void HricsWidget::make3DHriGrid()
 	if( ENV.getBool(Env::HRIAutoLoadGrid) )
 	{
 		// Reads a traj from a file
-                //		string filename("/Users/jmainpri/workspace/BioMove3DDemos/CostHriFunction/JidoTrajectory/JidoK.traj");
-                //		qt_fileName = filename.c_str();
-                //		qt_readTraj();
+    //		string filename("/Users/jmainpri/workspace/BioMove3DDemos/CostHriFunction/JidoTrajectory/JidoK.traj");
+    //		qt_fileName = filename.c_str();
+    //		qt_readTraj();
 		
-				QString fileName("/statFiles/Cost3DGrids/Cost3DGrid2.grid");
-                QString home( getenv("HOME_MOVE3D") );
-                fileName = home + fileName;
+    QString fileName("/statFiles/Cost3DGrids/Cost3DGrid2.grid");
+    QString home( getenv("HOME_MOVE3D") );
+    fileName = home + fileName;
 		// Reads the grid from XML and sets it ti the HRICS_MotionPL
 		qt_load_HRICS_Grid(fileName.toStdString());
 		
-//		m_ui->HRICSNatural->setDisabled(false);
-//		m_ui->pushButtonNewNaturalCostSpace->setDisabled(true);
-//		m_ui->activeGridsBox->addItem(dynamic_cast<HRICS::NaturalGrid*>(API_activeGrid)->getName().c_str());
-    api_store_new_grid( dynamic_cast<HRICS::NaturalGrid*>(API_activeGrid) );
-		HRICS_activeNatu->setGrid(dynamic_cast<HRICS::NaturalGrid*>(API_activeGrid));
-		ENV.setBool(Env::drawGrid,false);
+    //		m_ui->HRICSNatural->setDisabled(false);
+    //		m_ui->pushButtonNewNaturalCostSpace->setDisabled(true);
+    //		m_ui->activeGridsBox->addItem(dynamic_cast<HRICS::NaturalGrid*>(API_activeGrid)->getName().c_str());
+    
+//    api_store_new_grid( dynamic_cast<HRICS::NaturalGrid*>(API_activeGrid) );
+//		HRICS_activeNatu->setGrid(dynamic_cast<HRICS::NaturalGrid*>(API_activeGrid));
+//		ENV.setBool(Env::drawGrid,false);
 	}
 	
-	ENV.setInt(Env::hriCostType,HRICS_Combine);
-        m_mainWindow->drawAllWinActive();
-	
-        cout << "new HRI Workspace" << endl;
-
+//	ENV.setInt(Env::hriCostType,HRICS_Combine);
+  m_mainWindow->drawAllWinActive();
+  
   Human->setAndUpdate( *q );
-//        m_mainWindow->Ui()->tabCost->initCostFunctions();
+  //        m_mainWindow->Ui()->tabCost->initCostFunctions();
 	m_mainWindow->Ui()->tabCost->setCostFunction("costHRI");
   m_mainWindow->drawAllWinActive();
+  
+  cout << "new HRI Workspace" << endl;
+  cout << "set Agent Grid as API_activeGrid" << endl;
+  API_activeGrid = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getAgentGrids()[0];
 }
 
 void HricsWidget::delete3DHriGrid()
@@ -390,7 +420,36 @@ void HricsWidget::computeGridCost()
 void HricsWidget::resetGridCost()
 {
 	dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getGrid()->resetCellCost();
+  
+//  vector<HRICS::AgentGrid*> grids = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getAgentGrids();
+//  for (unsigned int i=0; i<grids.size(); i++) 
+//  {
+//    dynamic_cast<HRICS::AgentGrid*>(grids[i])->resetCellCost();
+//  }
 }
+
+void HricsWidget::initAgentGrids()
+{
+  vector<HRICS::AgentGrid*> grids = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getAgentGrids();
+  
+  for (unsigned int i=0; i<grids.size(); i++) 
+  {
+    HRICS::AgentGrid* grid = dynamic_cast<HRICS::AgentGrid*>(grids[i]);
+    
+    cout << "nb X cells : " << grid->getXNumberOfCells() << endl;
+    cout << "nb Y cells : " << grid->getYNumberOfCells() << endl;
+    cout << "nb Z cells : " << grid->getZNumberOfCells() << endl;
+        
+    if (grid)
+    {
+      cout << "delete : " << grid << endl;
+      delete grid;
+    }
+  }
+  
+  dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->initAgentGrids(ENV.getDouble(Env::CellSize));
+}
+
 
 void HricsWidget::AStarIn3DGrid()
 {

@@ -139,12 +139,7 @@ SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${MOVE3D-PLANNERS_INCLUDE_DIR})
 SET(LIBS ${LIBS} ${MOVE3D-PLANNERS_LIBRARIES})
 
 
-
-
-
 #-------------- Move3D-Qt-Gui-libs --------------------------------------
-
-
 
 #FIND_PACKAGE(MOVE3D-QTGUI REQUIRED)
 #INCLUDE_directories(${MOVE3D-QTGUI_INCLUDE_DIR})

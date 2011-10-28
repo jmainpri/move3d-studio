@@ -38,21 +38,21 @@ public:
 	void initDrawOneLineInGrid();
 	void initObjectTransferPoint();
 	void initHumanLike();
-        void initGrids();
-
-  	void drawAllWinActive();
+  void initGrids();
+  
+  void drawAllWinActive();
 	
 	void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
 	void setMotionWidget(MotionPlanner* ptrMLPW) { m_motionWidget = ptrMLPW; }
 	
 	Ui::HricsWidget* Ui() { return m_ui; }
 	
-private slots:
-        void set_X_line(bool);
-        void set_Y_line(bool);
-        void set_Z_line(bool);
-        void on_pushButton_initColPos_clicked();
-
+  private slots:
+  void set_X_line(bool);
+  void set_Y_line(bool);
+  void set_Z_line(bool);
+  void on_pushButton_initColPos_clicked();
+  
 	// Vector Field
 	void computeVectorField();
 	
@@ -64,11 +64,13 @@ private slots:
 	void delete3DHriGrid();
 	void computeGridCost();
 	void resetGridCost();
+  void initAgentGrids();
+  
 	void AStarIn3DGrid();
 	void HRICSRRT();
 	void zoneSizeChanged();
 	void resetRandomPoints();
-        void setWhichTestSlot(int);
+  void setWhichTestSlot(int);
 	
 private:
 	QtShiva::SpinBoxSliderConnector*	m_k_distance;
@@ -79,7 +81,7 @@ private:
 	Ui::HricsWidget*					m_ui;
 	
 	MotionPlanner*						m_motionWidget;
-
+  
 	MainWindow*               m_mainWindow;
 };
 

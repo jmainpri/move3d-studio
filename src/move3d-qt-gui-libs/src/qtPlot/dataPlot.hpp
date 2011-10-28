@@ -1,5 +1,5 @@
 #ifndef _DATA_PLOT_H
-#define _DATA_PLOT_H 1
+#define _DATA_PLOT_H 
 
 #include <qwt_plot.h>
 

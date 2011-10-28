@@ -65,7 +65,8 @@ void cameraWidget::changeEvent(QEvent *e)
 
 void cameraWidget::updateImageLeft()
 {
-    m_ui->labelImageLeft->setPixmap(m_pr->_picowebLeftImg->image().scaled(QSize(400, 400),Qt::KeepAspectRatio,Qt::FastTransformation));
+    m_ui->labelImageLeft->setPixmap(m_pr->_picowebLeftImg->image().scaled(QSize(400, 400),
+                                                                          Qt::KeepAspectRatio,Qt::FastTransformation));
     QSizePolicy labelSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     labelSizePolicy.setHeightForWidth(true);
     m_ui->labelImageLeft->setSizePolicy(labelSizePolicy);
@@ -74,7 +75,8 @@ void cameraWidget::updateImageLeft()
 
 void cameraWidget::updateImageRight()
 {
-    m_ui->labelImageRight->setPixmap(m_pr->_picowebRightImg->image().scaled(QSize(400, 400),Qt::KeepAspectRatio,Qt::FastTransformation));
+    m_ui->labelImageRight->setPixmap(m_pr->_picowebRightImg->image().scaled(QSize(400, 400),
+                                                                            Qt::KeepAspectRatio,Qt::FastTransformation));
     QSizePolicy labelSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     labelSizePolicy.setHeightForWidth(true);
     m_ui->labelImageRight->setSizePolicy(labelSizePolicy);

@@ -25,8 +25,8 @@
 #include "move3d-headless.h"
 #include "move3d-gui.h"
 
-#include "qtMainInterface/mainwindow.hpp"
 #include "qtFormRobot/moverobot.hpp"
+#include "qtMainInterface/mainwindow.hpp"
 #include "qtMainInterface/sideWidgets/qtRobot.hpp"
 
 #include "API/project.hpp"
@@ -71,15 +71,15 @@ using namespace std;
 using namespace tr1;
 
 /*
-*
-*      This file implements a pipe to read out commands from qt and
-*      pass it on to the XForms thread, the main loop runs in a
-*      distinct thread using X11 and XForms doesn't permit qt's thread to act upon X11
-*      at the same time (causing a segmentation fault).
-*
-*      This can be solved by passing the 3D display to Ogre or having the OpenGl in a
-*      Qt window.
-*/
+ *
+ *      This file implements a pipe to read out commands from qt and
+ *      pass it on to the XForms thread, the main loop runs in a
+ *      distinct thread using X11 and XForms doesn't permit qt's thread to act upon X11
+ *      at the same time (causing a segmentation fault).
+ *
+ *      This can be solved by passing the 3D display to Ogre or having the OpenGl in a
+ *      Qt window.
+ */
 
 
 //------------------------------------------------------------------------------
@@ -250,18 +250,7 @@ void qt_runPRM()
 	ENV.setBool(Env::isRunning,false);
 }
 
-#ifdef LIGHT_PLANNER
-void qt_runManipTest()
-{
-  Manip::runCurrentTest();
-}
-
-void qt_runManipulation()
-{
-  Manip::runManipulation();
-}
-#endif
-#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
+#ifdef MULTILOCALPATH
 void qt_runReplanning()
 {
   Robot* rob =	global_Project->getActiveScene()->getActiveRobot();
@@ -276,21 +265,21 @@ void qt_runReplanning()
 
 void qt_handover()
 {
-//  compute_handOver();
+  //  compute_handOver();
 }
 
 #ifdef HRI_PLANNER
 void qtOTP()
 {
 	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
-
-//	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->initGrid();
-//	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->simpleComputeBaseAndOTP();
-//	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid()->setCellsToblankCost();
+  
+  //	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->initGrid();
+  //	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->simpleComputeBaseAndOTP();
+  //	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid()->setCellsToblankCost();
 	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->newComputeOTP();
 	ENV.setBool(Env::drawOTPTraj,true);
-//	dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->computePR2GIK();
-
+  //	dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->computePR2GIK();
+  
 }
 #endif
 
@@ -308,16 +297,16 @@ void qt_runStomp()
 
 void qt_runChomp()
 {
-    if( traj_optim_runChomp() )
-    {
-        cout << "Chomp has run succesfully!!!" << endl;
-    }
-    else {
-        cout << "Chomp fail!!!" << endl;
-    }
-    
-    //ChompTrajectory ( T, 2 );
-    //cout << "Warning : CHOMP Not yet implemented" << endl;
+  if( traj_optim_runChomp() )
+  {
+    cout << "Chomp has run succesfully!!!" << endl;
+  }
+  else {
+    cout << "Chomp fail!!!" << endl;
+  }
+  
+  //ChompTrajectory ( T, 2 );
+  //cout << "Warning : CHOMP Not yet implemented" << endl;
 }
 #endif // MULTILOCALPATH
 
@@ -359,7 +348,8 @@ void qt_showTraj()
 	}
 
 #ifdef HRI_PLANNER
-	p3d_rob *robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
+  p3d_rob *robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
+  
 	if (PlanEnv->getBool(PlanParam::env_showHumanTraj))
 	{
 		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,false);
@@ -368,10 +358,10 @@ void qt_showTraj()
 	}
 	else
 	{
-//		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,false);
+    //		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,false);
 		g3d_show_tcur_rob(robotPt,default_drawtraj_fct_qt_pipe);
-//		g3d_show_tcur_rob(hum_robotPt,default_drawtraj_fct_qt_pipe);
-//		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->showBestConf();
+    //		g3d_show_tcur_rob(hum_robotPt,default_drawtraj_fct_qt_pipe);
+    //		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->showBestConf();
 	}
 #endif
 
@@ -475,24 +465,24 @@ void qt_removeRedundantNodes()
  */
 void qt_makeTrajFromViaPoints()
 {
-//    p3d_rob * robotPt = p3d_get_robot_by_name("PR2_ROBOT");//justin//JIDOKUKA_ROBOT
-    p3d_rob * robotPt =  global_Project->getActiveScene()->getActiveRobot()->getRobotStruct();
-    ManipulationViaConfPlanner m_viaConfPlan(robotPt);
-    std::vector<SM_TRAJ> smTrajs;
-
-// 	if(FORMGENOM_CARTESIAN == 1) {
-//   	for(int i=0; i<m_viaConfPlan.robot()->armManipulationData->size(); i++) {
-//     		m_viaConfPlan.setArmCartesian(i,true);
-//   	}
-// 	} else {
-//   	for(int i=0; i<m_viaConfPlan.robot()->armManipulationData->size(); i++) {
-//     		m_viaConfPlan.setArmCartesian(i,false);
-//   	}
-// 	}
-
-    m_viaConfPlan.planTrajFromConfigArrayInRobotTheForm(smTrajs);
-//    MainWindow::planningFinished();
-
+  //    p3d_rob * robotPt = p3d_get_robot_by_name("PR2_ROBOT");//justin//JIDOKUKA_ROBOT
+  p3d_rob * robotPt =  global_Project->getActiveScene()->getActiveRobot()->getRobotStruct();
+  ManipulationViaConfPlanner m_viaConfPlan(robotPt);
+  std::vector<SM_TRAJ> smTrajs;
+  
+  // 	if(FORMGENOM_CARTESIAN == 1) {
+  //   	for(int i=0; i<m_viaConfPlan.robot()->armManipulationData->size(); i++) {
+  //     		m_viaConfPlan.setArmCartesian(i,true);
+  //   	}
+  // 	} else {
+  //   	for(int i=0; i<m_viaConfPlan.robot()->armManipulationData->size(); i++) {
+  //     		m_viaConfPlan.setArmCartesian(i,false);
+  //   	}
+  // 	}
+  
+  m_viaConfPlan.planTrajFromConfigArrayInRobotTheForm(smTrajs);
+  //    MainWindow::planningFinished();
+  
 }
 #endif
 
@@ -589,7 +579,7 @@ void qt_load_HRICS_Grid(std::string docname)
 	
 	ENV.setBool(Env::drawGrid,true);
 #else
-    cout << "HRICS is not compiled!!!" << endl;
+  cout << "HRICS is not compiled!!!" << endl;
 #endif
 }
 
@@ -602,10 +592,13 @@ void qt_add_traj(char* name,int id,p3d_rob* rob,p3d_traj* traj)
   cout << "traj = " << traj << endl;
   
 #ifdef QT_GL
-	FormRobot* form = global_w->getMoveRobot()->getRobotFormByName( rob->name );
-  
-	std::string str = oss.str();
-	form->addTraj(str,traj);
+  if(rob != NULL)
+  {
+    FormRobot* form = global_w->getMoveRobot()->getRobotFormByName( rob->name );
+    
+    std::string str = oss.str();
+    form->addTraj(str,traj);
+  }
 #endif
 }
 
@@ -622,7 +615,7 @@ void qt_add_config_to_ui(char* name,p3d_rob* robot,double* q)
 #ifdef HRI_PLANNER
 void qt_test()
 {
- cout << "Running test" << endl; 
+  cout << "Running test" << endl; 
   
   HRI_AGENTS* agents = hri_create_agents();
   HRI_AGENT* pr2 = hri_get_one_agent_of_type(agents, HRI_PR2);
@@ -642,9 +635,9 @@ extern int mainMhp(int argc, char** argv);
 
 
 PlannerHandler::PlannerHandler(int argc, char** argv) :
-  mState(none),
-  mArgc(argc),
-  mArgv(argv)
+mState(none),
+mArgc(argc),
+mArgv(argv)
 {
   
 }
@@ -660,7 +653,7 @@ void PlannerHandler::startPlanner(QString plannerName)
   if(mState == running) // already running, do nothing
   {
     printf("Error: PlannerHandler::startPlanner called, but a planner \
-is already running.\n");
+           is already running.\n");
     return;
   }
   mState = running;
@@ -668,7 +661,7 @@ is already running.\n");
   p3d_SetStopValue(FALSE);
 #endif
   ENV.setBool(Env::isRunning, true);
-try
+  try
   {
     if(plannerName == "Diffusion")
     {
@@ -685,14 +678,14 @@ try
     else if(plannerName == "Manipulation")
     {
       std::cout << "Planning thread : starting Manipulation." << std::endl;
-//      size_t stacksize;
-//      pthread_attr_init(&attr);
-//      pthread_attr_getstacksize (&attr, &stacksize);
-      qt_runManipulation();
+      //      size_t stacksize;
+      //      pthread_attr_init(&attr);
+      //      pthread_attr_getstacksize (&attr, &stacksize);
+      Manip::runManipulation();
     }
     else if (plannerName == "ManipCurrentTest"){
       std::cout << "Manipulation Test :" << std::endl;
-      qt_runManipTest();
+      Manip::runCurrentTest();
     }
 #endif
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
@@ -707,11 +700,11 @@ try
       qt_executeReplanSimu();
     }
 #endif
-//    else if(plannerName == "Replanning")
-//    {
-//      std::cout << "Compute Handover thread : starting Re-planning." << std::endl;
-//      qt_handover();
-//    }
+    //    else if(plannerName == "Replanning")
+    //    {
+    //      std::cout << "Compute Handover thread : starting Re-planning." << std::endl;
+    //      qt_handover();
+    //    }
     else if (plannerName == "ShowTraj" ){
       std::cout << "Show trajectory : " << std::endl;
       qt_showTraj();
@@ -726,25 +719,28 @@ try
     }
 #ifdef HRI_PLANNER
     else if( plannerName == "otp"){
-          qtOTP();
+      qtOTP();
     }
     else if( plannerName == "MultipleOtp"){
-          qtMultipleOTP();
+      qtMultipleOTP();
     }
 #endif
 #ifdef GRASP_PLANNING
     else if( plannerName == "makeTrajFromViaPoints"){
-          qt_makeTrajFromViaPoints();
+      qt_makeTrajFromViaPoints();
     }
 #endif
 #ifdef MULTILOCALPATH
     else if( plannerName == "runStomp"){
-        qt_runStomp();
+      qt_runStomp();
     }
     else if( plannerName == "runChomp"){
-        qt_runChomp();
+      qt_runChomp();
     }
-#endif // MULTILOCALPATH
+    else if( plannerName == "convertToSoftMotion"){
+      traj_optim_generate_softMotion();
+    }
+#endif
   }
   catch(std::string what)
   {
@@ -768,8 +764,8 @@ void PlannerHandler::stopPlanner()
   if(mState != running) // not running, do nothing
   {
     printf("Error: PlannerHandler::stopPlanner called, but there is no planner \
-running.\n");
-//   return;
+           running.\n");
+    //   return;
   }
 #ifdef P3D_PLANNER
   p3d_SetStopValue(true);
@@ -783,7 +779,7 @@ void PlannerHandler::resetPlanner()
   if(mState == running) // running, do nothing
   {
     printf("Error: PlannerHandler::resetPlanner called, but there is a planner \
-currently running.\n");
+           currently running.\n");
     return;
   }
   if(mState == none) // no planner, do nothing

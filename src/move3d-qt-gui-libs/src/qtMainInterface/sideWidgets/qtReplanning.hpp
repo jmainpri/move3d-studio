@@ -40,17 +40,16 @@ public:
   void init();
 	void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
 	
-public slots:
-	
 private slots:
+  void computeSoftMotion();
   void computeHandOver();
   void mainReplanFunction();
   void runStomp();
   void runChomp();
-  void setLocalpath();
   
   void initReplanning();
   void executeReplanTraj();
+  void plotNoisyTrajectories();
 	
 signals:
   void selectedPlanner(QString);
@@ -60,6 +59,9 @@ private:
 	
 	MainWindow*			m_mainWindow;
 	
+#ifdef USE_QWT
+	BasicPlotWindow *m_plot;
+#endif
 };
 
 #endif

@@ -18,8 +18,7 @@
 using namespace std;
 
 BasicPlot::BasicPlot( QWidget *parent):
-    QwtPlot(parent)
-
+QwtPlot(parent)
 {
     // Disable polygon clipping
     QwtPainter::setDeviceClipping(false);
@@ -97,30 +96,28 @@ void BasicPlot::alignScales()
 //  Generate new values 
 void BasicPlot::setData(std::vector<double> y)
 {
-//    cout << "Adding data to plot" << endl;
+  if (int(y.size()) >= PLOT_SIZE) 
+  {
     if(ENV.getBool(Env::initPlot) == false )
     {
-//				for (unsigned int i=0; i<y.size(); i++) {
-//					cout << "y [" << i << "] = " << y[i] << endl;
-//				}
-			
-        Max_y = *std::max_element(y.begin(),y.end());
-//				cout << "Max_y = " << Max_y << endl;
-//        cout << "Setting fixed Axis"<< endl;
-        setAxisScale(QwtPlot::yLeft, 0.0,Max_y*1.10);
-        ENV.setBool(Env::initPlot,true);
+      Max_y = *std::max_element(y.begin(),y.end());
+      setAxisScale(QwtPlot::yLeft, 0.0,Max_y*1.10);
+      ENV.setBool(Env::initPlot,true);
     }
-
+    
     for ( int i = 0; i<PLOT_SIZE ; i++)
     {
-        d_y[i] = y[i];
-//        cout << y[i] << endl;
+      d_y[i] = y[i];
+      cout << y[i] << endl;
     }
-
-    replot();
-//		rescale()
-//    updateLayout();
- //   alignScales();
-
-//    cout << "Replot" << endl;
+  }
+  else
+  {
+    cout << "cannot set data (vector too small)" << endl;
+  }
+  
+  replot();
+  //		rescale()
+  //    updateLayout();
+  //    alignScales();
 }

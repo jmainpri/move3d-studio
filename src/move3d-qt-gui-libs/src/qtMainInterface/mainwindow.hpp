@@ -92,8 +92,13 @@ protected:
 	void keyPressEvent(QKeyEvent *e);
 	void keyReleaseEvent(QKeyEvent *e);
 	
+public slots:
+  void loadParametersQuick();
 	
 private slots:
+  void saveInterfaceParameters();
+  void loadInterfaceParameters();
+  void saveParametersQuick();
 	
 	void initRobotsMenu();
 	void setRobotAsCurrent();
@@ -121,6 +126,7 @@ private slots:
   void showTrace();
 	void restoreView();
 	void mobileCamera();
+  void changeCamera();
 	
 	void test();
 	

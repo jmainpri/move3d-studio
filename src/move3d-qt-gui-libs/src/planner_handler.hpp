@@ -6,6 +6,8 @@
 
 #include "P3d-pkg.h"
 
+#include <string>
+
 // UI functions
 void qt_add_traj(char* name, int id, p3d_rob* rob, p3d_traj* traj);
 void qt_add_config_to_ui(char* name, p3d_rob* rob, double* q);

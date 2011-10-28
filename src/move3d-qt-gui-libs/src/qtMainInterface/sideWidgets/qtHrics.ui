@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>485</width>
-    <height>751</height>
+    <width>527</width>
+    <height>795</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,9 +35,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-490</y>
-        <width>468</width>
-        <height>1239</height>
+        <y>0</y>
+        <width>510</width>
+        <height>1321</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -103,13 +103,6 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
-              <widget class="QCheckBox" name="checkBoxDrawGrid">
-               <property name="text">
-                <string>Draw Grid</string>
-               </property>
-              </widget>
-             </item>
              <item row="1" column="0">
               <widget class="QCheckBox" name="checkBoxDrawRandPoints">
                <property name="text">
@@ -125,44 +118,58 @@
               </widget>
              </item>
              <item row="3" column="0">
-              <widget class="QCheckBox" name="checkBoxComputeOTP">
-               <property name="text">
-                <string>Compute O. Transfer Point</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="1">
-              <widget class="QCheckBox" name="checkBoxHRINoRobot">
-               <property name="text">
-                <string>No Robot</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="0">
-              <widget class="QCheckBox" name="checkBoxAutoLoadGrid">
-               <property name="text">
-                <string>Auto Load Grid</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="1">
-              <widget class="QCheckBox" name="checkBoxCameraBehindHuman">
-               <property name="text">
-                <string>Camera Behind Human</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
               <widget class="QCheckBox" name="checkBoxDrawGaze">
                <property name="text">
                 <string>Draw Gaze</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="1">
+             <item row="4" column="0">
               <widget class="QCheckBox" name="checkBoxEntireGrid">
                <property name="text">
                 <string>Draw Entire Grid</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QCheckBox" name="checkBoxDrawGrid">
+               <property name="text">
+                <string>Draw Grid</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QCheckBox" name="checkBoxAutoLoadGrid">
+               <property name="text">
+                <string>Auto Load Grid</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QCheckBox" name="checkBoxComputeOTP">
+               <property name="text">
+                <string>Compute O. Transfer Point</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QCheckBox" name="checkBoxHRINoRobot">
+               <property name="text">
+                <string>No Robot</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QCheckBox" name="checkBoxCameraBehindHuman">
+               <property name="text">
+                <string>Camera Behind Human</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0">
+              <widget class="QCheckBox" name="checkBoxDrawBox">
+               <property name="text">
+                <string>Draw Box</string>
                </property>
               </widget>
              </item>
@@ -231,17 +238,24 @@
           </item>
           <item>
            <layout class="QGridLayout" name="gridLayout_2">
-            <item row="2" column="0">
+            <item row="3" column="0">
              <widget class="QPushButton" name="pushButtonAStarIn3DGrid">
               <property name="text">
                <string>(x,y,z) A* </string>
               </property>
              </widget>
             </item>
-            <item row="0" column="0">
+            <item row="1" column="0">
              <widget class="QPushButton" name="pushButtonVectorField">
               <property name="text">
                <string>Compute Vector Field</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QPushButton" name="pushButtonInitAgentGrids">
+              <property name="text">
+               <string>Init Agent Cell</string>
               </property>
              </widget>
             </item>

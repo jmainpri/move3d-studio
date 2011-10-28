@@ -4,12 +4,14 @@ SET(BM3D_MODULE_NAME ${BM3D_MODULE_NAME}/qtFormRobot)
 BM3D_SRC_SUBDIR_PROCESS(
 moverobot.cpp
 qtConstraints.cpp
+sliderfunction.cpp
 )
 BM3D_INC_DIR_PROCESS (${BM3D_MODULE_NAME})
 
 BM3D_QT_GENERATE_MOC(
 moverobot.hpp
 qtConstraints.hpp
+sliderfunction.hpp
 ui_moverobot.hpp
 )
 

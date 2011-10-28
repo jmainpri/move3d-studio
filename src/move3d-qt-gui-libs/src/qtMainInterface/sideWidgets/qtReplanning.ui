@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>485</width>
+    <width>482</width>
     <height>778</height>
    </rect>
   </property>
@@ -18,383 +18,255 @@
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QWidget" name="widgetTop" native="true">
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QWidget" name="widgetRunMpl" native="true">
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <item>
-            <widget class="QScrollArea" name="scrollArea">
-             <property name="widgetResizable">
-              <bool>true</bool>
-             </property>
-             <widget class="QWidget" name="scrollAreaWidgetContents">
-              <property name="geometry">
-               <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>433</width>
-                <height>726</height>
-               </rect>
-              </property>
-              <widget class="QGroupBox" name="groupBoxTrajOptim">
-               <property name="geometry">
-                <rect>
-                 <x>10</x>
-                 <y>190</y>
-                 <width>409</width>
-                 <height>381</height>
-                </rect>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>400</height>
-                </size>
-               </property>
-               <property name="title">
-                <string>Chomp/Stomp</string>
-               </property>
-               <widget class="QPushButton" name="pushButtonRunChomp">
-                <property name="geometry">
-                 <rect>
-                  <x>100</x>
-                  <y>30</y>
-                  <width>81</width>
-                  <height>32</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>Run</string>
-                </property>
-               </widget>
-               <widget class="QPushButton" name="pushButtonRunStomp">
-                <property name="geometry">
-                 <rect>
-                  <x>100</x>
-                  <y>70</y>
-                  <width>81</width>
-                  <height>32</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>Run</string>
-                </property>
-               </widget>
-               <widget class="QLabel" name="labelChomp">
-                <property name="geometry">
-                 <rect>
-                  <x>20</x>
-                  <y>40</y>
-                  <width>62</width>
-                  <height>16</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>Chomp</string>
-                </property>
-               </widget>
-               <widget class="QLabel" name="labelStomp">
-                <property name="geometry">
-                 <rect>
-                  <x>20</x>
-                  <y>80</y>
-                  <width>62</width>
-                  <height>16</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>Stomp</string>
-                </property>
-               </widget>
-               <widget class="QSpinBox" name="spinBoxNbPoints">
-                <property name="geometry">
-                 <rect>
-                  <x>160</x>
-                  <y>210</y>
-                  <width>57</width>
-                  <height>25</height>
-                 </rect>
-                </property>
-                <property name="minimum">
-                 <number>5</number>
-                </property>
-                <property name="maximum">
-                 <number>100</number>
-                </property>
-                <property name="singleStep">
-                 <number>5</number>
-                </property>
-                <property name="value">
-                 <number>50</number>
-                </property>
-               </widget>
-               <widget class="QLabel" name="label">
-                <property name="geometry">
-                 <rect>
-                  <x>20</x>
-                  <y>210</y>
-                  <width>131</width>
-                  <height>16</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>Nombre de points</string>
-                </property>
-               </widget>
-               <widget class="QCheckBox" name="checkBoxDrawTraj">
-                <property name="geometry">
-                 <rect>
-                  <x>30</x>
-                  <y>140</y>
-                  <width>87</width>
-                  <height>20</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>Draw Traj</string>
-                </property>
-               </widget>
-               <widget class="QCheckBox" name="checkBoxOptimizeCurrentTraj">
-                <property name="geometry">
-                 <rect>
-                  <x>30</x>
-                  <y>170</y>
-                  <width>171</width>
-                  <height>20</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>Use Current Trajectory</string>
-                </property>
-               </widget>
-               <widget class="QLabel" name="label_2">
-                <property name="geometry">
-                 <rect>
-                  <x>20</x>
-                  <y>240</y>
-                  <width>62</width>
-                  <height>16</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>Duration</string>
-                </property>
-               </widget>
-               <widget class="QDoubleSpinBox" name="doubleSpinBoxDuration">
-                <property name="geometry">
-                 <rect>
-                  <x>160</x>
-                  <y>240</y>
-                  <width>111</width>
-                  <height>25</height>
-                 </rect>
-                </property>
-               </widget>
-               <widget class="QLabel" name="label_3">
-                <property name="geometry">
-                 <rect>
-                  <x>20</x>
-                  <y>270</y>
-                  <width>62</width>
-                  <height>16</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>Std. Dev.</string>
-                </property>
-               </widget>
-               <widget class="QDoubleSpinBox" name="doubleSpinBoxStdDev">
-                <property name="geometry">
-                 <rect>
-                  <x>160</x>
-                  <y>270</y>
-                  <width>111</width>
-                  <height>25</height>
-                 </rect>
-                </property>
-                <property name="decimals">
-                 <number>6</number>
-                </property>
-                <property name="maximum">
-                 <double>10000.000000000000000</double>
-                </property>
-               </widget>
-               <widget class="QCheckBox" name="checkBoxTestMultiGauss">
-                <property name="geometry">
-                 <rect>
-                  <x>30</x>
-                  <y>110</y>
-                  <width>151</width>
-                  <height>20</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>Test Multi Gauss</string>
-                </property>
-               </widget>
-               <widget class="QLabel" name="label_4">
-                <property name="geometry">
-                 <rect>
-                  <x>20</x>
-                  <y>300</y>
-                  <width>111</width>
-                  <height>16</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>Smooth Weigth</string>
-                </property>
-               </widget>
-               <widget class="QLabel" name="label_5">
-                <property name="geometry">
-                 <rect>
-                  <x>20</x>
-                  <y>330</y>
-                  <width>121</width>
-                  <height>16</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>Obstacle Weigth</string>
-                </property>
-               </widget>
-               <widget class="QDoubleSpinBox" name="doubleSpinBoxSmoothWeight">
-                <property name="geometry">
-                 <rect>
-                  <x>160</x>
-                  <y>300</y>
-                  <width>111</width>
-                  <height>25</height>
-                 </rect>
-                </property>
-                <property name="decimals">
-                 <number>6</number>
-                </property>
-               </widget>
-               <widget class="QDoubleSpinBox" name="doubleSpinBoxObstacWeight">
-                <property name="geometry">
-                 <rect>
-                  <x>160</x>
-                  <y>330</y>
-                  <width>111</width>
-                  <height>25</height>
-                 </rect>
-                </property>
-                <property name="decimals">
-                 <number>6</number>
-                </property>
-               </widget>
-              </widget>
-              <widget class="QGroupBox" name="groupBoxReplan">
-               <property name="geometry">
-                <rect>
-                 <x>12</x>
-                 <y>31</y>
-                 <width>409</width>
-                 <height>151</height>
-                </rect>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>400</height>
-                </size>
-               </property>
-               <property name="title">
-                <string>Replanning</string>
-               </property>
-               <widget class="QPushButton" name="pushButtonReplan">
-                <property name="geometry">
-                 <rect>
-                  <x>180</x>
-                  <y>110</y>
-                  <width>85</width>
-                  <height>32</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>Replan</string>
-                </property>
-               </widget>
-               <widget class="QLabel" name="labelReplan">
-                <property name="geometry">
-                 <rect>
-                  <x>20</x>
-                  <y>40</y>
-                  <width>81</width>
-                  <height>16</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>Traj Optim</string>
-                </property>
-               </widget>
-               <widget class="QPushButton" name="pushButtonExecuteSimu">
-                <property name="geometry">
-                 <rect>
-                  <x>150</x>
-                  <y>70</y>
-                  <width>114</width>
-                  <height>32</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>Execute Traj</string>
-                </property>
-               </widget>
-               <widget class="QPushButton" name="pushButtonInitialize">
-                <property name="geometry">
-                 <rect>
-                  <x>190</x>
-                  <y>30</y>
-                  <width>71</width>
-                  <height>32</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>Init</string>
-                </property>
-               </widget>
-               <widget class="QCheckBox" name="checkBoxDoReplanning">
-                <property name="geometry">
-                 <rect>
-                  <x>40</x>
-                  <y>110</y>
-                  <width>121</width>
-                  <height>20</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>Do Replanning</string>
-                </property>
-               </widget>
-              </widget>
-              <widget class="QPushButton" name="pushButtonSetLocalpath">
-               <property name="geometry">
-                <rect>
-                 <x>6</x>
-                 <y>8</y>
-                 <width>162</width>
-                 <height>32</height>
-                </rect>
-               </property>
-               <property name="text">
-                <string>Set localpath RArm</string>
-               </property>
-              </widget>
-             </widget>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-    </layout>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>480</width>
+        <height>776</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QGroupBox" name="groupBoxReplan">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>400</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>Replanning</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelReplan">
+            <property name="text">
+             <string>Traj Optim</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="pushButtonInitialize">
+            <property name="text">
+             <string>Init</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="pushButtonExecuteSimu">
+            <property name="text">
+             <string>Execute Traj</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="pushButtonReplan">
+            <property name="text">
+             <string>Replan</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="checkBoxDoReplanning">
+            <property name="text">
+             <string>Do Replanning</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBoxTrajOptim">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>400</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>Chomp/Stomp</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelChomp">
+            <property name="text">
+             <string>Chomp</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" colspan="2">
+           <widget class="QPushButton" name="pushButtonRunChomp">
+            <property name="text">
+             <string>Run</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="labelStomp">
+            <property name="text">
+             <string>Stomp</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="3">
+           <widget class="QCheckBox" name="checkBoxTestMultiGauss">
+            <property name="text">
+             <string>Test Multi Gauss</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0" colspan="2">
+           <widget class="QCheckBox" name="checkBoxDrawTraj">
+            <property name="text">
+             <string>Draw Traj</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0" colspan="3">
+           <widget class="QCheckBox" name="checkBoxOptimizeCurrentTraj">
+            <property name="text">
+             <string>Use Current Trajectory</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0" colspan="2">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Nombre de points</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="2">
+           <widget class="QSpinBox" name="spinBoxNbPoints">
+            <property name="minimum">
+             <number>5</number>
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="singleStep">
+             <number>5</number>
+            </property>
+            <property name="value">
+             <number>50</number>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Duration</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="2">
+           <widget class="QDoubleSpinBox" name="doubleSpinBoxDuration"/>
+          </item>
+          <item row="10" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Std. Dev.</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="2">
+           <widget class="QDoubleSpinBox" name="doubleSpinBoxStdDev">
+            <property name="decimals">
+             <number>6</number>
+            </property>
+            <property name="maximum">
+             <double>10000.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="0" colspan="2">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Smooth Weigth</string>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="2">
+           <widget class="QDoubleSpinBox" name="doubleSpinBoxSmoothWeight">
+            <property name="decimals">
+             <number>6</number>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="0" colspan="2">
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>Obstacle Weigth</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="2">
+           <widget class="QDoubleSpinBox" name="doubleSpinBoxObstacWeight">
+            <property name="decimals">
+             <number>6</number>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QCheckBox" name="checkBoxSelectedDuration">
+            <property name="text">
+             <string>With Selected Duration</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QPushButton" name="pushButtonPlotNoise">
+            <property name="text">
+             <string>Plot Noise</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" colspan="2">
+           <widget class="QPushButton" name="pushButtonRunStomp">
+            <property name="text">
+             <string>Run</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QPushButton" name="pushButtonComputeSM">
+            <property name="text">
+             <string>Compute SM</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </widget>
    </item>
   </layout>
  </widget>

@@ -184,3 +184,91 @@ void SpinBoxSliderConnector::sliderValueChanged( int _value )
     emit( this->valueChanged( m_spinBox->value() ) );
     emit( this->valueChanged( (int)(m_spinBox->value()) ));
 }
+
+//****************************************************************
+// SpinBox to Env
+
+//----------------------------------------------------------------
+// Env connector
+//----------------------------------------------------------------
+SpinBoxConnector::SpinBoxConnector( QObject* _parent,
+                                    QDoubleSpinBox* _spinBox,
+                                    Env::doubleParameter p) :
+QObject( _parent ), m_doubleSpinBox( _spinBox )
+{
+  m_doubleSpinBox->setValue(numeric_limits<double>::max());
+  
+  connect(m_doubleSpinBox,SIGNAL(valueChanged(double)), ENV.getObject(p),SLOT(set(double)));
+  connect(ENV.getObject(p),SIGNAL(valueChanged(double)),m_doubleSpinBox,SLOT(setValue(double)));
+  
+  m_doubleSpinBox->setValue(ENV.getDouble(p));
+}
+
+SpinBoxConnector::SpinBoxConnector( QObject* _parent,
+                                    QDoubleSpinBox* _spinBox,
+                                    Env::intParameter p) :
+QObject( _parent ), m_doubleSpinBox( _spinBox )
+{
+  m_doubleSpinBox->setValue(numeric_limits<double>::max());
+  
+  connect(m_doubleSpinBox,SIGNAL(valueChanged(int)),ENV.getObject(p),SLOT(set(int)));
+  connect(ENV.getObject(p),SIGNAL(valueChanged(int)),m_doubleSpinBox, SLOT(setValue(int)));
+  
+  m_doubleSpinBox->setValue(ENV.getInt(p));
+}
+
+SpinBoxConnector::SpinBoxConnector( QObject* _parent,
+                                    QSpinBox* _spinBox,
+                                    Env::intParameter p) :
+QObject( _parent ), m_spinBox( _spinBox )
+{
+  m_spinBox->setValue(numeric_limits<int>::max());
+  
+  connect(m_spinBox, SIGNAL(valueChanged(int)), ENV.getObject(p),SLOT(set(int)));
+  connect(ENV.getObject(p),SIGNAL(valueChanged(int)),m_spinBox,SLOT(setValue(int)));
+  
+  m_spinBox->setValue(ENV.getInt(p));
+}
+
+//----------------------------------------------------------------
+// PlanParam connector
+//----------------------------------------------------------------
+SpinBoxConnector::SpinBoxConnector( QObject* _parent,
+                                    QDoubleSpinBox* _spinBox,
+                                    PlanParam::doubleParameter p) :
+QObject( _parent ), m_doubleSpinBox( _spinBox )
+{
+	m_doubleSpinBox->setValue(numeric_limits<double>::max());
+	
+	connect(m_doubleSpinBox,SIGNAL(valueChanged(double)),PlanEnv->getObject(p),SLOT(set(double)));
+	connect(PlanEnv->getObject(p),SIGNAL(valueChanged(double)),m_doubleSpinBox,SLOT(setValue(double)));
+	
+	m_doubleSpinBox->setValue(PlanEnv->getDouble(p));
+}
+
+SpinBoxConnector::SpinBoxConnector( QObject* _parent,
+                                    QDoubleSpinBox* _spinBox,
+                                    PlanParam::intParameter p) :
+QObject( _parent ), m_doubleSpinBox( _spinBox )
+{
+	m_doubleSpinBox->setValue(numeric_limits<double>::max());
+	
+	connect(m_doubleSpinBox, SIGNAL(valueChanged(int)), PlanEnv->getObject(p),SLOT(set(int)));
+	connect(PlanEnv->getObject(p),SIGNAL(valueChanged(int)),m_doubleSpinBox,SLOT(setValue(int)));
+	
+	m_doubleSpinBox->setValue(PlanEnv->getInt(p));
+}
+
+SpinBoxConnector::SpinBoxConnector( QObject* _parent,
+                                    QSpinBox* _spinBox,
+                                    PlanParam::intParameter p) :
+QObject( _parent ), m_spinBox( _spinBox )
+{
+	m_spinBox->setValue(numeric_limits<int>::max());
+	
+	connect(m_spinBox, SIGNAL(valueChanged(int)), PlanEnv->getObject(p),SLOT(set(int)));
+	connect(PlanEnv->getObject(p),SIGNAL(valueChanged(int)),m_spinBox,SLOT(setValue(int)));
+	
+	m_spinBox->setValue(PlanEnv->getInt(p));
+}
+

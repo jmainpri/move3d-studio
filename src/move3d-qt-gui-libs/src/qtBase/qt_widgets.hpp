@@ -1,9 +1,7 @@
 #ifndef QT_WIDGETS_HH
 #define QT_WIDGETS_HH
 
-#if defined( MOVE3D_CORE )
 #include "qtLibrary.hpp"
-#endif
 
 #include <vector>
 

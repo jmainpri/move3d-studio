@@ -17,7 +17,6 @@
 
 #ifdef USE_QWT
 #include "qtPlot/doublePlot.hpp"
-
 #endif
 
 

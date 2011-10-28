@@ -10,6 +10,7 @@ dataPlot.cpp
 tempWin.cpp 
 histoWin.cpp
 histogramItem.cpp
+replottingVectors.cpp
 )
 
 BM3D_INC_DIR_PROCESS (${BM3D_MODULE_NAME})
@@ -22,6 +23,7 @@ dataPlot.hpp
 tempWin.hpp 
 histoWin.hpp
 histogramItem.hpp
+replottingVectors.hpp
 )
 
 BM3D_QT_GENERATE_UI_HEADERS(basicPlotWindow.ui)

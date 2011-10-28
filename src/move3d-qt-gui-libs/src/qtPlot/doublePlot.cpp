@@ -92,7 +92,6 @@ void DoublePlot::rescale()
 void DoublePlot::setData(const std::vector< std::string >& names , 
 												 const std::vector< std::vector <double> >& data )
 {
-	
 	vector< double > Max_y;
 	
 	if(ENV.getBool(Env::initPlot) == false )

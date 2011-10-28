@@ -1,5 +1,6 @@
 #include "mainwindow.hpp"
 #include "mainwindowGenerated.hpp"
+#include "settings.hpp"
 
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
 #include "qtOpenGL/glwidget.hpp"
@@ -89,6 +90,8 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(m_ui->actionOpenScenario,SIGNAL(triggered()),this,SLOT(openScenario()));
 	connect(m_ui->actionSaveScenario,SIGNAL(triggered()),this,SLOT(saveScenario()));
 	connect(m_ui->actionRobotForm,SIGNAL(triggered()),m_ui->formRobot,SLOT(show()));
+  
+  connect(m_ui->pushButtonChangeCamera,SIGNAL(clicked()),this,SLOT(changeCamera()));
     //#ifdef MULTILOCALPATH
     //	connect(m_ui->actionLocalPathGroups,SIGNAL(triggered()),m_ui->localPathGroups,SLOT(show()));
     //#endif
@@ -100,6 +103,11 @@ MainWindow::MainWindow(QWidget *parent)
 	
 	connect(m_ui->actionLoadTrajectory,SIGNAL(triggered()),this,SLOT(loadTraj()));
 	connect(m_ui->actionSaveTrajectory,SIGNAL(triggered()),this,SLOT(saveTraj()));
+  
+  connect(m_ui->actionLoadInterfaceParameters,SIGNAL(triggered()),this,SLOT(loadInterfaceParameters()));
+	connect(m_ui->actionSaveInterfaceParameters,SIGNAL(triggered()),this,SLOT(saveInterfaceParameters()));
+  connect(m_ui->actionLoadParametersQuick,SIGNAL(triggered()),this,SLOT(loadParametersQuick()));
+	connect(m_ui->actionSaveParametersQuick,SIGNAL(triggered()),this,SLOT(saveParametersQuick()));
 	
 	// connect(m_ui->pagesOfStakedWidget, SIGNAL(activated(int)),m_ui->stackedWidget, SLOT(setCurrentIndex(int)));
 	
@@ -202,6 +210,36 @@ void MainWindow::saveScenario()
 	}
 }
 
+p3d_matrix4 cam_tmp;
+
+void MainWindow::changeCamera()
+{
+  G3D_Window *win = qt_get_cur_g3d_win();
+  p3d_rob* r = (p3d_rob *) p3d_get_robot_by_name("PR2_ROBOT");
+  p3d_jnt* j = r->joints[4];
+  p3d_matrix4* m_transf = &(j->abs_pos);
+  p3d_matrix4 T1,T2,T3,offset;
+  
+  p3d_mat4Copy(*m_transf,offset);
+  p3d_mat4Pos(T1, 0, 0, 0, 0, 0.0, 0.8);
+  p3d_mat4Pos(T2, -1.5, 0, 0, 0, 0, 0);
+  p3d_mat4Mult(T1,T2,T3);
+  p3d_mat4Mult(*m_transf,T3,offset);
+  
+  if( true )
+  {
+    cout << "Change camera" << endl;
+    
+    g3d_set_camera_parameters_from_frame(offset, win->vs);
+    g3d_set_projection_matrix(win->vs.projection_mode);
+    qt_change_mob_frame(win,m_transf);
+  }
+  else
+  {
+    qt_reset_mob_frame(win);
+  }
+}
+
 void MainWindow::loadGraph()
 {
 	QString fileName = QFileDialog::getOpenFileName(this);
@@ -274,6 +312,77 @@ void MainWindow::saveTraj()
         //p3d_writeXmlTraj(file, rob->getTrajStruct() );
 		this->drawAllWinActive();
 	}
+}
+
+void MainWindow::loadInterfaceParameters()
+{
+	QString fileName = QFileDialog::getOpenFileName(this);
+	
+	if (!fileName.isEmpty())
+	{
+		qt_loadInterfaceParameters( true, fileName.toStdString() );
+		cout << "Loading parameters at : " << fileName.toStdString() << endl;
+		this->drawAllWinActive();
+	}
+}
+
+void MainWindow::saveInterfaceParameters()
+{
+  QString fileName = QFileDialog::getSaveFileName(this);
+	
+	if (!fileName.isEmpty())
+	{
+//    if( remove( (home+fileName).c_str() ) != 0 )
+//    {
+//      cout << "Error deleting file" << endl;
+//      return;
+//    }
+    
+		qt_saveInterfaceParameters( true, fileName.toStdString() );
+		cout << "Saving parameters at : " << fileName.toStdString() << endl;
+		this->drawAllWinActive();
+	}
+}
+
+void MainWindow::loadParametersQuick()
+{
+	string home(getenv("HOME_MOVE3D"));
+  string fileName("/.save_interface_params");
+	
+	if (!home.empty())
+	{
+		qt_loadInterfaceParameters( false, home+fileName );
+		cout << "Loading parameters at : " << home+fileName << endl;
+    cout << "quick load succeded" << endl;
+		this->drawAllWinActive();
+	}
+  else
+  {
+    cout << "Error : HOME_MOVE3D is not defined" << endl;
+  }
+}
+
+void MainWindow::saveParametersQuick()
+{
+  string home(getenv("HOME_MOVE3D"));
+  string fileName("/.save_interface_params");
+	
+	if (!home.empty())
+	{
+    if( remove( (home+fileName).c_str() ) != 0 )
+    {
+      cout << "Error deleting file" << endl;
+      return;
+    }
+    
+		qt_saveInterfaceParameters( true, home+fileName );
+		cout << "Saving parameters at : " << home+fileName << endl;
+		this->drawAllWinActive();
+	}
+  else
+  {
+    cout << "Error : HOME_MOVE3D is not defined" << endl;
+  }
 }
 
 void MainWindow::connectCheckBoxToEnv(QCheckBox* box, Env::boolParameter p)
@@ -389,14 +498,16 @@ void MainWindow::initViewerButtons()
     
 	m_ui->checkBoxDrawGraph->setCheckState(Qt::Checked);
 	
+  // Joint to Draw
+  new QtShiva::SpinBoxConnector(this, m_ui->spinBoxJointToDraw,Env::jntToDraw);
 	connect(m_ui->spinBoxJointToDraw,SIGNAL(valueChanged(int)),this,SLOT(setJointToDraw(int)));
-	//int index = get_robot_jnt_index_by_name(XYZ_ROBOT,XYZ_ROBOT->o[XYZ_ROBOT->no-1]->jnt->name);
 	m_ui->spinBoxJointToDraw->setValue(XYZ_ROBOT->o[XYZ_ROBOT->no-1]->jnt->num);
 	
-    connect(m_ui->pushButtonShowTrace,SIGNAL(clicked(bool)),this,SLOT(showTrace()));
+  // Show traj and trace
+  connect(m_ui->pushButtonShowTrace,SIGNAL(clicked(bool)),this,SLOT(showTrace()));
 	connect(m_ui->pushButtonShowTraj,SIGNAL(clicked(bool)),this,SLOT(showTraj()),Qt::DirectConnection);
 	new QtShiva::SpinBoxSliderConnector(
-                                        this, m_ui->doubleSpinBoxTrajSpeed, m_ui->horizontalSliderTrajSpeed , Env::showTrajFPS );
+    this, m_ui->doubleSpinBoxTrajSpeed, m_ui->horizontalSliderTrajSpeed , Env::showTrajFPS );
 	
 	connect(m_ui->pushButtonRestoreView,SIGNAL(clicked(bool)),this,SLOT(restoreView()),Qt::DirectConnection);
 	//	connect(m_ui->pushButtonResetGraph,SIGNAL(clicked()),this,SLOT(ResetGraph()));
@@ -407,7 +518,6 @@ void MainWindow::initViewerButtons()
 	connect(m_ui->comboBoxColorTraj, SIGNAL(currentIndexChanged(int)),this,SLOT(colorTrajChange(int)));
 	
 	connect(m_ui->pushButtonMobileCamera,SIGNAL(clicked()),this,SLOT(mobileCamera()));
-    
 }
 
 void MainWindow::test()
@@ -417,16 +527,8 @@ void MainWindow::test()
 
 void MainWindow::setJointToDraw(int joint)
 {
-    //  Scene* sce = global_Project->getActiveScene();
-    //  Robot* rob = sce->getRobotByNameContaining( global_ActiveRobotName );
-    //  
-    //  if( joint > rob->getNumberOfJoints())
-    //  {
-    //    cout << "Joint number is larger than number of joints of the active robot" << endl;
-    //    return; 
-    //  }  
-    p3d_set_user_drawnjnt(joint);
-    this->drawAllWinActive();
+  p3d_set_user_drawnjnt(joint);
+  this->drawAllWinActive();
 }
 
 void MainWindow::mobileCamera()

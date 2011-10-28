@@ -37,12 +37,6 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
 
-//#if defined( MULTILOCALPATH )
-//#include "qtMultiLocalPath.hpp"
-//#endif
-
-#if defined( MOVE3D_CORE )
-
 #include "qtOpenGL/glwidget.hpp"
 
 #include "qtMainInterface/sideWidgets/qtCost.hpp"
@@ -50,7 +44,10 @@
 #include "qtMainInterface/sideWidgets/qtRobot.hpp"
 #include "qtMainInterface/sideWidgets/qtUtil.hpp"
 
-#endif
+// TODO set buttons using const char
+//#include "qtMainInterface/images/start.hpp"
+//#include "qtMainInterface/images/pause.hpp"
+//#include "qtMainInterface/images/stop.hpp"
 
 QT_BEGIN_NAMESPACE
 
@@ -66,7 +63,13 @@ public:
     QAction *actionOpenScenario;
 		QAction	*actionRobotForm;
 		QAction	*actionLocalPathGroups;
+  
     QAction *actionOpen;
+    QAction *actionLoadInterfaceParameters;
+    QAction *actionSaveInterfaceParameters;
+    QAction *actionLoadParametersQuick;
+    QAction *actionSaveParametersQuick;
+  
     QAction *actionSaveScenario;
     QAction *actionNameOfEnv;
     QAction *actionSaveGraph;
@@ -114,7 +117,10 @@ public:
     QSpinBox *spinBoxJointToDraw;
     QWidget *widgetMobCamButton;
     QHBoxLayout *horizontalLayout_5;
+  
     QPushButton *pushButtonMobileCamera;
+    QPushButton *pushButtonChangeCamera;
+  
     QSpacerItem *horizontalSpacer;
     QGroupBox *threeDGroupBox;
     QGridLayout *gridLayout_13;
@@ -149,7 +155,9 @@ public:
     QSlider *horizontalSliderLightZ;
     QWidget *widgetLightButtons;
     QVBoxLayout *verticalLayout_22;
+    
     QPushButton *pushButtonRestoreLight;
+  
     QCheckBox *checkBoxDrawLightSource;
     QGroupBox *groupBox;
     QGridLayout *gridLayout_41;
@@ -253,7 +261,10 @@ public:
 //				actionLocalPathGroups->setObjectName(QString::fromUtf8("actionLocalPathGroups"));
 			
         actionOpen = new QAction(MainWindow);
-        actionOpen->setObjectName(QString::fromUtf8("actionOpen"));
+        actionLoadInterfaceParameters = new QAction(MainWindow);
+        actionSaveInterfaceParameters = new QAction(MainWindow);
+        actionLoadParametersQuick = new QAction(MainWindow);
+        actionSaveParametersQuick = new QAction(MainWindow);
 			
         actionSaveScenario = new QAction(MainWindow);
         actionSaveScenario->setObjectName(QString::fromUtf8("actionSaveScenario"));
@@ -477,8 +488,11 @@ public:
 			
         pushButtonMobileCamera = new QPushButton(widgetMobCamButton);
         pushButtonMobileCamera->setObjectName(QString::fromUtf8("pushButtonMobileCamera"));
-
         horizontalLayout_5->addWidget(pushButtonMobileCamera);
+      
+        pushButtonChangeCamera = new QPushButton(widgetMobCamButton);
+        pushButtonChangeCamera->setObjectName(QString::fromUtf8("pushButtonChangeCamera"));
+        horizontalLayout_5->addWidget(pushButtonChangeCamera);
 
         horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -648,9 +662,9 @@ public:
         verticalLayout_22->setSpacing(6);
         verticalLayout_22->setContentsMargins(11, 11, 11, 11);
         verticalLayout_22->setObjectName(QString::fromUtf8("verticalLayout_22"));
+      
         pushButtonRestoreLight = new QPushButton(widgetLightButtons);
         pushButtonRestoreLight->setObjectName(QString::fromUtf8("pushButtonRestoreLight"));
-
         verticalLayout_22->addWidget(pushButtonRestoreLight);
 
         checkBoxDrawLightSource = new QCheckBox(widgetLightButtons);
@@ -1038,6 +1052,12 @@ public:
 			
         menuFile->addAction(actionOpen);
         menuFile->addAction(actionCloseEnvironement);
+      
+        menuFile->addAction(actionLoadInterfaceParameters);
+        menuFile->addAction(actionLoadParametersQuick);
+        menuFile->addAction(actionSaveParametersQuick);
+        menuFile->addAction(actionSaveInterfaceParameters);
+      
         menuFile->addSeparator();
         menuFile->addAction(actionQuit);
 			
@@ -1080,9 +1100,16 @@ public:
         actionCloseEnvironement->setText(QApplication::translate("MainWindow", "Close", 0, QApplication::UnicodeUTF8));
         actionRobotForm->setText(QApplication::translate("MainWindow", "Robot Forms", 0, QApplication::UnicodeUTF8));
 //				actionLocalPathGroups->setText(QApplication::translate("MainWindow", "Local Path Groups", 0, QApplication::UnicodeUTF8));
-				actionOpenScenario->setText(QApplication::translate("MainWindow", "Load Scenario", 0, QApplication::UnicodeUTF8));
-				actionOpen->setText(QApplication::translate("MainWindow", "Open", 0, QApplication::UnicodeUTF8));
+				actionOpenScenario->setText(QApplication::translate("MainWindow", "Load Scenario", 0, QApplication::UnicodeUTF8));      
         actionSaveScenario->setText(QApplication::translate("MainWindow", "Save Scenario", 0, QApplication::UnicodeUTF8));
+      
+        // File menu
+        actionOpen->setText(QApplication::translate("MainWindow", "Open", 0, QApplication::UnicodeUTF8));
+        actionLoadInterfaceParameters->setText(QApplication::translate("MainWindow", "Load Session...", 0, QApplication::UnicodeUTF8));
+        actionLoadParametersQuick->setText(QApplication::translate("MainWindow", "Load Last Saved", 0, QApplication::UnicodeUTF8));
+        actionSaveInterfaceParameters->setText(QApplication::translate("MainWindow", "Save As...", 0, QApplication::UnicodeUTF8));
+        actionSaveParametersQuick->setText(QApplication::translate("MainWindow", "Save", 0, QApplication::UnicodeUTF8));
+      
         actionNameOfEnv->setText(QApplication::translate("MainWindow", "NameOfEnv", 0, QApplication::UnicodeUTF8));
         actionSaveGraph->setText(QApplication::translate("MainWindow", "Save", 0, QApplication::UnicodeUTF8));
         actionLoadGraph->setText(QApplication::translate("MainWindow", "Load Graph", 0, QApplication::UnicodeUTF8));
@@ -1105,6 +1132,8 @@ public:
         checkBoxDrawDebug->setText(QApplication::translate("MainWindow", "Draw Debug", 0, QApplication::UnicodeUTF8));
         checkBoxDrawTrajVector->setText(QApplication::translate("MainWindow", "Draw Traj Vector", 0, QApplication::UnicodeUTF8));
         pushButtonMobileCamera->setText(QApplication::translate("MainWindow", "Mob. Camera", 0, QApplication::UnicodeUTF8));
+        pushButtonChangeCamera->setText(QApplication::translate("MainWindow", "Change Camera", 0, QApplication::UnicodeUTF8));
+        
         threeDGroupBox->setTitle(QApplication::translate("MainWindow", "3D Model", 0, QApplication::UnicodeUTF8));
         checkBoxBB->setText(QApplication::translate("MainWindow", "Bounding Boxes", 0, QApplication::UnicodeUTF8));
         checkBoxGhosts->setText(QApplication::translate("MainWindow", "Ghosts", 0, QApplication::UnicodeUTF8));

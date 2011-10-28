@@ -19,7 +19,8 @@ public:
     BasicPlot(QWidget* = NULL);
     int getPlotSize() { return PLOT_SIZE; }
     void setData(std::vector<double> data);
-//    void rescale();
+  
+protected:
 
 private:
     void alignScales();

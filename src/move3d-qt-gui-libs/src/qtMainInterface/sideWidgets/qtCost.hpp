@@ -95,6 +95,14 @@ private:
 #ifdef USE_QWT
 	BasicPlotWindow *plot;
 #endif
+  
+#ifdef HRI_COSTSPACE
+	HricsWidget* m_tabHri;
+  OtpWidget* m_tabOtp;
+#endif
+#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
+  ReplanningWidget* m_tabReplan;
+#endif
 	
 };
 

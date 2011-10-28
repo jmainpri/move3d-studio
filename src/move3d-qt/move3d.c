@@ -42,8 +42,6 @@
 #endif
 #endif
 
-
-
 #include "../graphic/proto/g3d_glut.hpp"
 
 #if defined( CXX_PLANNER ) || defined( MOVE3D_CORE ) 
@@ -57,6 +55,9 @@
 
 #include <iostream>
 using namespace std;
+
+// External varialbe handled when compiled with move3d studio
+bool move3d_sudio_load_settings = false;
 
 static int FILTER_TO_BE_SET_ACTIVE = FALSE;
 //extern void g3d_create_main_form(void);
@@ -160,6 +161,9 @@ int mainMhp(int argc, char ** argv) {
         use();
         return 0;
       }
+    } else if (strcmp(argv[i], "-setgui") == 0) {
+      ++i;
+      move3d_sudio_load_settings = true;
     }
 #ifdef P3D_COLLISION_CHECKING
 		else if (strcmp(argv[i], "-o") == 0) {

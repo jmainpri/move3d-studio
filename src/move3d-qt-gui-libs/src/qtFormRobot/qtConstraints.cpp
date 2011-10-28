@@ -15,6 +15,8 @@
 #include "P3d-pkg.h"
 #include "Localpath-pkg.h"
 
+//////////////////////////////////////////////////////////////////////////////
+
 ConstraintsWidget::ConstraintsWidget(QWidget *parent, FormRobot* fr )
 {
   m_currentRobot = fr->getRobot()->getRobotStruct();

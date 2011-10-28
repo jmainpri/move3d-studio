@@ -94,7 +94,8 @@ void RobotWidget::initModel()
 	connect(m_ui->pushButtonSetObjectToCarry,SIGNAL(clicked()),this,SLOT(SetObjectToCarry()));
 
 	//Traj from via point
-	connect(m_ui->pushButtonLaunch,SIGNAL(clicked()),this,SLOT(launch()));
+	connect(m_ui->pushButtonLaunchSoft,SIGNAL(clicked()),this,SLOT(makeSoftmotionTraj()));
+  connect(m_ui->pushButtonLaunchNormal,SIGNAL(clicked()),this,SLOT(makeNormalTraj()));
 	connect(m_ui->pushButtonSaveConf,SIGNAL(clicked()),this,SLOT(saveConfig()));
 	connect(m_ui->pushButtonClearTraj,SIGNAL(clicked()),this,SLOT(clearConfigs()));
 	connect(m_ui->pushButtonDeleteConf,SIGNAL(clicked()),this,SLOT(deleteConfig()));
@@ -753,7 +754,6 @@ void RobotWidget::isDebugManip(bool value)
   }
 }
 
-
 void RobotWidget::resetManipulationData()
 {
   cout << "-----------------------------------------------------" << endl;
@@ -978,10 +978,27 @@ void RobotWidget::initTrajectoryFromConfig()
   on_pushButtonrefrech_clicked();
 }
 
-void RobotWidget::launch()
+void RobotWidget::makeSoftmotionTraj()
 {
 	m_mainWindow->isPlanning();
 	emit(selectedPlanner(QString("makeTrajFromViaPoints")));
+}
+
+void RobotWidget::makeNormalTraj()
+{
+  Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+  API::Trajectory traj(robot);
+  
+  for(int i=(robot->getRobotStruct()->nconf-1) ; i>0; i--) 
+  {
+    std::tr1::shared_ptr<Configuration> q(new Configuration(robot,robot->getRobotStruct()->conf[i]->q));
+    traj.push_back(q);
+  }
+  
+  if(traj.replaceP3dTraj())
+    cout << "Traj generated successfully" << endl;
+  else
+    cout << "Error : replacing p3d traj" << endl;
 }
 
 void RobotWidget::saveConfig()

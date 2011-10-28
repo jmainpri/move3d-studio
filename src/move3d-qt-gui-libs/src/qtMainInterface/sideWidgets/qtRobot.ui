@@ -32,7 +32,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <property name="usesScrollButtons">
       <bool>true</bool>
@@ -845,9 +845,16 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pushButtonLaunch">
+                 <widget class="QPushButton" name="pushButtonLaunchNormal">
                   <property name="text">
-                   <string>Launch</string>
+                   <string>Launch Normal</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="pushButtonLaunchSoft">
+                  <property name="text">
+                   <string>Launch Softmotion</string>
                   </property>
                  </widget>
                 </item>

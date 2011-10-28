@@ -26,7 +26,6 @@ void BasicPlotWindow::changeEvent(QEvent *e)
     }
 }
 
-
 void BasicPlotWindow::setPlot(QwtPlot* plot)
 {
     m_ui->plot = plot;

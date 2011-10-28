@@ -23,24 +23,24 @@ qtGLWindow::qtGLWindow()
 	g3d_set_win_bgcolor(g3d_get_cur_states(), XYZ_ENV->background_color[0], XYZ_ENV->background_color[1], XYZ_ENV->background_color[2]);
 	
 	glWidget->setWinSize(win->vs.size);
-
+  
 	/*xSlider = createSlider();
-	ySlider = createSlider();
-	zSlider = createSlider();
-	zoom = createSlider();*/
-
+   ySlider = createSlider();
+   zSlider = createSlider();
+   zoom = createSlider();*/
+  
 	createCheckBoxes();
-
+  
 	opfloor->setChecked(true);
 	optiles->setChecked(true);
 	walls->setChecked(true);
-
+  
 	QHBoxLayout *mainLayout = new QHBoxLayout;
 	mainLayout->addWidget(glWidget);
-
+  
 	QPushButton* saveView = new QPushButton("Save View");
 	connect(saveView,SIGNAL(clicked()),glWidget, SLOT(saveView()));
-
+  
 	QBoxLayout* box = new QBoxLayout(QBoxLayout::TopToBottom);
 	box->addWidget(vGhost);
 	box->addWidget(vBb);
@@ -48,19 +48,19 @@ qtGLWindow::qtGLWindow()
 	box->addWidget(optiles);
 	box->addWidget(walls);
 	box->addWidget(shadows);
-
+  
 	box->addWidget(saveView);
-
+  
 	mainLayout->addLayout(box,0);
-
+  
 	setLayout(mainLayout);
-
+  
 	/*xSlider->setValue(15 * 160);
-	ySlider->setValue(345 * 160);
-	zSlider->setValue(0 * 160);
-	zSlider->setValue(10);*/
+   ySlider->setValue(345 * 160);
+   zSlider->setValue(0 * 160);
+   zSlider->setValue(10);*/
 	setWindowTitle(tr("Move3D"));
-//	setSizeIncrement(800,600);
+  //	setSizeIncrement(800,600);
 }
 
 QSlider *qtGLWindow::createSlider()
@@ -77,33 +77,33 @@ QSlider *qtGLWindow::createSlider()
 void qtGLWindow::createCheckBoxes()
 {
 	QString str;
-
+  
 	str = "Ghost";
 	vGhost = new QCheckBox(str);
 	connect(vGhost, SIGNAL(toggled(bool)), this , SLOT(setBoolGhost(bool)), Qt::DirectConnection);
 	connect(vGhost, SIGNAL(toggled(bool)), glWidget , SLOT(updateGL()));
-
+  
 	str = "Bb";
 	vBb = new QCheckBox(str);
 	connect(vBb, SIGNAL(toggled(bool)), this , SLOT(setBoolBb(bool)), Qt::DirectConnection);
 	connect(vBb, SIGNAL(toggled(bool)), glWidget , SLOT(updateGL()));
-//	vBb->setChecked(ENV.getBool(p));
-
+  //	vBb->setChecked(ENV.getBool(p));
+  
 	str = "Floor";
 	opfloor = new QCheckBox(str);
 	connect(opfloor, SIGNAL(toggled(bool)), this , SLOT(setBoolFloor(bool)), Qt::DirectConnection);
 	connect(opfloor, SIGNAL(toggled(bool)), glWidget , SLOT(updateGL()));
-
+  
 	str = "Tiles";
 	optiles = new QCheckBox(str);
 	connect(optiles, SIGNAL(toggled(bool)), this , SLOT(setBoolTiles(bool)), Qt::DirectConnection);
 	connect(optiles, SIGNAL(toggled(bool)), glWidget , SLOT(updateGL()));
-
+  
 	str = "Walls";
 	walls = new QCheckBox(str);
 	connect(walls, SIGNAL(toggled(bool)), this , SLOT(setBoolWalls(bool)), Qt::DirectConnection);
 	connect(walls, SIGNAL(toggled(bool)), glWidget , SLOT(updateGL()));
-
+  
 	str = "Shadows";
 	shadows = new QCheckBox(str);
 	connect(shadows, SIGNAL(toggled(bool)), this , SLOT(setBoolShadows(bool)), Qt::DirectConnection);
@@ -112,33 +112,33 @@ void qtGLWindow::createCheckBoxes()
 
 void qtGLWindow::setBoolGhost(bool value)
 {
-        win->vs.GHOST = value;
+  win->vs.GHOST = value;
 }
 
 void qtGLWindow::setBoolBb(bool value)
 {
-        win->vs.BB = value;
+  win->vs.BB = value;
 }
 
 
 void qtGLWindow::setBoolFloor(bool value)
 {
-        win->vs.displayFloor = value;
+  win->vs.displayFloor = value;
 }
 
 
 void qtGLWindow::setBoolTiles(bool value)
 {
-        win->vs.displayTiles = value;
+  win->vs.displayTiles = value;
 }
 
 
 void qtGLWindow::setBoolWalls(bool value)
 {
-        win->vs.displayWalls = value;
+  win->vs.displayWalls = value;
 }
 
 void qtGLWindow::setBoolShadows(bool value)
 {
-        win->vs.displayShadows = value;
+  win->vs.displayShadows = value;
 }

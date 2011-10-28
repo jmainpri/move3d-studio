@@ -12,6 +12,7 @@
 #include "../p3d/env.hpp"
 #include "planner/planEnvironment.hpp"
 #include <algorithm>
+
 //
 //  Initialize main window
 //

@@ -24,6 +24,7 @@ GLWidget* openGlWidget;
 //#endif
 
 extern int mainMhp(int argc, char** argv);
+extern bool move3d_sudio_load_settings;
 
 using namespace std;
 
@@ -104,8 +105,6 @@ int Main_threads::run(int argc, char** argv)
 		&w, SLOT(drawAllWinActive()));
 	//  w.showMaximized();
 
-
-	
  	QRect g = QApplication::desktop()->screenGeometry();
  	cout << " x = " << g.x() << " y = " << g.y() << endl;
  	cout << " width = " << g.width() << " height = " << g.height() << endl;
@@ -114,6 +113,11 @@ int Main_threads::run(int argc, char** argv)
  	g_window.setWidth( g.width() );
  	g_window.setHeight( 0.707*g.height() ); // sqrt(2) / 2
  	g_window.moveTo( 0, 0 );
+  
+  if( move3d_sudio_load_settings )
+  {
+    w.loadParametersQuick();
+  }
 	
  	w.setGeometry( g_window );
 	

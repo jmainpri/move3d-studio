@@ -23,7 +23,7 @@
       <bool>true</bool>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>4</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>
@@ -58,8 +58,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>464</width>
-            <height>811</height>
+            <width>468</width>
+            <height>936</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -517,19 +517,30 @@
       <attribute name="title">
        <string>OTP</string>
       </attribute>
-      <layout class="QHBoxLayout" name="otpLayout"/>
+      <layout class="QHBoxLayout" name="otpLayout">
+       <property name="margin">
+        <number>0</number>
+       </property>
+      </layout>
      </widget>
      <widget class="QWidget" name="Replanning">
       <attribute name="title">
        <string>Replanning</string>
       </attribute>
-      <layout class="QVBoxLayout" name="replanningLayout"/>
+      <layout class="QVBoxLayout" name="replanningLayout">
+       <property name="margin">
+        <number>0</number>
+       </property>
+      </layout>
      </widget>
      <widget class="QWidget" name="DistanceField">
       <attribute name="title">
        <string>Distance Field</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
+       <property name="margin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="DistFieldWidget" name="tabDistField" native="true"/>
        </item>
