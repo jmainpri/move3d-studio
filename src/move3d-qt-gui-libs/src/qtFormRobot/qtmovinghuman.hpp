@@ -33,7 +33,6 @@ private:
     QtShiva::SpinBoxSliderConnector*	m_k_rz;
 
 private slots:
-    void on_MovingHuman_destroyed();
     void updateMainWindow(double );
 };
 

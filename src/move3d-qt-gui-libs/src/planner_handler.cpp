@@ -292,12 +292,16 @@ void qt_handover()
 
 void qtRealTimeOtp()
 {
-    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getInputs();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->setRobotPos();
     int tmp = PlanEnv->getInt(PlanParam::env_timeShow);
     PlanEnv->setInt(PlanParam::env_timeShow,0);
     ENV.setBool(Env::drawGraph,false);
     dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid()->setAsNotSorted();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->clearRealTreajectory();
     PlanEnv->setBool(PlanParam::env_drawHumanModel,true);
+    PlanEnv->setBool(PlanParam::env_showText,false);
+    bool first = true;
     while (PlanEnv->getBool(PlanParam::env_realTime))
     {
         dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
@@ -306,19 +310,35 @@ void qtRealTimeOtp()
         pos[0] = PlanEnv->getDouble(PlanParam::env_futurX);
         pos[1] = PlanEnv->getDouble(PlanParam::env_futurY);
         pos[2] = PlanEnv->getDouble(PlanParam::env_futurRZ);
+
+        Eigen::Vector2d v(pos[0],pos[1]);
+        v[0] = pos[0];
+        v[1] = pos[1];
+        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->addVectorToRealTreajectory(v);
+
         dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->setInputs(pos,
                                                                            dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getRobotPos(),
                                                                            PlanEnv->getBool(PlanParam::env_isStanding),
                                                                            PlanEnv->getDouble(PlanParam::env_objectNessecity));
 
-        if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->newComputeOTP())
+
+        if (!dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->isTheRealNearThePredicted(0.2) || first)
         {
-            dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->showBestConf();
-            g3d_draw_allwin_active();
-            ENV.setBool(Env::drawOTPTraj,true);
+            first = false;
+            dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->clearRealTreajectory();
+
+            if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->newComputeOTP())
+            {
+                dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->showBestConf();
+
+                ENV.setBool(Env::drawOTPTraj,true);
+            }
         }
+        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->showBestConf();
+        g3d_draw_allwin_active();
     }
 
+    PlanEnv->setBool(PlanParam::env_showText,true);
     PlanEnv->setBool(PlanParam::env_drawHumanModel,false);
     ENV.setBool(Env::drawGraph,true);
     PlanEnv->setInt(PlanParam::env_timeShow,tmp);

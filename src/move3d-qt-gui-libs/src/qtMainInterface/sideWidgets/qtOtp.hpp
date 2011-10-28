@@ -45,6 +45,7 @@ public:
 
 private slots:
 
+        void on_pushButtonTestTraj_clicked();
         void on_pushButton_toggled(bool checked);
         void on_pushButtonTestCompute_clicked();
         void on_radioButtonOldHuman_toggled(bool checked);

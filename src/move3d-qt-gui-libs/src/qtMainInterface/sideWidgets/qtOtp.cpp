@@ -677,3 +677,18 @@ void OtpWidget::on_pushButton_toggled(bool checked)
         }
     }
 }
+
+void OtpWidget::on_pushButtonTestTraj_clicked()
+{
+    if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
+    {
+            if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->isTheRealNearThePredicted(0.2))
+            {
+                cout << "the trajectories are almost the same" << endl;
+            }
+            else
+            {
+                cout << "the trajectories are too different" << endl;
+            }
+    }
+}

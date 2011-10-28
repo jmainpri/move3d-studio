@@ -56,10 +56,6 @@ void MovingHuman::changeEvent(QEvent *e)
     }
 }
 
-void MovingHuman::on_MovingHuman_destroyed()
-{
-    PlanEnv->setBool(PlanParam::env_realTime,false);
-}
 
 
 void MovingHuman::updateMainWindow(double)
