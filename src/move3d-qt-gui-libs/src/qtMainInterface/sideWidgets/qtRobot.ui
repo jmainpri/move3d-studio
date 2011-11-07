@@ -79,8 +79,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>482</width>
-            <height>1128</height>
+            <width>483</width>
+            <height>1170</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -595,7 +595,7 @@
             <x>0</x>
             <y>0</y>
             <width>498</width>
-            <height>697</height>
+            <height>704</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -630,6 +630,26 @@
                       <property name="text">
                        <string>Manipulation</string>
                       </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="widget_11" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_10">
+                       <item>
+                        <widget class="QPushButton" name="pushButtonSetStart">
+                         <property name="text">
+                          <string>Start</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="pushButtonSetGoal">
+                         <property name="text">
+                          <string>Goal</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
                      </widget>
                     </item>
                     <item>

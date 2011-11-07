@@ -499,6 +499,9 @@ void RobotWidget::initManipulation()
   connect(m_ui->checkBoxIsDebugManip, SIGNAL(toggled(bool)),              this,SLOT(isDebugManip(bool)));
   connect(m_ui->checkBoxIsCartesianMode, SIGNAL(toggled(bool)),           this,SLOT(isCartesianMode(bool)));
   
+  connect(m_ui->pushButtonSetStart,SIGNAL(clicked()), this,SLOT(setRobotToInitConfig()));
+  connect(m_ui->pushButtonSetGoal,SIGNAL(clicked()), this,SLOT(setRobotToGoalConfig()));
+  
   connect(m_ui->pushButtonResetManipulationData,SIGNAL(clicked()),        this,SLOT(resetManipulationData()));
   connect(m_ui->pushButtonRunTest,SIGNAL(clicked()),                      this,SLOT(runManipTest()));
 	connect(m_ui->pushButtonArmFree,SIGNAL(clicked()),                      this,SLOT(armFree()));
@@ -540,6 +543,30 @@ void RobotWidget::initObjectSupportAndPlacementCombo()
 	connect(m_ui->comboBoxSupportName, SIGNAL(currentIndexChanged(int)),this, SLOT(supportNameChanged(int)));
 }
 
+void RobotWidget::setRobotToInitConfig()
+{
+  if( !global_manipPlanTest )
+  {
+    cout << "global_manipPlanTest is not initialized!!!" << endl;
+    return;
+  }
+  
+  cout << "Set to qInit configuration" << endl;
+  qInit->getRobot()->setAndUpdate( *qInit );
+}
+
+void RobotWidget::setRobotToGoalConfig()
+{
+  if( !global_manipPlanTest )
+  {
+    cout << "global_manipPlanTest is not initialized!!!" << endl;
+    return;
+  }
+  
+  cout << "Set to qGoal configuration" << endl;
+  qGoal->getRobot()->setAndUpdate( *qGoal );
+}
+
 std::string RobotWidget::getNameOfFreeFlyerFromIndex(int id)
 {
   string name("");
@@ -567,10 +594,15 @@ void RobotWidget::objectNameChanged(int id)
 {
   string name = getNameOfFreeFlyerFromIndex( id );
  
-  if( name == "" || global_manipPlanTest == NULL )
+  if( name == "")
   {
-    cout << "Object doesn't exist or global_manipPlanTest is not set" << endl;
+    cout << "Object doesn't exist" << endl;
     return;
+  }
+  
+  if (!global_manipPlanTest) 
+  {
+    resetManipulationData();
   }
   
   if( name == "No Object" )
@@ -587,10 +619,15 @@ void RobotWidget::placementNameChanged(int id)
 {
   string name = getNameOfFreeFlyerFromIndex( id );
   
-  if( name == "" || global_manipPlanTest == NULL )
+  if( name == "")
   {
-    cout << "Placement doesn't exist or global_manipPlanTest is not set" << endl;
+    cout << "Placement doesn't exist" << endl;
     return;
+  }
+  
+  if (!global_manipPlanTest) 
+  {
+    resetManipulationData();
   }
   
   if( name == "No Object" )
@@ -607,10 +644,15 @@ void RobotWidget::supportNameChanged(int id)
 {
   string name = getNameOfFreeFlyerFromIndex( id );
   
-  if( name == "" || global_manipPlanTest == NULL )
+  if( name == "")
   {
-    cout << "Support doesn't exist or global_manipPlanTest is not set" << endl;
+    cout << "Support doesn't exist" << endl;
     return;
+  }
+  
+  if (!global_manipPlanTest) 
+  {
+    resetManipulationData();
   }
   
   if( name == "No Object" )
@@ -680,6 +722,9 @@ namespace Manip
       case Manip::armFree :
       {
         cout << "Manip::armFree" << endl;
+        global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
+        global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
+        
         global_manipPlanTest->runTest(1);
       }
         break;
@@ -687,6 +732,9 @@ namespace Manip
       case Manip::pickGoto :
       {
         cout << "Manip::pickGoto" << endl;
+        global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
+        global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
+        
         global_manipPlanTest->runTest(2);
       }
         break;
@@ -791,9 +839,6 @@ namespace Manip
 #endif
 
 
-
-
-
 // ------------------------------------------------------------------------------
 // All buttons callbacks are defined here
 // for manipulation planning 
@@ -893,7 +938,6 @@ void RobotWidget::resetManipulationData()
   
   global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
   
-  m_mainWindow->setJointToDraw(28);
   m_mainWindow->drawAllWinActive();
 }
 
@@ -1016,8 +1060,9 @@ void RobotWidget::runManipTest()
     resetManipulationData();
   }
   
-  m_mainWindow->isPlanning();
   Manip::currentIdTest = m_ui->spinBoxManipTestId->value();
+  m_mainWindow->isPlanning();
+  
   global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
   
   emit(selectedPlanner(QString("ManipCurrentTest")));
@@ -1032,7 +1077,7 @@ void RobotWidget::loadWorkspace()
   
   std::string fileName( "./statFiles/workspace.csv" );
  	cout << "Loading file : " << fileName << endl;
-  ;
+  
   global_manipPlanTest->readWorkspaceFromFile( fileName );
 }
 #endif // MULTILOCALPATH

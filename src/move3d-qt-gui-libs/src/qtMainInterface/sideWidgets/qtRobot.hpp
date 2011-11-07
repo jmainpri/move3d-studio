@@ -86,6 +86,9 @@ private slots:
 	
 	// Manipulation -----------------------
 #ifdef MULTILOCALPATH
+  void setRobotToInitConfig();
+  void setRobotToGoalConfig();
+  
   void objectNameChanged(int id);
   void placementNameChanged(int id);
   void supportNameChanged(int id);

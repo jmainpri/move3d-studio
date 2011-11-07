@@ -119,6 +119,8 @@ int Main_threads::run(int argc, char** argv)
     w.loadParametersQuick();
   }
 	
+  w.refreshConstraintedDoFs();
+  
  	w.setGeometry( g_window );
 	
 	w.show();

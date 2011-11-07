@@ -132,6 +132,12 @@ GLWidget* MainWindow::getOpenGL()
 	return m_ui->OpenGL; 
 }
 
+//! Refresh sliders
+void MainWindow::refreshConstraintedDoFs()
+{
+  m_ui->tabRobot->getMoveRobot()->refreshConstraintedDoFs();
+}
+
 //! Return the MoveRobot widget
 MoveRobot* MainWindow::getMoveRobot()
 {

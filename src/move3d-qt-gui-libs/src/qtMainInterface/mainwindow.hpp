@@ -61,7 +61,7 @@ public:
 	GLWidget*		getOpenGL();
 	MoveRobot*	getMoveRobot();
 	
-	public slots:
+public slots:
 	void drawAllWinActive();
 	void isPlanning();
 	void planningFinished();
@@ -82,6 +82,7 @@ public:
 	void setJointToDraw(int joint);
 	
 	void setCurrentTraj(p3d_traj* traj);
+  void refreshConstraintedDoFs();
 
 signals:
   void runClicked();
