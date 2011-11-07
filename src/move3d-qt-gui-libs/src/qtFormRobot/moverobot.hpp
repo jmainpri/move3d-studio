@@ -222,6 +222,11 @@ public:
 	 * Sets the constraints
 	 */
 	void setRobotConstraintedDof(Robot* ptrRob);
+  
+  /**
+   * Refresh all constrainted DoFs
+   */
+  void refreshConstraintedDoFs();
 	
 protected:
 	void changeEvent(QEvent *e);

@@ -186,6 +186,14 @@ void MoveRobot::updateAllRobotInitPos()
 	}
 }
 
+void MoveRobot::refreshConstraintedDoFs()
+{
+  for(int i=0;i<int(mRobots.size());i++)
+	{
+		mRobots[i]->resetConstraintedDoFs();
+	}
+}
+
 void MoveRobot::changeEvent(QEvent *e)
 {
 	QWidget::changeEvent(e);
