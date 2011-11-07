@@ -22,6 +22,8 @@
 #include <QMessageBox>
 #include <QtNetwork/QNetworkProxy>
 
+#include <libmove3d/hri/hri.h>
+
 using namespace std;
 
 QSemaphore* sem;
