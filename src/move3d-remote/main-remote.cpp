@@ -121,6 +121,9 @@ int Simple_threads::run(int argc, char** argv)
   
   mainMhp(argc, argv);
   
+  // Init agents for display functions
+  GLOBAL_AGENTS = hri_create_agents();
+  
   // Creates the wrapper to the project
   // Be carefull to initialize in the right thread
   global_Project = new Project(new Scene(XYZ_ENV));
