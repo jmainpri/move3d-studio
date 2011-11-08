@@ -1136,7 +1136,7 @@ void RobotWidget::saveConfig()
 	p3d_rob* robot = p3d_get_robot_by_name(global_ActiveRobotName.c_str());
 	configPt q = p3d_get_robot_config( robot );
 
-	p3d_set_new_robot_config( name.c_str() , q, NULL, config);
+        p3d_set_new_robot_config(robot, name.c_str() , q, NULL, config);
 	m_ui->spinBoxNavigate->setMaximum(robot->nconf - 1);
 }
 
@@ -1192,10 +1192,10 @@ void RobotWidget::on_pushButtonPlanNavigation_clicked()
 {
     cout << "Navigation softmotion" << endl;
 
-//if (!global_manipPlanTest)
-//{
-//resetManipulationData();
-//}
+if (!global_manipPlanTest)
+{
+    resetManipulationData();
+}
 
 //Manip::Phase = Manip::armFree;
 m_mainWindow->isPlanning();

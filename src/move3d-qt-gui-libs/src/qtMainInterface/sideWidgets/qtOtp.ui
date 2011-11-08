@@ -26,9 +26,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>0</y>
+        <y>-425</y>
         <width>309</width>
-        <height>2005</height>
+        <height>2038</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -698,6 +698,13 @@
             </property>
             <property name="checkable">
              <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButtonSoftMotion">
+            <property name="text">
+             <string>Play soft motion traj</string>
             </property>
            </widget>
           </item>

@@ -342,6 +342,7 @@ void OtpWidget::on_pushButtonInit_clicked()
     m_ui->spinBoxYCell->setMaximum(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid()->getNbCellY()-1);
 
     dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->changeHumanByName("HERAKLES_HUMAN1");
+    cout << "WARNING: in order to make the soft work, the NAME HERAKLES_HUMAN1 has been hard coded, you can change it by using changeHumanByName(str)" << endl;
 
     if (!dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getReachability())
     {
@@ -691,4 +692,9 @@ void OtpWidget::on_pushButtonTestTraj_clicked()
                 cout << "the trajectories are too different" << endl;
             }
     }
+}
+
+void OtpWidget::on_pushButtonSoftMotion_clicked()
+{
+    PlanEnv->setBool(PlanParam::env_softMotionTraj,!PlanEnv->getBool(PlanParam::env_softMotionTraj));
 }

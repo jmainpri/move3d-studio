@@ -988,11 +988,11 @@ static void CB_new_config_obj(FL_OBJECT *ob, long arg)
   /* Ajout de la configuration */
   switch (fl_get_button_numb(ob)){
     case 1 : { // bouton de gauche : Ajoute en debut de liste
-      p3d_set_new_robot_config(name, q, robotPt->ikSol, NULL); /* Ajoute en debut de liste */
+      p3d_set_new_robot_config(robotPt, name, q, robotPt->ikSol, NULL); /* Ajoute en debut de liste */
       num = 1;
     } break;
     case 3 : { // bouton de droite : Insertion
-      p3d_set_new_robot_config(name, q, robotPt->ikSol, robotPt->confcur);
+      p3d_set_new_robot_config(robotPt, name, q, robotPt->ikSol, robotPt->confcur);
       num = fl_get_choice(ROBOTS_FORM[ir].CONFIG_OBJ) + 1;
     } break;
   }
