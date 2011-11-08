@@ -156,6 +156,8 @@ public:
 	 */
 	void addTraj( std::string& name, p3d_traj* trajPt );
   void addConfig( std::string& name, configPt q );
+  
+  void setConfAndTrajFromManipTest();
 	
 	/**
 	 * Function called to set the current trajectory

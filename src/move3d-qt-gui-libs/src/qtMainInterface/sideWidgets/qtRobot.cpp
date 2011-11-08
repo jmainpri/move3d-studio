@@ -426,9 +426,8 @@ void RobotWidget::ReleaseObject()
 
 void RobotWidget::printCurrentPos()
 {
-	Robot currRobot((p3d_rob*) p3d_get_desc_curid(P3D_ROBOT));
-	shared_ptr<Configuration> q = currRobot.getCurrentPos();
-	q->print(true );
+	Robot* currRobot = global_Project->getActiveScene()->getActiveRobot();
+	currRobot->getCurrentPos()->print(true);
 }
 
 #ifdef LIGHT_PLANNER
@@ -455,8 +454,15 @@ void RobotWidget::switchFKIK()
 
 void RobotWidget::printPQPColPair()
 {
-  cout << "print collision pair:" << endl;
-	p3d_print_col_pair();
+  Robot* currRobot = global_Project->getActiveScene()->getActiveRobot();
+  
+  if(  currRobot->getCurrentPos()->isInCollision() )
+  {
+    cout << "print collision pair:" << endl;
+    p3d_print_col_pair();
+  }
+  else
+    cout << "not colliding" << endl;
 }
 /*void RobotWidget::initVoxelCollisionChecker()
  {
@@ -492,23 +498,230 @@ void RobotWidget::printPQPColPair()
  }*/
 
 // ------------------------------------------------------------------------------
-// Arm manipulations
+// ------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
+// ARM MANIPULATION GUI
+// ------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
+
+
+// ------------------------------------------------------------------------------
+// The Manip namespace holds the function
+// to call the Manipulation Planner
+// ------------------------------------------------------------------------------
+#ifdef MULTILOCALPATH
+namespace Manip
+{
+  ManipulationPlanner* manipulation = NULL;
+  
+  bool firstRun = true;
+  bool isCartesianMode = false;
+  
+  int currentIdTest=0;
+  
+  MANIPULATION_TASK_TYPE_STR Phase;
+  
+  void runCurrentTest()
+  {
+    global_manipPlanTest->runTest(currentIdTest);
+  }
+  
+  //ARM_FREE  /*!< move the arm from a free configuration (in the air) to another free configuration */
+  //ARM_PICK_GOTO   /*!< move the arm from a free configuration to a grasping configuration of the object placed on a support */
+  //ARM_TAKE_TO_FREE   /*!< move the arm from a grasping configuration (of the object placed on a support) to a free configuration */
+  //ARM_TAKE_TO_PLACE   /*!< move the arm from a grasping configuration to a configuration with the same grasp but a different object placement */
+  //ARM_PLACE_FROM_FREE  /*!< move the arm from a free configuration to a placement configuration */
+  //ARM_EXTRACT  /*!< move the arm over Z axis to escape from collision */
+  //ARM_ESCAPE_OBJECT  /*!< move the arm to escape from a placed object */
+  
+  //! Main function for launching the manipulation planner
+  //! it is based on the testing class
+  //! it reads the Cartesian mode variable to determine 
+  //! which type of method will be used (it is called from the planner thread)
+  void runManipulation()
+  {
+    p3d_rob* rob =  global_manipPlanTest->getManipulationPlanner()->robot();
+    
+    if(Manip::isCartesianMode)
+    {
+      for(unsigned int i=0; i < rob->armManipulationData->size(); i++) 
+        global_manipPlanTest->getManipulationPlanner()->setArmCartesian(i, true);
+    }
+    else 
+    {
+      for(unsigned int i=0; i < rob->armManipulationData->size(); i++) 
+        global_manipPlanTest->getManipulationPlanner()->setArmCartesian(i, false);
+    }
+    
+    switch (Phase) 
+    {
+      case ARM_FREE :
+      {
+        cout << "ARM_FREE" << endl;
+        global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
+        global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
+        
+        global_manipPlanTest->runTest(1);
+      }
+        break;
+        
+      case ARM_PICK_GOTO :
+      {
+        cout << "ARM_PICK_GOTO" << endl;
+        global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
+        global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
+        
+        global_manipPlanTest->runTest(2);
+      }
+        break;
+        
+      case ARM_TAKE_TO_FREE :
+      {
+        cout << "ARM_TAKE_TO_FREE" << endl;
+        global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
+        global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
+        
+        global_manipPlanTest->runTest(3);
+      }
+      case ARM_TAKE_TO_PLACE :
+      {
+        cout << "ARM_TAKE_TO_PLACE" << endl;
+        global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
+        global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
+        
+        global_manipPlanTest->runTest(4);
+      }
+        break;
+        
+        //      case Manip::rePlanning :
+        //      {
+        //        p3d_vector3 otp;
+        //        otp[0] = 4.250;
+        //        otp[1] = -2.60;
+        //        otp[2] = 1.000;
+        //        
+        //        SM_TRAJ traj;
+        //        
+        //        int id_localpath;
+        //        const double t_rep = 0.0; // in second
+        //        const double tau = 0.0;
+        //        p3d_getQSwitchIDFromMidCVS(tau, t_rep, &id_localpath); 
+        //        
+        //        global_manipPlanTest->getManipulationPlanner()->armReplan(otp,id_localpath,traj);
+        //      }
+        //        break;
+        
+      default:
+        cout << "Manip::Test not implemented" << endl;
+        break;
+    }
+    
+    g3d_draw_allwin_active();
+    ENV.setBool(Env::isRunning,false);
+    cout << "Ends Manipulation Thread" << endl;
+  }
+  
+  
+  //! Main function for launching the manipulation planner
+  //! it is based on the testing class
+  //! it reads the Cartesian mode variable to determine
+  //! which type of method will be used (it is called from the planner thread)
+  void runNavigation()
+  {
+    p3d_rob* rob =  global_manipPlanTest->getManipulationPlanner()->robot();
+    
+    //  if(Manip::isCartesianMode)
+    //  {
+    //    for(unsigned int i=0; i < rob->armManipulationData->size(); i++)
+    //      global_manipPlanTest->getManipulationPlanner()->setArmCartesian(i, true);
+    //  }
+    //  else
+    //  {
+    //    for(unsigned int i=0; i < rob->armManipulationData->size(); i++)
+    //      global_manipPlanTest->getManipulationPlanner()->setArmCartesian(i, false);
+    //  }
+    //
+    //  switch (Phase)
+    //  {
+    //    case Manip::armFree :
+    //    {
+    //      cout << "Manip::armFree" << endl;
+    //      global_manipPlanTest->runTest(1);
+    //    }
+    //      break;
+    //
+    //    case Manip::pickGoto :
+    //    {
+    //      cout << "Manip::pickGoto" << endl;
+    //      global_manipPlanTest->runTest(2);
+    //    }
+    //      break;
+    //
+    //    case Manip::rePlanning :
+    //    {
+    //      p3d_vector3 otp;
+    //      otp[0] = 4.250;
+    //      otp[1] = -2.60;
+    //      otp[2] = 1.000;
+    //
+    //      SM_TRAJ traj;
+    //
+    //      int id_localpath;
+    //      const double t_rep = 0.0; // in second
+    //      const double tau = 0.0;
+    //      p3d_getQSwitchIDFromMidCVS(tau, t_rep, &id_localpath);
+    //
+    //      global_manipPlanTest->getManipulationPlanner()->armReplan(otp,id_localpath,traj);
+    std::vector <MANPIPULATION_TRAJECTORY_CONF_STR> confs;
+    std::vector <SM_TRAJ> smTrajs;
+    
+    global_manipPlanTest->getManipulationPlanner()->planNavigation(rob->ROBOT_POS, rob->ROBOT_GOTO, confs, smTrajs);
+    //    }
+    //      break;
+    //
+    //    default:
+    //      cout << "Manip::Test not implemented" << endl;
+    //      break;
+    //  }
+    //
+    //  g3d_draw_allwin_active();
+    //  ENV.setBool(Env::isRunning,false);
+    cout << "Ends Manipulation Thread" << endl;
+  }
+  
+};
+#endif
+
+// ------------------------------------------------------------------------------
+// The Manip Buttons
+// to call the Manipulation Planner
 // ------------------------------------------------------------------------------
 void RobotWidget::initManipulation()
 {
   connect(m_ui->checkBoxIsDebugManip, SIGNAL(toggled(bool)),              this,SLOT(isDebugManip(bool)));
   connect(m_ui->checkBoxIsCartesianMode, SIGNAL(toggled(bool)),           this,SLOT(isCartesianMode(bool)));
   
-  connect(m_ui->pushButtonSetStart,SIGNAL(clicked()), this,SLOT(setRobotToInitConfig()));
-  connect(m_ui->pushButtonSetGoal,SIGNAL(clicked()), this,SLOT(setRobotToGoalConfig()));
+  connect(m_ui->pushButtonSetStart, SIGNAL(clicked()),                    this,SLOT(setRobotAtInitConfig()));
+  connect(m_ui->pushButtonSetGoal, SIGNAL(clicked()),                     this,SLOT(setRobotAtGoalConfig()));
+  connect(m_ui->pushButtonStoreStart, SIGNAL(clicked()),                  this,SLOT(setInitConfigAtCurrent()));
+  connect(m_ui->pushButtonStoreGoal, SIGNAL(clicked()),                   this,SLOT(setGoalConfigAtCurrent()));
   
   connect(m_ui->pushButtonResetManipulationData,SIGNAL(clicked()),        this,SLOT(resetManipulationData()));
   connect(m_ui->pushButtonRunTest,SIGNAL(clicked()),                      this,SLOT(runManipTest()));
+
 	connect(m_ui->pushButtonArmFree,SIGNAL(clicked()),                      this,SLOT(armFree()));
 	connect(m_ui->pushButtonArmPickGoto,SIGNAL(clicked()),                  this,SLOT(armPickGoto()));
-	connect(m_ui->pushButtonArmPickTakeToFree,SIGNAL(clicked()),            this,SLOT(armPickTakeToFree()));
-  connect(m_ui->pushButtonArmPickTakeToFreePoint,SIGNAL(clicked()),       this,SLOT(armPickTakeToFreePoint()));
-	connect(m_ui->pushButtonArmPickGotoAndTakeToFree,SIGNAL(clicked()),     this,SLOT(armPickGotoAndTakeToFree()));
+	connect(m_ui->pushButtonArmTakeToFree,SIGNAL(clicked()),                this,SLOT(armTakeToFree()));
+  connect(m_ui->pushButtonArmTakeToPlace,SIGNAL(clicked()),               this,SLOT(armTakeToPlace()));
+  connect(m_ui->pushButtonArmPlaceFromFree,SIGNAL(clicked()),             this,SLOT(armPlaceFromFree()));
+  connect(m_ui->pushButtonArmExtract,SIGNAL(clicked()),                   this,SLOT(armExtract()));
+//  connect(m_ui->pushButtonArmEscape,SIGNAL(clicked()),                    this,SLOT(armPickTakeToFreePoint()));
+  
   connect(m_ui->pushButtonReplanning,SIGNAL(clicked()),                   this,SLOT(armReplanTask()));
   connect(m_ui->pushButtonLoadWorkspaceFile,SIGNAL(clicked()),            this,SLOT(loadWorkspace()));
   connect(m_ui->pushButtonOptimizeRedundantCost,SIGNAL(clicked()),        this,SLOT(optimizeRedundantCost()));
@@ -543,7 +756,7 @@ void RobotWidget::initObjectSupportAndPlacementCombo()
 	connect(m_ui->comboBoxSupportName, SIGNAL(currentIndexChanged(int)),this, SLOT(supportNameChanged(int)));
 }
 
-void RobotWidget::setRobotToInitConfig()
+void RobotWidget::setRobotAtInitConfig()
 {
   if( !global_manipPlanTest )
   {
@@ -553,9 +766,10 @@ void RobotWidget::setRobotToInitConfig()
   
   cout << "Set to qInit configuration" << endl;
   qInit->getRobot()->setAndUpdate( *qInit );
+  m_mainWindow->drawAllWinActive();
 }
 
-void RobotWidget::setRobotToGoalConfig()
+void RobotWidget::setRobotAtGoalConfig()
 {
   if( !global_manipPlanTest )
   {
@@ -565,6 +779,31 @@ void RobotWidget::setRobotToGoalConfig()
   
   cout << "Set to qGoal configuration" << endl;
   qGoal->getRobot()->setAndUpdate( *qGoal );
+  m_mainWindow->drawAllWinActive();
+}
+
+void RobotWidget::setInitConfigAtCurrent()
+{
+  if( !global_manipPlanTest )
+  {
+    cout << "global_manipPlanTest is not initialized!!!" << endl;
+    return;
+  }
+  
+  cout << "Set to qInit configuration to current" << endl;
+  qInit = qInit->getRobot()->getCurrentPos();
+}
+
+void RobotWidget::setGoalConfigAtCurrent()
+{  
+  if( !global_manipPlanTest )
+  {
+    cout << "global_manipPlanTest is not initialized!!!" << endl;
+    return;
+  }
+  
+  cout << "Set to qGoal configuration to current" << endl;
+  qGoal = qGoal->getRobot()->getCurrentPos();
 }
 
 std::string RobotWidget::getNameOfFreeFlyerFromIndex(int id)
@@ -574,13 +813,9 @@ std::string RobotWidget::getNameOfFreeFlyerFromIndex(int id)
   if((id >= 0) && (id < int(m_FreeFlyers.size())))
 	{
     if( id == 0 )
-    {
       name = "No Object";
-    }
     else
-    {
       name = m_FreeFlyers[id-1].toStdString();
-    }
     
     cout << "Set object name to : " << name << endl;
   }
@@ -600,19 +835,12 @@ void RobotWidget::objectNameChanged(int id)
     return;
   }
   
-  if (!global_manipPlanTest) 
-  {
-    resetManipulationData();
-  }
+  if (!global_manipPlanTest) resetManipulationData();
   
   if( name == "No Object" )
-  {
     global_manipPlanTest->resetObject();
-  }
   else
-  {
     global_manipPlanTest->setObject( name );
-  }
 }
 
 void RobotWidget::placementNameChanged(int id)
@@ -625,19 +853,12 @@ void RobotWidget::placementNameChanged(int id)
     return;
   }
   
-  if (!global_manipPlanTest) 
-  {
-    resetManipulationData();
-  }
+  if (!global_manipPlanTest) resetManipulationData();
   
   if( name == "No Object" )
-  {
     global_manipPlanTest->resetPlacement();
-  }
   else
-  {
     global_manipPlanTest->setPlacement( name );
-  }
 }
 
 void RobotWidget::supportNameChanged(int id)
@@ -650,193 +871,13 @@ void RobotWidget::supportNameChanged(int id)
     return;
   }
   
-  if (!global_manipPlanTest) 
-  {
-    resetManipulationData();
-  }
+  if (!global_manipPlanTest) resetManipulationData();
   
   if( name == "No Object" )
-  {
     global_manipPlanTest->resetSupport();
-  }
   else
-  {
     global_manipPlanTest->setSupport( name );
-  }
 }
-
-// ------------------------------------------------------------------------------
-// The Manip namespace holds the function
-// to call the Manipulation Planner
-// ------------------------------------------------------------------------------
-#ifdef MULTILOCALPATH
-namespace Manip
-{
-  ManipulationPlanner* manipulation = NULL;
-  
-  // Manip locals
-  typedef enum ManipulationType
-	{
-		armFree,
-		pickGoto,
-		takeToFree,
-    takeToFreePoint,
-		pickGotoAndTakeToFree,
-    rePlanning
-	} 
-	ManipulationType;
-  
-  bool firstRun = true;
-  bool isCartesianMode = false;
-  
-  int currentIdTest=0;
-  
-  ManipulationType Phase;
-  
-  void runCurrentTest()
-  {
-    global_manipPlanTest->runTest(currentIdTest);
-  }
-  
-  //! Main function for launching the manipulation planner
-  //! it is based on the testing class
-  //! it reads the Cartesian mode variable to determine 
-  //! which type of method will be used (it is called from the planner thread)
-  void runManipulation()
-  {
-    p3d_rob* rob =  global_manipPlanTest->getManipulationPlanner()->robot();
-    
-    if(Manip::isCartesianMode)
-    {
-      for(unsigned int i=0; i < rob->armManipulationData->size(); i++) 
-        global_manipPlanTest->getManipulationPlanner()->setArmCartesian(i, true);
-    }
-    else 
-    {
-      for(unsigned int i=0; i < rob->armManipulationData->size(); i++) 
-        global_manipPlanTest->getManipulationPlanner()->setArmCartesian(i, false);
-    }
-    
-    switch (Phase) 
-    {
-      case Manip::armFree :
-      {
-        cout << "Manip::armFree" << endl;
-        global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
-        global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
-        
-        global_manipPlanTest->runTest(1);
-      }
-        break;
-        
-      case Manip::pickGoto :
-      {
-        cout << "Manip::pickGoto" << endl;
-        global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
-        global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
-        
-        global_manipPlanTest->runTest(2);
-      }
-        break;
-        
-      case Manip::rePlanning :
-      {
-        p3d_vector3 otp;
-        otp[0] = 4.250;
-        otp[1] = -2.60;
-        otp[2] = 1.000;
-        
-        SM_TRAJ traj;
-        
-        int id_localpath;
-        const double t_rep = 0.0; // in second
-        const double tau = 0.0;
-        p3d_getQSwitchIDFromMidCVS(tau, t_rep, &id_localpath); 
-        
-        global_manipPlanTest->getManipulationPlanner()->armReplan(otp,id_localpath,traj);
-      }
-        break;
-        
-      default:
-        cout << "Manip::Test not implemented" << endl;
-        break;
-    }
-    
-    g3d_draw_allwin_active();
-    ENV.setBool(Env::isRunning,false);
-    cout << "Ends Manipulation Thread" << endl;
-  }
-
-
-  //! Main function for launching the manipulation planner
-  //! it is based on the testing class
-  //! it reads the Cartesian mode variable to determine
-  //! which type of method will be used (it is called from the planner thread)
-  void runNavigation()
-  {
-    p3d_rob* rob =  global_manipPlanTest->getManipulationPlanner()->robot();
-
-  //  if(Manip::isCartesianMode)
-  //  {
-  //    for(unsigned int i=0; i < rob->armManipulationData->size(); i++)
-  //      global_manipPlanTest->getManipulationPlanner()->setArmCartesian(i, true);
-  //  }
-  //  else
-  //  {
-  //    for(unsigned int i=0; i < rob->armManipulationData->size(); i++)
-  //      global_manipPlanTest->getManipulationPlanner()->setArmCartesian(i, false);
-  //  }
-  //
-  //  switch (Phase)
-  //  {
-  //    case Manip::armFree :
-  //    {
-  //      cout << "Manip::armFree" << endl;
-  //      global_manipPlanTest->runTest(1);
-  //    }
-  //      break;
-  //
-  //    case Manip::pickGoto :
-  //    {
-  //      cout << "Manip::pickGoto" << endl;
-  //      global_manipPlanTest->runTest(2);
-  //    }
-  //      break;
-  //
-  //    case Manip::rePlanning :
-  //    {
-  //      p3d_vector3 otp;
-  //      otp[0] = 4.250;
-  //      otp[1] = -2.60;
-  //      otp[2] = 1.000;
-  //
-  //      SM_TRAJ traj;
-  //
-  //      int id_localpath;
-  //      const double t_rep = 0.0; // in second
-  //      const double tau = 0.0;
-  //      p3d_getQSwitchIDFromMidCVS(tau, t_rep, &id_localpath);
-  //
-  //      global_manipPlanTest->getManipulationPlanner()->armReplan(otp,id_localpath,traj);
-        std::vector <MANPIPULATION_TRAJECTORY_CONF_STR> confs;
-        std::vector <SM_TRAJ> smTrajs;
-
-        global_manipPlanTest->getManipulationPlanner()->planNavigation(rob->ROBOT_POS, rob->ROBOT_GOTO, confs, smTrajs);
-  //    }
-  //      break;
-  //
-  //    default:
-  //      cout << "Manip::Test not implemented" << endl;
-  //      break;
-  //  }
-  //
-  //  g3d_draw_allwin_active();
-  //  ENV.setBool(Env::isRunning,false);
-    cout << "Ends Manipulation Thread" << endl;
-  }
-
-};
-#endif
 
 
 // ------------------------------------------------------------------------------
@@ -879,29 +920,8 @@ void RobotWidget::resetManipulationData()
   
   if (!global_manipPlanTest) 
   {
-//    Robot* rob = global_Project->getActiveScene()->getRobotByNameContaining( global_ActiveRobotName );
-//    
-//    qInit = rob->getInitialPosition();
-//    qGoal = rob->getGoTo();
-//    
-//    if(qInit->equal(*qGoal))
-//    {
-//      cout << "Manip::firstRun : qInit->equal(*qGoal)" << endl;
-//    }
-    
     global_manipPlanTest = new ManipulationTestFunctions( global_ActiveRobotName  );
   }
-  
-//  p3d_rob* rob1 = qInit->getRobot()->getRobotStruct();
-//  p3d_rob* rob2 = qGoal->getRobot()->getRobotStruct();
-//  
-//  if (rob1 != rob2) 
-//  {
-//    cout << "Error in resetManipulationData robot is not the same in init and goal" << endl;
-//  }
-  
-//  p3d_copy_config_into(rob1,qInit->getConfigStruct(),&(rob1->ROBOT_POS));
-//  p3d_copy_config_into(rob1,qGoal->getConfigStruct(),&(rob1->ROBOT_GOTO));
   
   Robot* rob = global_Project->getActiveScene()->getRobotByNameContaining( global_ActiveRobotName );
 //  Robot* rob = global_Project->getActiveScene()->getRobotByName(rob1->name);
@@ -916,21 +936,8 @@ void RobotWidget::resetManipulationData()
 
   global_manipPlanTest->initManipulationGenom ();
   
-  configPt q1 = p3d_alloc_config(rob->getRobotStruct());
-  configPt q2 = p3d_alloc_config(rob->getRobotStruct());
-  
-  p3d_copy_config_into(rob->getRobotStruct(), qInit->getConfigStruct(), &(q1));
-  p3d_copy_config_into(rob->getRobotStruct(), qGoal->getConfigStruct(), &(q2));
-  
-//  p3d_copy_config_into(rob->getRobotStruct(),qInit->getConfigStruct(),&(rob->getRobotStruct()->ROBOT_POS));
-//  p3d_copy_config_into(rob->getRobotStruct(),qGoal->getConfigStruct(),&(rob->getRobotStruct()->ROBOT_GOTO));
-//  
-//  p3d_set_and_update_this_robot_conf(rob->getRobotStruct(),rob->getRobotStruct()->ROBOT_POS);
-//  
-//  m_mainWindow->drawAllWinActive();
-  
-  global_manipPlanTest->setInitConfiguration (q1);
-  global_manipPlanTest->setGoalConfiguration (q2);
+  global_manipPlanTest->setInitConfiguration (qInit->getConfigStructCopy());
+  global_manipPlanTest->setGoalConfiguration (qGoal->getConfigStructCopy());
   
   global_manipPlanTest->getManipPlanner()->setPlanningMethod( planner_Function );
   global_manipPlanTest->getManipPlanner()->setSmoothingMethod( smoothing_Function );
@@ -949,106 +956,83 @@ void RobotWidget::optimizeRedundantCost()
 //  cout << "Cost" << cost << endl;
 }
 
-void RobotWidget::armFree()
+//ARM_FREE  /*!< move the arm from a free configuration (in the air) to another free configuration */
+//ARM_PICK_GOTO   /*!< move the arm from a free configuration to a grasping configuration of the object placed on a support */
+//ARM_TAKE_TO_FREE   /*!< move the arm from a grasping configuration (of the object placed on a support) to a free configuration */
+//ARM_TAKE_TO_PLACE   /*!< move the arm from a grasping configuration to a configuration with the same grasp but a different object placement */
+//ARM_PLACE_FROM_FREE  /*!< move the arm from a free configuration to a placement configuration */
+//ARM_EXTRACT  /*!< move the arm over Z axis to escape from collision */
+//ARM_ESCAPE_OBJECT  /*!< move the arm to escape from a placed object */
+
+void RobotWidget::callToManipulationPlanner()
 {
-	cout << "Manipulation : free" << endl;
-	
-  if (!global_manipPlanTest) 
+  if ( global_manipPlanTest == NULL ) 
   {
     resetManipulationData();
   }
   
-  Manip::Phase = Manip::armFree;
   m_mainWindow->isPlanning();
-  
   global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
-  
   emit(selectedPlanner(QString("Manipulation")));
+}
+
+void RobotWidget::armFree()
+{
+	cout << "Manipulation : free" << endl;
+  Manip::Phase = ARM_FREE;
+  callToManipulationPlanner();
 }
 
 void RobotWidget::armPickGoto()
 {
 	cout << "Manipulation : pick goto" << endl;
-	
-  if (!global_manipPlanTest) 
-  {
-    resetManipulationData();
-  }
-  
-  Manip::Phase = Manip::pickGoto;
-  m_mainWindow->isPlanning();
-  
-  global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
-  
-	emit(selectedPlanner(QString("Manipulation")));
+  Manip::Phase = ARM_PICK_GOTO;
+  callToManipulationPlanner();
 }
 
-void RobotWidget::armPickTakeToFree()
+void RobotWidget::armTakeToFree()
 {
 	cout << "Manipulation : take to free" << endl;
-	
-  if (!global_manipPlanTest) 
-  {
-    resetManipulationData();
-  }
-  
-  Manip::Phase = Manip::takeToFree;
-  m_mainWindow->isPlanning();
-  resetManipulationData();
-  global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
-  
-	emit(selectedPlanner(QString("Manipulation")));
+  Manip::Phase = ARM_TAKE_TO_FREE;
+  callToManipulationPlanner();
 }
 
-void RobotWidget::armPickTakeToFreePoint()
+void RobotWidget::armTakeToPlace()
 {
-  cout << "Manipulation : take to free point" << endl;
-	
-  if (!global_manipPlanTest) 
-  {
-    resetManipulationData();
-  }
-  
-  Manip::Phase = Manip::takeToFreePoint;
-  m_mainWindow->isPlanning();
-
-  global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
-  
-	emit(selectedPlanner(QString("Manipulation")));
+	cout << "Manipulation : take to place" << endl;
+  Manip::Phase = ARM_TAKE_TO_PLACE;
+  callToManipulationPlanner();
 }
 
-void RobotWidget::armPickGotoAndTakeToFree()
+void RobotWidget::armPlaceFromFree()
 {
-	cout << "Manipulation : pick goto and take to free" << endl;
+	cout << "Manipulation : place from free" << endl;
+  Manip::Phase = ARM_PLACE_FROM_FREE;
+  callToManipulationPlanner();
+}
 
-  if (!global_manipPlanTest) 
-  {
-    resetManipulationData();
-  }
-  
-  Manip::Phase = Manip::pickGotoAndTakeToFree;
-  m_mainWindow->isPlanning();
-
-  global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
-  
-	emit(selectedPlanner(QString("Manipulation")));
+void RobotWidget::armExtract()
+{
+	cout << "Manipulation : Extract" << endl;
+  Manip::Phase = ARM_EXTRACT;
+  callToManipulationPlanner();
 }
 
 void RobotWidget::armReplanTask()
 {
-  cout << "Manipulation : rePlanning" << endl;
-	
-  if (!global_manipPlanTest) 
-  {
-    resetManipulationData();
-  }
-  
-  Manip::Phase = Manip::rePlanning;
-  m_mainWindow->isPlanning();
-  
-  global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
-  
-  emit(selectedPlanner(QString("Manipulation")));
+//  cout << "Manipulation : rePlanning" << endl;
+//	
+//  if (!global_manipPlanTest) 
+//  {
+//    resetManipulationData();
+//  }
+//  
+//  Manip::Phase = Manip::rePlanning;
+//  m_mainWindow->isPlanning();
+//  
+//  global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
+//  
+//  emit(selectedPlanner(QString("Manipulation")));
 }
 
 void RobotWidget::runManipTest()

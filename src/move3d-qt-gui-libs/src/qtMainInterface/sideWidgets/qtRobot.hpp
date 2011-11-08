@@ -86,8 +86,11 @@ private slots:
 	
 	// Manipulation -----------------------
 #ifdef MULTILOCALPATH
-  void setRobotToInitConfig();
-  void setRobotToGoalConfig();
+  void setRobotAtInitConfig();
+  void setRobotAtGoalConfig();
+  
+  void setInitConfigAtCurrent();
+  void setGoalConfigAtCurrent();
   
   void objectNameChanged(int id);
   void placementNameChanged(int id);
@@ -98,11 +101,13 @@ private slots:
   void resetManipulationData();
   void runManipTest();
   void optimizeRedundantCost();
+  
 	void armFree();
 	void armPickGoto();
-	void armPickTakeToFree();
-  void armPickTakeToFreePoint();
-	void armPickGotoAndTakeToFree();
+	void armTakeToFree();
+  void armTakeToPlace();
+	void armPlaceFromFree();
+  void armExtract();
   void armReplanTask();
   void loadWorkspace();
 #endif
@@ -125,18 +130,15 @@ private:
   void initModel();
 	void initManipulation();
   void initObjectSupportAndPlacementCombo();
+  void callToManipulationPlanner();
   std::string getNameOfFreeFlyerFromIndex(int id);
   
 	Ui::RobotWidget *m_ui;
-	
 	MainWindow *m_mainWindow;
-	
 	std::vector<QString> m_FreeFlyers;
-  
   QString m_ObjectName;
   QString m_SupportName;
   QString m_PlacementName;
-  
 	int m_configNum;
 };
 

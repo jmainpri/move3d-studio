@@ -188,8 +188,11 @@ void GLWidget::initG3DFunctions()
     ext_g3d_get_win_mouse = (void (*) (int*,int*))(qt_get_win_mouse);
     ext_g3d_draw_allwin_active = draw_opengl;
     ext_g3d_calc_cam_param = (void (*) (g3d_cam_param&) )(qt_ui_calc_param);
+  
     ext_g3d_add_traj_to_ui = qt_add_traj;
-    ext_g3d_add_config_to_ui = qt_add_config_to_ui;
+    ext_g3d_add_config_to_ui = qt_add_config_to_ui;  
+//    ext_g3d_add_traj_to_ui = NULL;
+//    ext_g3d_add_config_to_ui = NULL;
 
     Graphic::initDrawFunctions();
 }

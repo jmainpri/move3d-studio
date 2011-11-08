@@ -22,6 +22,8 @@ ConstraintsWidget::ConstraintsWidget(QWidget *parent, FormRobot* fr )
   m_currentRobot = fr->getRobot()->getRobotStruct();
   m_form = fr;
 	init();
+  
+  setAttribute(Qt::WA_DeleteOnClose, true);
 }
 
 void ConstraintsWidget::init()

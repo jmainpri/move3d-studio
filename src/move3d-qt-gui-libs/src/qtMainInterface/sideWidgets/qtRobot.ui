@@ -594,8 +594,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>498</width>
-            <height>704</height>
+            <width>483</width>
+            <height>734</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -604,37 +604,28 @@
              <property name="title">
               <string>Basic Requests</string>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_5">
-              <item>
-               <widget class="QCheckBox" name="checkBoxIsDebugManip">
-                <property name="text">
-                 <string>Debug</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="checkBoxIsCartesianMode">
-                <property name="text">
-                 <string>Cartesian Mode</string>
-                </property>
-               </widget>
-              </item>
-              <item>
+             <layout class="QGridLayout" name="gridLayout_6">
+              <item row="3" column="0">
                <widget class="QWidget" name="widget_6" native="true">
                 <layout class="QHBoxLayout" name="horizontalLayout_8">
+                 <property name="margin">
+                  <number>0</number>
+                 </property>
                  <item>
                   <widget class="QWidget" name="widget_7" native="true">
                    <layout class="QVBoxLayout" name="verticalLayout_8">
+                    <property name="margin">
+                     <number>0</number>
+                    </property>
                     <item>
-                     <widget class="QLabel" name="label_10">
-                      <property name="text">
-                       <string>Manipulation</string>
+                     <widget class="QGroupBox" name="groupBox_7">
+                      <property name="title">
+                       <string>Set Robot At:</string>
                       </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QWidget" name="widget_11" native="true">
-                      <layout class="QHBoxLayout" name="horizontalLayout_10">
+                      <layout class="QHBoxLayout" name="horizontalLayout_11">
+                       <property name="margin">
+                        <number>0</number>
+                       </property>
                        <item>
                         <widget class="QPushButton" name="pushButtonSetStart">
                          <property name="text">
@@ -653,10 +644,29 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="pushButtonResetManipulationData">
-                      <property name="text">
-                       <string>Reset ManipData</string>
+                     <widget class="QGroupBox" name="groupBox_8">
+                      <property name="title">
+                       <string>Store Current Config As:</string>
                       </property>
+                      <layout class="QHBoxLayout" name="horizontalLayout_10">
+                       <property name="margin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QPushButton" name="pushButtonStoreStart">
+                         <property name="text">
+                          <string>Start</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="pushButtonStoreGoal">
+                         <property name="text">
+                          <string>Goal</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
                      </widget>
                     </item>
                     <item>
@@ -670,6 +680,13 @@
                      <widget class="QPushButton" name="pushButtonReplanning">
                       <property name="text">
                        <string>Replanning</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="pushButtonResetManipulationData">
+                      <property name="text">
+                       <string>Reset ManipData</string>
                       </property>
                      </widget>
                     </item>
@@ -690,15 +707,11 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QWidget" name="widget_5" native="true">
+                  <widget class="QGroupBox" name="groupBox_9">
+                   <property name="title">
+                    <string>ArmPlanTask</string>
+                   </property>
                    <layout class="QVBoxLayout" name="verticalLayout_7">
-                    <item>
-                     <widget class="QLabel" name="label_9">
-                      <property name="text">
-                       <string>ArmPlanTask</string>
-                      </property>
-                     </widget>
-                    </item>
                     <item>
                      <widget class="QPushButton" name="pushButtonArmFree">
                       <property name="text">
@@ -709,28 +722,42 @@
                     <item>
                      <widget class="QPushButton" name="pushButtonArmPickGoto">
                       <property name="text">
-                       <string>PickGoto</string>
+                       <string>Pick Goto</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="pushButtonArmPickTakeToFree">
+                     <widget class="QPushButton" name="pushButtonArmTakeToFree">
                       <property name="text">
-                       <string>PickTake2Free</string>
+                       <string>Take To Free</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="pushButtonArmPickTakeToFreePoint">
+                     <widget class="QPushButton" name="pushButtonArmTakeToPlace">
                       <property name="text">
-                       <string>PickTake2FreeP</string>
+                       <string>Take To Place</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="pushButtonArmPickGotoAndTakeToFree">
+                     <widget class="QPushButton" name="pushButtonArmPlaceFromFree">
                       <property name="text">
-                       <string>PickGotoTake2Free</string>
+                       <string>Place From Free</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="pushButtonArmExtract">
+                      <property name="text">
+                       <string>Extract</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="pushButtonArmEscape">
+                      <property name="text">
+                       <string>Escape Object</string>
                       </property>
                      </widget>
                     </item>
@@ -740,7 +767,7 @@
                 </layout>
                </widget>
               </item>
-              <item>
+              <item row="4" column="0">
                <widget class="QWidget" name="ObjectToManipulate" native="true">
                 <layout class="QGridLayout" name="gridLayout_4">
                  <item row="0" column="2">
@@ -770,6 +797,33 @@
                   <widget class="QLabel" name="label_16">
                    <property name="text">
                     <string>Placement Name</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QWidget" name="widget_5" native="true">
+                <layout class="QGridLayout" name="gridLayout_7">
+                 <item row="0" column="1">
+                  <widget class="QCheckBox" name="checkBoxIsDebugManip">
+                   <property name="text">
+                    <string>Debug</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QCheckBox" name="checkBoxIsCartesianMode">
+                   <property name="text">
+                    <string>Cartesian Mode</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="labelManipRobotName">
+                   <property name="text">
+                    <string>Manip. Test Uninitialized</string>
                    </property>
                   </widget>
                  </item>

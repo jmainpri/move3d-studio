@@ -37,9 +37,6 @@
 #include "planner/TrajectoryOptim/trajectoryOptim.hpp"
 #include "planner/planEnvironment.hpp"
 #include "planner/plannerFunctions.hpp"
-#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
-#include "planner/replanning.hpp"
-#endif
 
 #include "utils/MultiRun.hpp"
 #include "utils/MultiRun.hpp"
@@ -62,7 +59,14 @@
 #endif
 
 #ifdef LIGHT_PLANNER
+#include "LightPlanner-pkg.h"
 #include "../lightPlanner/proto/ManipulationViaConfPlanner.hpp"
+
+#if defined(MULTILOCALPATH)
+#include "planner/replanning.hpp"
+
+extern ManipulationTestFunctions* global_manipPlanTest;
+#endif
 #endif
 
 const char *qt_fileName = NULL;
@@ -663,10 +667,15 @@ void qt_add_traj(char* name,int id,p3d_rob* rob,p3d_traj* traj)
 {
 	std::ostringstream oss;
 	oss << name << " (" << id - 1 << " )";
-	
   cout << "traj = " << traj << endl;
   
 #ifdef QT_GL
+  if(global_manipPlanTest)
+  {
+    global_manipPlanTest->addTraj( oss.str(), traj );
+    return;
+  }
+  
   if(rob != NULL)
   {
     FormRobot* form = global_w->getMoveRobot()->getRobotFormByName( rob->name );
@@ -677,13 +686,22 @@ void qt_add_traj(char* name,int id,p3d_rob* rob,p3d_traj* traj)
 #endif
 }
 
-void qt_add_config_to_ui(char* name,p3d_rob* robot,double* q)
+void qt_add_config_to_ui(char* name,p3d_rob* rob,double* q)
 {
 #ifdef QT_GL
-	FormRobot* form = global_w->getMoveRobot()->getRobotFormByName( robot->name );
+  if(global_manipPlanTest)
+  {
+    global_manipPlanTest->addConf( name, q );
+    return;
+  }
   
-	std::string str(name);
-	form->addConfig(str,q);
+  if(rob != NULL)
+  {
+     FormRobot* form = global_w->getMoveRobot()->getRobotFormByName( rob->name );
+    
+    std::string str(name);
+    form->addConfig(str,q);
+  }
 #endif
 }
 

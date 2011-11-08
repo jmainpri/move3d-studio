@@ -5,9 +5,6 @@
 #include "qtMainInterface/mainwindow.hpp"
 #include "qtLibrary.hpp"
 #include "qtConstraints.hpp"
-#ifdef MULTILOCALPATH
-#include "qtMultiLocalPath.hpp"
-#endif
 
 #include <iostream>
 #include <tr1/memory>
@@ -18,6 +15,12 @@
 #include "sliderfunction.hpp"
 
 #include "API/project.hpp"
+
+#ifdef MULTILOCALPATH
+#include "LightPlanner-pkg.h"
+#include "qtMultiLocalPath.hpp"
+extern ManipulationTestFunctions* global_manipPlanTest;
+#endif
 
 using namespace std;
 using namespace tr1;
@@ -275,6 +278,9 @@ FormRobot* MoveRobot::newGridLayoutForRobotStacked(Robot* ptrRob)
   QPushButton* saveCurrButton = new QPushButton("Save Curr.");
 	configLayout->addWidget(saveCurrButton);
   
+  QPushButton* setConfAndTrajFromManipButton = new QPushButton("Set traj & conf from manip.");
+	configLayout->addWidget(setConfAndTrajFromManipButton);
+  
   QWidget* configectoriesWidget = new QWidget();
   configectoriesWidget->setLayout( configLayout );
   robotLayoutTab->addWidget( configectoriesWidget );
@@ -346,12 +352,13 @@ FormRobot* MoveRobot::newGridLayoutForRobotStacked(Robot* ptrRob)
 	trajectoriesNames->setCurrentIndex( 0 );
 	
 	// Connect the formRobot save current configuration
-	// Button
+	// Buttons
 	connect(saveInitButton,SIGNAL(clicked()),formRobot,SLOT(saveCurrentConfigToInit()));
   connect(saveGoalButton,SIGNAL(clicked()),formRobot,SLOT(saveCurrentConfigToGoal()));
   connect(saveCurrButton,SIGNAL(clicked()),formRobot,SLOT(saveCurrentConfigToVector()));
+  connect(setConfAndTrajFromManipButton,SIGNAL(clicked()),formRobot,SLOT(setConfAndTrajFromManipTest()));
   
-  // Connect he constraints button
+  // Connect the constraints button
   connect(showConstraints,SIGNAL(clicked()),formRobot,SLOT(showConstraints()));
 	connect(showMultiLocalpath,SIGNAL(clicked()),formRobot,SLOT(showMultiLocalpath()));
   connect(refreshConstraints,SIGNAL(clicked()),formRobot,SLOT(resetConstraintedDoFs()));
@@ -631,6 +638,49 @@ void FormRobot::saveCurrentConfigToVector()
   cout << "Save Config in Pos: " << mConfigurations.size() << endl;
 }
 
+/**
+ * Sets from the manpulation planner
+ */
+void FormRobot::setConfAndTrajFromManipTest()
+{
+  if( global_manipPlanTest == NULL )
+  {
+    cout << "global_manipPlanTest is not set" << endl;
+  }
+  
+  std::string robotName( global_manipPlanTest->getManipPlanner()->robot()->name );
+  
+  if( robotName != mRobot->getName() )
+  {
+    cout << "Wrong robot in Manipulation test" << endl;
+  }
+  
+  // Delete configurations
+  mConfigurations.clear();
+  mConfigNames->clear();
+
+  // Delete trajectories
+  for (int i=0; i<int(mTrajectories.size()); i++) 
+    delete mTrajectories[i];
+
+  mTrajectories.clear();
+  mTrajectoriesNames->clear();
+  
+  // Add all config in global_manipPlanTest
+  vector< pair<string,double*> > configs = global_manipPlanTest->getConfVector();
+  for (int i=0; i<int(configs.size()); i++) 
+  {
+    addConfig( configs[i].first, configs[i].second );
+  }
+  
+  // Add all trajs in global_manipPlanTest
+  vector< pair<string,p3d_traj*> > trajs = global_manipPlanTest->getTrajVector();
+  for (int i=0; i<int(trajs.size()); i++) 
+  {
+    addTraj( trajs[i].first, trajs[i].second );
+  }
+}
+
 /*!
  * Saves a config in the vector
  */
@@ -641,10 +691,9 @@ void FormRobot::addConfig( std::string& name, configPt q )
   
   QString storeName = QString( name.c_str() );
   
-  mConfigNames->addItem(storeName);
+  mConfigNames->addItem( storeName );
   mConfigNames->setCurrentIndex( mConfigurations.size() - 1 );
 }
-
 
 /*!
  * Saves the current Config into the robot configuration
@@ -658,6 +707,7 @@ void FormRobot::addTraj(std::string& name,p3d_traj* trajPt)
 	mTrajectoriesNames->addItem(trajName);
 	mTrajectories.push_back(trajPt);
 }
+
 
 /*!
  * Saves the current Config into the robot configuration

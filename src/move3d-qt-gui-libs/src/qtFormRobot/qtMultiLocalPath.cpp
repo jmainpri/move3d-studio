@@ -44,6 +44,8 @@ void GroupValidator::multiLocalPathList_obj(bool value)
 MultiLocalPathWidget::MultiLocalPathWidget(QWidget *parent, p3d_rob* rob) : m_currentRobot(rob)
 {
 	initMultiLocalPathForm();
+  
+  setAttribute(Qt::WA_DeleteOnClose, true);
 }
 
 MultiLocalPathWidget::~MultiLocalPathWidget()
