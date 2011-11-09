@@ -665,7 +665,7 @@ static void CB_calculate_affordance_active_obj_old(FL_OBJECT *ob, long arg)
  //////////virtually_update_human_state_new(1);
  //////find_affordance();
  //////////find_affordance_new();
- find_Mightability_Maps();
+ find_Mightability_Maps(NULL);
  CALCULATE_AFFORDANCE=1;
  //g3d_draw_env();
  
@@ -687,8 +687,10 @@ static void CB_calculate_affordance_active_obj_old(FL_OBJECT *ob, long arg)
 
 int add_agents_for_HRI_task()
 {
+ printf(" >>>>To add in the list MAXI_NUM_OF_AGENT_FOR_HRI_TASK =%d \n",MAXI_NUM_OF_AGENT_FOR_HRI_TASK);
   for(int i=0; i<MAXI_NUM_OF_AGENT_FOR_HRI_TASK; i++)
   {
+    printf(" Adding %d th\n",i); 
     fl_addto_choice(BT_HRI_TASK_PERFORMED_BY_AGENT_OBJ,envPt_MM->robot[indices_of_MA_agents[i]]->name);
     fl_addto_choice(BT_HRI_TASK_PERFORMED_FOR_AGENT_OBJ,envPt_MM->robot[indices_of_MA_agents[i]]->name);
   }
@@ -727,8 +729,10 @@ static void CB_create_agents_for_MA_n_ASA_obj(FL_OBJECT *ob, long arg)
 static void CB_calculate_affordance_active_obj(FL_OBJECT *ob, long arg)
 {
  ////XFORM_update_func=fl_check_forms;
+ /////char MM_around_object[50]="HRP2_TABLE";
+  char MM_around_object[50]="IKEA_SHELF";
   default_drawtraj_fct_ptr=default_drawtraj_fct_with_XFORM;
- int MA_init_res=Create_and_init_Mightability_Maps();
+ int MA_init_res=Create_and_init_Mightability_Maps(MM_around_object);
  
  if(MA_init_res==1)
  {
@@ -962,8 +966,35 @@ static void CB_show_weight_for_candidates_obj(FL_OBJECT *ob, long arg)
 
 static void CB_find_current_task_candidates_obj(FL_OBJECT *ob, long arg)
 {
+  
+HRI_task_desc curr_task;
+curr_task.task_type=CURRENT_HRI_MANIPULATION_TASK;
+curr_task.for_object=CURRENT_OBJECT_TO_MANIPULATE;
+curr_task.by_agent=CURRENT_TASK_PERFORMED_BY;
+curr_task.for_agent=CURRENT_TASK_PERFORMED_FOR;
+
+//****Uncomment to test by changing the effort level of human
+/*
+  HRI_task_agent_effort_level desired_level;
+  desired_level.performing_agent=curr_task.by_agent;
+  desired_level.target_agent=curr_task.for_agent;
+  
+  if(curr_task.for_agent==HUMAN1_MA)
+    desired_level.effort_for_agent=curr_task.for_agent;
+  if(curr_task.by_agent==HUMAN1_MA)
+   desired_level.effort_for_agent=curr_task.by_agent;
+  
+  desired_level.task=curr_task.task_type;
+  desired_level.maxi_reach_accept=MA_ARM_TORSO_EFFORT;//MA_ARM_EFFORT;//MA_ARM_TORSO_EFFORT;//MA_WHOLE_BODY_CURR_POS_EFFORT_REACH;
+  desired_level.maxi_vis_accept=MA_HEAD_EFFORT;//MA_WHOLE_BODY_CURR_POS_EFFORT_VIS;
+  
+  set_accepted_effort_level_for_HRI_task(desired_level);
+*/
+
+get_candidate_points_for_HRI_task(curr_task, IS_PERFORMING_AGENT_MASTER, CONSIDER_OBJECT_DIMENSION_FOR_CANDIDATE_PTS);
 
  //// find_candidate_points_for_current_HRI_task(CURRENT_HRI_MANIPULATION_TASK, JIDO_MA, HUMAN1_MA, &resultant_current_candidate_point);
+/*//Earlier working version
  candidate_poins_for_task *curr_resultant_candidate_points=MY_ALLOC(candidate_poins_for_task,1);
 
  int performing_agent_rank;
@@ -977,6 +1008,7 @@ performing_agent_rank=0;//Slave
   find_HRI_task_candidate_points(CURRENT_HRI_MANIPULATION_TASK,CURRENT_OBJECT_TO_MANIPULATE,CURRENT_TASK_PERFORMED_BY,CURRENT_TASK_PERFORMED_FOR,performing_agent_rank,curr_resultant_candidate_points);
  
   MY_FREE(curr_resultant_candidate_points, candidate_poins_for_task,1);
+*/
 
   CANDIDATE_POINTS_FOR_TASK_FOUND=1;
   
