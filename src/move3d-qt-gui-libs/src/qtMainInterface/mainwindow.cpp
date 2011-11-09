@@ -352,43 +352,58 @@ void MainWindow::saveInterfaceParameters()
 
 void MainWindow::loadParametersQuick()
 {
-	string home(getenv("HOME_MOVE3D"));
-  string fileName("/.save_interface_params");
-	
-	if (!home.empty())
-	{
-		qt_loadInterfaceParameters( false, home+fileName );
-		cout << "Loading parameters at : " << home+fileName << endl;
-    cout << "quick load succeded" << endl;
-		this->drawAllWinActive();
-	}
-  else
-  {
-    cout << "Error : HOME_MOVE3D is not defined" << endl;
-  }
+    char* home_path = getenv("HOME_MOVE3D");
+
+    if( home_path == NULL)
+    {
+        cout << "HOME_MOVE3D is not defined" << endl;
+        return;
+    }
+
+    string home(home_path);
+    string fileName("/.save_interface_params");
+
+    if (!home.empty())
+    {
+        qt_loadInterfaceParameters( false, home+fileName );
+        cout << "Loading parameters at : " << home+fileName << endl;
+        cout << "quick load succeded" << endl;
+        this->drawAllWinActive();
+    }
+    else
+    {
+        cout << "Error : HOME_MOVE3D is not defined" << endl;
+    }
 }
 
 void MainWindow::saveParametersQuick()
 {
-  string home(getenv("HOME_MOVE3D"));
-  string fileName("/.save_interface_params");
-	
-	if (!home.empty())
-	{
-    if( remove( (home+fileName).c_str() ) != 0 )
+    char* home_path = getenv("HOME_MOVE3D");
+
+    if( home_path == NULL)
     {
-      cout << "Error deleting file" << endl;
-      return;
+        cout << "HOME_MOVE3D is not defined" << endl;
+        return;
     }
-    
-		qt_saveInterfaceParameters( true, home+fileName );
-		cout << "Saving parameters at : " << home+fileName << endl;
-		this->drawAllWinActive();
-	}
-  else
-  {
-    cout << "Error : HOME_MOVE3D is not defined" << endl;
-  }
+
+    string home(home_path);
+    string fileName("/.save_interface_params");
+
+    if (!home.empty())
+    {
+        if( remove( (home+fileName).c_str() ) != 0 )
+        {
+            cout << "Not deleting file!!!" << endl;
+        }
+
+        qt_saveInterfaceParameters( true, home+fileName );
+        cout << "Saving parameters at : " << home+fileName << endl;
+        this->drawAllWinActive();
+    }
+    else
+    {
+        cout << "Error : HOME_MOVE3D is not defined" << endl;
+    }
 }
 
 void MainWindow::connectCheckBoxToEnv(QCheckBox* box, Env::boolParameter p)

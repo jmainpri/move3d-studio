@@ -32,7 +32,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <property name="usesScrollButtons">
       <bool>true</bool>
@@ -79,8 +79,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>483</width>
-            <height>1170</height>
+            <width>480</width>
+            <height>1187</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -593,9 +593,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
-            <width>483</width>
-            <height>734</height>
+            <y>-29</y>
+            <width>480</width>
+            <height>729</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -622,21 +622,28 @@
                       <property name="title">
                        <string>Set Robot At:</string>
                       </property>
-                      <layout class="QHBoxLayout" name="horizontalLayout_11">
+                      <layout class="QGridLayout" name="gridLayout_9">
                        <property name="margin">
                         <number>0</number>
                        </property>
-                       <item>
+                       <item row="0" column="0">
                         <widget class="QPushButton" name="pushButtonSetStart">
                          <property name="text">
                           <string>Start</string>
                          </property>
                         </widget>
                        </item>
-                       <item>
+                       <item row="0" column="1">
                         <widget class="QPushButton" name="pushButtonSetGoal">
                          <property name="text">
                           <string>Goal</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="1" column="0">
+                        <widget class="QPushButton" name="pushButtonSetOpenConfig">
+                         <property name="text">
+                          <string>Open</string>
                          </property>
                         </widget>
                        </item>
@@ -648,18 +655,15 @@
                       <property name="title">
                        <string>Store Current Config As:</string>
                       </property>
-                      <layout class="QHBoxLayout" name="horizontalLayout_10">
-                       <property name="margin">
-                        <number>0</number>
-                       </property>
-                       <item>
+                      <layout class="QGridLayout" name="gridLayout_8">
+                       <item row="0" column="0">
                         <widget class="QPushButton" name="pushButtonStoreStart">
                          <property name="text">
                           <string>Start</string>
                          </property>
                         </widget>
                        </item>
-                       <item>
+                       <item row="0" column="1">
                         <widget class="QPushButton" name="pushButtonStoreGoal">
                          <property name="text">
                           <string>Goal</string>

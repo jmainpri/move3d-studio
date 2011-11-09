@@ -703,32 +703,33 @@ namespace Manip
 // ------------------------------------------------------------------------------
 void RobotWidget::initManipulation()
 {
-  connect(m_ui->checkBoxIsDebugManip, SIGNAL(toggled(bool)),              this,SLOT(isDebugManip(bool)));
-  connect(m_ui->checkBoxIsCartesianMode, SIGNAL(toggled(bool)),           this,SLOT(isCartesianMode(bool)));
-  
-  connect(m_ui->pushButtonSetStart, SIGNAL(clicked()),                    this,SLOT(setRobotAtInitConfig()));
-  connect(m_ui->pushButtonSetGoal, SIGNAL(clicked()),                     this,SLOT(setRobotAtGoalConfig()));
-  connect(m_ui->pushButtonStoreStart, SIGNAL(clicked()),                  this,SLOT(setInitConfigAtCurrent()));
-  connect(m_ui->pushButtonStoreGoal, SIGNAL(clicked()),                   this,SLOT(setGoalConfigAtCurrent()));
-  
-  connect(m_ui->pushButtonResetManipulationData,SIGNAL(clicked()),        this,SLOT(resetManipulationData()));
-  connect(m_ui->pushButtonRunTest,SIGNAL(clicked()),                      this,SLOT(runManipTest()));
+    connect(m_ui->checkBoxIsDebugManip, SIGNAL(toggled(bool)),              this,SLOT(isDebugManip(bool)));
+    connect(m_ui->checkBoxIsCartesianMode, SIGNAL(toggled(bool)),           this,SLOT(isCartesianMode(bool)));
 
-	connect(m_ui->pushButtonArmFree,SIGNAL(clicked()),                      this,SLOT(armFree()));
-	connect(m_ui->pushButtonArmPickGoto,SIGNAL(clicked()),                  this,SLOT(armPickGoto()));
-	connect(m_ui->pushButtonArmTakeToFree,SIGNAL(clicked()),                this,SLOT(armTakeToFree()));
-  connect(m_ui->pushButtonArmTakeToPlace,SIGNAL(clicked()),               this,SLOT(armTakeToPlace()));
-  connect(m_ui->pushButtonArmPlaceFromFree,SIGNAL(clicked()),             this,SLOT(armPlaceFromFree()));
-  connect(m_ui->pushButtonArmExtract,SIGNAL(clicked()),                   this,SLOT(armExtract()));
-//  connect(m_ui->pushButtonArmEscape,SIGNAL(clicked()),                    this,SLOT(armPickTakeToFreePoint()));
-  
-  connect(m_ui->pushButtonReplanning,SIGNAL(clicked()),                   this,SLOT(armReplanTask()));
-  connect(m_ui->pushButtonLoadWorkspaceFile,SIGNAL(clicked()),            this,SLOT(loadWorkspace()));
-  connect(m_ui->pushButtonOptimizeRedundantCost,SIGNAL(clicked()),        this,SLOT(optimizeRedundantCost()));
-  
-  connect(this, SIGNAL(selectedPlanner(QString)),
-          global_plannerHandler, SLOT(startPlanner(QString)));
-  
+    connect(m_ui->pushButtonSetStart, SIGNAL(clicked()),                    this,SLOT(setRobotAtInitConfig()));
+    connect(m_ui->pushButtonSetGoal, SIGNAL(clicked()),                     this,SLOT(setRobotAtGoalConfig()));
+    connect(m_ui->pushButtonStoreStart, SIGNAL(clicked()),                  this,SLOT(setInitConfigAtCurrent()));
+    connect(m_ui->pushButtonStoreGoal, SIGNAL(clicked()),                   this,SLOT(setGoalConfigAtCurrent()));
+    connect(m_ui->pushButtonSetOpenConfig, SIGNAL(clicked()),               this,SLOT(setRobotAtOpenConfig()));
+
+    connect(m_ui->pushButtonResetManipulationData,SIGNAL(clicked()),        this,SLOT(resetManipulationData()));
+    connect(m_ui->pushButtonRunTest,SIGNAL(clicked()),                      this,SLOT(runManipTest()));
+
+    connect(m_ui->pushButtonArmFree,SIGNAL(clicked()),                      this,SLOT(armFree()));
+    connect(m_ui->pushButtonArmPickGoto,SIGNAL(clicked()),                  this,SLOT(armPickGoto()));
+    connect(m_ui->pushButtonArmTakeToFree,SIGNAL(clicked()),                this,SLOT(armTakeToFree()));
+    connect(m_ui->pushButtonArmTakeToPlace,SIGNAL(clicked()),               this,SLOT(armTakeToPlace()));
+    connect(m_ui->pushButtonArmPlaceFromFree,SIGNAL(clicked()),             this,SLOT(armPlaceFromFree()));
+    connect(m_ui->pushButtonArmExtract,SIGNAL(clicked()),                   this,SLOT(armExtract()));
+    //  connect(m_ui->pushButtonArmEscape,SIGNAL(clicked()),                    this,SLOT(armPickTakeToFreePoint()));
+
+    connect(m_ui->pushButtonReplanning,SIGNAL(clicked()),                   this,SLOT(armReplanTask()));
+    connect(m_ui->pushButtonLoadWorkspaceFile,SIGNAL(clicked()),            this,SLOT(loadWorkspace()));
+    connect(m_ui->pushButtonOptimizeRedundantCost,SIGNAL(clicked()),        this,SLOT(optimizeRedundantCost()));
+
+    connect(this, SIGNAL(selectedPlanner(QString)),
+            global_plannerHandler, SLOT(startPlanner(QString)));
+
   initObjectSupportAndPlacementCombo();
 }
 
@@ -779,6 +780,21 @@ void RobotWidget::setRobotAtGoalConfig()
   
   cout << "Set to qGoal configuration" << endl;
   qGoal->getRobot()->setAndUpdate( *qGoal );
+  m_mainWindow->drawAllWinActive();
+}
+
+void RobotWidget::setRobotAtOpenConfig()
+{
+  if( !global_manipPlanTest )
+  {
+    cout << "global_manipPlanTest is not initialized!!!" << endl;
+    return;
+  }
+
+  cout << "Set to qGoal configuration" << endl;
+  Robot* rob = qGoal->getRobot();
+  shared_ptr<Configuration> q(new Configuration(rob,rob->getRobotStruct()->openChainConf));
+  rob->setAndUpdate( *q );
   m_mainWindow->drawAllWinActive();
 }
 

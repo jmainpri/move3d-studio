@@ -16,15 +16,15 @@
 
 namespace Ui
 {
-	class RobotWidget;
+    class RobotWidget;
 }
 
 #ifdef MULTILOCALPATH
 namespace Manip
 {
-  void runManipulation();
-  void runNavigation();
-  void runCurrentTest();
+    void runManipulation();
+    void runNavigation();
+    void runCurrentTest();
 }
 #endif
 
@@ -34,112 +34,113 @@ namespace Manip
  */
 class RobotWidget : public QWidget
 {
-	Q_OBJECT
-	
+    Q_OBJECT
+
 public:
-	RobotWidget(QWidget *parent = 0);
-	~RobotWidget();
-	
-	void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
-	
-	void initRobot();
-  void initTrajectoryFromConfig();
-	
-	MoveRobot* getMoveRobot();
-	
+    RobotWidget(QWidget *parent = 0);
+    ~RobotWidget();
+
+    void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
+
+    void initRobot();
+    void initTrajectoryFromConfig();
+
+    MoveRobot* getMoveRobot();
+
 private slots:
-  
-        void on_pushButtonPlanNavigation_clicked();
- // Test Model -------------------------
-  void on_pushButtonrefrech_clicked();
-  void on_spinBoxNavigate_valueChanged(int value);
-  void costTest();
-	void collisionsTest();
-	void localpathsTest();
-	void allTests();
-	void setAttMatrix();
-	
-	// Hri Planner ------------------------
-	// HRI GIK functions
-	void computeHriGik(bool leftArm);
-	
+
+    void on_pushButtonPlanNavigation_clicked();
+    // Test Model -------------------------
+    void on_pushButtonrefrech_clicked();
+    void on_spinBoxNavigate_valueChanged(int value);
+    void costTest();
+    void collisionsTest();
+    void localpathsTest();
+    void allTests();
+    void setAttMatrix();
+
+    // Hri Planner ------------------------
+    // HRI GIK functions
+    void computeHriGik(bool leftArm);
+
 #if defined (HRI_PLANNER)
-	void computeHriGikLARM() { this->computeHriGik(true); }
-	void computeHriGikRARM() { this->computeHriGik(false); }
+    void computeHriGikLARM() { this->computeHriGik(true); }
+    void computeHriGikRARM() { this->computeHriGik(false); }
 #endif
-	
-	// Grab Object ------------------------
-	void GrabObject();
-	void ReleaseObject();
-	void currentObjectChange(int i);
-	void SetObjectToCarry();
-	
-	// MISC -------------------------------
-	void printCurrentPos();
-	void printAbsPos();
-	
+
+    // Grab Object ------------------------
+    void GrabObject();
+    void ReleaseObject();
+    void currentObjectChange(int i);
+    void SetObjectToCarry();
+
+    // MISC -------------------------------
+    void printCurrentPos();
+    void printAbsPos();
+
 #ifdef LIGHT_PLANNER
-	void switchFKIK();
+    void switchFKIK();
 #endif
-	
-	void printPQPColPair();
-	
-	// Manipulation -----------------------
+
+    void printPQPColPair();
+
+    // Manipulation -----------------------
 #ifdef MULTILOCALPATH
-  void setRobotAtInitConfig();
-  void setRobotAtGoalConfig();
-  
-  void setInitConfigAtCurrent();
-  void setGoalConfigAtCurrent();
-  
-  void objectNameChanged(int id);
-  void placementNameChanged(int id);
-  void supportNameChanged(int id);
-  
-  void isDebugManip(bool value);
-  void isCartesianMode(bool on);
-  void resetManipulationData();
-  void runManipTest();
-  void optimizeRedundantCost();
-  
-	void armFree();
-	void armPickGoto();
-	void armTakeToFree();
-  void armTakeToPlace();
-	void armPlaceFromFree();
-  void armExtract();
-  void armReplanTask();
-  void loadWorkspace();
+    void setRobotAtInitConfig();
+    void setRobotAtGoalConfig();
+    void setRobotAtOpenConfig();
+
+    void setInitConfigAtCurrent();
+    void setGoalConfigAtCurrent();
+
+    void objectNameChanged(int id);
+    void placementNameChanged(int id);
+    void supportNameChanged(int id);
+
+    void isDebugManip(bool value);
+    void isCartesianMode(bool on);
+    void resetManipulationData();
+    void runManipTest();
+    void optimizeRedundantCost();
+
+    void armFree();
+    void armPickGoto();
+    void armTakeToFree();
+    void armTakeToPlace();
+    void armPlaceFromFree();
+    void armExtract();
+    void armReplanTask();
+    void loadWorkspace();
 #endif
-	/*void initVoxelCollisionChecker();
+    /*void initVoxelCollisionChecker();
 	 void createVoxelCC();
 	 void deleteVoxelCC();
 	 
 	 void voxelCCTest();*/
-  
-  void makeSoftmotionTraj();
-  void makeNormalTraj();
-  void saveConfig();
-  void clearConfigs();
-  void deleteConfig();
-  
+
+    void makeSoftmotionTraj();
+    void makeNormalTraj();
+    void saveConfig();
+    void clearConfigs();
+    void deleteConfig();
+
 signals:
-  void selectedPlanner(QString);
-	
+    void selectedPlanner(QString);
+
 private:
-  void initModel();
-	void initManipulation();
-  void initObjectSupportAndPlacementCombo();
-  void callToManipulationPlanner();
-  std::string getNameOfFreeFlyerFromIndex(int id);
-  
-	Ui::RobotWidget *m_ui;
-	MainWindow *m_mainWindow;
-	std::vector<QString> m_FreeFlyers;
-  QString m_ObjectName;
-  QString m_SupportName;
-  QString m_PlacementName;
-	int m_configNum;
+    void initModel();
+    void initManipulation();
+    void initObjectSupportAndPlacementCombo();
+    void callToManipulationPlanner();
+    std::string getNameOfFreeFlyerFromIndex(int id);
+
+    Ui::RobotWidget *m_ui;
+    MainWindow *m_mainWindow;
+    std::vector<QString> m_FreeFlyers;
+    QString m_ObjectName;
+    QString m_SupportName;
+    QString m_PlacementName;
+    int m_configNum;
 };
 
 #endif
