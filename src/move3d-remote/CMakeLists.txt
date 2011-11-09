@@ -160,6 +160,11 @@ LINK_DIRECTORIES( ${MOVE3D-PLANNERS_LIBRARY_DIRS} )
 SET(LIBS ${LIBS} ${MOVE3D-PLANNERS_LIBRARIES})
 
 
+#-------------- Eigen ----------------------------------------------------------
+
+FIND_PACKAGE(EIGEN REQUIRED)
+INCLUDE_directories(${Eigen_INCLUDE_DIR})
+SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${Eigen_INCLUDE_DIR})
 
 #-------------- Qt Library -----------------
 IF(QT_LIBRARY)
@@ -213,6 +218,7 @@ ENDIF(APPLE)
 Message(Find Pocolibs)
 FIND_PACKAGE (PkgConfig)
 pkg_check_modules(POCOLIBS REQUIRED "pocolibs")
+
 
 MESSAGE( "------------------ POCOLIBS -----------------------" )
 MESSAGE( "${POCOLIBS_CFLAGS}" )
