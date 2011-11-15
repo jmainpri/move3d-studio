@@ -624,7 +624,7 @@ void OtpWidget::on_pushButtonStandUp_clicked()
 
 void OtpWidget::on_pushButtonSetPreferences_clicked()
 {
-    ENV.setDouble(Env::Kdistance,10.0);
+    ENV.setDouble(Env::Kdistance,40.0);
     ENV.setDouble(Env::Kvisibility,35.0);
     ENV.setDouble(Env::Kreachable,50.0);
 }
@@ -639,11 +639,15 @@ void OtpWidget::on_pushButtonTestCompute_clicked()
     if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
     {
         std::vector<pair<double,double> > traj;
+        std::vector<SM_TRAJ> smTraj;
         configPt handConf = 0;
         Eigen::Vector3d dockPos;
         dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
         dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->InitMhpObjectTransfert("HERAKLES_HUMAN1");
-        if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getOtp("HERAKLES_HUMAN1",dockPos,traj,handConf,
+//        if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getOtp("HERAKLES_HUMAN1",dockPos,traj,handConf,
+//                                                                            PlanEnv->getBool(PlanParam::env_isStanding),
+//                                                                            PlanEnv->getDouble(PlanParam::env_objectNessecity)))
+        if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getOtp("HERAKLES_HUMAN1",dockPos,smTraj,handConf,
                                                                             PlanEnv->getBool(PlanParam::env_isStanding),
                                                                             PlanEnv->getDouble(PlanParam::env_objectNessecity)))
         {
@@ -697,4 +701,16 @@ void OtpWidget::on_pushButtonTestTraj_clicked()
 void OtpWidget::on_pushButtonSoftMotion_clicked()
 {
     PlanEnv->setBool(PlanParam::env_softMotionTraj,!PlanEnv->getBool(PlanParam::env_softMotionTraj));
+}
+
+
+
+void OtpWidget::on_pushButtonSmooth_clicked()
+{
+    if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
+    {
+            dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->setRobotTraj(
+                    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->SmoothTrajectory(
+                            dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getRobotTraj()));
+    }
 }

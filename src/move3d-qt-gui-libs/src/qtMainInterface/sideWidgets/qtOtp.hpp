@@ -45,6 +45,7 @@ public:
 
 private slots:
 
+        void on_pushButtonSmooth_clicked();
         void on_pushButtonSoftMotion_clicked();
         void on_pushButtonTestTraj_clicked();
         void on_pushButton_toggled(bool checked);

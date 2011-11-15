@@ -680,7 +680,7 @@ namespace Manip
     std::vector <MANPIPULATION_TRAJECTORY_CONF_STR> confs;
     std::vector <SM_TRAJ> smTrajs;
     
-    global_manipPlanTest->getManipulationPlanner()->planNavigation(rob->ROBOT_POS, rob->ROBOT_GOTO, confs, smTrajs);
+    global_manipPlanTest->getManipulationPlanner()->planNavigation(rob->ROBOT_POS, rob->ROBOT_GOTO, false ,confs, smTrajs);
     //    }
     //      break;
     //

@@ -26,9 +26,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-425</y>
+        <y>-371</y>
         <width>309</width>
-        <height>2038</height>
+        <height>2071</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -592,6 +592,13 @@
               </widget>
              </item>
             </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButtonSmooth">
+            <property name="text">
+             <string>smooth 2d robot traj</string>
+            </property>
            </widget>
           </item>
           <item>
