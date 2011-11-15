@@ -211,7 +211,14 @@ ELSE(APPLE)
   SET(LIBS ${LIBS} ${OPENGL_LIBRARIES})
 ENDIF(APPLE)
 
-
+IF(HRI_COSTSPACE)
+PKG_CHECK_MODULES(HRI REQUIRED libmove3d-hri)
+INCLUDE_directories(${HRI_INCLUDE_DIRS})
+LINK_DIRECTORIES( ${HRI_LIBRARY_DIRS} )
+SET(LIBS ${LIBS} ${HRI_LIBRARIES})
+message("libhri headers : ${HRI_INCLUDE_DIRS}")
+message("libhri lib : ${HRI_LIBRARY_DIRS}")
+ENDIF()
 
 #-------------- Pocolibs -------------------------------------------------------
 
