@@ -21,12 +21,13 @@ public:
     void init();
     //const GenomPoster & getSparkPoster(){return *_sparkPoster;}
     GenomPoster *getSparkPoster(){return _sparkPoster;}
-
+    GenomPoster *getSoftmotionPoster(){return _softmotionPoster;}
 //    GenomPoster *getVimanImageLeftPoster(){return _vimanImageLeftPoster;}
 //    GenomPoster *getVimanImageRightPoster(){return _vimanImageRightPoster;}
 
 private slots:
     void update();
+    void softmotionPlotTraj();
 
 private:
     // Spark ftc and data
@@ -50,6 +51,9 @@ public:
     //! Posters
     GenomPoster * _sparkPoster;
     SPARK_CURRENT_ENVIRONMENT _sparkPosterStruct;
+
+    GenomPoster * _softmotionPoster;
+    SM_TRAJ_STR _softmotionPosterStruct;
 
     PicowebImage * _picowebLeftImg;
     PicowebImage * _picowebRightImg;

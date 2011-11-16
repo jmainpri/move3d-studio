@@ -8,6 +8,9 @@
 #include "../lightPlanner/proto/ManipulationPlanner.hpp"
 #include <stdlib.h>
 
+
+#include "softMotion/Sm_Traj.h"
+
 using namespace std;
 
 
@@ -23,6 +26,10 @@ PosterReader::PosterReader()
     _sparkPoster = new GenomPoster("sparkEnvironment", (char*)(&_sparkPosterStruct), sizeof(SPARK_CURRENT_ENVIRONMENT), 10);
     _sparkPoster->setRefreshStatus(true);
 
+
+    /* declaration of the poster reader threads */
+    _softmotionPoster = new GenomPoster("mhpArmTraj", (char*)(&_softmotionPosterStruct), sizeof(SM_TRAJ_STR), 10);
+    _softmotionPoster->setRefreshStatus(true);
     // Camera
 
     std::string host;
@@ -224,6 +231,13 @@ bool PosterReader::updateNiut()
     //  cout << "Niut is alive association done!!!" <<endl;
     emit niutIsAlive(true);
     return true;
+}
+
+void PosterReader::softmotionPlotTraj()
+{
+
+
+
 }
 
 

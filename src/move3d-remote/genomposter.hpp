@@ -27,6 +27,7 @@ public:
 
     /* the main loop of the thread */
     void run();
+    virtual void update();
 
     void setRefreshStatus(bool b);
     //! Find the poster given a posterName
@@ -44,9 +45,6 @@ public slots:
     //void setRefresh(bool checked);
     void stop();
 
-
-protected:
-    virtual void update();
 
 protected:
     std::string _posterName;
