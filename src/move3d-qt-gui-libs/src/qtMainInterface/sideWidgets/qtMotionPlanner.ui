@@ -26,7 +26,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>
@@ -61,7 +61,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>319</width>
+            <width>512</width>
             <height>606</height>
            </rect>
           </property>
@@ -622,7 +622,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-619</y>
+            <y>0</y>
             <width>512</width>
             <height>1051</height>
            </rect>

@@ -1190,17 +1190,17 @@ void RobotWidget::on_pushButtonrefrech_clicked()
 
 void RobotWidget::on_pushButtonPlanNavigation_clicked()
 {
-    cout << "Navigation softmotion" << endl;
+        cout << "Navigation softmotion" << endl;
 
-if (!global_manipPlanTest)
-{
-    resetManipulationData();
-}
+    if (!global_manipPlanTest)
+    {
+        resetManipulationData();
+    }
 
-//Manip::Phase = Manip::armFree;
-m_mainWindow->isPlanning();
+    //Manip::Phase = Manip::armFree;
+    m_mainWindow->isPlanning();
 
-global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
+    global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
 
-emit(selectedPlanner(QString("NavigationSM")));
+    emit(selectedPlanner(QString("NavigationSM")));
 }
