@@ -321,7 +321,7 @@ void PosterReader::drawSmTraj()
             // t= _smTraj.getDuration() + 1;
             _smTraj.getMotionCond(t, cond);
             p3d_get_robot_config_into(robotPt, &q);
-            cout << " duration " << _smTraj.getDuration() << " time " <<  t <<  endl;
+
             q[6] = cond[0].x;
             q[7] = cond[1].x;
             q[11] = cond[5].x;
@@ -351,6 +351,38 @@ void PosterReader::drawSmTraj()
             p3d_set_and_update_this_robot_conf(robotPt, q);
             g3d_draw_robot(robotPt->num, G3D_WIN, 0);
         }
+
+       _smTraj.getMotionCond(_smTraj.getDuration(), cond);
+        p3d_get_robot_config_into(robotPt, &q);
+
+        q[6] = cond[0].x;
+        q[7] = cond[1].x;
+        q[11] = cond[5].x;
+        // torso
+        q[12] = cond[6].x;
+        //head
+        q[13] = cond[7].x;
+        q[14] = cond[8].x;
+        //leftarm
+        q[25] = cond[19].x;
+        q[26] = cond[20].x;
+        q[27] = cond[21].x;
+        q[28] = cond[22].x;
+        q[29] = cond[23].x;
+        q[30] = cond[24].x;
+        q[31] = cond[25].x;
+        //rightarm
+        q[16] = cond[10].x;
+        q[17] = cond[11].x;
+        q[18] = cond[12].x;
+        q[19] = cond[13].x;
+        q[20] = cond[14].x;
+        q[21] = cond[15].x;
+        q[22] = cond[16].x;
+        //G3D_WIN->vs.transparency_mode= G3D_TRANSPARENT_AND_OPAQUE;
+
+        p3d_set_and_update_this_robot_conf(robotPt, q);
+        g3d_draw_robot(robotPt->num, G3D_WIN, 0);
 
         p3d_destroy_config(robotPt, q);
     }

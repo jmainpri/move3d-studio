@@ -19,8 +19,6 @@ public:
     ~softmotionWidget();
     void init(PosterReader *pr, Ui::MainWindowRemote *m_ui_parent);
 
-signals:
-    void softmotiondt(double dt);
 
 
 private:
@@ -30,8 +28,7 @@ private:
 
 
 
-private slots:
-    void on_doubleSpinBoxdt_valueChanged(double dt);
+
 };
 
 #endif // SOFTMOTIONWIDGET_HPP

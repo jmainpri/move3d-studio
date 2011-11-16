@@ -31,7 +31,7 @@ softmotionWidget::softmotionWidget(PosterReader *pr, Ui::MainWindowRemote *m_ui_
            this, m_ui->doubleSpinBoxdt, m_ui->horizontalSliderdt);
 
 
-   connect(this, SIGNAL(softmotiondt(double)), pr, SLOT(changesoftmotiondt(double)));
+   connect(connectordt, SIGNAL(valueChanged(double)), pr, SLOT(changesoftmotiondt(double)));
 }
 
 
@@ -53,7 +53,4 @@ void softmotionWidget::init(PosterReader *pr, Ui::MainWindowRemote *ui_parent)
 
 }
 
-void softmotionWidget::on_doubleSpinBoxdt_valueChanged(double dt)
-{
-    emit softmotiondt(dt);
-}
+
