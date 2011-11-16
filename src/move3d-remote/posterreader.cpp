@@ -312,6 +312,8 @@ void PosterReader::drawSmTraj()
             return;
         }
 
+        _smTraj.importFromSM_TRAJ_STR(&_softmotionPosterStruct);
+
         std::vector<SM_COND> cond;
 
         configPt q = p3d_alloc_config(robotPt);
@@ -398,7 +400,7 @@ void PosterReader::softmotionDrawTraj(bool b)
     }
     _drawTraj = b;
     if(b) {
-        _smTraj.importFromSM_TRAJ_STR(&_softmotionPosterStruct);
+
         cout << "_drawTraj = true " << endl;
     } else {
         cout << "_drawTraj = false " << endl;
