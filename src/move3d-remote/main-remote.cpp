@@ -55,6 +55,12 @@ void draw_opengl()
   }
 }
 
+void draw_remote_main()
+{
+    draw_smtraj_tace();
+}
+
+
 /**
  * @ingroup qtWindow
  */
@@ -83,6 +89,7 @@ void Simple_threads::initSeperatedWidgets(MainWindowRemote& w)
   softmotionWidget* wSoftmotion = new softmotionWidget(m_posterHandler, w.m_ui);
   
   global_w = wSpark1;
+  ext_g3d_draw_remote = draw_remote_main;
   
   openGlWidgets.push_back(wSpark1);
   //    openGlWidgets.push_back(&wSpark2);

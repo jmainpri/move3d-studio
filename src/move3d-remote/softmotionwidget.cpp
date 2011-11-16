@@ -11,6 +11,7 @@
 #include "Graphic-pkg.h"
 #include "Util-pkg.h"
 
+#include "qtBase/SpinBoxSliderConnector_p.hpp"
 
 using namespace std;
 
@@ -21,7 +22,16 @@ softmotionWidget::softmotionWidget(PosterReader *pr, Ui::MainWindowRemote *m_ui_
         m_ui(new Ui::softmotionWidget)
 {
     m_ui->setupUi(this);
+   connect(m_ui->pushButtonSMPlot,SIGNAL(clicked()),pr,SLOT(softmotionPlotTraj()));
 
+
+   connect(m_ui->checkBoxSoftMotionDrawTraj, SIGNAL(toggled(bool)), pr , SLOT(softmotionDrawTraj(bool)), Qt::DirectConnection);
+
+   QtShiva::SpinBoxSliderConnector *connectordt= new QtShiva::SpinBoxSliderConnector(
+           this, m_ui->doubleSpinBoxdt, m_ui->horizontalSliderdt);
+
+
+   connect(this, SIGNAL(softmotiondt(double)), pr, SLOT(changesoftmotiondt(double)));
 }
 
 
@@ -41,4 +51,9 @@ void softmotionWidget::init(PosterReader *pr, Ui::MainWindowRemote *ui_parent)
   }
 
 
+}
+
+void softmotionWidget::on_doubleSpinBoxdt_valueChanged(double dt)
+{
+    emit softmotiondt(dt);
 }

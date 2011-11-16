@@ -1,18 +1,35 @@
 #include "posterreader.hpp"
+
+#include "qtOpenGL/glwidget.hpp"
 #include "P3d-pkg.h"
 #include "Graphic-pkg.h"
 #include <unistd.h>
+
+#include "planner_handler.hpp"
+#include "move3d-gui.h"
+#include "API/scene.hpp"
+#include "API/project.hpp"
+#include "P3d-pkg.h"
+#include "Graphic-pkg.h"
+#include "Util-pkg.h"
 
 #include "../lightPlanner/proto/lightPlanner.h"
 #include "../lightPlanner/proto/lightPlannerApi.h"
 #include "../lightPlanner/proto/ManipulationPlanner.hpp"
 #include <stdlib.h>
 
-
+#include <QMessageBox>
 #include "softMotion/Sm_Traj.h"
 
 using namespace std;
 
+PosterReader* ptrPosterReader=NULL;
+
+void draw_smtraj_tace()
+{
+    if(ptrPosterReader)
+        ptrPosterReader->drawSmTraj();
+}
 
 PosterReader::PosterReader()
 {
@@ -21,12 +38,12 @@ PosterReader::PosterReader()
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->start(10);
 
-
+    _drawTraj = false;
     /* declaration of the poster reader threads */
     _sparkPoster = new GenomPoster("sparkEnvironment", (char*)(&_sparkPosterStruct), sizeof(SPARK_CURRENT_ENVIRONMENT), 10);
     _sparkPoster->setRefreshStatus(true);
 
-
+    _dt = 0.2;
     /* declaration of the poster reader threads */
     _softmotionPoster = new GenomPoster("mhpArmTraj", (char*)(&_softmotionPosterStruct), sizeof(SM_TRAJ_STR), 10);
     _softmotionPoster->setRefreshStatus(true);
@@ -52,11 +69,18 @@ PosterReader::PosterReader()
     }
 
     // Niut reader
-    _niutPoster = new GenomPoster("niutHuman", (char*)(&_niutPosterStruct), sizeof(NIUT_HUMAN_LIST), 10);
+    _niutPoster = new GenomPoster("niutHuman", (char*)(&_niutPosterStruct), sizeof(NIUT_HUMAN_LIST), 2000);
     _niutPoster->setRefreshStatus(true);
     _niutWatchDog = 0;
     _niutDeathCounter = 0;
     _niutPrevId = 0;
+
+    ptrPosterReader = this;
+}
+
+void PosterReader::changesoftmotiondt(double dt) {
+
+    _dt = dt;
 }
 
 PosterReader::~PosterReader()
@@ -65,6 +89,7 @@ PosterReader::~PosterReader()
     delete _niutPoster;
     delete _picowebLeftImg;
     delete _picowebRightImg;
+    delete _softmotionPoster;
 }
 
 
@@ -81,6 +106,9 @@ void PosterReader::init()
     cout << "   ... _picowebRightImg thread started" << endl;
     cout << "start thread for niut ..." << endl;
     _niutPoster->start();
+    cout << "   ... niut thread started" << endl;
+
+    _softmotionPoster->start();
     cout << "   ... niut thread started" << endl;
 }
 
@@ -236,8 +264,114 @@ bool PosterReader::updateNiut()
 void PosterReader::softmotionPlotTraj()
 {
 
+    if( _softmotionPoster == NULL )
+    {
+        cout << "softmotion : NULL Poster" << endl;
+        return;
+    }
+    //_softmotionPoster->update();
+    SM_TRAJ smTraj;
+    if(_softmotionPoster->getPosterStuct((char *)(&_softmotionPosterStruct)) == false) {
+        cout << " PosterReader::softmotionPlotTraj() ERROR " << endl;
+    }
+
+    smTraj.importFromSM_TRAJ_STR(&_softmotionPosterStruct);
+
+    if( smTraj.getDuration() <= 0) {
+
+        // QMessageBox  toto(QMessageBox::Information, ,QMessageBox::Close, NULL,Qt::Dialog);
+        QMessageBox::about (NULL, QString("SoftMotion info"), QString("Trajectory is empty"));
+
+        return;
+    }
+
+    cout << "duration " << smTraj.getDuration() << endl;
+    smTraj.plot();
+    return;
+}
 
 
+
+void PosterReader::drawSmTraj()
+{
+    if(_drawTraj == true) {
+        p3d_rob * robotPt = NULL;
+        if(_softmotionPoster->getPosterStuct((char *)(&_softmotionPosterStruct)) == false) {
+            cout << " PosterReader::softmotionPlotTraj() ERROR " << endl;
+        }
+        for(int i=0; i<_sparkPosterStruct.robotNb; i++) {
+            robotPt = p3d_get_robot_by_name("PR2_ROBOT");
+            if( robotPt == NULL) {
+                //printf("robot not found %s\n",_sparkPosterStruct.robot[i].name.name );
+                continue;
+            }
+        }
+
+        if( robotPt == NULL) {
+            printf("robot not found %s\n","PR2_ROBOT");
+            return;
+        }
+
+        std::vector<SM_COND> cond;
+
+        configPt q = p3d_alloc_config(robotPt);
+        //robotPt->draw_transparent = true;
+
+        for (double t=0; t< _smTraj.getDuration() ; t = t +  _dt) {
+            // t= _smTraj.getDuration() + 1;
+            _smTraj.getMotionCond(t, cond);
+            p3d_get_robot_config_into(robotPt, &q);
+            cout << " duration " << _smTraj.getDuration() << " time " <<  t <<  endl;
+            q[6] = cond[0].x;
+            q[7] = cond[1].x;
+            q[11] = cond[5].x;
+            // torso
+            q[12] = cond[6].x;
+            //head
+            q[13] = cond[7].x;
+            q[14] = cond[8].x;
+            //leftarm
+            q[25] = cond[19].x;
+            q[26] = cond[20].x;
+            q[27] = cond[21].x;
+            q[28] = cond[22].x;
+            q[29] = cond[23].x;
+            q[30] = cond[24].x;
+            q[31] = cond[25].x;
+            //rightarm
+            q[16] = cond[10].x;
+            q[17] = cond[11].x;
+            q[18] = cond[12].x;
+            q[19] = cond[13].x;
+            q[20] = cond[14].x;
+            q[21] = cond[15].x;
+            q[22] = cond[16].x;
+            //G3D_WIN->vs.transparency_mode= G3D_TRANSPARENT_AND_OPAQUE;
+
+            p3d_set_and_update_this_robot_conf(robotPt, q);
+            g3d_draw_robot(robotPt->num, G3D_WIN, 0);
+        }
+
+        p3d_destroy_config(robotPt, q);
+    }
+    return;
+}
+
+void PosterReader::softmotionDrawTraj(bool b)
+{
+    if( _softmotionPoster == NULL )
+    {
+        cout << "softmotion : NULL Poster" << endl;
+        return;
+    }
+    _drawTraj = b;
+    if(b) {
+        _smTraj.importFromSM_TRAJ_STR(&_softmotionPosterStruct);
+        cout << "_drawTraj = true " << endl;
+    } else {
+        cout << "_drawTraj = false " << endl;
+    }
+    return;
 }
 
 
