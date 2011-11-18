@@ -26,11 +26,11 @@ move3d.c
 sparkwidget.cpp
 niutwidget.cpp
 camerawidget.cpp
+softmotionwidget.cpp
 camerasolo.cpp 
 mainwindow-remote.cpp
 posterreader.cpp
 genomposter.cpp
-genomimageposter.cpp
 myopencv.cpp
 qtipl.cpp
 picowebimage.cpp
@@ -51,11 +51,11 @@ main-remote.hpp
 sparkwidget.hpp
 niutwidget.h
 camerawidget.h
+softmotionwidget.hpp
 camerasolo.hpp 
 mainwindow-remote.hpp
 posterreader.hpp
 genomposter.hpp
-genomimageposter.hpp
 myopencv.hpp
 qtipl.hpp
 picowebimage.hpp 
@@ -69,6 +69,7 @@ mainwindow-remote.ui
 sparkwidget.ui
 niutwidget.ui
 camerawidget.ui
+softmotionwidget.ui
 camerasolo.ui
 dockwidget.ui)
 
@@ -82,6 +83,8 @@ INCLUDE_DIRECTORIES(/home/xbroquer/openrobots/include/viam)
 
 SET(Move3DGUI_CompilationFlags "")
 SET(Move3DGUI_LinkedCompilationFlags "")
+
+
 
 MACRO(Move3DGUI_flag flagName description status)
   SET(flagName "${flagName}")
@@ -220,6 +223,13 @@ message("libhri headers : ${HRI_INCLUDE_DIRS}")
 message("libhri lib : ${HRI_LIBRARY_DIRS}")
 ENDIF()
 
+
+#-------------- softmotion-libs -------------------------------------------------------
+
+Message(Find softMotion-libs)
+FIND_PACKAGE (PkgConfig)
+pkg_check_modules(softMotion-libs REQUIRED "softMotion-libs")
+
 #-------------- Pocolibs -------------------------------------------------------
 
 Message(Find Pocolibs)
@@ -257,7 +267,9 @@ SMP_QT_GENERATE_MOC(${header_files})
 SMP_QT_GENERATE_UI_HEADERS(${ui_files})
 
 # necessary for the UI headers
-BM3D_INC_DIR_PROCESS(${CMAKE_CURRENT_BINARY_DIR})
+#BM3D_INC_DIR_PROCESS(${CMAKE_CURRENT_BINARY_DIR})
+
+include_directories (${CMAKE_CURRENT_BINARY_DIR})
 # generate the UI headers
 QT4_WRAP_UI(SMP_QT_UI_HEADERS ${SMP_QT_UI_FILES})
 # Qt4 files that need to be preprocessed
@@ -296,11 +308,6 @@ SET(LIBRARY_OUTPUT_PATH "${CMAKE_BUILD_TYPE}/lib/$ENV{HOSTTYPE}")
 #Default Flags
 #ADD_DEFINITIONS(-DKCD_MOVE3D -DPRINT_ERROR -DPRINT_INFO)
 
-IF(${CMAKE_BUILD_TYPE} MATCHES "Debug")
-  ADD_DEFINITIONS(-g -Wall -Wextra -Wunused -Wno-unknown-pragmas)
-ELSEIF(${CMAKE_BUILD_TYPE} MATCHES "Release")
-  ADD_DEFINITIONS(-O2 -Wall -Wunused -Wno-unknown-pragmas)
-ENDIF(${CMAKE_BUILD_TYPE} MATCHES "Debug")
 
 
 ADD_EXECUTABLE(move3d-remote ${source_files} ${SMP_QT_MOC} ${SMP_QT_UI_HEADERS})

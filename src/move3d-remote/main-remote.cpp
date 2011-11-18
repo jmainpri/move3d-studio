@@ -10,6 +10,7 @@
 #include "camerawidget.h"
 #include "niutwidget.h"
 #include "dockwidget.hpp"
+#include "softmotionwidget.hpp"
 
 #include "planner_handler.hpp"
 
@@ -54,6 +55,12 @@ void draw_opengl()
   }
 }
 
+void draw_remote_main()
+{
+    draw_smtraj_tace();
+}
+
+
 /**
  * @ingroup qtWindow
  */
@@ -78,8 +85,11 @@ void Simple_threads::initSeperatedWidgets(MainWindowRemote& w)
   sparkWidget* wSpark1 = new sparkWidget(m_posterHandler, w.m_ui);
   //    sparkWidget wSpark2(m_posterHandler, w.m_ui);
   //    sparkWidget wSpark3(m_posterHandler, w.m_ui);
+
+  softmotionWidget* wSoftmotion = new softmotionWidget(m_posterHandler, w.m_ui);
   
   global_w = wSpark1;
+  ext_g3d_draw_remote = draw_remote_main;
   
   openGlWidgets.push_back(wSpark1);
   //    openGlWidgets.push_back(&wSpark2);
@@ -99,6 +109,7 @@ void Simple_threads::initSeperatedWidgets(MainWindowRemote& w)
   wCam->show();
   wNiut->show();
   wSpark1->show();
+  wSoftmotion->show();
   //    wSpark2.show();
   //    wSpark3.show();
   
@@ -137,7 +148,7 @@ int Simple_threads::run(int argc, char** argv)
   
   MainWindowRemote w(m_posterHandler);
   
-  const bool several_widgets = false;
+  const bool several_widgets = true;
   
   if(several_widgets)
   {

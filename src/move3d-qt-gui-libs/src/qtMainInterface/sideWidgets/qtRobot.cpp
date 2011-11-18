@@ -1218,7 +1218,7 @@ void RobotWidget::on_pushButtonrefrech_clicked()
 
 void RobotWidget::on_pushButtonPlanNavigation_clicked()
 {
-    cout << "Navigation softmotion" << endl;
+        cout << "Navigation softmotion" << endl;
 
     if (!global_manipPlanTest)
     {

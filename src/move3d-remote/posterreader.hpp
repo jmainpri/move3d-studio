@@ -10,6 +10,9 @@
 
 #include "duplicatedGenomStruct.hpp"
 
+#include "softMotion/Sm_Traj.h"
+
+extern void draw_smtraj_tace();
 
 class PosterReader : public QObject
 {
@@ -21,16 +24,23 @@ public:
     void init();
     //const GenomPoster & getSparkPoster(){return *_sparkPoster;}
     GenomPoster *getSparkPoster(){return _sparkPoster;}
-
+    GenomPoster *getSoftmotionPoster(){return _softmotionPoster;}
 //    GenomPoster *getVimanImageLeftPoster(){return _vimanImageLeftPoster;}
 //    GenomPoster *getVimanImageRightPoster(){return _vimanImageRightPoster;}
 
-private slots:
+public slots:
     void update();
+    void softmotionPlotTraj();
+    void softmotionDrawTraj(bool b);
+    void drawSmTraj();
+
+    void changesoftmotiondt(double dt);
 
 private:
     // Spark ftc and data
     bool updateSparkEnv();
+
+    bool _drawTraj;
   
     // Niut fct and data
     bool updateNiut();
@@ -51,11 +61,16 @@ public:
     GenomPoster * _sparkPoster;
     SPARK_CURRENT_ENVIRONMENT _sparkPosterStruct;
 
+    GenomPoster * _softmotionPoster;
+    SM_TRAJ_STR _softmotionPosterStruct;
+
     PicowebImage * _picowebLeftImg;
     PicowebImage * _picowebRightImg;
 
     GenomPoster * _niutPoster;
     NIUT_HUMAN_LIST _niutPosterStruct;
+double _dt;
+    SM_TRAJ _smTraj;
 };
 
 #endif // POSTERREADER_HPP
