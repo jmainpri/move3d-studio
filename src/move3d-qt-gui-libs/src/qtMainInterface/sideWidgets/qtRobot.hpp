@@ -110,6 +110,7 @@ private slots:
     void armPlaceFromFree();
     void armExtract();
     void armReplanTask();
+    void armEscapeObject();
     void loadWorkspace();
 #endif
     /*void initVoxelCollisionChecker();
