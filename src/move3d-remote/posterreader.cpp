@@ -314,10 +314,15 @@ void PosterReader::drawSmTraj()
 
         _smTraj.importFromSM_TRAJ_STR(&_softmotionPosterStruct);
 
+
+        if( _smTraj.getDuration()  <= 0 ) {
+                return;
+        }
+
         std::vector<SM_COND> cond;
 
         configPt q = p3d_alloc_config(robotPt);
-        //robotPt->draw_transparent = true;
+        robotPt->draw_transparent = true;
 
         for (double t=0; t< _smTraj.getDuration() ; t = t +  _dt) {
             // t= _smTraj.getDuration() + 1;
@@ -385,7 +390,7 @@ void PosterReader::drawSmTraj()
 
         p3d_set_and_update_this_robot_conf(robotPt, q);
         g3d_draw_robot(robotPt->num, G3D_WIN, 0);
-
+        robotPt->draw_transparent = false;
         p3d_destroy_config(robotPt, q);
     }
     return;
