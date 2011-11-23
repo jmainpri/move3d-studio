@@ -26,9 +26,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-371</y>
+        <y>-984</y>
         <width>309</width>
-        <height>2071</height>
+        <height>2255</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -595,13 +595,6 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButtonSmooth">
-            <property name="text">
-             <string>smooth 2d robot traj</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QWidget" name="widget_12" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout_13">
              <property name="spacing">
@@ -1000,6 +993,76 @@
               </widget>
              </item>
             </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_10">
+         <property name="title">
+          <string>Trajectory</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_11">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="pushButtonInitTraj">
+            <property name="text">
+             <string>Init trajectory</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButtonNextStep">
+            <property name="text">
+             <string>Put robot cylinder to next step</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButtonSmooth">
+            <property name="text">
+             <string>smooth 2d robot traj</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButtonTestTraj_2">
+            <property name="text">
+             <string>Test curent Traj</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButtonTestCol">
+            <property name="text">
+             <string>test robot Cylinder colision</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButtonPlan">
+            <property name="text">
+             <string>planNavigation from start to end</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxCreateTrajs">
+            <property name="text">
+             <string>Create trajs</string>
+            </property>
            </widget>
           </item>
          </layout>

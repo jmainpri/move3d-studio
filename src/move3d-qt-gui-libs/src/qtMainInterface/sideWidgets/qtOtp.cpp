@@ -83,6 +83,7 @@ void OtpWidget::initOTP()
 
 
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxReach,Env::drawGrid);
+        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxCreateTrajs,PlanParam::env_createTrajs);
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxrandomLimits,PlanParam::drawRandomMap);
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawSlice,PlanParam::env_drawSlice);
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawPoint,PlanParam::env_drawRandomPoint);
@@ -710,7 +711,67 @@ void OtpWidget::on_pushButtonSmooth_clicked()
     if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
     {
             dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->setRobotTraj(
-                    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->SmoothTrajectory(
+                    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->smoothTrajectory(
                             dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getRobotTraj()));
     }
+}
+
+void OtpWidget::on_pushButtonInitTraj_clicked()
+{
+    if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
+    {
+            dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->initTrajTest();
+    }
+}
+
+void OtpWidget::on_pushButtonNextStep_clicked()
+{
+    if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
+    {
+            dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->goToNextStep();
+    }
+    drawAllWinActive();
+}
+
+void OtpWidget::on_pushButtonTestCol_clicked()
+{
+    Robot* robCyl;
+    for (int i=0; i<XYZ_ENV->nr; i++)
+    {
+        string name(XYZ_ENV->robot[i]->name);
+        if(name.find("PR_2CYLINDER") != string::npos )
+        {
+            robCyl = new Robot(XYZ_ENV->robot[i]);
+        }
+
+    }
+    if (robCyl->isInCollisionWithOthersAndEnv())
+    {
+        cout << "The cylinder is in colision with the environment" << endl;
+    }
+    else
+    {
+        cout << "No colision detected between the cylinder and the environment" << endl;
+    }
+}
+
+void OtpWidget::on_pushButtonTestTraj_2_clicked()
+{
+    if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
+    {
+        if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->testCurrentTraj())
+        {
+            cout << "this trajectory can be done" << endl;
+        }
+        else
+        {
+            cout << "this trajectory is unfeasable" << endl;
+        }
+    }
+    drawAllWinActive();
+}
+
+void OtpWidget::on_pushButtonPlan_clicked()
+{
+    emit(selectedPlanner(QString("simpleNav")));
 }

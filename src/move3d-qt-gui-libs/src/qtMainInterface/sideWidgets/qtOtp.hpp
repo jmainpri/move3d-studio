@@ -45,6 +45,11 @@ public:
 
 private slots:
 
+        void on_pushButtonPlan_clicked();
+        void on_pushButtonTestTraj_2_clicked();
+        void on_pushButtonTestCol_clicked();
+        void on_pushButtonNextStep_clicked();
+        void on_pushButtonInitTraj_clicked();
         void on_pushButtonSmooth_clicked();
         void on_pushButtonSoftMotion_clicked();
         void on_pushButtonTestTraj_clicked();

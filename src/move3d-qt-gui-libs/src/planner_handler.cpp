@@ -360,6 +360,13 @@ void qtOTP()
   //	dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->computePR2GIK();
   
 }
+
+void qt_simpleNav()
+{
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->navigate();
+    qt_drawAllWinActive();
+
+}
 #endif
 
 #ifdef MULTILOCALPATH
@@ -823,6 +830,9 @@ void PlannerHandler::startPlanner(QString plannerName)
     }
     else if( plannerName == "otp"){
       qtOTP();
+    }
+    else if( plannerName == "simpleNav"){
+      qt_simpleNav();
     }
     else if( plannerName == "MultipleOtp"){
       qtMultipleOTP();
