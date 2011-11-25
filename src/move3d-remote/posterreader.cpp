@@ -15,6 +15,7 @@
 
 #include "../lightPlanner/proto/lightPlanner.h"
 #include "../lightPlanner/proto/lightPlannerApi.h"
+#include "../lightPlanner/proto/ManipulationArmData.hpp"
 #include "../lightPlanner/proto/ManipulationPlanner.hpp"
 #include <stdlib.h>
 
