@@ -811,8 +811,10 @@ void PlannerHandler::startPlanner(QString plannerName)
     //      qt_handover();
     //    }
     else if (plannerName == "ShowTraj" ){
-      std::cout << "Show trajectory : " << std::endl;
+      std::cout << "Show trajectory : ";
+            std::cout.flush();
       qt_showTraj();
+      std::cout << "Done" << std::endl;
     }
     else if (plannerName == "Optimize" ){
       std::cout << "Optimize trajectory : " << std::endl;

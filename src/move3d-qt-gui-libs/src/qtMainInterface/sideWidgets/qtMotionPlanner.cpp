@@ -288,8 +288,7 @@ void MotionPlanner::cutTrajAndOptimizeSM()
 #ifdef LIGHT_PLANNER
   MANPIPULATION_TRAJECTORY_CONF_STR confs;
   SM_TRAJ smTraj;
-  
-  if ( p3d_convert_traj_to_softMotion( rob->getRobotStruct()->tcur, true, false, confs.first, confs.second, smTraj) == 1) 
+  if ( p3d_convert_traj_to_softMotion( rob->getRobotStruct()->tcur, ENV.getBool(Env::smoothSoftMotionTraj),  true, false, confs.first, confs.second, smTraj) == 1)
   {
     printf("p3d_optim_traj_softMotion : cannot compute the softMotion trajectory\n");
     return;

@@ -138,7 +138,7 @@ static void CB_softMotion_compute_traj_obj(FL_OBJECT *ob, long arg) {
 
 	fct_draw = &(g3d_draw_allwin_active);
         bool approximate = true;
-	if(p3d_convert_traj_to_softMotion(traj, ENV.getBool(Env::writeSoftMotionFiles), approximate, lp, positions, smTraj)){
+        if(p3d_convert_traj_to_softMotion(traj, ENV.getBool(Env::smoothSoftMotionTraj), ENV.getBool(Env::writeSoftMotionFiles), approximate, lp, positions, smTraj)){
 		/* position the robot at the beginning of the optimized trajectory */
 		position_robot_at_beginning(ir, traj);
 	}
