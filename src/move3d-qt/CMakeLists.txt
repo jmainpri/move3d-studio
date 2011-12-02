@@ -280,6 +280,9 @@ IF(USE_GBM)
   SET(LIBS ${LIBS} ${GBM_LIBRARIES})
 ENDIF(USE_GBM)
 
+# -------------------------------------------------------------
+# --- Compilation ---------------------------------------------
+# -------------------------------------------------------------
 
 IF(QT_LIBRARY)
 QT4_WRAP_CPP(MOC_OUTFILES main.hpp)
@@ -287,7 +290,6 @@ ADD_EXECUTABLE(move3d-qt-studio main.cpp move3d.c ${MOC_OUTFILES})
 ELSE()
 ADD_EXECUTABLE(move3d-qt-studio main.cpp move3d.c)
 ENDIF()
-
 
 SET_TARGET_PROPERTIES(move3d-qt-studio PROPERTIES LINKER_LANGUAGE CXX)
 TARGET_LINK_LIBRARIES(move3d-qt-studio Move3D-Qt-Gui ${LIBS} m)

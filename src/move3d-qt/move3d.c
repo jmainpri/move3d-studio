@@ -69,8 +69,8 @@ static void use(void);
 
 
 
-int mainMhp(int argc, char ** argv) {
-	
+int mainMhp(int argc, char ** argv) 
+{	
 	cout << "Main Mhp" << endl;
 	
   //int main(int argc, char ** argv) {
@@ -311,7 +311,6 @@ int mainMhp(int argc, char ** argv) {
       }
 #endif
 #endif
-			
 			else if (strcmp(argv[i], "bio") == 0) {
         col_mode_to_be_set = p3d_col_mode_bio;
         col_det_set = TRUE;
@@ -404,17 +403,16 @@ int mainMhp(int argc, char ** argv) {
       p3d_col_set_mode(col_mode_to_be_set);
 #endif
       p3d_BB_set_mode_close();
-      if (!p3d_read_desc(filename)) {
-
-	file_set = FALSE;
-
+      
+      if (!p3d_read_desc(filename)) 
+      {
+        file_set = FALSE;
       }
     }
     if (file_set == FALSE) {
 
       printf("Error : give a p3d filename as argument, or use the XFORMS module.\n");
       exit(0);
-
     }
 #else
 		
@@ -548,11 +546,10 @@ int mainMhp(int argc, char ** argv) {
   /*
    * needs to be run after main form has been created
    */
-  if (scenario_set == TRUE) {
-
+  if (scenario_set == TRUE) 
+  {
 		p3d_rw_scenario_init_name();
 		p3d_read_scenario(scenario);
-
   }
 	
   //Set the robots to initial Pos if defined
@@ -589,16 +586,12 @@ int mainMhp(int argc, char ** argv) {
 		qt_load_HRICS_Grid(grid_path);
 	}
 #endif
-//#ifdef QT_GL
-//	sem->release();
-//#endif
 	
 	//  double c, color[4];
 	//  srand(time(NULL));
 	//  c= rand()/((double)RAND_MAX+1);
 	//  g3d_rgb_from_hue(c, color);
 	//  g3d_set_win_floor_color(g3d_get_cur_win(), color[0], color[1], color[2]);
-	
 
 #if defined( LIGHT_PLANNER ) && !defined( QT_GL )
 	if (manip_test_run) 
