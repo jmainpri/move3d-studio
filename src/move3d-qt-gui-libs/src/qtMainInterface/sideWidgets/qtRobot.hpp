@@ -99,6 +99,9 @@ private slots:
 
     void isDebugManip(bool value);
     void isCartesianMode(bool on);
+    void isToFreePoint(bool value);
+    void isUsingMobileBase(bool value);
+  
     void resetManipulationData();
     void runManipTest();
     void optimizeRedundantCost();

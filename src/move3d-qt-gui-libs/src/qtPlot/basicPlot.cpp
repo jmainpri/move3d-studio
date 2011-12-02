@@ -108,7 +108,7 @@ void BasicPlot::setData(std::vector<double> y)
     for ( int i = 0; i<PLOT_SIZE ; i++)
     {
       d_y[i] = y[i];
-      cout << y[i] << endl;
+      //cout << y[i] << endl;
     }
   }
   else

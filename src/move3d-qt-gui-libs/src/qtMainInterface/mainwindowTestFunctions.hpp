@@ -6,10 +6,7 @@
  *  Copyright 2010 LAAS/CNRS. All rights reserved.
  *
  */
-
-#if defined( MOVE3D_CORE )
 #include "qtMainInterface/mainwindow.hpp"
-#endif
 
 #ifndef MAIN_WINDOW_TEST_FUNCTIONS
 #define MAIN_WINDOW_TEST_FUNCTIONS
@@ -29,25 +26,10 @@ public slots:
 	void test2();
 	void test3();
 	
+signals:
+  void selectedPlanner(QString);
+
 private:
 	MainWindow* m_mainWindow;
-	
 };
-
-/**
- * @ingroup qtWindow
- * @brief Testing thread class 
- */
-class Testthread: public QThread
-{
-	Q_OBJECT
-	
-public:
-	Testthread(QObject* parent = 0);
-	
-protected:
-	void run();
-	
-};
-
 #endif

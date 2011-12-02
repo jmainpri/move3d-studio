@@ -39,7 +39,6 @@ public:
 	void initDrawOneLineInGrid();
 	void initObjectTransferPoint();
 	void initHumanLike();
-  void initGrids();
   
   void drawAllWinActive();
 	
@@ -48,14 +47,14 @@ public:
 	
 	Ui::HricsWidget* Ui() { return m_ui; }
 	
-
-private slots:
-        void on_checkBoxPosOr_toggled(bool checked);
-        void set_X_line(bool);
-        void set_Y_line(bool);
-        void set_Z_line(bool);
-        void on_pushButton_initColPos_clicked();
-
+  
+  private slots:
+  void on_checkBoxPosOr_toggled(bool checked);
+  void set_X_line(bool);
+  void set_Y_line(bool);
+  void set_Z_line(bool);
+  void on_pushButton_initColPos_clicked();
+  
 	// Vector Field
 	void computeVectorField();
 	
@@ -65,9 +64,9 @@ private slots:
 	// Workspace
 	void make3DHriGrid();
 	void delete3DHriGrid();
-	void computeGridCost();
-	void resetGridCost();
-  void initAgentGrids();
+  
+  void initGrids();
+  void deleteGrids();
   
 	void AStarIn3DGrid();
 	void HRICSRRT();
@@ -76,18 +75,18 @@ private slots:
   void setWhichTestSlot(int);
 	
 private:
-        QtShiva::SpinBoxSliderConnector*	m_k_distance;
-        QtShiva::SpinBoxSliderConnector*        m_k_visbility;
-        QtShiva::SpinBoxSliderConnector*        m_k_reachability;
-        QtShiva::SpinBoxSliderConnector*        m_k_naturality;
+  QtShiva::SpinBoxSliderConnector*	m_k_distance;
+  QtShiva::SpinBoxSliderConnector*  m_k_visbility;
+  QtShiva::SpinBoxSliderConnector*  m_k_reachability;
+  QtShiva::SpinBoxSliderConnector*  m_k_naturality;
 	
-        MovingHuman*                            m_mh;
-
-        Ui::HricsWidget*                        m_ui;
+  MovingHuman*                            m_mh;
+  
+  Ui::HricsWidget*                        m_ui;
 	
-        MotionPlanner*                          m_motionWidget;
-
-        MainWindow*                             m_mainWindow;
+  MotionPlanner*                          m_motionWidget;
+  
+  MainWindow*                             m_mainWindow;
 };
 
 #endif

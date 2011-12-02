@@ -93,7 +93,7 @@ private:
 	MainWindow*			m_mainWindow;
 	
 #ifdef USE_QWT
-	BasicPlotWindow *plot;
+	BasicPlotWindow *m_plot;
 #endif
   
 #ifdef HRI_COSTSPACE

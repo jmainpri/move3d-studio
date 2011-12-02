@@ -85,6 +85,13 @@
             </property>
            </widget>
           </item>
+          <item row="3" column="1">
+           <widget class="QPushButton" name="pushButtonExecutePlan">
+            <property name="text">
+             <string>Execute Plan</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -245,6 +252,13 @@
            <widget class="QPushButton" name="pushButtonComputeSM">
             <property name="text">
              <string>Compute SM</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="pushButtonPlotTraj">
+            <property name="text">
+             <string>Plot 2D Traj</string>
             </property>
            </widget>
           </item>

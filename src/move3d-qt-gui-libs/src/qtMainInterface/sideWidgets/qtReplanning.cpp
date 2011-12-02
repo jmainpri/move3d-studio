@@ -21,6 +21,7 @@
 
 #if defined(USE_QWT)
 #include "qtPlot/basicPlot.hpp"
+#include "qtPlot/multiPlot.hpp"
 #include "qtPlot/replottingVectors.hpp"
 #endif
 
@@ -57,10 +58,12 @@ void ReplanningWidget::init()
   
   connect(m_ui->pushButtonInitialize, SIGNAL(clicked()), this, SLOT(initReplanning()));
   connect(m_ui->pushButtonExecuteSimu, SIGNAL(clicked()), this, SLOT(executeReplanTraj()));
+  connect(m_ui->pushButtonExecutePlan, SIGNAL(clicked()), this, SLOT(executePlan()));
 
   
 #ifdef USE_QWT
   connect(m_ui->pushButtonPlotNoise, SIGNAL(clicked()), this, SLOT(plotNoisyTrajectories()));
+  connect(m_ui->pushButtonPlotTraj, SIGNAL(clicked()), this, SLOT(plotMultiVectors()));
   m_plot = new BasicPlotWindow();
 #endif
   
@@ -145,6 +148,27 @@ void ReplanningWidget::plotNoisyTrajectories()
 #endif
 }
 
+void ReplanningWidget::plotMultiVectors()
+{
+#if defined(USE_QWT)
+  MultiPlot* myPlot = new MultiPlot(m_plot);
+	myPlot->setGeometry(m_plot->getPlot()->geometry());
+	
+	vector< string > plotNames;
+	plotNames.push_back( "X SoftMotion" );
+	plotNames.push_back( "Y SoftMotion" );
+	plotNames.push_back( "X Initial" );
+  plotNames.push_back( "Y Initial" );
+	
+	myPlot->setData( plotNames , traj_optim_to_plot );
+  myPlot->setTitle("Initial and smoothed trajectory");
+  
+	delete m_plot->getPlot();
+	m_plot->setPlot(myPlot);
+	m_plot->show();
+#endif
+}
+
 void ReplanningWidget::computeSoftMotion()
 {
   emit(selectedPlanner(QString("convertToSoftMotion")));
@@ -169,4 +193,8 @@ void ReplanningWidget::executeReplanTraj()
   emit(selectedPlanner(QString("ExecuteReplanTraj")));
 }
 
+void ReplanningWidget::executePlan()
+{
+  emit(selectedPlanner(QString("ExecuteManipulationPlan")));
+}
 

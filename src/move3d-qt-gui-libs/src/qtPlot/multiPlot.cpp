@@ -91,23 +91,25 @@ void MultiPlot::rescale()
 //  Generate new values
 void MultiPlot::setData(const std::vector< std::string >& names , 
 												 const std::vector< std::vector <double> >& data )
-{
-	vector< double > Max_y;
-	
+{	
 	if(ENV.getBool(Env::initPlot) == false )
 	{
-		
+    vector< double > Max_y,Min_y;
+    
 		// Get the max element in y of all curves
 		for (vector< vector <double> >::const_iterator it = data.begin(); 
 				 it != data.end(); ++it) 
 		{
 			Max_y.push_back( *std::max_element( (*it).begin(), (*it).end()) );
+      Min_y.push_back( *std::min_element( (*it).begin(), (*it).end()) );
 		}
 		
 		double max = *std::max_element( Max_y.begin() , Max_y.end() );
+    double min = *std::min_element( Min_y.begin() , Min_y.end() );
 		
 		//        cout << "Setting fixed Axis"<< endl;
-		setAxisScale(QwtPlot::yLeft, -1.0, max*1.10);
+		//setAxisScale(QwtPlot::yLeft, -1.0, max*1.10);
+    setAxisScale(QwtPlot::yLeft, 1.10*min, max*1.10);
 		
 		ENV.setBool(Env::initPlot,true);
 	}

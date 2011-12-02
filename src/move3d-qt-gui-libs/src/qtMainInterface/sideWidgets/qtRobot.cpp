@@ -49,7 +49,7 @@ extern ManipulationTestFunctions* global_manipPlanTest;
 
 shared_ptr<Configuration> qInit;
 shared_ptr<Configuration> qGoal;
-
+shared_ptr<Configuration> qOpen;
 
 RobotWidget::RobotWidget(QWidget *parent) :
     QWidget(parent),
@@ -549,13 +549,13 @@ void runManipulation()
     
     if(Manip::isCartesianMode)
     {
-        for(unsigned int i=0; i < rob->armManipulationData->size(); i++)
-            global_manipPlanTest->getManipulationPlanner()->setArmCartesian(i, true);
+        //for(unsigned int i=0; i < rob->armManipulationData->size(); i++)
+            global_manipPlanTest->getManipulationPlanner()->setArmCartesian(0, true);
     }
     else
     {
-        for(unsigned int i=0; i < rob->armManipulationData->size(); i++)
-            global_manipPlanTest->getManipulationPlanner()->setArmCartesian(i, false);
+        //for(unsigned int i=0; i < rob->armManipulationData->size(); i++)
+            global_manipPlanTest->getManipulationPlanner()->setArmCartesian(0, false);
     }
     
     switch (Phase)
@@ -746,6 +746,45 @@ void RobotWidget::initManipulation()
 
     QString text("<FONT COLOR=Red>Unitizialized</Font>");
     m_ui->labelManipRobotName->setText(text);
+  
+  
+  vector<double> envSize = global_Project->getActiveScene()->getBounds();
+	
+	m_ui->doubleSpinBoxXPlace->setMinimum(envSize[0]);
+	m_ui->doubleSpinBoxXPlace->setMaximum(envSize[1]);
+	
+  m_ui->doubleSpinBoxYPlace->setMinimum(envSize[2]);
+	m_ui->doubleSpinBoxYPlace->setMaximum(envSize[3]);
+  
+	m_ui->doubleSpinBoxZPlace->setMinimum(envSize[4]);
+	m_ui->doubleSpinBoxZPlace->setMaximum(envSize[5]);
+  
+  // To free point sliders sliders
+  new QtShiva::SpinBoxSliderConnector(
+  this, m_ui->doubleSpinBoxXPlace, m_ui->horizontalSliderXPlace );
+  new QtShiva::SpinBoxSliderConnector(
+  this, m_ui->doubleSpinBoxYPlace, m_ui->horizontalSliderYPlace );
+  new QtShiva::SpinBoxSliderConnector(
+  this, m_ui->doubleSpinBoxZPlace, m_ui->horizontalSliderZPlace );
+  
+//  cout << "Dim box" << endl;
+//  cout << (envSize[1]+envSize[0])/2 << endl;
+//  cout << (envSize[3]+envSize[2])/2 << endl;
+//  cout << (envSize[5]+envSize[4])/2 << endl;
+//  
+//  cout << (envSize[0]) << endl;
+//  cout << (envSize[1]) << endl;
+//  cout << (envSize[2]) << endl;
+//  cout << (envSize[3]) << endl;
+//  cout << (envSize[4]) << endl;
+//  cout << (envSize[5]) << endl;
+  
+  m_ui->doubleSpinBoxXPlace->setValue((envSize[1]+envSize[0])/2);
+	m_ui->doubleSpinBoxYPlace->setValue((envSize[3]+envSize[2])/2);
+	m_ui->doubleSpinBoxZPlace->setValue((envSize[5]+envSize[4])/2);
+  
+  connect(m_ui->checkBoxToFreePoint, SIGNAL(toggled(bool)), this,SLOT(isToFreePoint(bool)));
+  connect(m_ui->checkBoxIsUsingMobileBase, SIGNAL(toggled(bool)), this,SLOT(isUsingMobileBase(bool)));
 }
 
 void RobotWidget::initObjectSupportAndPlacementCombo()
@@ -806,10 +845,8 @@ void RobotWidget::setRobotAtOpenConfig()
         return;
     }
 
-    cout << "Set to qGoal configuration" << endl;
-    Robot* rob = qGoal->getRobot();
-    shared_ptr<Configuration> q(new Configuration(rob,rob->getRobotStruct()->openChainConf));
-    rob->setAndUpdate( *q );
+    cout << "Set to qOpen configuration" << endl;
+    qOpen->getRobot()->setAndUpdate( *qOpen , true );
     m_mainWindow->drawAllWinActive();
 }
 
@@ -944,6 +981,38 @@ void RobotWidget::isDebugManip(bool value)
     }
 }
 
+void RobotWidget::isUsingMobileBase(bool value)
+{
+  if(global_manipPlanTest)
+  {
+    global_manipPlanTest->getManipPlanner()->setUseBaseMotion(value);
+  }
+  else {
+    cout << "Manip test is NULL" << endl;
+  }
+}
+
+void RobotWidget::isToFreePoint(bool value)
+{
+  if(global_manipPlanTest)
+  {
+    if( value )
+    {
+      vector<double> point(6,P3D_HUGE);
+      point[0] = m_ui->doubleSpinBoxXPlace->value();
+      point[1] = m_ui->doubleSpinBoxYPlace->value();
+      point[2] = m_ui->doubleSpinBoxZPlace->value();
+      
+      global_manipPlanTest->setToPoint(point);
+    }
+    else
+      global_manipPlanTest->resetToPoint();
+  }
+  else {
+    cout << "Manip test is NULL" << endl;
+  }
+}
+
 void RobotWidget::resetManipulationData()
 {
     cout << "-----------------------------------------------------" << endl;
@@ -959,6 +1028,7 @@ void RobotWidget::resetManipulationData()
 
     qInit = rob->getInitialPosition();
     qGoal = rob->getGoTo();
+    qOpen = shared_ptr<Configuration>( new Configuration( rob, rob->getRobotStruct()->openChainConf ));
 
     rob->setAndUpdate(*qInit);
 

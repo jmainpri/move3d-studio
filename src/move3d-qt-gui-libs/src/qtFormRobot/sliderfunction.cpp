@@ -13,6 +13,7 @@
 
 #ifdef HRI_COSTSPACE
 #include "HRI_costspace/HRICS_costspace.hpp"
+#include "HRI_costspace/HRICS_Miscellaneous.hpp"
 #endif
 
 #include "API/ConfigSpace/configuration.hpp"
@@ -166,5 +167,6 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
   }
 #endif
   
+  //HRICS::setThePlacemateInIkeaShelf();
   g3d_set_draw_coll( ncol );
 }

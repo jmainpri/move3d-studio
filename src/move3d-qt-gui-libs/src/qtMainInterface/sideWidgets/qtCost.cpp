@@ -154,7 +154,7 @@ void CostWidget::initCost()
 	connect(m_ui->pushButtonShowTemp,SIGNAL(clicked()),this,SLOT(showTemperature()));
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxRescale, Env::initPlot);
 	
-	this->plot = new BasicPlotWindow();
+	m_plot = new BasicPlotWindow();
 #endif
   
 	qRegisterMetaType< std::vector<double> > ("std::vector<double>");
@@ -348,8 +348,8 @@ void CostWidget::showTrajCost()
 	p3d_rob *robotPt = (p3d_rob *) p3d_get_desc_curid(P3D_ROBOT);
 	p3d_traj* CurrentTrajPt = robotPt->tcur;
 	
-	BasicPlot* myPlot = new BasicPlot(this->plot);
-	myPlot->setGeometry(this->plot->getPlot()->geometry());
+	BasicPlot* myPlot = new BasicPlot( m_plot );
+	myPlot->setGeometry( m_plot->getPlot()->geometry() );
 	int nbSample = myPlot->getPlotSize();
 	
 	API::Trajectory traj(new Robot(robotPt),CurrentTrajPt);
@@ -370,17 +370,18 @@ void CostWidget::showTrajCost()
       cost.push_back( traj.configAtParam(param)->cost() );
       //cout << cost.back() << endl;
     }
+    myPlot->setTitle("Cost Space along trajectory");
   }
-  
-  if (optimizer)
+  else if (optimizer)
   {
     optimizer->getTrajectoryCost(cost,step);
+    myPlot->setTitle("STOMP/CHOMP traj cost profile");
   }
 	
 	myPlot->setData(cost);
-	delete this->plot->getPlot();
-	this->plot->setPlot(myPlot);
-	this->plot->show();
+	delete m_plot->getPlot();
+	m_plot->setPlot(myPlot);
+	m_plot->show();
 #endif
 }
 
@@ -391,8 +392,8 @@ void CostWidget::showCostProfile()
 	p3d_rob *robotPt = (p3d_rob *) p3d_get_desc_curid(P3D_ROBOT);
 	p3d_traj* CurrentTrajPt = robotPt->tcur;
 	
-	BasicPlot* myPlot = new BasicPlot(this->plot);
-	myPlot->setGeometry(this->plot->getPlot()->geometry());
+	BasicPlot* myPlot = new BasicPlot( m_plot );
+	myPlot->setGeometry( m_plot->getPlot()->geometry() );
 	int nbSample = myPlot->getPlotSize();
 	
 	API::Trajectory traj(new Robot(robotPt),CurrentTrajPt);
@@ -431,9 +432,9 @@ void CostWidget::showCostProfile()
 	}
 	
 	myPlot->setData(cost);
-	delete this->plot->getPlot();
-	this->plot->setPlot(myPlot);
-	this->plot->show();
+	delete m_plot->getPlot();
+	m_plot->setPlot(myPlot);
+	m_plot->show();
 #endif
 }
 
@@ -465,8 +466,8 @@ void CostWidget::showHRITrajCost()
 	ENV.setInt(Env::hriCostType,HRICS_Combine);
 #endif
 	
-	MultiPlot* myPlot = new MultiPlot(this->plot);
-	myPlot->setGeometry(this->plot->getPlot()->geometry());
+	MultiPlot* myPlot = new MultiPlot( m_plot );
+	myPlot->setGeometry( m_plot->getPlot()->geometry() );
 	int nbSample = myPlot->getPlotSize();
 	
 	Robot* thisRob = new Robot(robotPt);
@@ -586,9 +587,9 @@ void CostWidget::showHRITrajCost()
 	
 	myPlot->setData( plotNames , curves );
 	
-	delete this->plot->getPlot();
-	this->plot->setPlot(myPlot);
-	this->plot->show();
+	delete m_plot->getPlot();
+	m_plot->setPlot(myPlot);
+	m_plot->show();
 	
 	s.close();
 #endif
@@ -606,11 +607,11 @@ void CostWidget::setPlotedVector(vector<double> v)
 {
 	cout << "PLOTTING ------------------------------------------" << endl;
 #ifdef USE_QWT
-	BasicPlot* myPlot = dynamic_cast<BasicPlot*>(this->plot->getPlot());
+	BasicPlot* myPlot = dynamic_cast<BasicPlot*>(m_plot->getPlot());
 	vector<double> cost = ENV.getVector(Env::costAlongTraj);
 	cost.resize(myPlot->getPlotSize());
 	myPlot->setData(cost);
-	this->plot->show();
+	m_plot->show();
 #endif
 }
 

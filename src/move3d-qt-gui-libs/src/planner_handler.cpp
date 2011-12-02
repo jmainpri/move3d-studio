@@ -21,6 +21,7 @@
 #include "Util-pkg.h"
 #include "Planner-pkg.h"
 #include "Graphic-pkg.h"
+#include "LightPlanner-pkg.h"
 
 #include "move3d-headless.h"
 #include "move3d-gui.h"
@@ -52,6 +53,7 @@
 #if defined( HRI_COSTSPACE )
 #include "HRI_costspace/HRICS_costspace.hpp"
 #include "HRI_costspace/HRICS_Workspace.hpp"
+#include "HRI_costspace/HRICS_Miscellaneous.hpp"
 #if defined( HRI_PLANNER )
 #include "HRI_costspace/HRICS_HAMP.hpp"
 #include "HRI_costspace/HRICS_otpmotionpl.hpp"
@@ -89,6 +91,21 @@ using namespace tr1;
 //------------------------------------------------------------------------------
 //  Callback functions  
 //------------------------------------------------------------------------------
+
+void qt_test1()
+{
+  HRICS::generateGraspConfigurations();
+}
+
+void qt_test2()
+{
+  HRICS::setSimulationRobotsTransparent();
+}
+
+void qt_test3()
+{
+  global_humanCostSpace->testCostFunction();
+}
 
 void qt_resetGraph()
 {
@@ -416,11 +433,18 @@ static int default_drawtraj_fct_qt_pipe(p3d_rob* robot, p3d_localpath* curLp)
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
 void qt_executeReplanSimu()
 {
-  if( replan_plan_initial_path() )
-  {
+//  if( replan_plan_initial_path() )
+//  {
     replann_execute_simulation_traj(default_drawtraj_fct_qt_pipe);
+//  }
+}
+
+void qt_executePlan()
+{
+  if( HRICS::initShelfScenario() )
+  {
+    HRICS::execShelfScenario();
   }
-	ENV.setBool(Env::isRunning,false);
 }
 #endif
 
@@ -788,7 +812,8 @@ void PlannerHandler::startPlanner(QString plannerName)
       std::cout << "Navigation thread : starting navigation." << std::endl;
       qt_runNavigation();
     }
-    else if (plannerName == "ManipCurrentTest"){
+    else if (plannerName == "ManipCurrentTest")
+    {
       std::cout << "Manipulation Test :" << std::endl;
       Manip::runCurrentTest();
     }
@@ -803,6 +828,11 @@ void PlannerHandler::startPlanner(QString plannerName)
     {
       std::cout << "Re-Planning thread : starting simulation." << std::endl;
       qt_executeReplanSimu();
+    }
+    else if(plannerName == "ExecuteManipulationPlan")
+    {
+      std::cout << "execute manipulation thread : starting plan." << std::endl;
+      qt_executePlan();
     }
 #endif
     //    else if(plannerName == "Replanning")
@@ -856,6 +886,22 @@ void PlannerHandler::startPlanner(QString plannerName)
       traj_optim_generate_softMotion();
     }
 #endif
+    else if(plannerName == "test1")
+    {
+      qt_test1();
+    }
+    else if(plannerName == "test2")
+    {
+      qt_test2();
+    }
+    else if(plannerName == "test3")
+    {
+      qt_test3();
+    }
+    else
+    {
+      cout << "planner not define" << endl;
+    }
   }
   catch(std::string what)
   {

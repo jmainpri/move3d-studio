@@ -92,7 +92,8 @@ void HricsWidget::initHRI()
 	connect(m_ui->checkBoxDrawGrid,SIGNAL(clicked()),m_mainWindow,SLOT(drawAllWinActive()));
 	connect(m_ui->checkBoxEntireGrid,SIGNAL(clicked()),m_mainWindow,SLOT(drawAllWinActive()));
   
-  connect(m_ui->pushButtonInitAgentGrids,SIGNAL(clicked()),this,SLOT(initAgentGrids()));
+  connect(m_ui->pushButtonInitGrids,SIGNAL(clicked()),this,SLOT(initGrids()));
+  connect(m_ui->pushButtonDeleteGrids,SIGNAL(clicked()),this,SLOT(deleteGrids()));
 
 	
 	// -------------------------------
@@ -411,43 +412,29 @@ void HricsWidget::resetRandomPoints()
 	}
 }
 
-void HricsWidget::computeGridCost()
+void HricsWidget::initGrids()
 {
-	dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getGrid()->computeAllCellCost();
-	API_activeGrid = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getGrid();
+  //cout << "HricsWidget::initGrids" << endl;
+  //dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->initAgentGrids(ENV.getDouble(Env::CellSize));
+  
+  HRICS::Workspace* ws = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL);
+  
+  if(global_humanCostSpace!=NULL)
+    delete global_humanCostSpace;
+  
+  Robot* rob = ws->getRobot();
+  //Robot* rob = global_Project->getActiveScene()->getRobotByName("GREY_TAPE");
+  
+  global_humanCostSpace = new HRICS::HumanCostSpace(rob,ws->getHumans(),ENV.getDouble(Env::CellSize));
 }
 
-void HricsWidget::resetGridCost()
+void HricsWidget::deleteGrids()
 {
-	dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getGrid()->resetCellCost();
+  //cout << "HricsWidget::deleteGrids" << endl;
+  //dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->deleteAgentGrids();
   
-//  vector<HRICS::AgentGrid*> grids = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getAgentGrids();
-//  for (unsigned int i=0; i<grids.size(); i++) 
-//  {
-//    dynamic_cast<HRICS::AgentGrid*>(grids[i])->resetCellCost();
-//  }
-}
-
-void HricsWidget::initAgentGrids()
-{
-  vector<HRICS::AgentGrid*> grids = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getAgentGrids();
-  
-  for (unsigned int i=0; i<grids.size(); i++) 
-  {
-    HRICS::AgentGrid* grid = dynamic_cast<HRICS::AgentGrid*>(grids[i]);
-    
-    cout << "nb X cells : " << grid->getXNumberOfCells() << endl;
-    cout << "nb Y cells : " << grid->getYNumberOfCells() << endl;
-    cout << "nb Z cells : " << grid->getZNumberOfCells() << endl;
-        
-    if (grid)
-    {
-      cout << "delete : " << grid << endl;
-      delete grid;
-    }
-  }
-  
-  dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->initAgentGrids(ENV.getDouble(Env::CellSize));
+  delete global_humanCostSpace;
+  global_humanCostSpace = NULL;
 }
 
 

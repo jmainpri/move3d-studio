@@ -49,7 +49,9 @@ private slots:
   
   void initReplanning();
   void executeReplanTraj();
+  void executePlan();
   void plotNoisyTrajectories();
+  void plotMultiVectors();
 	
 signals:
   void selectedPlanner(QString);
