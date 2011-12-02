@@ -11,7 +11,7 @@
 #include <gbM/Proto_gbModeles.h>
 #include <lightPlanner/proto/lightPlannerApi.h>
 #include <lightPlanner/proto/lightPlanner.h>
-#include <lightPlanner/proto/ManipulationStruct.h>
+#include <lightPlanner/proto/ManipulationStruct.hpp"
 #include <lightPlanner/proto/Manipulation.h>
 #include <lightPlanner/proto/ManipulationPlanner.hpp>
 #include <lightPlanner/proto/ManipulationUtils.hpp>
