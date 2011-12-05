@@ -97,9 +97,17 @@ ENDFOREACH(srcfile)
 
 ADD_LIBRARY(move3d-xforms STATIC ${MOVE3DSTUDIO_SRC})
 
-ADD_EXECUTABLE(move3d-xforms-studio move3d.cpp ${INCLUDE_DIRS})
-TARGET_LINK_LIBRARIES(move3d-xforms-studio move3d-xforms ${LIBS})
 
+
+#ADD_EXECUTABLE(move3d-xforms-studio move3d.cpp ${INCLUDE_DIRS})
+#TARGET_LINK_LIBRARIES(move3d-xforms-studio move3d-xforms ${LIBS})
+ADD_EXECUTABLE(move3d-studio move3d.cpp ${INCLUDE_DIRS})
+
+IF(HRI_GUI)
+TARGET_LINK_LIBRARIES(move3d-studio move3d-xforms ${LIBS} hri-gui)
+ELSE()
+TARGET_LINK_LIBRARIES(move3d-studio move3d-xforms ${LIBS})
+ENDIF()
 # -------------------------------------------------------------
 # --- Installation --------------------------------------------
 # -------------------------------------------------------------
@@ -109,4 +117,14 @@ IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 INSTALL(TARGETS move3d-xforms-studio
         RUNTIME DESTINATION bin PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE CONFIGURATIONS ${CMAKE_BUILD_TYPE})
+
+
+#IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+#  SET(CMAKE_INSTALL_PREFIX "${MOVE3DSTUDIO_BINARY_DIR}/" CACHE PATH "move3d-studio install prefix" FORCE)
+#ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+#
+#INSTALL(TARGETS move3d-studio
+#        RUNTIME DESTINATION bin 
+#		CONFIGURATIONS ${CMAKE_BUILD_TYPE})
+
 		
