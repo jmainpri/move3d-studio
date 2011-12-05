@@ -279,7 +279,7 @@ static int read_trajectory_config(p3d_rob* robotPt, FILE *fileptr) {
 		configTrajConfig[nbConfigTrajConfig][index_dof+1] += robotPt->ROBOT_POS[7];
 		p3d_set_and_update_this_robot_conf(robotPt, configTrajConfig[nbConfigTrajConfig]);
 		sprintf(name, "configTraj_%i", nbConfigTrajConfig);
-                p3d_set_new_robot_config(robotPt, name, configTrajConfig[nbConfigTrajConfig], robotPt->ikSol, robotPt->confcur);
+//                p3d_set_new_robot_config(robotPt, name, configTrajConfig[nbConfigTrajConfig], robotPt->ikSol, robotPt->confcur);
 		robotPt->confcur = robotPt->conf[nbConfigTrajConfig];
 		FORMrobot_update(p3d_get_desc_curnum(P3D_ROBOT));
 		nbConfigTrajConfig ++;
