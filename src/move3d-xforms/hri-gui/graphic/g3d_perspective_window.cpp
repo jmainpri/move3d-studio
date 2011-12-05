@@ -39,7 +39,7 @@ typedef struct {
 
 
 static void recalc_cam_up         (G3D_Window *win, p3d_matrix4 transf);
-static void calc_cam_param        (G3D_Window *win, p3d_vector4 Xc, p3d_vector4 Xw);
+//static void calc_cam_param        (G3D_Window *win, p3d_vector4 Xc, p3d_vector4 Xw);
 static void get_pos_cam_matrix    (G3D_Window *win, p3d_matrix4 Transf);
 static void get_lookat_vector     (G3D_Window *win, p3d_vector4 Vec);
 int  canvas_expose_special (FL_OBJECT *ob, Window win, int w, int h, XEvent *xev, void *ud);
@@ -121,7 +121,8 @@ void g3d_set_win_draw_mode(G3D_Window *w,g3d_window_draw_mode mode)
 
 /* fonction pour calculer les parametres de position de la      */
 /* camera de la facon necessaire pour openGL                    */
-static void calc_cam_param(G3D_Window *win, p3d_vector4 Xc, p3d_vector4 Xw)
+/*
+ void calc_cam_param(G3D_Window *win, p3d_vector4 Xc, p3d_vector4 Xw)
 {
   static p3d_matrix4 Txc = {{1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1}};
   p3d_matrix4 m_aux;
@@ -155,7 +156,7 @@ static void calc_cam_param(G3D_Window *win, p3d_vector4 Xc, p3d_vector4 Xw)
 		}
 	}
 }
-
+*/
 
 
 static void get_pos_cam_matrix(G3D_Window *win, p3d_matrix4 Transf) {
@@ -331,7 +332,7 @@ win->vs.enableLight = FALSE;
     glPopMatrix();
   }
 
-  if(win->fct_draw) (*win->fct_draw)();
+ // if(win->fct_draw) (*win->fct_draw)();
   glPopMatrix();
   // glFinish();
 

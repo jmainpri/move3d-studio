@@ -6769,7 +6769,7 @@ static void psp_draw_confs( G3D_Window  *win )
     {
       //glXWaitGL();
       p3d_set_and_update_this_robot_conf(PSP_ROBOT,theqs[i]);
-      g3d_draw_robot(PSP_ROBOT->num,win);
+     // g3d_draw_robot(PSP_ROBOT->num,win);
 
       //printf("passing %i %f,%f\n",i,theqs[i][ROBOTq_X],theqs[i][ROBOTq_Y]);
     }
