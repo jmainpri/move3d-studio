@@ -93,6 +93,8 @@ void OtpWidget::initOTP()
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawOnlyBest,PlanParam::env_drawOnlyBest);
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxIsStanding,PlanParam::env_isStanding);
 
+//        m_ui->groupBoxTraj->hide();
+
 
 
 }
@@ -146,11 +148,11 @@ void OtpWidget::on_pushButton_2_clicked()
 
 void OtpWidget::on_spinBoxNextOTP_valueChanged(int value)
 {
-    std::vector<Eigen::Vector3d> OTPList = dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getOTPList();
+    std::vector<Eigen::Vector3d> OTPList = dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getConfGenerator()->getOTPList();
     if (value < (int) OTPList.size())
     {
-        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->setCurrentOTP(OTPList.at(value));
-        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->placeRobot();
+        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getConfGenerator()->setCurOTP(OTPList.at(value));
+        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getConfGenerator()->placeRobot();
     }
     m_mainWindow->drawAllWinActive();
 }
@@ -179,7 +181,7 @@ void OtpWidget::on_pushButtonLoadFromFile_clicked()
                 cout << "Error has occured while loading the file.";
                 return;
             }
-            dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->addToList(WSPoint);
+            dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getConfGenerator()->addToList(WSPoint);
             OTPList.push_back(WSPoint);
 
         }
@@ -192,7 +194,7 @@ void OtpWidget::on_pushButtonPlaceRobot_clicked()
 {
 	if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
 	{
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->placeRobot();
+                dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getConfGenerator()->placeRobot();
 	}
 	m_mainWindow->drawAllWinActive();
 }
@@ -201,7 +203,7 @@ void OtpWidget::on_pushButtonDrawOTPs_toggled(bool checked)
 {
 	if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
 	{
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->drawOTPList(checked);
+                dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getConfGenerator()->drawOTPList(checked);
 	}
 //	m_mainWindow->drawAllWinActive();
 }
@@ -219,7 +221,7 @@ void OtpWidget::on_pushButtonAddToconfList_clicked()
 {
 	if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
 	{
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->addConfToList();
+                dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getConfGenerator()->addConfToList();
 		m_ui->spinBoxNavigate->setMaximum(m_ui->spinBoxNavigate->maximum() + 1);
 	}
 }
@@ -228,7 +230,7 @@ void OtpWidget::on_pushButtoRemoveLastconf_clicked()
 {
 	if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
 	{
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->removeLastConf();
+                dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getConfGenerator()->removeLastConf();
 		m_ui->spinBoxNavigate->setMaximum(m_ui->spinBoxNavigate->maximum() - 1);
 	}
 }
@@ -254,7 +256,7 @@ void OtpWidget::on_pushButtonSaveConfs_clicked()
 								tr("Save configuration to XML file"));
 	if (!fileName.isEmpty() && dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
 	{
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveToXml(fileName.toStdString());
+                dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getConfGenerator()->saveToXml(fileName.toStdString());
 	}
 
 
@@ -643,8 +645,9 @@ void OtpWidget::on_pushButtonTestCompute_clicked()
         std::vector<SM_TRAJ> smTraj;
         configPt handConf = 0;
         Eigen::Vector3d dockPos;
-        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+//        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
         dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->InitMhpObjectTransfert("HERAKLES_HUMAN1");
+        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
 //        if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getOtp("HERAKLES_HUMAN1",dockPos,traj,handConf,
 //                                                                            PlanEnv->getBool(PlanParam::env_isStanding),
 //                                                                            PlanEnv->getDouble(PlanParam::env_objectNessecity)))
@@ -774,4 +777,12 @@ void OtpWidget::on_pushButtonTestTraj_2_clicked()
 void OtpWidget::on_pushButtonPlan_clicked()
 {
     emit(selectedPlanner(QString("simpleNav")));
+}
+
+void OtpWidget::on_pushButtonGridVar_clicked()
+{
+    if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
+    {
+        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid()->dumpVar();
+    }
 }

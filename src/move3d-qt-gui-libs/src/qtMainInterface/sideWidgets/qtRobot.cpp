@@ -18,10 +18,14 @@
 #include "Graphic-pkg.h"
 #include "Collision-pkg.h"
 
+
 #include "planner_handler.hpp"
 
 #include "planner/plannerFunctions.hpp"
 #include "planner/replanning.hpp"
+
+#include <QMessageBox>
+#include <QString>
 
 #if defined( MOVE3D_CORE ) 
 #include "MultiRun.hpp"
@@ -1301,4 +1305,29 @@ void RobotWidget::on_pushButtonPlanNavigation_clicked()
     global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
 
     emit(selectedPlanner(QString("NavigationSM")));
+}
+
+void RobotWidget::on_pushButtonSaveCurConf_clicked()
+{
+    QString fileName = QFileDialog::getSaveFileName(this,
+                                                    tr("Save configuration to XML file"));
+    if (!fileName.isEmpty())
+    {
+        p3d_rob* robot = p3d_get_robot_by_name(global_ActiveRobotName.c_str());
+        configPt q = p3d_get_robot_config( robot );
+        p3d_saveConfigTofile(robot,q,fileName.toAscii().data());
+    }
+}
+
+void RobotWidget::on_pushButtonLoadConf_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Load configuration from XML file"));
+    if (!fileName.isEmpty())
+    {
+        p3d_rob* robot = p3d_get_robot_by_name(global_ActiveRobotName.c_str());
+        configPt q = p3d_loadConfigFromfile(robot,fileName.toAscii().data());
+        p3d_set_robot_config(robot,q);
+    }
+
 }

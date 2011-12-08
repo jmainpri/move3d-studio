@@ -21,6 +21,7 @@
 #include <tr1/memory>
 #include <vector>
 
+
 #include "planner/planEnvironment.hpp"
 #include "planner/cost_space.hpp"
 
@@ -50,74 +51,80 @@ using namespace tr1;
 extern string global_ActiveRobotName;
 
 MainWindow::MainWindow(QWidget *parent)
-: QMainWindow(parent), m_ui(new Ui::MainWindow)
+    : QMainWindow(parent), m_ui(new Ui::MainWindow)
 {
     
-	m_ui->setupUi(this);
-	
-	m_ui->tabMotionPlanner->setMainWindow(this);
-	
-	m_ui->tabCost->setMainWindow(this);
-	m_ui->tabCost->setMotionWidget(this->m_ui->tabMotionPlanner);
-	m_ui->tabCost->initCost();
-	
-	m_ui->tabUtil->setMainWindow(this);
-	
+    m_ui->setupUi(this);
+
+    m_ui->tabMotionPlanner->setMainWindow(this);
+
+    m_ui->tabCost->setMainWindow(this);
+    m_ui->tabCost->setMotionWidget(this->m_ui->tabMotionPlanner);
+    m_ui->tabCost->initCost();
+
+    m_ui->tabUtil->setMainWindow(this);
+
 #ifdef HRI_COSTSPACE
-	m_ui->tabCost->getHriWidget()->setMainWindow(this);
-	m_ui->tabCost->getHriWidget()->setMotionWidget(this->m_ui->tabMotionPlanner);	
-	m_ui->tabCost->getHriWidget()->initHRI();
-  m_ui->tabCost->getOtpWidget()->setMainWindow(this);
+    m_ui->tabCost->getHriWidget()->setMainWindow(this);
+    m_ui->tabCost->getHriWidget()->setMotionWidget(this->m_ui->tabMotionPlanner);
+    m_ui->tabCost->getHriWidget()->initHRI();
+    m_ui->tabCost->getOtpWidget()->setMainWindow(this);
 #endif
-  
-  m_ui->tabCost->getDistFieldWidget()->setMainWindow(this);
+
+    m_ui->tabCost->getDistFieldWidget()->setMainWindow(this);
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
-  m_ui->tabCost->getReplanningWidget()->setMainWindow(this);
+    m_ui->tabCost->getReplanningWidget()->setMainWindow(this);
 #endif
-	
-	m_ui->tabRobot->setMainWindow(this);
-	m_ui->tabRobot->initRobot();
-	
-	// m_ui->OpenGL->setWinSize(G3D_WIN->size);
-	m_ui->OpenGL->setWinSize(600);
-	m_ui->OpenGL->setMainWindow(this);
-	
-	mKCDpropertiesWindow = new KCDpropertiesWindow();
-	
-	m_testFunctions = new MainWindowTestFunctions(this);
-	
-	// Connect Menu slots
-	connect(m_ui->actionOpenScenario,SIGNAL(triggered()),this,SLOT(openScenario()));
-	connect(m_ui->actionSaveScenario,SIGNAL(triggered()),this,SLOT(saveScenario()));
-	connect(m_ui->actionRobotForm,SIGNAL(triggered()),m_ui->formRobot,SLOT(show()));
-  
-  connect(m_ui->pushButtonChangeCamera,SIGNAL(clicked()),this,SLOT(changeCamera()));
+
+    m_ui->tabRobot->setMainWindow(this);
+    m_ui->tabRobot->initRobot();
+
+    // m_ui->OpenGL->setWinSize(G3D_WIN->size);
+    m_ui->OpenGL->setWinSize(600);
+    m_ui->OpenGL->setMainWindow(this);
+
+    mKCDpropertiesWindow = new KCDpropertiesWindow();
+
+    m_testFunctions = new MainWindowTestFunctions(this);
+
+    // Connect Menu slots
+    connect(m_ui->actionOpenScenario,SIGNAL(triggered()),this,SLOT(openScenario()));
+    connect(m_ui->actionSaveScenario,SIGNAL(triggered()),this,SLOT(saveScenario()));
+    connect(m_ui->actionRobotForm,SIGNAL(triggered()),m_ui->formRobot,SLOT(show()));
+
+    connect(m_ui->pushButtonChangeCamera,SIGNAL(clicked()),this,SLOT(changeCamera()));
     //#ifdef MULTILOCALPATH
     //	connect(m_ui->actionLocalPathGroups,SIGNAL(triggered()),m_ui->localPathGroups,SLOT(show()));
     //#endif
-	connect(m_ui->actionKCDPropietes,SIGNAL(triggered()),mKCDpropertiesWindow,SLOT(show()));
-	
-	connect(m_ui->actionLoadGraph,SIGNAL(triggered()),this,SLOT(loadGraph()));
-	connect(m_ui->actionSaveGraph_2,SIGNAL(triggered()),this,SLOT(saveGraph()));
-	connect(m_ui->actionSaveToDot,SIGNAL(triggered()),this,SLOT(saveXYZGraphToDot()));
-	
-	connect(m_ui->actionLoadTrajectory,SIGNAL(triggered()),this,SLOT(loadTraj()));
-	connect(m_ui->actionSaveTrajectory,SIGNAL(triggered()),this,SLOT(saveTraj()));
-  
-  connect(m_ui->actionLoadInterfaceParameters,SIGNAL(triggered()),this,SLOT(loadInterfaceParameters()));
-	connect(m_ui->actionSaveInterfaceParameters,SIGNAL(triggered()),this,SLOT(saveInterfaceParameters()));
-  connect(m_ui->actionLoadParametersQuick,SIGNAL(triggered()),this,SLOT(loadParametersQuick()));
-	connect(m_ui->actionSaveParametersQuick,SIGNAL(triggered()),this,SLOT(saveParametersQuick()));
-	
-	// connect(m_ui->pagesOfStakedWidget, SIGNAL(activated(int)),m_ui->stackedWidget, SLOT(setCurrentIndex(int)));
-	
-	connectCheckBoxes();
-	
-	// MainWindow init functions
-	initRunButtons();
-	initViewerButtons();
-	initLightSource();
-	initRobotsMenu();
+    connect(m_ui->actionKCDPropietes,SIGNAL(triggered()),mKCDpropertiesWindow,SLOT(show()));
+
+    connect(m_ui->actionLoadGraph,SIGNAL(triggered()),this,SLOT(loadGraph()));
+    connect(m_ui->actionSaveGraph_2,SIGNAL(triggered()),this,SLOT(saveGraph()));
+    connect(m_ui->actionSaveToDot,SIGNAL(triggered()),this,SLOT(saveXYZGraphToDot()));
+
+    connect(m_ui->actionLoadTrajectory,SIGNAL(triggered()),this,SLOT(loadTraj()));
+    connect(m_ui->actionSaveTrajectory,SIGNAL(triggered()),this,SLOT(saveTraj()));
+
+    connect(m_ui->actionLoadInterfaceParameters,SIGNAL(triggered()),this,SLOT(loadInterfaceParameters()));
+    connect(m_ui->actionSaveInterfaceParameters,SIGNAL(triggered()),this,SLOT(saveInterfaceParameters()));
+    connect(m_ui->actionLoadParametersQuick,SIGNAL(triggered()),this,SLOT(loadParametersQuick()));
+    connect(m_ui->actionSaveParametersQuick,SIGNAL(triggered()),this,SLOT(saveParametersQuick()));
+
+    // connect(m_ui->pagesOfStakedWidget, SIGNAL(activated(int)),m_ui->stackedWidget, SLOT(setCurrentIndex(int)));
+
+    connectCheckBoxes();
+
+    // MainWindow init functions
+    initRunButtons();
+    initViewerButtons();
+    initLightSource();
+    initRobotsMenu();
+
+
+    //timer for recording
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(saveVideoTimer()));
+    isRecording = false;
 }
 
 MainWindow::~MainWindow()
@@ -503,42 +510,43 @@ void MainWindow::initViewerButtons()
     connect(this, SIGNAL(selectedPlanner(QString)),
             global_plannerHandler, SLOT(startPlanner(QString)));
     
-	connect(m_ui->checkBoxDrawGraph,SIGNAL(toggled(bool)),this,SLOT(drawAllWinActive()),Qt::QueuedConnection);
-	connect(m_ui->checkBoxDrawTraj,SIGNAL(toggled(bool)),this,SLOT(drawAllWinActive()),Qt::QueuedConnection);
-	
-	cout <<  "Graph Draw = " << ENV.getBool(Env::drawGraph) << endl;
-	
-	connect( ENV.getObject(Env::drawGraph), SIGNAL(valueChanged(bool)), this, SLOT(test()) );
-	
-	connectCheckBoxToEnv(m_ui->checkBoxDisableDraw,Env::drawDisabled);
-	connectCheckBoxToEnv(m_ui->checkBoxDrawGraph,Env::drawGraph);
-	connectCheckBoxToEnv(m_ui->checkBoxDrawTraj,Env::drawTraj);
-	connectCheckBoxToEnv(m_ui->checkBoxDrawTrajVector,Env::drawTrajVector);
-	connectCheckBoxToEnv(m_ui->checkBoxDrawDebug,Env::debugCostOptim);
-  connectCheckBoxToEnv(m_ui->checkBoxDrawMultiColoredTraj, Env::drawMultiColorLocalpath );
+    connect(m_ui->checkBoxDrawGraph,SIGNAL(toggled(bool)),this,SLOT(drawAllWinActive()),Qt::QueuedConnection);
+    connect(m_ui->checkBoxDrawTraj,SIGNAL(toggled(bool)),this,SLOT(drawAllWinActive()),Qt::QueuedConnection);
+
+    cout <<  "Graph Draw = " << ENV.getBool(Env::drawGraph) << endl;
+
+    connect( ENV.getObject(Env::drawGraph), SIGNAL(valueChanged(bool)), this, SLOT(test()) );
+
+    connectCheckBoxToEnv(m_ui->checkBoxDisableDraw,Env::drawDisabled);
+    connectCheckBoxToEnv(m_ui->checkBoxDrawGraph,Env::drawGraph);
+    connectCheckBoxToEnv(m_ui->checkBoxDrawTraj,Env::drawTraj);
+    connectCheckBoxToEnv(m_ui->checkBoxDrawTrajVector,Env::drawTrajVector);
+    connectCheckBoxToEnv(m_ui->checkBoxDrawDebug,Env::debugCostOptim);
+    connectCheckBoxToEnv(m_ui->checkBoxDrawMultiColoredTraj, Env::drawMultiColorLocalpath );
     
-	m_ui->checkBoxDrawGraph->setCheckState(Qt::Checked);
-	
-  // Joint to Draw
-  new QtShiva::SpinBoxConnector(this, m_ui->spinBoxJointToDraw,Env::jntToDraw);
-	connect(m_ui->spinBoxJointToDraw,SIGNAL(valueChanged(int)),this,SLOT(setJointToDraw(int)));
-	m_ui->spinBoxJointToDraw->setValue(XYZ_ROBOT->o[XYZ_ROBOT->no-1]->jnt->num);
-	
-  // Show traj and trace
-  connect(m_ui->pushButtonShowTrace,SIGNAL(clicked(bool)),this,SLOT(showTrace()));
-	connect(m_ui->pushButtonShowTraj,SIGNAL(clicked(bool)),this,SLOT(showTraj()),Qt::DirectConnection);
-	new QtShiva::SpinBoxSliderConnector(
-    this, m_ui->doubleSpinBoxTrajSpeed, m_ui->horizontalSliderTrajSpeed , Env::showTrajFPS );
-	
-	connect(m_ui->pushButtonRestoreView,SIGNAL(clicked(bool)),this,SLOT(restoreView()),Qt::DirectConnection);
-	//	connect(m_ui->pushButtonResetGraph,SIGNAL(clicked()),this,SLOT(ResetGraph()));
-	
-	connect(m_ui->pushButtonAddTraj,SIGNAL(clicked()),this,SLOT(addTrajToDraw()));
-	connect(m_ui->pushButtonClearTraj,SIGNAL(clicked()),this,SLOT(clearTrajToDraw()));
-	
-	connect(m_ui->comboBoxColorTraj, SIGNAL(currentIndexChanged(int)),this,SLOT(colorTrajChange(int)));
-	
-	connect(m_ui->pushButtonMobileCamera,SIGNAL(clicked()),this,SLOT(mobileCamera()));
+    m_ui->checkBoxDrawGraph->setCheckState(Qt::Checked);
+
+    // Joint to Draw
+    new QtShiva::SpinBoxConnector(this, m_ui->spinBoxJointToDraw,Env::jntToDraw);
+    connect(m_ui->spinBoxJointToDraw,SIGNAL(valueChanged(int)),this,SLOT(setJointToDraw(int)));
+    m_ui->spinBoxJointToDraw->setValue(XYZ_ROBOT->o[XYZ_ROBOT->no-1]->jnt->num);
+
+    // Show traj and trace
+    connect(m_ui->pushButtonShowTrace,SIGNAL(clicked(bool)),this,SLOT(showTrace()));
+    connect(m_ui->pushButtonShowTraj,SIGNAL(clicked(bool)),this,SLOT(showTraj()),Qt::DirectConnection);
+    connect(m_ui->pushButtonSaveVideo,SIGNAL(clicked(bool)),this,SLOT(saveVideo()));
+    new QtShiva::SpinBoxSliderConnector(
+            this, m_ui->doubleSpinBoxTrajSpeed, m_ui->horizontalSliderTrajSpeed , Env::showTrajFPS );
+
+    connect(m_ui->pushButtonRestoreView,SIGNAL(clicked(bool)),this,SLOT(restoreView()),Qt::DirectConnection);
+    //	connect(m_ui->pushButtonResetGraph,SIGNAL(clicked()),this,SLOT(ResetGraph()));
+
+    connect(m_ui->pushButtonAddTraj,SIGNAL(clicked()),this,SLOT(addTrajToDraw()));
+    connect(m_ui->pushButtonClearTraj,SIGNAL(clicked()),this,SLOT(clearTrajToDraw()));
+
+    connect(m_ui->comboBoxColorTraj, SIGNAL(currentIndexChanged(int)),this,SLOT(colorTrajChange(int)));
+
+    connect(m_ui->pushButtonMobileCamera,SIGNAL(clicked()),this,SLOT(mobileCamera()));
 }
 
 void MainWindow::test()
@@ -927,4 +935,26 @@ void MainWindow::changeEvent(QEvent *e)
 	}
 }
 
+void MainWindow::saveVideo()
+{
+    if (!isRecording)
+    {
+        getOpenGL()->resetImageVector();
+        timer->start(40);
+        cout << "begin recording" << endl;
+    }
+    else
+    {
+        timer->stop();
+        getOpenGL()->saveImagesToDisk();
+        cout << "end recording" << endl;
+    }
+    isRecording = !isRecording;
+
+}
+
+void MainWindow::saveVideoTimer()
+{
+    getOpenGL()->addCurrentImage();
+}
 

@@ -22,6 +22,7 @@ class MainWindowTestFunctions;
 #endif
 
 #include <vector>
+#include <QTimer>
 
 namespace Ui
 {
@@ -116,16 +117,18 @@ private slots:
 	void addTrajToDraw();
 	void clearTrajToDraw();
 	void colorTrajChange(int color);
-  void enableRunAndResetButtons();
-  void enableStopButton();
-  void enableRunButton();
+        void enableRunAndResetButtons();
+        void enableStopButton();
+        void enableRunButton();
 	void showTraj();
-  void showTrace();
+        void showTrace();
 	void restoreView();
 	void mobileCamera();
-  void changeCamera();
+        void changeCamera();
 	
 	void test();
+        void saveVideo();
+        void saveVideoTimer();
 	
 	// Global
 	//    void setLineEditWithNumber(Env::intParameter p , int val );
@@ -151,6 +154,9 @@ private:
 	void initLightSource();
 	
 	p3d_traj* m_currentTraj;
+
+        QTimer *timer;
+        bool isRecording;
 };
 
 // Global MainWindow Pointer 

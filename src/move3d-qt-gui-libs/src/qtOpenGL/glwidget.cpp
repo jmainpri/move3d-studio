@@ -110,11 +110,12 @@ void GLWidget::saveImagesToDisk()
     for (int i = 0; i < _pictures.size(); i++)
     {
         oss.str("");
-        oss << "video/Image_" << setfill('0') << setw(4) << i << ".jpg";
+        string str = string(getenv("HOME_MOVE3D")) + "/video/";
+        oss << str << "Image_" << setfill('0') << setw(4) << i << ".jpg";
         cout << "Saving : " << oss.str() << endl;
         _pictures.at(i)->save(oss.str().c_str(), "JPG", 100);
     }
-    resetImageVector();
+//    resetImageVector();
     cout << "Images saved to video/" << endl;
 
     oss.str("");
@@ -320,6 +321,12 @@ void GLWidget::myPaintGL()
     _isThreadWorking = true;
 }
 
+//void GLWidget::updateGL()
+//{
+//
+//    QGLWidget::updateGL();
+//}
+
 //void GLWidget::reinitGraphics()
 //{
 //  pp3d_env env;
@@ -329,7 +336,7 @@ void GLWidget::myPaintGL()
 //  g3d_delete_all_poly(-1);
 //  
 //  if (boxlist != -1)
-//  {
+//  {5
 //    glDeleteLists(boxlist, 1);
 //    boxlist = -1;
 //  }

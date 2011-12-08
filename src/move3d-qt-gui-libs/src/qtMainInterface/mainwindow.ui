@@ -912,6 +912,13 @@ p, li { white-space: pre-wrap; }
                   </spacer>
                  </item>
                  <item>
+                  <widget class="QPushButton" name="pushButtonSaveVideo">
+                   <property name="text">
+                    <string>Save To video</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
                   <widget class="QPushButton" name="pushButtonShowTraj">
                    <property name="text">
                     <string>Show Trajectory</string>

@@ -39,6 +39,7 @@ public:
 	void setThreadWorking(bool isWorking);
 	void newG3dWindow();
 	void initG3DFunctions();
+//        void updateGL();
 
 public slots:
 	void saveView();

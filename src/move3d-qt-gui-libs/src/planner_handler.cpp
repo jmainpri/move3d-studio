@@ -305,6 +305,7 @@ void qt_runReplanning()
 
 void qt_handover()
 {
+
   //  compute_handOver();
 }
 
@@ -321,7 +322,7 @@ void qtRealTimeOtp()
     dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid()->setAsNotSorted();
     dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->clearRealTreajectory();
 //    PlanEnv->setBool(PlanParam::env_drawHumanModel,true);
-    PlanEnv->setBool(PlanParam::env_showText,false);
+//    PlanEnv->setBool(PlanParam::env_showText,false);
     bool first = true;
     while (PlanEnv->getBool(PlanParam::env_realTime))
     {
@@ -367,6 +368,7 @@ void qtRealTimeOtp()
 
 void qtOTP()
 {
+//    global_w->getOpenGL()
 	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
 
 //	dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->initGrid();
@@ -450,6 +452,7 @@ void qt_executePlan()
 
 void qt_showTraj()
 {
+
 	p3d_rob *hum_robotPt;
 	Robot* rob =	global_Project->getActiveScene()->getRobotByNameContaining("HUMAN");
 	if (rob)
@@ -470,7 +473,10 @@ void qt_showTraj()
 	{
     //		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,false);
 		g3d_show_tcur_rob(robotPt,default_drawtraj_fct_qt_pipe);
-    //		g3d_show_tcur_rob(hum_robotPt,default_drawtraj_fct_qt_pipe);
+                double tmp = ENV.getDouble(Env::showTrajFPS);
+                ENV.setDouble(Env::showTrajFPS,tmp*5);
+                g3d_show_tcur_rob(hum_robotPt,default_drawtraj_fct_qt_pipe);
+                ENV.setDouble(Env::showTrajFPS,tmp);
     //		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->showBestConf();
 	}
 #endif
@@ -493,6 +499,7 @@ void qt_shortCut()
 #endif
 	g3d_draw_allwin_active();
 	ENV.setBool(Env::isRunning,false);
+
 }
 
 /**

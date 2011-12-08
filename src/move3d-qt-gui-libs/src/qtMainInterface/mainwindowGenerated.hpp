@@ -193,6 +193,7 @@ public:
     QSpacerItem *horizontalSpacerShowTraj1;
     QPushButton *pushButtonShowTraj;
     QPushButton *pushButtonShowTrace;
+    QPushButton *pushButtonSaveVideo;
     QSpacerItem *horizontalSpacerShowTraj2;
     QHBoxLayout *horizontalLayoutTrajSpeed;
 	
@@ -930,12 +931,16 @@ public:
 
         horizontalLayoutShowTraj->addItem(horizontalSpacerShowTraj1);
 
+        pushButtonSaveVideo = new QPushButton(groupBoxTrajectory);
+        pushButtonSaveVideo->setObjectName(QString::fromUtf8("pushButtonSaveVideo"));
+
         pushButtonShowTraj = new QPushButton(groupBoxTrajectory);
         pushButtonShowTraj->setObjectName(QString::fromUtf8("pushButtonShowTraj"));
       
         pushButtonShowTrace = new QPushButton(groupBoxTrajectory);
         pushButtonShowTrace->setObjectName(QString::fromUtf8("pushButtonShowTrace"));
-			
+
+        horizontalLayoutShowTraj->addWidget(pushButtonSaveVideo);
         horizontalLayoutShowTraj->addWidget(pushButtonShowTraj);
         horizontalLayoutShowTraj->addWidget(pushButtonShowTrace);
       
@@ -1200,6 +1205,7 @@ public:
         checkBoxWithSmoothing->setText(QApplication::translate("MainWindow", "With Smoothing", 0, QApplication::UnicodeUTF8));
         checkBoxUseP3DStructures->setText(QApplication::translate("MainWindow", "p3d Structs", 0, QApplication::UnicodeUTF8));
         groupBoxTrajectory->setTitle(QApplication::translate("MainWindow", "Trajectory", 0, QApplication::UnicodeUTF8));
+        pushButtonSaveVideo->setText(QApplication::translate("MainWindow", "Save video", 0, QApplication::UnicodeUTF8));
         pushButtonShowTraj->setText(QApplication::translate("MainWindow", "Show Trajectory", 0, QApplication::UnicodeUTF8));
         pushButtonShowTrace->setText(QApplication::translate("MainWindow", "Show Trace", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "Speed", 0, QApplication::UnicodeUTF8));

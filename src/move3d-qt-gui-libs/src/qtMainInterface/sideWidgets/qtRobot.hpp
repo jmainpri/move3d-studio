@@ -49,6 +49,8 @@ public:
 
 private slots:
 
+    void on_pushButtonLoadConf_clicked();
+    void on_pushButtonSaveCurConf_clicked();
     void on_pushButtonPlanNavigation_clicked();
     // Test Model -------------------------
     void on_pushButtonrefrech_clicked();
