@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>505</width>
-    <height>778</height>
+    <height>796</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -47,7 +47,7 @@
          <x>0</x>
          <y>0</y>
          <width>487</width>
-         <height>620</height>
+         <height>640</height>
         </rect>
        </property>
        <attribute name="label">
@@ -101,11 +101,11 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>467</width>
-             <height>521</height>
+             <width>451</width>
+             <height>547</height>
             </rect>
            </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_8">
+           <layout class="QVBoxLayout" name="verticalLayout">
             <item>
              <widget class="QWidget" name="widgetViewer" native="true">
               <layout class="QVBoxLayout" name="verticalLayout_39">
@@ -324,6 +324,16 @@
                     </property>
                    </widget>
                   </item>
+                  <item>
+                   <widget class="QPushButton" name="pushButtonSaveVideo">
+                    <property name="text">
+                     <string>save video</string>
+                    </property>
+                    <property name="checkable">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
                  </layout>
                 </widget>
                </item>
@@ -367,8 +377,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>127</width>
-         <height>168</height>
+         <width>487</width>
+         <height>640</height>
         </rect>
        </property>
        <attribute name="label">
@@ -460,8 +470,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>110</width>
-         <height>45</height>
+         <width>487</width>
+         <height>640</height>
         </rect>
        </property>
        <attribute name="label">
@@ -487,7 +497,7 @@
      <x>0</x>
      <y>0</y>
      <width>505</width>
-     <height>25</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuRobot">

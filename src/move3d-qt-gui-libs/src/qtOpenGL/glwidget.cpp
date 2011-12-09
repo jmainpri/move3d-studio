@@ -103,14 +103,18 @@ void GLWidget::addCurrentImage()
 
 void GLWidget::saveImagesToDisk()
 {
+    string str = string(getenv("HOME_MOVE3D")) + "/video/";
+
     ostringstream oss(ostringstream::out);
-    oss << "cd "<< getenv("HOME_MOVE3D") <<"/video;rm *.jpg";
+    oss << "cd "<< str <<";rm *.jpg";
     system(oss.str().c_str());
 
+
+    cout << "saving in : " << str << endl;
     for (int i = 0; i < _pictures.size(); i++)
     {
         oss.str("");
-        string str = string(getenv("HOME_MOVE3D")) + "/video/";
+
         oss << str << "Image_" << setfill('0') << setw(4) << i << ".jpg";
         cout << "Saving : " << oss.str() << endl;
         _pictures.at(i)->save(oss.str().c_str(), "JPG", 100);
@@ -120,7 +124,7 @@ void GLWidget::saveImagesToDisk()
 
     oss.str("");
     //change to video directory then compress jpg files to AVI video for more parameters and video format see man pages of mencoder
-    oss << "cd "<<getenv("HOME_MOVE3D")<<"/video;mencoder mf://*.jpg -mf w=800:h=600:fps=25:type=jpeg -ovc lavc -lavcopts vcodec=mpeg4 -oac copy -o output.avi";
+    oss << "cd "<< str <<";mencoder mf://*.jpg -mf w=800:h=600:fps=25:type=jpeg -ovc lavc -lavcopts vcodec=mpeg4 -oac copy -o output.avi";
     system(oss.str().c_str());
 }
 

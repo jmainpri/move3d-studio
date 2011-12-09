@@ -11,6 +11,7 @@
 #include <QSettings>
 #include <QMessageBox>
 #include "qtipl.hpp"
+#include "sparkwidget.hpp"
 
 
 #include "planner_handler.hpp"
@@ -24,6 +25,7 @@
 
 using namespace std;
 
+extern sparkWidget* global_w;
 
 MainWindowRemote::MainWindowRemote(PosterReader *pr, QWidget *parent) :
         QMainWindow(parent),
@@ -47,6 +49,12 @@ MainWindowRemote::MainWindowRemote(PosterReader *pr, QWidget *parent) :
     connect(m_pr, SIGNAL(sparkStatus(bool)),this, SLOT(setSparkStatusText(bool)));
 
     on_pushButtonLoadSettings_clicked();
+
+    //timer for recording
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(saveVideoTimer()));
+
+    connect(m_ui->pushButtonSaveSettings,SIGNAL(toggled(bool)), this, SLOT(on_pushButtonSaveVideo_toggled(bool)));
 
 }
 
@@ -278,3 +286,24 @@ void MainWindowRemote::on_pushButtonSaveSettings_clicked()
 //{
 //
 //}
+
+void MainWindowRemote::on_pushButtonSaveVideo_toggled(bool checked)
+{
+    if (checked)
+    {
+        global_w->getOpenGL()->resetImageVector();
+        timer->start(40);
+        cout << "begin recording" << endl;
+    }
+    else
+    {
+        timer->stop();
+        global_w->getOpenGL()->saveImagesToDisk();
+        cout << "end recording" << endl;
+    }
+}
+
+void MainWindowRemote::saveVideoTimer()
+{
+    global_w->getOpenGL()->addCurrentImage();
+}

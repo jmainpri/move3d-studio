@@ -7,6 +7,7 @@ class PosterReader;
 
 #include "qtLibrary.hpp"
 #include <QSettings>
+#include <QTimer>
 #include "p3d_sys.h"
 #include "../p3d/env.hpp"
 #include "../p3d/ParametersEnv.hpp"
@@ -41,11 +42,13 @@ signals:
 private slots:
 
         //void on_switchSparkView_clicked(bool checked);
+        void on_pushButtonSaveVideo_toggled(bool checked);
         void on_pushButtonSaveSettings_clicked();
         void on_pushButtonLoadSettings_clicked();
         void setSparkRefresh();
         void sparkSaveScenario();
         void setRobotAsCurrent();
+        void saveVideoTimer();
         //void on_checkBox_clicked(bool checked);
 
 protected:
@@ -70,6 +73,8 @@ private:
         void initCamera();
         void saveDockSettings(QSettings & settings, QString dockName, QDockWidget * dockWidget);
         void loadDockSettings(QSettings & settings, QString dockName, QDockWidget * dockWidget);
+
+        QTimer* timer;
 };
 
 #endif // MAINWINDOWREMOTE_HPP
