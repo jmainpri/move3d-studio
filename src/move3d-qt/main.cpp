@@ -73,6 +73,8 @@ int Main_threads::run(int argc, char** argv)
 	//    app->setStyle(new QWindowsStyle());
 	//    app->setStyle(new QMacStyle());
   
+  char** argv_tmp=NULL;
+  
   // No argument (load a file from disc)
   if( argc == 1 )
   {
@@ -81,14 +83,30 @@ int Main_threads::run(int argc, char** argv)
     if (!fileName.isEmpty())
     {
       argc = 3;
-      argv[1] = QString("-f").toAscii().data();
-      argv[2] = fileName.toAscii().data();
+      
+      argv_tmp = new char*[3];
+      argv_tmp[0] = argv[0];
+      argv_tmp[1] = new char[string("-f").length()+1];
+      argv_tmp[2] = new char[fileName.toStdString().length()+1];
+      
+      strcpy( argv_tmp[1] , QString("-f").toAscii().data() );
+      strcpy( argv_tmp[2] , fileName.toAscii().data() );
+      
+      cout << "Openning file : " << fileName.toStdString() << endl;
     }
+    else
+    {
+      return 0;
+    }
+  }
+  else
+  {
+    argv_tmp = argv;
   }
 
 	QThread plannerThread;
   global_PlanningThread = &plannerThread;
-	global_plannerHandler = new PlannerHandler(argc, argv);
+	global_plannerHandler = new PlannerHandler(argc, argv_tmp);
 	global_plannerHandler->moveToThread(&plannerThread);
 	plannerThread.start();
 	QMetaObject::invokeMethod(global_plannerHandler,"init",Qt::BlockingQueuedConnection);
