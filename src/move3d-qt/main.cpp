@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <QDesktopWidget>
+#include <QFileDialog>
 
 #ifdef QT_GL
 QSemaphore* sem;
@@ -71,6 +72,19 @@ int Main_threads::run(int argc, char** argv)
 	//    app->setStyle(new QCleanlooksStyle());
 	//    app->setStyle(new QWindowsStyle());
 	//    app->setStyle(new QMacStyle());
+  
+  // No argument (load a file from disc)
+  if( argc == 1 )
+  {
+    QString fileName = QFileDialog::getOpenFileName();
+    
+    if (!fileName.isEmpty())
+    {
+      argc = 3;
+      argv[1] = QString("-f").toAscii().data();
+      argv[2] = fileName.toAscii().data();
+    }
+  }
 
 	QThread plannerThread;
   global_PlanningThread = &plannerThread;
