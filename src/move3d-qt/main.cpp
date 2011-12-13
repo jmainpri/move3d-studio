@@ -73,18 +73,45 @@ int Main_threads::run(int argc, char** argv)
 	//    app->setStyle(new QWindowsStyle());
 	//    app->setStyle(new QMacStyle());
   
+  int argc_tmp;
   char** argv_tmp=NULL;
+  int ith_arg=0;
+  bool openFileDialog=true;
+  string dirName;
+  
+  // Find if a file is passed as argument
+  while (ith_arg < argc)
+  {
+    if (string(argv[ith_arg]) == "-d") 
+    {
+      openFileDialog = true;
+      if ((ith_arg+1) < argc) {
+        dirName = argv[ith_arg+1];
+      } 
+      else {
+        return 0;
+      }
+    }
+    if (string(argv[ith_arg]) == "-f") 
+    {
+      openFileDialog = false;
+      break;
+    }
+    
+    ith_arg++;
+  }
   
   // No argument (load a file from disc)
-  if( argc == 1 )
+  if( argc == 1 || openFileDialog )
   {
-    QString fileName = QFileDialog::getOpenFileName();
+    QString fileName = QFileDialog::getOpenFileName( NULL, tr("Open P3D File"), dirName.c_str(),tr("P3D (*.p3d)"));
     
     if (!fileName.isEmpty())
     {
-      argc = 3;
+      // Copy arguments after the fileName
+      argc_tmp = argc+2;
+      argv_tmp = new char*[argc+2];
       
-      argv_tmp = new char*[3];
       argv_tmp[0] = argv[0];
       argv_tmp[1] = new char[string("-f").length()+1];
       argv_tmp[2] = new char[fileName.toStdString().length()+1];
@@ -92,6 +119,10 @@ int Main_threads::run(int argc, char** argv)
       strcpy( argv_tmp[1] , QString("-f").toAscii().data() );
       strcpy( argv_tmp[2] , fileName.toAscii().data() );
       
+      for(int i=1;i<(argc-1);i++)
+      {
+        argv_tmp[i+2] = argv[i];
+      }
       cout << "Openning file : " << fileName.toStdString() << endl;
     }
     else
@@ -101,12 +132,13 @@ int Main_threads::run(int argc, char** argv)
   }
   else
   {
+    argc_tmp = argc;
     argv_tmp = argv;
   }
 
 	QThread plannerThread;
   global_PlanningThread = &plannerThread;
-	global_plannerHandler = new PlannerHandler(argc, argv_tmp);
+	global_plannerHandler = new PlannerHandler(argc_tmp, argv_tmp);
 	global_plannerHandler->moveToThread(&plannerThread);
 	plannerThread.start();
 	QMetaObject::invokeMethod(global_plannerHandler,"init",Qt::BlockingQueuedConnection);
