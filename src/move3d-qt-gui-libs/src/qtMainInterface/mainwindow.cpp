@@ -527,7 +527,8 @@ void MainWindow::initViewerButtons()
     new QtShiva::SpinBoxConnector(this, m_ui->spinBoxJointToDraw,Env::jntToDraw);
     connect(m_ui->spinBoxJointToDraw,SIGNAL(valueChanged(int)),this,SLOT(setJointToDraw(int)));
     m_ui->spinBoxJointToDraw->setValue(XYZ_ROBOT->o[XYZ_ROBOT->no-1]->jnt->num);
-
+    setJointToDraw( m_ui->spinBoxJointToDraw->value() );
+  
     // Show traj and trace
     connect(m_ui->pushButtonShowTrace,SIGNAL(clicked(bool)),this,SLOT(showTrace()));
     connect(m_ui->pushButtonShowTraj,SIGNAL(clicked(bool)),this,SLOT(showTraj()),Qt::DirectConnection);
