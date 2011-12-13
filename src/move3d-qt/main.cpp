@@ -119,9 +119,14 @@ int Main_threads::run(int argc, char** argv)
       strcpy( argv_tmp[1] , QString("-f").toAscii().data() );
       strcpy( argv_tmp[2] , fileName.toAscii().data() );
       
-      for(int i=1;i<(argc-1);i++)
+      if (argc>1) 
       {
-        argv_tmp[i+2] = argv[i];
+        for(int i=1;i<argc;i++)
+        {
+          string str(argv[i]);
+          argv_tmp[i+2] = new char[str.length()+1];
+          strcpy( argv_tmp[i+2] , str.c_str() );
+        }
       }
       cout << "Openning file : " << fileName.toStdString() << endl;
     }
