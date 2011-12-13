@@ -4,15 +4,6 @@ IF(QT_LIBRARY)
 
 BM3D_INC_DIR_PROCESS (${BM3D_MODULE_NAME})
 
-IF(USE_POCOLIBS)
-BM3D_SRC_SUBDIR_PROCESS(
-pocolibsPoster.cpp
-)
-BM3D_QT_GENERATE_MOC(
-pocolibsPoster.hpp
-)
-ENDIF()
-
 BM3D_SRC_SUBDIR_PROCESS(
 planner_handler.cpp
 )

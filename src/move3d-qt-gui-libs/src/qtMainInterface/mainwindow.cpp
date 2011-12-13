@@ -41,10 +41,6 @@
 #include "utils/testModel.hpp"
 #include "utils/SaveContext.hpp"
 
-#ifdef USE_POCOLIBS
-#include "pocolibsPoster.hpp" 
-#endif
-
 using namespace std;
 using namespace tr1;
 
@@ -519,6 +515,7 @@ void MainWindow::initViewerButtons()
 
     connectCheckBoxToEnv(m_ui->checkBoxDisableDraw,Env::drawDisabled);
     connectCheckBoxToEnv(m_ui->checkBoxDrawGraph,Env::drawGraph);
+    connectCheckBoxToEnv(m_ui->checkBoxDrawExploration,Env::drawExploration);
     connectCheckBoxToEnv(m_ui->checkBoxDrawTraj,Env::drawTraj);
     connectCheckBoxToEnv(m_ui->checkBoxDrawTrajVector,Env::drawTrajVector);
     connectCheckBoxToEnv(m_ui->checkBoxDrawDebug,Env::debugCostOptim);
@@ -709,15 +706,6 @@ void MainWindow::restoreView()
 {
 	g3d_restore_win_camera(G3D_WIN->vs);
 	drawAllWinActive();
-    
-#ifdef USE_POCOLIBS
-	FetchEnvironment* posterHandler = new FetchEnvironment();
-    
-	if( !posterHandler->init(this) )
-	{
-	    cout << " YESSSS : Poster Found!!!" << endl;
-	}
-#endif
 }
 
 void MainWindow::addTrajToDraw()

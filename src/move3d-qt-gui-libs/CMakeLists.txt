@@ -94,7 +94,6 @@ Move3D_flag(HRI_PLANNER "Human Robot Interaction planner module" ON USE_GSL PQP)
 Move3D_flag(USE_GBM "Compilation with module Multilocalpath" ON)
 Move3D_flag(USE_GLUT "Compilation with a glut window" OFF)
 Move3D_flag(USE_GSL "Mathematic Library" OFF)
-Move3D_flag(USE_POCOLIBS "Laas/poster mechanism" OFF)
 Move3D_flag(USE_QWT "Compilation with technical widget" ON)
 
 
@@ -157,22 +156,6 @@ IF(USE_GLUT)
 FIND_PACKAGE (GLUT REQUIRED glut)
 INCLUDE_directories (${GLUT_INCLUDE_DIR})
 SET (LIBS ${LIBS} ${GLUT_glut_LIBRARY})
-ENDIF()
-
-#-------------- Pocolibs -------------------------------------------------------
-
-IF(USE_POCOLIBS)
-FIND_PACKAGE (Pkgconfig)
-pkg_check_modules(POCOLIBS REQUIRED "pocolibs")
-
-#MESSAGE( "------------------ POCOLIBS -----------------------" )
-#MESSAGE( "${POCOLIBS_CFLAGS}" )
-#MESSAGE( "${POCOLIBS_LDFLAGS}" )
-
-#SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${POCOLIBS_INCLUDE_DIR})
-#SET(LIBS ${LIBS} ${POCOLIBS_LDFLAGS})
-
-
 ENDIF()
 
 FIND_PACKAGE(MOVE3D-PLANNERS REQUIRED)
@@ -380,10 +363,6 @@ ENDIF(${CMAKE_BUILD_TYPE} MATCHES "Debug")
 ADD_LIBRARY(Move3D-Qt-Gui SHARED ${Move3DGUI_src} ${Move3DGUI_QT_MOC} ${Move3DGUI_QT_UI_HEADERS} ${Move3DGUI_inc})
 TARGET_LINK_LIBRARIES(Move3D-Qt-Gui ${LIBS}  m)
 
-IF(USE_POCOLIBS)
-TARGET_LINK_LIBRARIES(Move3D-Qt-Gui ${POCOLIBS_LDFLAGS})
-SET_TARGET_PROPERTIES(Move3D-Qt-Gui PROPERTIES COMPILE_FLAGS ${POCOLIBS_CFLAGS})
-ENDIF()
 
 # ------------------------------------------------------------------------------
 # Intallation
