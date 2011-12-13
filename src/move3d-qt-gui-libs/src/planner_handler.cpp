@@ -299,7 +299,7 @@ void qt_runReplanning()
   otp[1] = -2.60;
   otp[2] = 1.000;
   
-  replanning_Function(rob->getRobotStruct(), rob->getRobotStruct()->tcur, otp, 5);
+  //replanning_Function(rob->getRobotStruct(), rob->getRobotStruct()->tcur, otp, 5);
 }
 #endif
 
@@ -452,35 +452,8 @@ void qt_executePlan()
 
 void qt_showTraj()
 {
-
-	p3d_rob *hum_robotPt;
-	Robot* rob =	global_Project->getActiveScene()->getRobotByNameContaining("HUMAN");
-	if (rob)
-	{
-		hum_robotPt = rob->getRobotStruct();
-	}
-
-#ifdef HRI_PLANNER
   p3d_rob *robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
-  
-	if (PlanEnv->getBool(PlanParam::env_showHumanTraj))
-	{
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,false);
-		g3d_show_tcur_both_rob(robotPt,default_drawtraj_fct_qt_pipe,hum_robotPt,default_drawtraj_fct_qt_pipe);
-		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->showBestConf();
-	}
-	else
-	{
-    //		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,false);
-		g3d_show_tcur_rob(robotPt,default_drawtraj_fct_qt_pipe);
-                double tmp = ENV.getDouble(Env::showTrajFPS);
-                ENV.setDouble(Env::showTrajFPS,tmp*5);
-                g3d_show_tcur_rob(hum_robotPt,default_drawtraj_fct_qt_pipe);
-                ENV.setDouble(Env::showTrajFPS,tmp);
-    //		dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->showBestConf();
-	}
-#endif
-
+  g3d_show_tcur_rob(robotPt,default_drawtraj_fct_qt_pipe);
 	ENV.setBool(Env::isRunning,false);
 }
 
