@@ -59,6 +59,7 @@ void ReplanningWidget::init()
   connect(m_ui->pushButtonInitialize, SIGNAL(clicked()), this, SLOT(initReplanning()));
   connect(m_ui->pushButtonExecuteSimu, SIGNAL(clicked()), this, SLOT(executeReplanTraj()));
   connect(m_ui->pushButtonExecutePlan, SIGNAL(clicked()), this, SLOT(executePlan()));
+  connect(m_ui->pushButtonCreateSraightLine, SIGNAL(clicked()), this, SLOT(createSraightLine()));
 
   
 #ifdef USE_QWT
@@ -177,15 +178,30 @@ void ReplanningWidget::computeSoftMotion()
 //---------------------------------------------------------
 // Replanning
 //---------------------------------------------------------
+void ReplanningWidget::createSraightLine()
+{
+  replan_init("PR2_ROBOT");
+  replan_init_for_navigation();
+  replan_create_straightline();
+  
+  m_mainWindow->drawAllWinActive();
+}
+
 void ReplanningWidget::initReplanning()
 {
-  replann_initialize();
+  //replan_initialize();
+  replan_init_execution();
 }
 
 void ReplanningWidget::mainReplanFunction()
 {
   emit(selectedPlanner(QString("Replanning")));
   return; 
+}
+
+void ReplanningWidget::optimizeCurrentTrajectory()
+{
+  emit(selectedPlanner(QString("ExecuteOptimizeOnCurrentTraj")));
 }
 
 void ReplanningWidget::executeReplanTraj()

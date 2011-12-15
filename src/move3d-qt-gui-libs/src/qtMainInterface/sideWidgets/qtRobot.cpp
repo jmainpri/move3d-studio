@@ -91,44 +91,45 @@ MoveRobot*  RobotWidget::getMoveRobot()
 //---------------------------------------------------------------------
 void RobotWidget::initModel()
 {
-    connect(m_ui->pushButtonCollision,SIGNAL(clicked()),this,SLOT(collisionsTest()));
-    connect(m_ui->pushButtonLocalPath,SIGNAL(clicked()),this,SLOT(localpathsTest()));
-    connect(m_ui->pushButtonCost,SIGNAL(clicked()),this,SLOT(costTest()));
-    connect(m_ui->pushButtonTestAll,SIGNAL(clicked()),this,SLOT(allTests()));
-    connect(m_ui->pushButtonSetObjectToCarry,SIGNAL(clicked()),this,SLOT(SetObjectToCarry()));
-
-    //Traj from via point
-    connect(m_ui->pushButtonLaunchSoft,SIGNAL(clicked()),this,SLOT(makeSoftmotionTraj()));
-    connect(m_ui->pushButtonLaunchNormal,SIGNAL(clicked()),this,SLOT(makeNormalTraj()));
-    connect(m_ui->pushButtonSaveConf,SIGNAL(clicked()),this,SLOT(saveConfig()));
-    connect(m_ui->pushButtonClearTraj,SIGNAL(clicked()),this,SLOT(clearConfigs()));
-    connect(m_ui->pushButtonDeleteConf,SIGNAL(clicked()),this,SLOT(deleteConfig()));
-    // end Traj from via point
-
-    connect(ENV.getObject(Env::numberOfCollisionPerSec),SIGNAL(valueChanged(QString)),m_ui->labelCollision,SLOT(setText(QString)));
-    connect(ENV.getObject(Env::numberOfLocalPathPerSec),SIGNAL(valueChanged(QString)),m_ui->labelLocalPath,SLOT(setText(QString)));
-    connect(ENV.getObject(Env::numberOfCostPerSec),SIGNAL(valueChanged(QString)),m_ui->labelTimeCost,SLOT(setText(QString)));
-
-    connect(m_ui->pushButtonAttMat,SIGNAL(clicked()),this,SLOT(setAttMatrix()));
-
-    QString RobotObjectToCarry("No Object");
-
-    ENV.setString(Env::ObjectToCarry,RobotObjectToCarry);
-
-    // Grab Object
-    for(int i =0;i<XYZ_ENV->nr;i++)
+  connect(m_ui->pushButtonCollision,SIGNAL(clicked()),this,SLOT(collisionsTest()));
+  connect(m_ui->pushButtonLocalPath,SIGNAL(clicked()),this,SLOT(localpathsTest()));
+  connect(m_ui->pushButtonCost,SIGNAL(clicked()),this,SLOT(costTest()));
+  connect(m_ui->pushButtonTestAll,SIGNAL(clicked()),this,SLOT(allTests()));
+  connect(m_ui->pushButtonSetObjectToCarry,SIGNAL(clicked()),this,SLOT(SetObjectToCarry()));
+  
+  //Traj from via point
+  connect(m_ui->pushButtonLaunchSoft,SIGNAL(clicked()),this,SLOT(makeSoftmotionTraj()));
+  connect(m_ui->pushButtonLaunchNormal,SIGNAL(clicked()),this,SLOT(makeNormalTraj()));
+  connect(m_ui->pushButtonSaveConf,SIGNAL(clicked()),this,SLOT(saveConfig()));
+  connect(m_ui->pushButtonClearTraj,SIGNAL(clicked()),this,SLOT(clearConfigs()));
+  connect(m_ui->pushButtonDeleteConf,SIGNAL(clicked()),this,SLOT(deleteConfig()));
+  // end Traj from via point
+  
+  connect(ENV.getObject(Env::numberOfCollisionPerSec),SIGNAL(valueChanged(QString)),m_ui->labelCollision,SLOT(setText(QString)));
+  connect(ENV.getObject(Env::numberOfLocalPathPerSec),SIGNAL(valueChanged(QString)),m_ui->labelLocalPath,SLOT(setText(QString)));
+  connect(ENV.getObject(Env::numberOfCostPerSec),SIGNAL(valueChanged(QString)),m_ui->labelTimeCost,SLOT(setText(QString)));
+  
+  connect(m_ui->pushButtonAttMat,SIGNAL(clicked()),this,SLOT(setAttMatrix()));
+  
+  QString RobotObjectToCarry("No Object");
+  
+  ENV.setString(Env::ObjectToCarry,RobotObjectToCarry);
+  
+  // List all robots with only one 
+  // Freeflyer joint
+  for(int i =0;i<XYZ_ENV->nr;i++)
+  {
+    if( XYZ_ENV->robot[i]->njoints == 1 )
     {
-        if(XYZ_ENV->robot[i]->joints[1]->type == P3D_FREEFLYER )
-        {
-            if( XYZ_ENV->robot[i]->njoints == 1 )
-            {
-                QString FFname(XYZ_ENV->robot[i]->name);
-                m_ui->comboBoxGrabObject->addItem(FFname);
-                m_FreeFlyers.push_back(FFname);
-                //                cout<< " FreeFlyer = "  << XYZ_ENV->robot[i]->name << endl;
-            }
-        }
+      if(XYZ_ENV->robot[i]->joints[1]->type == P3D_FREEFLYER )
+      {
+        QString FFname(XYZ_ENV->robot[i]->name);
+        m_ui->comboBoxGrabObject->addItem(FFname);
+        m_FreeFlyers.push_back(FFname);
+        //                cout<< " FreeFlyer = "  << XYZ_ENV->robot[i]->name << endl;
+      }
     }
+  }
 
     m_ui->comboBoxGrabObject->setCurrentIndex(0);
     connect(m_ui->comboBoxGrabObject, SIGNAL(currentIndexChanged(int)),this, SLOT(currentObjectChange(int))/*, Qt::DirectConnection*/);
@@ -549,97 +550,95 @@ void runCurrentTest()
 //! which type of method will be used (it is called from the planner thread)
 void runManipulation()
 {
-    p3d_rob* rob =  global_manipPlanTest->getManipulationPlanner()->robot();
-    
-    if(Manip::isCartesianMode)
-    {
-        //for(unsigned int i=0; i < rob->armManipulationData->size(); i++)
-            global_manipPlanTest->getManipulationPlanner()->setArmCartesian(0, true);
-    }
-    else
-    {
-        //for(unsigned int i=0; i < rob->armManipulationData->size(); i++)
-            global_manipPlanTest->getManipulationPlanner()->setArmCartesian(0, false);
-    }
-    
-    switch (Phase)
-    {
+  if(Manip::isCartesianMode)
+  {
+    //for(unsigned int i=0; i < rob->armManipulationData->size(); i++)
+    global_manipPlanTest->getManipulationPlanner()->setArmCartesian(0, true);
+  }
+  else
+  {
+    //for(unsigned int i=0; i < rob->armManipulationData->size(); i++)
+    global_manipPlanTest->getManipulationPlanner()->setArmCartesian(0, false);
+  }
+  
+  switch (Phase)
+  {
     case ARM_FREE :
     {
-        cout << "ARM_FREE" << endl;
-        global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
-        global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
-        
-        global_manipPlanTest->runTest(1);
+      cout << "ARM_FREE" << endl;
+      global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
+      global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
+      
+      global_manipPlanTest->runTest(1);
     }
-        break;
-        
+      break;
+      
     case ARM_PICK_GOTO :
     {
-        cout << "ARM_PICK_GOTO" << endl;
-        global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
-        global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
-        
-        global_manipPlanTest->runTest(2);
+      cout << "ARM_PICK_GOTO" << endl;
+      global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
+      global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
+      
+      global_manipPlanTest->runTest(2);
     }
-        break;
-        
+      break;
+      
     case ARM_TAKE_TO_FREE :
     {
-        cout << "ARM_TAKE_TO_FREE" << endl;
-        global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
-        global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
-        
-        global_manipPlanTest->runTest(3);
+      cout << "ARM_TAKE_TO_FREE" << endl;
+      global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
+      global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
+      
+      global_manipPlanTest->runTest(3);
     }
-        break;
-
+      break;
+      
     case ARM_TAKE_TO_PLACE :
     {
-        cout << "ARM_TAKE_TO_PLACE" << endl;
-        global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
-        global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
-        
-        global_manipPlanTest->runTest(4);
+      cout << "ARM_TAKE_TO_PLACE" << endl;
+      global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
+      global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
+      
+      global_manipPlanTest->runTest(4);
     }
-        break;
-
+      break;
+      
     case ARM_ESCAPE_OBJECT :
     {
-        cout << "ARM_ESCAPE_OBJECT" << endl;
-        global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
-        global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
-
-        global_manipPlanTest->runTest(7);
+      cout << "ARM_ESCAPE_OBJECT" << endl;
+      global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
+      global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
+      
+      global_manipPlanTest->runTest(7);
     }
-        break;
-        
-        //      case Manip::rePlanning :
-        //      {
-        //        p3d_vector3 otp;
-        //        otp[0] = 4.250;
-        //        otp[1] = -2.60;
-        //        otp[2] = 1.000;
-        //
-        //        SM_TRAJ traj;
-        //
-        //        int id_localpath;
-        //        const double t_rep = 0.0; // in second
-        //        const double tau = 0.0;
-        //        p3d_getQSwitchIDFromMidCVS(tau, t_rep, &id_localpath);
-        //
-        //        global_manipPlanTest->getManipulationPlanner()->armReplan(otp,id_localpath,traj);
-        //      }
-        //        break;
-        
+      break;
+      
+      //      case Manip::rePlanning :
+      //      {
+      //        p3d_vector3 otp;
+      //        otp[0] = 4.250;
+      //        otp[1] = -2.60;
+      //        otp[2] = 1.000;
+      //
+      //        SM_TRAJ traj;
+      //
+      //        int id_localpath;
+      //        const double t_rep = 0.0; // in second
+      //        const double tau = 0.0;
+      //        p3d_getQSwitchIDFromMidCVS(tau, t_rep, &id_localpath);
+      //
+      //        global_manipPlanTest->getManipulationPlanner()->armReplan(otp,id_localpath,traj);
+      //      }
+      //        break;
+      
     default:
-        cout << "Manip::Test not implemented" << endl;
-        break;
-    }
-    
-    g3d_draw_allwin_active();
-    ENV.setBool(Env::isRunning,false);
-    cout << "Ends Manipulation Thread" << endl;
+      cout << "Manip::Test not implemented" << endl;
+      break;
+  }
+  
+  g3d_draw_allwin_active();
+  ENV.setBool(Env::isRunning,false);
+  cout << "Ends Manipulation Thread" << endl;
 }
 
 
@@ -1046,7 +1045,7 @@ void RobotWidget::resetManipulationData()
 
     global_manipPlanTest->getManipPlanner()->setPlanningMethod( planner_Function );
     global_manipPlanTest->getManipPlanner()->setSmoothingMethod( smoothing_Function );
-    global_manipPlanTest->getManipPlanner()->setReplanningMethod( replanning_Function );
+    //global_manipPlanTest->getManipPlanner()->setReplanningMethod( replanning_Function );
 
     global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
 

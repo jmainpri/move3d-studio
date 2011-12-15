@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
-    <height>729</height>
+    <width>412</width>
+    <height>731</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -79,8 +79,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>483</width>
-            <height>1170</height>
+            <width>395</width>
+            <height>1212</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -617,22 +617,28 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>483</width>
-            <height>933</height>
+            <width>395</width>
+            <height>902</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
+           <property name="margin">
+            <number>5</number>
+           </property>
            <item>
             <widget class="QGroupBox" name="groupBox_4">
              <property name="title">
               <string>Basic Requests</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_6">
+              <property name="margin">
+               <number>0</number>
+              </property>
               <item row="3" column="0">
                <widget class="QWidget" name="widget_6" native="true">
                 <layout class="QHBoxLayout" name="horizontalLayout_8">
                  <property name="margin">
-                  <number>0</number>
+                  <number>5</number>
                  </property>
                  <item>
                   <widget class="QWidget" name="widget_7" native="true">
@@ -640,6 +646,13 @@
                     <property name="margin">
                      <number>0</number>
                     </property>
+                    <item>
+                     <widget class="QPushButton" name="pushButtonResetManipulationData">
+                      <property name="text">
+                       <string>Reset</string>
+                      </property>
+                     </widget>
+                    </item>
                     <item>
                      <widget class="QGroupBox" name="groupBox_7">
                       <property name="title">
@@ -649,21 +662,21 @@
                        <property name="margin">
                         <number>0</number>
                        </property>
-                       <item row="0" column="0">
+                       <item row="1" column="0">
                         <widget class="QPushButton" name="pushButtonSetStart">
                          <property name="text">
                           <string>Start</string>
                          </property>
                         </widget>
                        </item>
-                       <item row="0" column="1">
+                       <item row="1" column="1">
                         <widget class="QPushButton" name="pushButtonSetGoal">
                          <property name="text">
                           <string>Goal</string>
                          </property>
                         </widget>
                        </item>
-                       <item row="1" column="0">
+                       <item row="2" column="0">
                         <widget class="QPushButton" name="pushButtonSetOpenConfig">
                          <property name="text">
                           <string>Open</string>
@@ -711,13 +724,6 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="pushButtonResetManipulationData">
-                      <property name="text">
-                       <string>Reset ManipData</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
                      <spacer name="verticalSpacer_2">
                       <property name="orientation">
                        <enum>Qt::Vertical</enum>
@@ -739,6 +745,9 @@
                     <string>ArmPlanTask</string>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_7">
+                    <property name="margin">
+                     <number>0</number>
+                    </property>
                     <item>
                      <widget class="QPushButton" name="pushButtonArmFree">
                       <property name="text">
@@ -804,7 +813,7 @@
                    </property>
                    <layout class="QGridLayout" name="gridLayout_10">
                     <property name="margin">
-                     <number>0</number>
+                     <number>5</number>
                     </property>
                     <item row="1" column="0">
                      <widget class="QDoubleSpinBox" name="doubleSpinBoxXPlace"/>

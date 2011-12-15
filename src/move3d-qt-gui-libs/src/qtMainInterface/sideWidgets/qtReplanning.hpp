@@ -52,6 +52,8 @@ private slots:
   void executePlan();
   void plotNoisyTrajectories();
   void plotMultiVectors();
+  void createSraightLine();
+  void optimizeCurrentTrajectory();
 	
 signals:
   void selectedPlanner(QString);

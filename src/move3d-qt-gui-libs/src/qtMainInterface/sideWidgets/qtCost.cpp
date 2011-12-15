@@ -181,28 +181,37 @@ extern void* GroundCostObj;
 
 void CostWidget::initCostSpace()
 {  
-  if (ENV.getBool(Env::isCostSpace)) 
+  if (ENV.getBool(Env::isCostSpace) && global_costSpace ) 
   {
     cout << "Nothing to do" << endl;
     return;
   }
 
+  GlobalCostSpace::initialize();
+  
+  if (ENV.getBool(Env::enableHri))
+  {
 #ifdef HRI_PLANNER
-  HRICS_init();
-  
-  this->initCostFunctions();
-  this->setCostFunction("costHRI");
-  
-  m_tabHri->Ui()->HRICSPlanner->setDisabled(false);
-  m_tabHri->Ui()->pushButtonMakeGrid->setDisabled(true);
-  m_tabHri->Ui()->pushButtonDeleteGrid->setDisabled(false);
-//  m_mainWindow->Ui()->tabCost->m_ui->tabHri->Ui()->HRICSNatural->setDisabled(false);
-//  m_mainWindow->Ui()->tabCost->m_ui->tabHri->Ui()->pushButtonNewNaturalCostSpace->setDisabled(true);
-
-  m_tabOtp->initSliders();
-  
-  cout << "HRI_COSTSPACE OK -----------------------" << endl;
+    HRICS_init();
+    
+    this->initCostFunctions();
+    this->setCostFunction("costHRI");
+    
+    m_tabHri->Ui()->HRICSPlanner->setDisabled(false);
+    m_tabHri->Ui()->pushButtonMakeGrid->setDisabled(true);
+    m_tabHri->Ui()->pushButtonDeleteGrid->setDisabled(false);
+    //  m_mainWindow->Ui()->tabCost->m_ui->tabHri->Ui()->HRICSNatural->setDisabled(false);
+    //  m_mainWindow->Ui()->tabCost->m_ui->tabHri->Ui()->pushButtonNewNaturalCostSpace->setDisabled(true);
+    
+    m_tabOtp->initSliders();
+    
+    cout << "HRI_COSTSPACE OK -----------------------" << endl;
 #endif
+  }
+  else 
+  {
+    this->initCostFunctions();
+  }
 }
 
 // This function is called by the mainwindow

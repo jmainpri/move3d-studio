@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>482</width>
-    <height>778</height>
+    <width>429</width>
+    <height>731</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,8 +27,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>480</width>
-        <height>776</height>
+        <width>427</width>
+        <height>729</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -64,6 +64,13 @@
             </property>
            </widget>
           </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="checkBoxDoReplanning">
+            <property name="text">
+             <string>Do Replanning</string>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="1">
            <widget class="QPushButton" name="pushButtonExecuteSimu">
             <property name="text">
@@ -78,17 +85,24 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QCheckBox" name="checkBoxDoReplanning">
-            <property name="text">
-             <string>Do Replanning</string>
-            </property>
-           </widget>
-          </item>
           <item row="3" column="1">
            <widget class="QPushButton" name="pushButtonExecutePlan">
             <property name="text">
              <string>Execute Plan</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QPushButton" name="pushButtonCreateSraightLine">
+            <property name="text">
+             <string>Straight Line</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QPushButton" name="pushButton">
+            <property name="text">
+             <string>Optimize Current Traj</string>
             </property>
            </widget>
           </item>
@@ -100,166 +114,199 @@
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-           <height>400</height>
+           <height>16777215</height>
           </size>
          </property>
          <property name="title">
           <string>Chomp/Stomp</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="0" column="0">
-           <widget class="QLabel" name="labelChomp">
-            <property name="text">
-             <string>Chomp</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1" colspan="2">
-           <widget class="QPushButton" name="pushButtonRunChomp">
-            <property name="text">
-             <string>Run</string>
-            </property>
+          <item row="3" column="0">
+           <widget class="QWidget" name="widget" native="true">
+            <layout class="QGridLayout" name="gridLayout_4">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item row="2" column="0">
+              <widget class="QCheckBox" name="checkBoxOptimizeCurrentTraj">
+               <property name="text">
+                <string>Use Current Trajectory</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QCheckBox" name="checkBoxSelectedDuration">
+               <property name="text">
+                <string>With Selected Dur.</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QCheckBox" name="checkBoxDrawTraj">
+               <property name="text">
+                <string>Draw Traj</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QCheckBox" name="checkBoxTestMultiGauss">
+               <property name="text">
+                <string>Test Multi Gauss</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QLabel" name="labelStomp">
-            <property name="text">
-             <string>Stomp</string>
-            </property>
+           <widget class="QWidget" name="widget_2" native="true">
+            <layout class="QGridLayout" name="gridLayout_5">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="labelChomp">
+               <property name="text">
+                <string>Chomp</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1" colspan="2">
+              <widget class="QPushButton" name="pushButtonRunChomp">
+               <property name="text">
+                <string>Run</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="labelStomp">
+               <property name="text">
+                <string>Stomp</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1" colspan="2">
+              <widget class="QPushButton" name="pushButtonRunStomp">
+               <property name="text">
+                <string>Run</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QPushButton" name="pushButtonPlotTraj">
+               <property name="text">
+                <string>Plot 2D Traj</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <widget class="QPushButton" name="pushButtonPlotNoise">
+               <property name="text">
+                <string>Plot Noise</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <widget class="QPushButton" name="pushButtonComputeSM">
+               <property name="text">
+                <string>Compute SM</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
-          <item row="4" column="0" colspan="3">
-           <widget class="QCheckBox" name="checkBoxTestMultiGauss">
-            <property name="text">
-             <string>Test Multi Gauss</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0" colspan="2">
-           <widget class="QCheckBox" name="checkBoxDrawTraj">
-            <property name="text">
-             <string>Draw Traj</string>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="0" colspan="3">
-           <widget class="QCheckBox" name="checkBoxOptimizeCurrentTraj">
-            <property name="text">
-             <string>Use Current Trajectory</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="0" colspan="2">
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>Nombre de points</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="2">
-           <widget class="QSpinBox" name="spinBoxNbPoints">
-            <property name="minimum">
-             <number>5</number>
-            </property>
-            <property name="maximum">
-             <number>100</number>
-            </property>
-            <property name="singleStep">
-             <number>5</number>
-            </property>
-            <property name="value">
-             <number>50</number>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="0">
-           <widget class="QLabel" name="label_2">
-            <property name="text">
-             <string>Duration</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBoxDuration"/>
-          </item>
-          <item row="10" column="0">
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>Std. Dev.</string>
-            </property>
-           </widget>
-          </item>
-          <item row="10" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBoxStdDev">
-            <property name="decimals">
-             <number>6</number>
-            </property>
-            <property name="maximum">
-             <double>10000.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="11" column="0" colspan="2">
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>Smooth Weigth</string>
-            </property>
-           </widget>
-          </item>
-          <item row="11" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBoxSmoothWeight">
-            <property name="decimals">
-             <number>6</number>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="0" colspan="2">
-           <widget class="QLabel" name="label_5">
-            <property name="text">
-             <string>Obstacle Weigth</string>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBoxObstacWeight">
-            <property name="decimals">
-             <number>6</number>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QCheckBox" name="checkBoxSelectedDuration">
-            <property name="text">
-             <string>With Selected Duration</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QPushButton" name="pushButtonPlotNoise">
-            <property name="text">
-             <string>Plot Noise</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1" colspan="2">
-           <widget class="QPushButton" name="pushButtonRunStomp">
-            <property name="text">
-             <string>Run</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="2">
-           <widget class="QPushButton" name="pushButtonComputeSM">
-            <property name="text">
-             <string>Compute SM</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QPushButton" name="pushButtonPlotTraj">
-            <property name="text">
-             <string>Plot 2D Traj</string>
-            </property>
+          <item row="4" column="0">
+           <widget class="QWidget" name="widget_3" native="true">
+            <layout class="QGridLayout" name="gridLayout_6">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Nombre de points</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QSpinBox" name="spinBoxNbPoints">
+               <property name="minimum">
+                <number>5</number>
+               </property>
+               <property name="maximum">
+                <number>100</number>
+               </property>
+               <property name="singleStep">
+                <number>5</number>
+               </property>
+               <property name="value">
+                <number>50</number>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_2">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Duration</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QDoubleSpinBox" name="doubleSpinBoxDuration"/>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Std. Dev.</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QDoubleSpinBox" name="doubleSpinBoxStdDev">
+               <property name="decimals">
+                <number>6</number>
+               </property>
+               <property name="maximum">
+                <double>10000.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>Smooth Weigth</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QDoubleSpinBox" name="doubleSpinBoxSmoothWeight">
+               <property name="decimals">
+                <number>6</number>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_5">
+               <property name="text">
+                <string>Obstacle Weigth</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QDoubleSpinBox" name="doubleSpinBoxObstacWeight">
+               <property name="decimals">
+                <number>6</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>

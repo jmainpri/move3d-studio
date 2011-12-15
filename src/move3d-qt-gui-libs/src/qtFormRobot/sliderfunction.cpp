@@ -114,7 +114,7 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
 #endif
     Robot* costR(global_Project->getActiveScene()->getRobotByName(costRobot->name));
     
-    if ( /*true ||*/ !ENV.getBool(Env::HRINoRobot)) 
+    if ( /*true ||*/ global_costSpace && (!ENV.getBool(Env::HRINoRobot))) 
     {
       Configuration costConfig(costR,cost_q);
       //std::cout << "Cost = " << p3d_GetConfigCost(costRobot,cost_q) << std::endl;

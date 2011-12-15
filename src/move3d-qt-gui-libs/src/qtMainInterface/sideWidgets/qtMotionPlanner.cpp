@@ -190,7 +190,11 @@ void MotionPlanner::initOptim()
 {	
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxCostSpace2,				Env::isCostSpace );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxDebug2,						Env::debugCostOptim );
-	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxSaveTrajCost,			PlanParam::saveTrajCost );
+
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxSaveTrajCost,			PlanParam::trajSaveCost );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithIterLimit,		PlanParam::trajPartialShortcut );
+	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithDescent,			PlanParam::trajSaveCost );
+  
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithDeform,				PlanParam::withDeformation );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithShortCut,			PlanParam::withShortCut );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithTimeLimit,		PlanParam::withTimeLimit );
@@ -198,7 +202,7 @@ void MotionPlanner::initOptim()
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithIterLimit,		PlanParam::withMaxIteration );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithDescent,			PlanParam::withDescent );
 	
-	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxPartialShortcut,	PlanParam::partialShortcut );
+	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxPartialShortcut,	PlanParam::trajPartialShortcut );
   
   // Main functions for shortcut and optimization
   connect(this,                                   SIGNAL(selectedPlanner(QString)),global_plannerHandler, SLOT(startPlanner(QString)));
@@ -217,15 +221,12 @@ void MotionPlanner::initOptim()
 	m_ui->comboBoxTrajCostExtimation->setCurrentIndex( /*MECHANICAL_WORK*/ INTEGRAL );
 	setCostCriterium(MECHANICAL_WORK);
 	
-	new QtShiva::SpinBoxSliderConnector(
-																			this, m_ui->doubleSpinBoxNbRounds, m_ui->horizontalSliderNbRounds_2 , Env::nbCostOptimize );
-	
-	new QtShiva::SpinBoxSliderConnector(
-																			this, m_ui->doubleSpinBoxNbMultiSmooth, m_ui->horizontalSliderNbMultiSmooth , Env::nbMultiSmooth );
+	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxNbRounds, m_ui->horizontalSliderNbRounds_2 , Env::nbCostOptimize );
+	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxNbMultiSmooth, m_ui->horizontalSliderNbMultiSmooth , Env::nbMultiSmooth );
 	
 	//QtShiva::SpinBoxSliderConnector* connector1 = 
-	new QtShiva::SpinBoxSliderConnector(
-																			this, m_ui->doubleSpinBoxMinDeformStep, m_ui->horizontalSliderMinDeformStep , PlanParam::MinStep );
+//	new QtShiva::SpinBoxSliderConnector(
+//																			this, m_ui->doubleSpinBoxMinDeformStep, m_ui->horizontalSliderMinDeformStep , PlanParam::MinStep );
 	
 	//QtShiva::SpinBoxSliderConnector* connector2 = 
 	new QtShiva::SpinBoxSliderConnector(

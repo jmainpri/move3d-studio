@@ -293,11 +293,11 @@ void qt_runNavigation()
 
 void qt_runReplanning()
 {
-  Robot* rob =	global_Project->getActiveScene()->getActiveRobot();
-  p3d_vector3 otp;
-  otp[0] = 4.250;
-  otp[1] = -2.60;
-  otp[2] = 1.000;
+//  Robot* rob =	global_Project->getActiveScene()->getActiveRobot();
+//  p3d_vector3 otp;
+//  otp[0] = 4.250;
+//  otp[1] = -2.60;
+//  otp[2] = 1.000;
   
   //replanning_Function(rob->getRobotStruct(), rob->getRobotStruct()->tcur, otp, 5);
 }
@@ -435,10 +435,12 @@ static int default_drawtraj_fct_qt_pipe(p3d_rob* robot, p3d_localpath* curLp)
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
 void qt_executeReplanSimu()
 {
-//  if( replan_plan_initial_path() )
-//  {
-    replann_execute_simulation_traj(default_drawtraj_fct_qt_pipe);
-//  }
+  replan_execute_simulation_traj(default_drawtraj_fct_qt_pipe);
+}
+
+void qt_executeSimpleSimu()
+{
+  replan_execute_simple_simulation(default_drawtraj_fct_qt_pipe);
 }
 
 void qt_executePlan()
@@ -449,6 +451,11 @@ void qt_executePlan()
   }
 }
 #endif
+
+void qt_()
+{
+  
+}
 
 void qt_showTraj()
 {
@@ -465,14 +472,12 @@ void qt_shortCut()
 	cout << "Random : ShortCut "  << endl;
 	//ENV.setBool(Env::isRunning,true);
 #ifdef MOVE3D_CORE
-	Robot* trajRobot = global_Project->getActiveScene()->getActiveRobot();
-	API::Smoothing optimTrj(trajRobot->getCurrentTraj());
+	API::Smoothing optimTrj(global_Project->getActiveScene()->getActiveRobot()->getCurrentTraj());
 	optimTrj.runShortCut(ENV.getInt(Env::nbCostOptimize));
 	optimTrj.replaceP3dTraj();
 #endif
 	g3d_draw_allwin_active();
 	ENV.setBool(Env::isRunning,false);
-
 }
 
 /**
@@ -483,8 +488,7 @@ void qt_optimize()
 	cout << "Random : Deformation "  << endl;
 	//ENV.setBool(Env::isRunning,true);
 #ifdef MOVE3D_CORE
-	Robot* trajRobot = global_Project->getActiveScene()->getActiveRobot();
-	API::CostOptimization optimTrj(trajRobot->getCurrentTraj());
+	API::CostOptimization optimTrj(global_Project->getActiveScene()->getActiveRobot()->getCurrentTraj());
 	optimTrj.runDeformation(ENV.getInt(Env::nbCostOptimize));
 	optimTrj.replaceP3dTraj();
 #endif
