@@ -257,8 +257,11 @@ void CostWidget::setCostFunction(std::string function)
 void CostWidget::setCostFunction(int costFunctionId)
 {
 	vector<string> AllCost = global_costSpace->getAllCost();
-	global_costSpace->setCost(AllCost[costFunctionId]);
-	cout << "Cost Function is now :  " << AllCost[costFunctionId] << endl;	
+        if (costFunctionId< AllCost.size() && costFunctionId>= 0)
+        {
+            global_costSpace->setCost(AllCost[costFunctionId]);
+            cout << "Cost Function is now :  " << AllCost[costFunctionId] << endl;
+        }
 }
 
 void CostWidget::extractBestPath()
