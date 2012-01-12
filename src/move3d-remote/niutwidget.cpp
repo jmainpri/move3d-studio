@@ -6,19 +6,18 @@
 #include "images/yellow-death-xpm.h"
 #include "images/yellow-man-xpm.h"
 #include "images/im_still_alive-xpm.h"
+#include "images/rip-xpm.h"
+
 #include <iostream>
 
 using namespace std;
 
-niutWidget::niutWidget(PosterReader *pr, Ui::MainWindowRemote *m_ui_parent, QWidget *parent) :
+niutWidget::niutWidget(QWidget *parent) :
     QWidget(parent),
-    m_pr(pr),
-    m_ui_p(m_ui_parent),
     m_ui(new Ui::niutWidget)
         
 {
     m_ui->setupUi(this);
-    init( m_pr, m_ui_p );
 }
 
 niutWidget::~niutWidget()
@@ -26,16 +25,16 @@ niutWidget::~niutWidget()
     delete m_ui;
 }
 
-void niutWidget::init(PosterReader *pr, Ui::MainWindowRemote *ui_parent)
+void niutWidget::init(PosterReader *pr, Ui::ParamWidget *ui_param)
 {
-  if( (!pr) || (!ui_parent))
+  if( (!pr) || (!ui_param))
   {
     cout << "niutWidget not well initialized!!!" << endl;
     return;
   }
   
   m_pr = pr;
-  m_ui_p = ui_parent;
+  m_ui_p = ui_param;
   
   _niutLabels.push_back( m_ui->labelNiut1 );
   _niutLabels.push_back( m_ui->labelNiut2 );
@@ -56,7 +55,7 @@ void niutWidget::init(PosterReader *pr, Ui::MainWindowRemote *ui_parent)
   _niutLabels.push_back( m_ui->labelNiut16 );
   
   _niutPmAlive = QPixmap(im_still_alive_img);
-  _niutPmDead = QPixmap(yellow_death);
+  _niutPmDead = QPixmap(rip_xpm);
   _niutPmRed = QPixmap(red_man);
   _niutPmOrange = QPixmap(orange_man);
   _niutPmYellow = QPixmap(yellow_man);

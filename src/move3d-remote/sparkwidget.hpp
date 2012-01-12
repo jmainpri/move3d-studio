@@ -4,8 +4,7 @@
 #include <QWidget>
 #include "posterreader.hpp"
 
-
-#include "ui_mainwindow-remote.h"
+#include "ui_paramwidget.h"
 
 
 namespace Ui {
@@ -16,11 +15,10 @@ class sparkWidget : public QWidget
 {
     Q_OBJECT
 public:
-    sparkWidget(PosterReader *pr = NULL,  Ui::MainWindowRemote *m_ui_parent = NULL, QWidget *parent = 0);
+    sparkWidget(QWidget *parent = 0);
     ~sparkWidget();
     GLWidget* getOpenGL();
-  
-   void init(PosterReader *pr, Ui::MainWindowRemote *m_ui_parent);
+   void init(PosterReader *pr, Ui::ParamWidget *m_ui_param);
 
 private slots:
     void drawAllWinActive();
@@ -51,7 +49,7 @@ protected:
 
 private:
     PosterReader *m_pr;
-    Ui::MainWindowRemote *m_ui_p;
+    Ui::ParamWidget *m_ui_p;
     Ui::sparkWidget *m_ui;
     
     void initLightSource();

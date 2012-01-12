@@ -12,6 +12,7 @@
 
 #include "softMotion/Sm_Traj.h"
 
+
 extern void draw_smtraj_tace();
 
 class PosterReader : public QObject
@@ -69,6 +70,10 @@ public:
 
     GenomPoster * _niutPoster;
     NIUT_HUMAN_LIST _niutPosterStruct;
+ #ifdef ATTENTIONAL_REMOTE
+    GenomPoster * _attentionalPoster;
+    ATTENTIONAL_REPORT_STR _attentionalPosterStruct;
+#endif
 double _dt;
     SM_TRAJ _smTraj;
 };

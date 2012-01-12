@@ -75,7 +75,11 @@ PosterReader::PosterReader()
     _niutWatchDog = 0;
     _niutDeathCounter = 0;
     _niutPrevId = 0;
-
+ #ifdef ATTENTIONAL_REMOTE
+    // Attentional reader
+    _attentionalPoster = new GenomPoster("attentionalReport", (char*)(&_attentionalPosterStruct), sizeof(ATTENTIONAL_REPORT_STR), 10);
+    _attentionalPoster->setRefreshStatus(true);
+#endif
     ptrPosterReader = this;
 }
 
@@ -91,6 +95,9 @@ PosterReader::~PosterReader()
     delete _picowebLeftImg;
     delete _picowebRightImg;
     delete _softmotionPoster;
+   #ifdef ATTENTIONAL_REMOTE
+    delete _attentionalPoster;
+#endif
 }
 
 
@@ -111,6 +118,10 @@ void PosterReader::init()
 
     _softmotionPoster->start();
     cout << "   ... niut thread started" << endl;
+     #ifdef ATTENTIONAL_REMOTE
+    _attentionalPoster->start();
+    cout << "   ... attentional thread started" << endl;
+#endif
 }
 
 void PosterReader::update()
