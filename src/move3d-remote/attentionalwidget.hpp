@@ -21,6 +21,7 @@ public:
 
 private slots:
   void update();
+  void updateOutput();
 
 private:
     Ui::AttentionalWidget *m_ui;

@@ -30,6 +30,8 @@ void AttentionalWidget::init(PosterReader *pr, Ui::ParamWidget *ui_param)
   m_ui_p = ui_param;
 
   connect(m_pr->_attentionalPoster, SIGNAL(dataReady()), this,SLOT(update()));
+
+   connect(m_pr->_attentionalOutputPoster, SIGNAL(dataReady()), this,SLOT(updateOutput()));
 }
 
 //!
@@ -117,4 +119,46 @@ void AttentionalWidget::update()
     m_ui->labelBehaviorSelected->setText(QString("NONE"));
   }
   return;
+}
+
+
+void AttentionalWidget::updateOutput()
+{
+  ATTENTIONAL_OUTPUT_STR *attentionalOutput;
+
+
+
+  if(m_pr->_attentionalOutputPoster->getPosterStuct((char *)(&m_pr->_attentionalOutputPosterStruct)) == false) {
+    cout << " AttentionalWidget::UpdateOutput() getPosterStuct() ERROR " << endl;
+    return;
+  }
+  attentionalOutput = &(m_pr->_attentionalOutputPosterStruct);
+
+   m_ui->doubleSpinBoxOutputCost->setValue(attentionalOutput->cost);
+
+  m_ui->spinBoxOutputHumanTarget->setValue(attentionalOutput->partner);
+
+  m_ui->spinBoxOutputObjectTarget->setValue(attentionalOutput->object);
+
+  m_ui->spinBoxOutputActionChanged->setValue(attentionalOutput->actionChange);
+
+  switch(attentionalOutput->action) {
+    case 0:
+    m_ui->labelOutputBehaviorSelectet->setText(QString("Avoid"));
+    break;
+  case 1:
+    m_ui->labelOutputBehaviorSelectet->setText(QString("Picking"));
+    break;
+  case 2:
+    m_ui->labelOutputBehaviorSelectet->setText(QString("Receiving"));
+    break;
+  case 3:
+    m_ui->labelOutputBehaviorSelectet->setText(QString("Giving"));
+    break;
+  case 4:
+    m_ui->labelOutputBehaviorSelectet->setText(QString("Placing"));
+    break;
+  default:
+    m_ui->labelOutputBehaviorSelectet->setText(QString("NONE"));
+  }
 }

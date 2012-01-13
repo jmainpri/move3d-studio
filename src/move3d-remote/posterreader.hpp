@@ -73,6 +73,9 @@ public:
  #ifdef ATTENTIONAL_REMOTE
     GenomPoster * _attentionalPoster;
     ATTENTIONAL_REPORT_STR _attentionalPosterStruct;
+
+    GenomPoster * _attentionalOutputPoster;
+    ATTENTIONAL_OUTPUT_STR _attentionalOutputPosterStruct;
 #endif
 double _dt;
     SM_TRAJ _smTraj;

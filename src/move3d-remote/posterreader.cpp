@@ -79,6 +79,9 @@ PosterReader::PosterReader()
     // Attentional reader
     _attentionalPoster = new GenomPoster("attentionalReport", (char*)(&_attentionalPosterStruct), sizeof(ATTENTIONAL_REPORT_STR), 10);
     _attentionalPoster->setRefreshStatus(true);
+
+    _attentionalOutputPoster = new GenomPoster("attentionalOutput", (char*)(&_attentionalOutputPosterStruct), sizeof(ATTENTIONAL_OUTPUT_STR), 10);
+    _attentionalOutputPoster->setRefreshStatus(true);
 #endif
     ptrPosterReader = this;
 }
@@ -97,6 +100,7 @@ PosterReader::~PosterReader()
     delete _softmotionPoster;
    #ifdef ATTENTIONAL_REMOTE
     delete _attentionalPoster;
+    delete _attentionalOutputPoster;
 #endif
 }
 
@@ -121,6 +125,8 @@ void PosterReader::init()
      #ifdef ATTENTIONAL_REMOTE
     _attentionalPoster->start();
     cout << "   ... attentional thread started" << endl;
+    _attentionalOutputPoster->start();
+    cout << "   ... attentionalOutput thread started" << endl;
 #endif
 }
 
