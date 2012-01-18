@@ -118,6 +118,26 @@ void AttentionalWidget::update()
   default:
     m_ui->labelBehaviorSelected->setText(QString("NONE"));
   }
+
+  switch(attentionalReport->executed_behavior) {
+    case 0:
+    m_ui->labelBehaviorExecuted->setText(QString("Avoid"));
+    break;
+  case 1:
+    m_ui->labelBehaviorExecuted->setText(QString("Picking"));
+    break;
+  case 2:
+    m_ui->labelBehaviorExecuted->setText(QString("Receiving"));
+    break;
+  case 3:
+    m_ui->labelBehaviorExecuted->setText(QString("Giving"));
+    break;
+  case 4:
+    m_ui->labelBehaviorExecuted->setText(QString("Placing"));
+    break;
+  default:
+    m_ui->labelBehaviorExecuted->setText(QString("NONE"));
+  }
   return;
 }
 
