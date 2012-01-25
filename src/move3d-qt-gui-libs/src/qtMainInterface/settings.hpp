@@ -12,6 +12,6 @@
 #include <string>
 
 void qt_saveInterfaceParameters(bool print, std::string fileName);
-void qt_loadInterfaceParameters(bool print, std::string fileName);
+void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl = true);
 
 #endif

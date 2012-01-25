@@ -192,7 +192,7 @@ void qt_loadCntrts(bool print, Robot* rob, QSettings& settings)
 // LOAD
 //////////////////////////////////////////////////////////////////////////////
 
-void qt_loadInterfaceParameters(bool print, std::string fileName)
+void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
 { 
   QSettings settings(QString(fileName.c_str()), QSettings::IniFormat);
   // ------------------------------------------------------------------
@@ -340,7 +340,9 @@ void qt_loadInterfaceParameters(bool print, std::string fileName)
   // ------------------------------------------------------------------
   qt_loadCntrts(print,global_Project->getActiveScene()->getActiveRobot(),settings);
   qt_loadMultiLocalPath(print,global_Project->getActiveScene()->getActiveRobot(),settings);
-  qt_loadCameraAndAxis( print, g3d_get_cur_states(), settings) ;
+  
+  if( opengl )
+    qt_loadCameraAndAxis( print, g3d_get_cur_states(), settings) ;
 }
 
 //////////////////////////////////////////////////////////////////////////////

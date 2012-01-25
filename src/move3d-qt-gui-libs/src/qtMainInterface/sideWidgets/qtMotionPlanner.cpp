@@ -106,42 +106,36 @@ void MotionPlanner::envDmaxSpinBoxValueChanged( double dmax )
 //---------------------------------------------------------------------
 void MotionPlanner::initDiffusion()
 {
-	//    m_mainWindow->connectCheckBoxToEnv(m_ui->isCostSpace,         Env::isCostSpace);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->isWithGoal,          Env::expandToGoal);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->isManhattan,         Env::isManhattan);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->isEST,               Env::treePlannerIsEST);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->isBidir,             Env::biDir);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->isBalanced,          Env::expandBalanced);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->isExpandControl,     Env::expandControl);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->isDiscardingNodes,   Env::discardNodes);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxIsGoalBias,  Env::isGoalBiased);
-	//    m_mainWindow->connectCheckBoxToEnv(m_ui->isCostTransition,    Env::costBeforeColl);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxRandomInCompCo, Env::randomConnectionToGoal);
+	m_mainWindow->connectCheckBoxToEnv(m_ui->isWithGoal,              Env::expandToGoal);
+	m_mainWindow->connectCheckBoxToEnv(m_ui->isManhattan,             Env::isManhattan);
+	m_mainWindow->connectCheckBoxToEnv(m_ui->isEST,                   Env::treePlannerIsEST);
+	m_mainWindow->connectCheckBoxToEnv(m_ui->isBidir,                 Env::biDir);
+	m_mainWindow->connectCheckBoxToEnv(m_ui->isBalanced,              Env::expandBalanced);
+	m_mainWindow->connectCheckBoxToEnv(m_ui->isExpandControl,         Env::expandControl);
+	m_mainWindow->connectCheckBoxToEnv(m_ui->isDiscardingNodes,       Env::discardNodes);
+	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxIsGoalBias,      Env::isGoalBiased);
+	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxRandomInCompCo,  Env::randomConnectionToGoal);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxClosestInCompCo, Env::tryClosest);
 	
 	m_ui->expansionMethod->setCurrentIndex((int)ENV.getExpansionMethod());
 	connect(m_ui->expansionMethod, SIGNAL(currentIndexChanged(int)),&ENV, SLOT(setExpansionMethodSlot(int)), Qt::DirectConnection);
 	connect(&ENV, SIGNAL(expansionMethodChanged(int)),m_ui->expansionMethod, SLOT(setCurrentIndex(int)));
 	
-	//    m_ui->lineEditMaxNodes->setText( QString::number(ENV.getInt(Env::maxNodeCompco)));
 	m_ui->spinBoxMaxNodes->setValue(ENV.getInt(Env::maxNodeCompco));
-	connect(m_ui->spinBoxMaxNodes, SIGNAL(valueChanged( int )), ENV.getObject(Env::maxNodeCompco), SLOT(set(int)));
+	connect(m_ui->spinBoxMaxNodes, SIGNAL(valueChanged(int)), ENV.getObject(Env::maxNodeCompco), SLOT(set(int)));
 	connect(ENV.getObject(Env::maxNodeCompco), SIGNAL(valueChanged( int )), m_ui->spinBoxMaxNodes, SLOT(setValue(int)));
+  
+  cout << "Set planner max iter : " << PlanEnv->getInt(PlanParam::plannerMaxIterations) << endl;
+  m_ui->spinBoxMaxIterations->setValue( PlanEnv->getInt(PlanParam::plannerMaxIterations) );
+	connect(m_ui->spinBoxMaxIterations, SIGNAL(valueChanged(int)), PlanEnv->getObject(PlanParam::plannerMaxIterations), SLOT(set(int)));
+	connect(PlanEnv->getObject(PlanParam::plannerMaxIterations), SIGNAL(valueChanged(int)), m_ui->spinBoxMaxIterations, SLOT(setValue(int)));
 	
 	m_ui->spinBoxNbTry->setValue(ENV.getInt(Env::NbTry));
 	connect(m_ui->spinBoxNbTry, SIGNAL(valueChanged( int )), ENV.getObject(Env::NbTry), SLOT(set(int)));
 	connect(ENV.getObject(Env::NbTry), SIGNAL(valueChanged( int )), m_ui->spinBoxNbTry, SLOT(setValue(int)));
 	
-	//    connect(ENV.getObject(Env::maxNodeCompco),SIGNAL(valueChanged(int)),this,SLOT(setLineEditWithNumber(Env::maxNodeCompco,int)));
-	//    connect(m_ui->lineEditMaxNodes,SIGNAL(getText(QString::number(int))),ENV.getObject(Env::maxNodeCompco),SLOT(setInt(int)));
-	//    cout << "ENV.getBool(Env::treePlannerIsEST) = " << ENV.getBool(Env::treePlannerIsEST) << endl;
-	
-	//    connect(m_ui->lineEditExtentionStep,SIGNAL(textEdited(QString)),this,SLOT(lineEditChangedStep()));
-	new QtShiva::SpinBoxSliderConnector(
-																			this, m_ui->doubleSpinBoxExtentionStep, m_ui->horizontalSliderExtentionStep , Env::extensionStep );
-	
-	new QtShiva::SpinBoxSliderConnector(
-																			this, m_ui->doubleSpinBoxBias, m_ui->horizontalSliderBias , Env::Bias );
+	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxExtentionStep, m_ui->horizontalSliderExtentionStep, Env::extensionStep );
+	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxBias, m_ui->horizontalSliderBias, Env::Bias );
 	
 	initMultiRRT();
 }

@@ -167,18 +167,19 @@ void qt_runDiffusion()
 		cout << "ENV.getBool(Env::Env::treePlannerIsEST) = " << ENV.getBool(Env::treePlannerIsEST) << endl;
 		if (ENV.getBool(Env::treePlannerIsEST))
 		{
-#if defined( MOVE3D_CORE )
 			res = p3d_run_est(XYZ_GRAPH, fct_stop, fct_draw);
 		}
 		else
 		{
 			res = p3d_run_rrt(XYZ_GRAPH, fct_stop, fct_draw);
-#endif
 		}
+    
 		ChronoPrint("");
 		ChronoOff();
 		
-		g3d_draw_allwin_active();
+    if( !ENV.getBool(Env::drawDisabled) ) {
+      g3d_draw_allwin_active();
+    }
 	}
 	catch (string str) 
 	{
@@ -753,6 +754,11 @@ mArgv(argv)
 void PlannerHandler::init()
 {
   mainMhp(mArgc, mArgv);
+  
+  // Creates the wrapper to the project 
+  // Be carefull to initialize in the right thread
+  global_Project = new Project(new Scene(XYZ_ENV));
+  
   emit initIsDone();
 }
 
