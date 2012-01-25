@@ -235,7 +235,7 @@ void ReplanningWidget::multiThreadGraphicalMode(bool enable)
 
 void ReplanningWidget::createSraightLine()
 {
-  global_rePlanningEnv->init_simple_replanning();
+  //global_rePlanningEnv->init_simple_replanning();
   
   m_mainWindow->drawAllWinActive();
 }
