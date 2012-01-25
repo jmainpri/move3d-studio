@@ -18,26 +18,28 @@
  */
 class Main_threads: public QObject
 {
-Q_OBJECT
-
-        qtGLWindow* 	g3dWin;
-        QApplication* 	app;
-
+  Q_OBJECT
+  
+  qtGLWindow* 	g3dWin;
+  QApplication*       app;
+  QCoreApplication* 	coreApp;
+  
 public:
-        Main_threads();
-        ~Main_threads();
-
+  Main_threads();
+  ~Main_threads();
+  
   int run(int argc, char** argv);
-				
+  
 public slots:
   void selectPlanner();
+  void initInterface();
+  void loadSettings();
   
 signals:
   void selectedPlanner(QString);
-			       
-private slots :
-  void exit();
   
+  private slots :
+  void exit();  
 };
 
 /**

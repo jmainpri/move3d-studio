@@ -57,7 +57,7 @@
 using namespace std;
 
 // External varialbe handled when compiled with move3d studio
-bool move3d_sudio_load_settings = false;
+bool move3d_studio_load_settings = false;
 
 static int FILTER_TO_BE_SET_ACTIVE = FALSE;
 //extern void g3d_create_main_form(void);
@@ -161,9 +161,14 @@ int mainMhp(int argc, char ** argv)
         use();
         return 0;
       }
-    } else if (strcmp(argv[i], "-setgui") == 0) {
+    } 
+    else if (strcmp(argv[i], "-setgui") == 0) {
       ++i;
-      move3d_sudio_load_settings = true;
+      move3d_studio_load_settings = true;
+    } 
+    else if (strcmp(argv[i], "-nogui") == 0) {
+      ++i;
+      // Nothing to do, fix this in main
     }
 #ifdef P3D_COLLISION_CHECKING
 		else if (strcmp(argv[i], "-o") == 0) {
