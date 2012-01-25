@@ -197,11 +197,13 @@ void CostWidget::initCostSpace()
     this->initCostFunctions();
     this->setCostFunction("costHRI");
     
-    m_tabHri->Ui()->HRICSPlanner->setDisabled(false);
-    m_tabHri->Ui()->pushButtonMakeGrid->setDisabled(true);
-    m_tabHri->Ui()->pushButtonDeleteGrid->setDisabled(false);
-    //  m_mainWindow->Ui()->tabCost->m_ui->tabHri->Ui()->HRICSNatural->setDisabled(false);
-    //  m_mainWindow->Ui()->tabCost->m_ui->tabHri->Ui()->pushButtonNewNaturalCostSpace->setDisabled(true);
+    m_tabHri->setGroupBoxDisabled(false);
+    
+//  m_tabHri->Ui()->HRICSPlanner->setDisabled(false);
+//  m_tabHri->Ui()->pushButtonMakeGrid->setDisabled(true);
+//  m_tabHri->Ui()->pushButtonDeleteGrid->setDisabled(false);
+//  m_tabHri->Ui()->HRICSNatural->setDisabled(false);
+//  m_tabHri->Ui()->pushButtonNewNaturalCostSpace->setDisabled(true);
     
     m_tabOtp->initSliders();
     
@@ -354,21 +356,28 @@ void CostWidget::showTrajCost()
 {
 #if defined(USE_QWT)
 	cout << "showTrajCost" << endl;
-	p3d_rob *robotPt = (p3d_rob *) p3d_get_desc_curid(P3D_ROBOT);
-	p3d_traj* CurrentTrajPt = robotPt->tcur;
-	
+
 	BasicPlot* myPlot = new BasicPlot( m_plot );
 	myPlot->setGeometry( m_plot->getPlot()->geometry() );
 	int nbSample = myPlot->getPlotSize();
+  
+  Scene* sc = global_Project->getActiveScene();
+  Robot* robot = sc->getActiveRobot();
+  
+  // If simbot exist use it for traj cost
+  Robot* simbot = sc->getRobotByNameContaining("_ROBOT");
+  if( simbot != NULL ) 
+  {
+    robot = simbot; 
+  }
+  
+  cout << "Show traj cost of robot : " << robot->getName() << endl;
+  
+	API::Trajectory traj = robot->getCurrentTraj();
 	
-	API::Trajectory traj(new Robot(robotPt),CurrentTrajPt);
-	
-	double step = traj.getRangeMax() / (double) nbSample;
+	double step = traj.getRangeMax() / double(nbSample);
 	
 	vector<double> cost;
-	
-	//    cout << "Traj param max = " << traj.getRangeMax() << endl;
-	//    cout << "Traj step = " << step << endl;
 	
 	cout << "Traj cost = " << traj.costDeltaAlongTraj() << endl;
 	
@@ -377,7 +386,6 @@ void CostWidget::showTrajCost()
     for( double param=0; param<traj.getRangeMax(); param = param + step)
     {
       cost.push_back( traj.configAtParam(param)->cost() );
-      //cout << cost.back() << endl;
     }
     myPlot->setTitle("Cost Space along trajectory");
   }

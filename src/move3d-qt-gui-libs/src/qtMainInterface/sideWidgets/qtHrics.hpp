@@ -30,25 +30,24 @@ class HricsWidget : public QWidget
 	Q_OBJECT
 	
 public:
+  
 	HricsWidget(QWidget *parent = 0);
 	~HricsWidget();
 	
 	void initHRI();
-	//void initCost();
 	void initVectorField();
 	void initDrawOneLineInGrid();
 	void initObjectTransferPoint();
 	void initHumanLike();
-  
-  void drawAllWinActive();
 	
 	void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
 	void setMotionWidget(MotionPlanner* ptrMLPW) { m_motionWidget = ptrMLPW; }
+  void setGroupBoxDisabled(bool disable);
 	
-	Ui::HricsWidget* Ui() { return m_ui; }
-	
+  void drawAllWinActive();
   
-  private slots:
+private slots:
+  
   void on_checkBoxPosOr_toggled(bool checked);
   void set_X_line(bool);
   void set_Y_line(bool);
@@ -75,18 +74,17 @@ public:
   void setWhichTestSlot(int);
 	
 private:
+  
   QtShiva::SpinBoxSliderConnector*	m_k_distance;
   QtShiva::SpinBoxSliderConnector*  m_k_visbility;
   QtShiva::SpinBoxSliderConnector*  m_k_reachability;
   QtShiva::SpinBoxSliderConnector*  m_k_naturality;
-	
+  
+  MotionPlanner*                          m_motionWidget;
+  MainWindow*                             m_mainWindow;
   MovingHuman*                            m_mh;
   
   Ui::HricsWidget*                        m_ui;
-	
-  MotionPlanner*                          m_motionWidget;
-  
-  MainWindow*                             m_mainWindow;
 };
 
 #endif

@@ -88,6 +88,8 @@ private slots:
 
     // Manipulation -----------------------
 #ifdef MULTILOCALPATH
+    void setGroupBoxDisabled(bool disable);
+  
     void setRobotAtInitConfig();
     void setRobotAtGoalConfig();
     void setRobotAtOpenConfig();
@@ -102,6 +104,8 @@ private slots:
     void isDebugManip(bool value);
     void isCartesianMode(bool on);
     void isToFreePoint(bool value);
+    void isOnlySamplingRZ(bool value);
+    void getVisballPos();
     void isUsingMobileBase(bool value);
   
     void resetManipulationData();

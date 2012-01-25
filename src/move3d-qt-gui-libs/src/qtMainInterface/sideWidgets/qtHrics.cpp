@@ -81,8 +81,8 @@ void HricsWidget::initHRI()
   m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawBox,               Env::drawBox);
   
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxHRICS_MOPL,						Env::HRIPlannerWS);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxBBDist,								Env::useBoxDist);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxBallDist,							Env::useBallDist);
+//	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxBBDist,								Env::useBoxDist);
+//	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxBallDist,							Env::useBallDist);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxHriPlannerTRRT,				Env::HRIPlannerTRRT);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxHriPathDistance,				Env::HRIPathDistance);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxCameraBehindHuman,			Env::HRIcameraBehindHuman);
@@ -130,11 +130,16 @@ void HricsWidget::initHRI()
                                       m_ui->horizontalSliderCellSize,
                                       Env::CellSize);
   
-//  new QtShiva::SpinBoxSliderConnector(this, 
-//                                      m_ui->doubleSpinBoxDistance,		
-//                                      m_ui->horizontalSliderDistance,
-//                                      Env::Kdistance);
+  new QtShiva::SpinBoxSliderConnector(this, 
+                                      m_ui->doubleSpinBoxColor1,		
+                                      m_ui->horizontalSliderColor1,
+                                      Env::colorThreshold1);
 	
+  new QtShiva::SpinBoxSliderConnector(this, 
+                                      m_ui->doubleSpinBoxColor2,		
+                                      m_ui->horizontalSliderColor2,
+                                      Env::colorThreshold2);
+  
 	// -------------------------------
 	// Wich Test	
 	// -------------------------------
@@ -150,6 +155,17 @@ void HricsWidget::initHRI()
 	initDrawOneLineInGrid();
 //  initGrids();
 	//initObjectTransferPoint();
+  
+  setGroupBoxDisabled(true);
+}
+
+void HricsWidget::setGroupBoxDisabled(bool disable)
+{
+  m_ui->groupBoxCostFunctions->setDisabled( disable );
+  m_ui->groupBoxDraw->setDisabled( disable );
+  m_ui->groupBoxGrids->setDisabled( disable );
+  m_ui->groupBoxHRICSPlanner->setDisabled( disable );
+  m_ui->groupBoxMisc->setDisabled( disable );
 }
 
 void HricsWidget::drawAllWinActive()
@@ -237,7 +253,7 @@ void HricsWidget::computeObjectTransferPoint()
 }
 
 //-------------------------------------------------------------
-// Select One line
+// Select One Slice
 //-------------------------------------------------------------
 void HricsWidget::initDrawOneLineInGrid()
 {
@@ -333,7 +349,7 @@ void HricsWidget::make3DHriGrid()
 	
 	PointsToDraw = new PointCloud;
 	
-	m_ui->HRICSPlanner->setDisabled(false);
+	//m_ui->HRICSPlanner->setDisabled(false);
 	ENV.setBool(Env::HRIPlannerWS,true);
 	//    ENV.setBool(Env::biDir,false);
 	ENV.setDouble(Env::zone_size,0.5);
@@ -392,12 +408,35 @@ void HricsWidget::delete3DHriGrid()
 	delete HRICS_MotionPL;
 	HRICS_MotionPL = NULL;
 	
-	m_ui->HRICSPlanner->setDisabled(true);
+	//m_ui->HRICSPlanner->setDisabled(true);
 	
 	m_mainWindow->drawAllWinActive();
 	
 	m_ui->pushButtonMakeGrid->setDisabled(false);
 	m_ui->pushButtonDeleteGrid->setDisabled(true);
+}
+
+//-------------------------------------------------------------
+// Human Cost Space
+//-------------------------------------------------------------
+void HricsWidget::initGrids()
+{
+  // Get the HRICS workspace
+  HRICS::Workspace* ws = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL);
+  
+  // If a costspace allready exists delete it!
+  if(global_humanCostSpace!=NULL)
+    delete global_humanCostSpace;
+
+  // Build a costspace from the Robot and Humans in the workspace
+  // This costspace will hold the agents grids
+  global_humanCostSpace = new HRICS::HumanCostSpace(ws->getRobot(),ws->getHumans(),ENV.getDouble(Env::CellSize));
+}
+
+void HricsWidget::deleteGrids()
+{
+  delete global_humanCostSpace;
+  global_humanCostSpace = NULL;
 }
 
 //-------------------------------------------------------------
@@ -411,32 +450,6 @@ void HricsWidget::resetRandomPoints()
 		delete PointsToDraw;
 	}
 }
-
-void HricsWidget::initGrids()
-{
-  //cout << "HricsWidget::initGrids" << endl;
-  //dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->initAgentGrids(ENV.getDouble(Env::CellSize));
-  
-  HRICS::Workspace* ws = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL);
-  
-  if(global_humanCostSpace!=NULL)
-    delete global_humanCostSpace;
-  
-  Robot* rob = ws->getRobot();
-  //Robot* rob = global_Project->getActiveScene()->getRobotByName("GREY_TAPE");
-  
-  global_humanCostSpace = new HRICS::HumanCostSpace(rob,ws->getHumans(),ENV.getDouble(Env::CellSize));
-}
-
-void HricsWidget::deleteGrids()
-{
-  //cout << "HricsWidget::deleteGrids" << endl;
-  //dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->deleteAgentGrids();
-  
-  delete global_humanCostSpace;
-  global_humanCostSpace = NULL;
-}
-
 
 void HricsWidget::AStarIn3DGrid()
 {

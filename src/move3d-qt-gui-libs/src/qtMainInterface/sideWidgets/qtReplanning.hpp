@@ -50,10 +50,16 @@ private slots:
   void initReplanning();
   void executeReplanTraj();
   void executePlan();
+  void executeSimpleSimu();
   void plotNoisyTrajectories();
   void plotMultiVectors();
   void createSraightLine();
   void optimizeCurrentTrajectory();
+  
+  void multiThreadGraphicalMode(bool);
+  
+  void setPlannerType();
+  void setPlannerTypeRadioButtons(int);
 	
 signals:
   void selectedPlanner(QString);

@@ -618,7 +618,7 @@
             <x>0</x>
             <y>0</y>
             <width>395</width>
-            <height>902</height>
+            <height>936</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -626,7 +626,7 @@
             <number>5</number>
            </property>
            <item>
-            <widget class="QGroupBox" name="groupBox_4">
+            <widget class="QGroupBox" name="groupBoxMainManip">
              <property name="title">
               <string>Basic Requests</string>
              </property>
@@ -654,7 +654,7 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QGroupBox" name="groupBox_7">
+                     <widget class="QGroupBox" name="groupBoxSettingRobotConf">
                       <property name="title">
                        <string>Set Robot At:</string>
                       </property>
@@ -687,7 +687,7 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QGroupBox" name="groupBox_8">
+                     <widget class="QGroupBox" name="groupBoxStoringRobotConf">
                       <property name="title">
                        <string>Store Current Config As:</string>
                       </property>
@@ -740,7 +740,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QGroupBox" name="groupBox_9">
+                  <widget class="QGroupBox" name="groupBoxArmPlanTask">
                    <property name="title">
                     <string>ArmPlanTask</string>
                    </property>
@@ -807,7 +807,7 @@
                <widget class="QWidget" name="ObjectToManipulate" native="true">
                 <layout class="QGridLayout" name="gridLayout_4">
                  <item row="1" column="0">
-                  <widget class="QGroupBox" name="groupBox_10">
+                  <widget class="QGroupBox" name="groupBoxXYZPlace">
                    <property name="title">
                     <string>(X,Y,Z) place</string>
                    </property>
@@ -849,6 +849,20 @@
                      <widget class="QCheckBox" name="checkBoxToFreePoint">
                       <property name="text">
                        <string>ToFreePoint</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QPushButton" name="pushButtonGetVisballPos">
+                      <property name="text">
+                       <string>Get visballsmall Pos</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="5" column="0">
+                     <widget class="QCheckBox" name="checkBoxOnlySampleRZ">
+                      <property name="text">
+                       <string>Only Sample RZ</string>
                       </property>
                      </widget>
                     </item>
@@ -914,17 +928,17 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="labelManipRobotName">
-                   <property name="text">
-                    <string>Manip. Test Uninitialized</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="2" column="1">
                   <widget class="QCheckBox" name="checkBoxIsUsingMobileBase">
                    <property name="text">
                     <string>Mobile Base</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="labelManipRobotName">
+                   <property name="text">
+                    <string>Manip. Test Uninitialized</string>
                    </property>
                   </widget>
                  </item>
@@ -935,7 +949,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QGroupBox" name="groupBox_5">
+            <widget class="QGroupBox" name="groupBoxTest">
              <property name="title">
               <string>Tests</string>
              </property>

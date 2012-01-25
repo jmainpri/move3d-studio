@@ -1,18 +1,18 @@
 #include "qtmovinghuman.hpp"
 #include "ui_qtmovinghuman.h"
 
-
 #include "qtMainInterface/mainwindow.hpp"
 #include "qtMainInterface/mainwindowGenerated.hpp"
 #include "planner_handler.hpp"
 
+#include "API/project.hpp"
 
 MovingHuman::MovingHuman(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MovingHuman)
 {
     ui->setupUi(this);
-    init(0,0,0);
+    init(0,0,0,0);
 }
 
 MovingHuman::MovingHuman(double x, double y, double rz, QWidget *parent) :
@@ -20,7 +20,7 @@ MovingHuman::MovingHuman(double x, double y, double rz, QWidget *parent) :
     ui(new Ui::MovingHuman)
 {
     ui->setupUi(this);
-    init(x,y,rz);
+    init(x,y,0,rz);
 }
 
 MovingHuman::~MovingHuman()
@@ -29,13 +29,27 @@ MovingHuman::~MovingHuman()
     delete ui;
 }
 
-void MovingHuman::init(double x, double y, double rz)
+void MovingHuman::init(double x, double y, double z, double rz)
 {
+    std::vector<double> bounds = global_Project->getActiveScene()->getBounds();
+  
+    std::cout << "Set MovingHuman Bounds to : (" ;
+    std::cout << bounds[0] << " , " << bounds[1] << " , " << bounds[2] << " , " ;
+    std::cout << bounds[3] << " , " << bounds[4] << " , " << bounds[5] << " )" << std::endl;
+  
+    ui->doubleSpinBoxX->setMinimum(bounds[0]);
+    ui->doubleSpinBoxX->setMaximum(bounds[1]);
+    ui->doubleSpinBoxY->setMinimum(bounds[2]);
+    ui->doubleSpinBoxY->setMaximum(bounds[3]);
+    ui->doubleSpinBoxZ->setMinimum(bounds[4]);
+    ui->doubleSpinBoxZ->setMaximum(bounds[5]);
 
     m_k_x  = new QtShiva::SpinBoxSliderConnector(this, ui->doubleSpinBoxX,      ui->horizontalSliderX,    PlanParam::env_futurX);
     m_k_x->setValue(x);
     m_k_y  = new QtShiva::SpinBoxSliderConnector(this, ui->doubleSpinBoxY,      ui->horizontalSliderY,    PlanParam::env_futurY);
     m_k_y->setValue(y);
+    m_k_z  = new QtShiva::SpinBoxSliderConnector(this, ui->doubleSpinBoxZ,      ui->horizontalSliderZ,    PlanParam::env_futurZ);
+    m_k_z->setValue(z);
     m_k_rz = new QtShiva::SpinBoxSliderConnector(this, ui->doubleSpinBoxRZ,     ui->horizontalSliderRZ,   PlanParam::env_futurRZ);
     m_k_rz->setValue(rz);
 

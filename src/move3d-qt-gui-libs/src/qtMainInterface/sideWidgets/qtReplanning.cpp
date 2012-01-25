@@ -59,9 +59,21 @@ void ReplanningWidget::init()
   connect(m_ui->pushButtonInitialize, SIGNAL(clicked()), this, SLOT(initReplanning()));
   connect(m_ui->pushButtonExecuteSimu, SIGNAL(clicked()), this, SLOT(executeReplanTraj()));
   connect(m_ui->pushButtonExecutePlan, SIGNAL(clicked()), this, SLOT(executePlan()));
+  connect(m_ui->pushButtonExecuteSimpleSim, SIGNAL(clicked()), this, SLOT(executeSimpleSimu()));
   connect(m_ui->pushButtonCreateSraightLine, SIGNAL(clicked()), this, SLOT(createSraightLine()));
-
   
+  // Enable multi-thread graphical mode
+  connect(m_ui->checkBoxMultiThreadGraphical, SIGNAL(toggled(bool)), this, SLOT(multiThreadGraphicalMode(bool)));
+  
+  // Planner Type
+  connect(m_ui->radioButtonNavigation,    SIGNAL(toggled(bool)), this, SLOT(setPlannerType()));
+	connect(m_ui->radioButtonManipulation,  SIGNAL(toggled(bool)), this, SLOT(setPlannerType()));
+	connect(m_ui->radioButtonMobileManip,   SIGNAL(toggled(bool)), this, SLOT(setPlannerType()));
+  
+  connect(PlanEnv->getObject(PlanParam::plannerType), SIGNAL(valueChanged(int)),  
+          this, SLOT(setPlannerTypeRadioButtons(int)), Qt::DirectConnection);
+  
+  // Plot Noisy trajectories
 #ifdef USE_QWT
   connect(m_ui->pushButtonPlotNoise, SIGNAL(clicked()), this, SLOT(plotNoisyTrajectories()));
   connect(m_ui->pushButtonPlotTraj, SIGNAL(clicked()), this, SLOT(plotMultiVectors()));
@@ -178,11 +190,52 @@ void ReplanningWidget::computeSoftMotion()
 //---------------------------------------------------------
 // Replanning
 //---------------------------------------------------------
+void ReplanningWidget::setPlannerType()
+{
+  if( m_ui->radioButtonNavigation->isChecked() )
+  {
+    cout << "radioButtonNavigation->isChecked()" << endl;
+    PlanEnv->setInt(PlanParam::plannerType,0);
+  }
+	if ( m_ui->radioButtonManipulation->isChecked() )
+  {
+    cout << "radioButtonManipulation->isChecked()" << endl;
+    PlanEnv->setInt(PlanParam::plannerType,1);
+  }
+	if ( m_ui->radioButtonMobileManip->isChecked() )
+  {
+    cout << "radioButtonMobileManip->isChecked()" << endl;
+    PlanEnv->setInt(PlanParam::plannerType,2);
+  }
+}
+
+void ReplanningWidget::setPlannerTypeRadioButtons(int type)
+{
+  if( type == 0 )
+  {
+    cout << "radioButtonNavigation->toggle()" << endl;
+    m_ui->radioButtonNavigation->toggle();
+  }
+	if( type == 1 )
+  {
+    cout << "radioButtonManipulation->toggle()" << endl;
+    m_ui->radioButtonManipulation->toggle();
+  }
+	if( type == 2 )
+  {
+    cout << "radioButtonMobileManip->toggle()" << endl;
+    m_ui->radioButtonMobileManip->toggle();
+  }
+}
+
+void ReplanningWidget::multiThreadGraphicalMode(bool enable)
+{
+  global_rePlanningEnv->set_multithread_graphical( enable );
+}
+
 void ReplanningWidget::createSraightLine()
 {
-  replan_init("PR2_ROBOT");
-  replan_init_for_navigation();
-  replan_create_straightline();
+  global_rePlanningEnv->init_simple_replanning();
   
   m_mainWindow->drawAllWinActive();
 }
@@ -190,7 +243,6 @@ void ReplanningWidget::createSraightLine()
 void ReplanningWidget::initReplanning()
 {
   //replan_initialize();
-  replan_init_execution();
 }
 
 void ReplanningWidget::mainReplanFunction()
@@ -212,5 +264,10 @@ void ReplanningWidget::executeReplanTraj()
 void ReplanningWidget::executePlan()
 {
   emit(selectedPlanner(QString("ExecuteManipulationPlan")));
+}
+
+void ReplanningWidget::executeSimpleSimu()
+{
+  emit(selectedPlanner(QString("ExecuteSimpleSimu")));
 }
 

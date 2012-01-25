@@ -94,12 +94,15 @@ using namespace tr1;
 
 void qt_test1()
 {
-  HRICS::generateGraspConfigurations();
+  //HRICS::generateGraspConfigurations();
+  string robotName("PR2_ROBOT");
+  
 }
 
 void qt_test2()
 {
-  HRICS::setSimulationRobotsTransparent();
+  set_goal_solution_function( manipulation_get_free_holding_config );
+//  HRICS::setSimulationRobotsTransparent();
 }
 
 void qt_test3()
@@ -289,8 +292,6 @@ void qt_runNavigation()
     Manip::runNavigation();
 }
 
-
-
 void qt_runReplanning()
 {
 //  Robot* rob =	global_Project->getActiveScene()->getActiveRobot();
@@ -435,12 +436,16 @@ static int default_drawtraj_fct_qt_pipe(p3d_rob* robot, p3d_localpath* curLp)
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
 void qt_executeReplanSimu()
 {
-  replan_execute_simulation_traj(default_drawtraj_fct_qt_pipe);
+  global_rePlanningEnv->execute_softmotion_simulation(default_drawtraj_fct_qt_pipe);
 }
 
 void qt_executeSimpleSimu()
 {
-  replan_execute_simple_simulation(default_drawtraj_fct_qt_pipe);
+  if( global_rePlanningEnv == NULL )
+  {
+    global_rePlanningEnv = new ReplanningSimulator();
+  }
+  global_rePlanningEnv->execute_simple_simulation(default_drawtraj_fct_qt_pipe);
 }
 
 void qt_executePlan()
@@ -451,11 +456,6 @@ void qt_executePlan()
   }
 }
 #endif
-
-void qt_()
-{
-  
-}
 
 void qt_showTraj()
 {
@@ -817,6 +817,10 @@ void PlannerHandler::startPlanner(QString plannerName)
     {
       std::cout << "execute manipulation thread : starting plan." << std::endl;
       qt_executePlan();
+    }
+    else if(plannerName == "ExecuteSimpleSimu")
+    {
+      qt_executeSimpleSimu();
     }
 #endif
     //    else if(plannerName == "Replanning")

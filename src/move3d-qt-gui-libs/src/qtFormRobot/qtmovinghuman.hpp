@@ -22,14 +22,16 @@ public:
     // getters and setters
     void setX(double x);
     void setY(double y);
+    void setZ(double z);
     void setRZ(double rz);
 
     double getX();
     double getY();
+    double getZ();
     double getRZ();
 
 
-    void init(double x, double y, double rz);
+    void init(double x, double y, double z, double rz);
     void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
 
 protected:
@@ -41,6 +43,7 @@ private:
 
     QtShiva::SpinBoxSliderConnector*	m_k_x;
     QtShiva::SpinBoxSliderConnector*	m_k_y;
+    QtShiva::SpinBoxSliderConnector*	m_k_z;
     QtShiva::SpinBoxSliderConnector*	m_k_rz;
 
 

@@ -720,6 +720,8 @@ void RobotWidget::initManipulation()
 {
     connect(m_ui->checkBoxIsDebugManip, SIGNAL(toggled(bool)),              this,SLOT(isDebugManip(bool)));
     connect(m_ui->checkBoxIsCartesianMode, SIGNAL(toggled(bool)),           this,SLOT(isCartesianMode(bool)));
+    connect(m_ui->checkBoxOnlySampleRZ, SIGNAL(toggled(bool)),              this,SLOT(isOnlySamplingRZ(bool)));
+  
 
     connect(m_ui->pushButtonSetStart, SIGNAL(clicked()),                    this,SLOT(setRobotAtInitConfig()));
     connect(m_ui->pushButtonSetGoal, SIGNAL(clicked()),                     this,SLOT(setRobotAtGoalConfig()));
@@ -751,6 +753,7 @@ void RobotWidget::initManipulation()
     m_ui->labelManipRobotName->setText(text);
   
   
+  // X,Y,Z Place!!!
   vector<double> envSize = global_Project->getActiveScene()->getBounds();
 	
 	m_ui->doubleSpinBoxXPlace->setMinimum(envSize[0]);
@@ -770,24 +773,26 @@ void RobotWidget::initManipulation()
   new QtShiva::SpinBoxSliderConnector(
   this, m_ui->doubleSpinBoxZPlace, m_ui->horizontalSliderZPlace );
   
-//  cout << "Dim box" << endl;
-//  cout << (envSize[1]+envSize[0])/2 << endl;
-//  cout << (envSize[3]+envSize[2])/2 << endl;
-//  cout << (envSize[5]+envSize[4])/2 << endl;
-//  
-//  cout << (envSize[0]) << endl;
-//  cout << (envSize[1]) << endl;
-//  cout << (envSize[2]) << endl;
-//  cout << (envSize[3]) << endl;
-//  cout << (envSize[4]) << endl;
-//  cout << (envSize[5]) << endl;
-  
   m_ui->doubleSpinBoxXPlace->setValue((envSize[1]+envSize[0])/2);
 	m_ui->doubleSpinBoxYPlace->setValue((envSize[3]+envSize[2])/2);
 	m_ui->doubleSpinBoxZPlace->setValue((envSize[5]+envSize[4])/2);
   
   connect(m_ui->checkBoxToFreePoint, SIGNAL(toggled(bool)), this,SLOT(isToFreePoint(bool)));
+  
+  // Get Visball Position
+  connect(m_ui->pushButtonGetVisballPos, SIGNAL(clicked()), this,SLOT(getVisballPos()));
+  
   connect(m_ui->checkBoxIsUsingMobileBase, SIGNAL(toggled(bool)), this,SLOT(isUsingMobileBase(bool)));
+  
+  setGroupBoxDisabled(true);
+}
+
+void RobotWidget::setGroupBoxDisabled(bool disable)
+{
+  m_ui->groupBoxTest->setDisabled( disable );
+  m_ui->groupBoxArmPlanTask->setDisabled( disable );
+  m_ui->groupBoxSettingRobotConf->setDisabled( disable );
+  m_ui->groupBoxStoringRobotConf->setDisabled( disable );
 }
 
 void RobotWidget::initObjectSupportAndPlacementCombo()
@@ -995,9 +1000,22 @@ void RobotWidget::isUsingMobileBase(bool value)
   }
 }
 
-void RobotWidget::isToFreePoint(bool value)
+// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
+void RobotWidget::isOnlySamplingRZ(bool value)
 {
   if(global_manipPlanTest)
+  {
+    global_manipPlanTest->getManipPlanner()->setUseBaseMotion(value);
+  }
+  else {
+    cout << "Manip test is NULL" << endl;
+  }
+}
+
+void RobotWidget::isToFreePoint(bool value)
+{
+  if( global_manipPlanTest != NULL )
   {
     if( value )
     {
@@ -1006,7 +1024,7 @@ void RobotWidget::isToFreePoint(bool value)
       point[1] = m_ui->doubleSpinBoxYPlace->value();
       point[2] = m_ui->doubleSpinBoxZPlace->value();
       
-      global_manipPlanTest->setToPoint(point);
+      global_manipPlanTest->setToPoint( point );
     }
     else
       global_manipPlanTest->resetToPoint();
@@ -1016,46 +1034,89 @@ void RobotWidget::isToFreePoint(bool value)
   }
 }
 
+void RobotWidget::getVisballPos()
+{
+  if( global_manipPlanTest != NULL )
+  {
+    Robot* rob = global_Project->getActiveScene()->getRobotByName("VISBALL_INTERNAL");
+    
+    if( rob != NULL )
+    {
+      cout << "getVisballPos" << endl;
+      
+      Eigen::Vector3d pos = rob->getJoint(1)->getVectorPos();
+      
+      m_ui->doubleSpinBoxXPlace->setValue( pos[0] );
+      m_ui->doubleSpinBoxYPlace->setValue( pos[1] );
+      m_ui->doubleSpinBoxZPlace->setValue( pos[2] );
+      
+      m_ui->checkBoxToFreePoint->toggle();
+      
+      vector<double> point(6,P3D_HUGE);
+      point[0] = pos[0];
+      point[1] = pos[1];
+      point[2] = pos[2];
+      
+      global_manipPlanTest->setToPoint( point );
+    }
+    else {
+      cout << "No robot is named VISBALL_INTERNAL" << endl;
+    }
+  }
+  else {
+    cout << "Manip test is NULL" << endl;
+  }
+}
+
+// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
 void RobotWidget::resetManipulationData()
 {
-    cout << "-----------------------------------------------------" << endl;
-    cout << " RobotWidget::resetManipulationData -----------------" << endl;
-
-    if (!global_manipPlanTest)
-    {
-        global_manipPlanTest = new ManipulationTestFunctions( global_ActiveRobotName  );
-    }
-
-    Robot* rob = global_Project->getActiveScene()->getRobotByNameContaining( global_ActiveRobotName );
-    //  Robot* rob = global_Project->getActiveScene()->getRobotByName(rob1->name);
-
-    qInit = rob->getInitialPosition();
-    qGoal = rob->getGoTo();
-    qOpen = shared_ptr<Configuration>( new Configuration( rob, rob->getRobotStruct()->openChainConf ));
-
-    rob->setAndUpdate(*qInit);
-
-    cout << "global_manipPlanTest->getManipPlanner()->setPlanningMethod" << endl;
-    // Set Planning functions
-
-    global_manipPlanTest->initManipulationGenom ();
-
-    global_manipPlanTest->setInitConfiguration (qInit->getConfigStructCopy());
-    global_manipPlanTest->setGoalConfiguration (qGoal->getConfigStructCopy());
-
-    global_manipPlanTest->getManipPlanner()->setPlanningMethod( planner_Function );
-    global_manipPlanTest->getManipPlanner()->setSmoothingMethod( smoothing_Function );
-    //global_manipPlanTest->getManipPlanner()->setReplanningMethod( replanning_Function );
-
-    global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
-
-    m_mainWindow->drawAllWinActive();
-
-    std::string t1 = "<FONT COLOR=Green>";
-    std::string t2 = "</FONT>";
-    t1 = t1 + rob->getName() + t2;
-
-    m_ui->labelManipRobotName->setText(QString(t1.c_str()));
+  cout << "-----------------------------------------------------" << endl;
+  cout << " RobotWidget::resetManipulationData -----------------" << endl;
+  
+  if (!global_manipPlanTest)
+  {
+    global_manipPlanTest = new ManipulationTestFunctions( global_ActiveRobotName  );
+    
+    global_manipPlanTest->resetObject();
+    global_manipPlanTest->resetPlacement();
+    global_manipPlanTest->resetSupport();
+    global_manipPlanTest->resetToPoint();
+  }
+  
+  Robot* rob = global_Project->getActiveScene()->getRobotByNameContaining( global_ActiveRobotName );
+  //  Robot* rob = global_Project->getActiveScene()->getRobotByName(rob1->name);
+  
+  qInit = rob->getInitialPosition();
+  qGoal = rob->getGoTo();
+  qOpen = shared_ptr<Configuration>( new Configuration( rob, rob->getRobotStruct()->openChainConf ));
+  
+  rob->setAndUpdate(*qInit);
+  
+  cout << "global_manipPlanTest->getManipPlanner()->setPlanningMethod" << endl;
+  // Set Planning functions
+  
+  global_manipPlanTest->initManipulationGenom ();
+  
+  global_manipPlanTest->setInitConfiguration (qInit->getConfigStructCopy());
+  global_manipPlanTest->setGoalConfiguration (qGoal->getConfigStructCopy());
+  
+  global_manipPlanTest->getManipPlanner()->setPlanningMethod( planner_Function );
+  global_manipPlanTest->getManipPlanner()->setSmoothingMethod( smoothing_Function );
+  //global_manipPlanTest->getManipPlanner()->setReplanningMethod( replanning_Function );
+  
+  global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
+  
+  m_mainWindow->drawAllWinActive();
+  
+  std::string t1 = "<FONT COLOR=Green>";
+  std::string t2 = "</FONT>";
+  t1 = t1 + rob->getName() + t2;
+  
+  m_ui->labelManipRobotName->setText(QString(t1.c_str()));
+  
+  setGroupBoxDisabled(false);
 }
 
 void RobotWidget::optimizeRedundantCost()

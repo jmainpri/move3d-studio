@@ -622,9 +622,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-563</y>
+            <y>-462</y>
             <width>449</width>
-            <height>1091</height>
+            <height>1093</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_37">
@@ -635,31 +635,37 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QCheckBox" name="checkBoxSaveTrajCost">
-                <property name="text">
-                 <string>Save Traj Cost To File</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="checkBoxDebug2">
-                <property name="text">
-                 <string>Debug</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="checkBoxWithGainLimit">
-                <property name="text">
-                 <string>With Gain Limit</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="checkBoxCostSpace2">
-                <property name="text">
-                 <string>Cost Space</string>
-                </property>
+               <widget class="QWidget" name="widget_8" native="true">
+                <layout class="QGridLayout" name="gridLayout_6">
+                 <item row="0" column="0">
+                  <widget class="QCheckBox" name="checkBoxSaveTrajCost">
+                   <property name="text">
+                    <string>Save Traj Cost To File</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QCheckBox" name="checkBoxDebug2">
+                   <property name="text">
+                    <string>Debug</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QCheckBox" name="checkBoxWithGainLimit">
+                   <property name="text">
+                    <string>With Gain Limit</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QCheckBox" name="checkBoxCostSpace2">
+                   <property name="text">
+                    <string>Cost Space</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
               <item>
@@ -947,6 +953,13 @@
                      <widget class="QCheckBox" name="checkBoxCheckCollision">
                       <property name="text">
                        <string>Check for Collision</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="1">
+                     <widget class="QCheckBox" name="checkBoxShowExploration">
+                      <property name="text">
+                       <string>Show Exploration</string>
                       </property>
                      </widget>
                     </item>

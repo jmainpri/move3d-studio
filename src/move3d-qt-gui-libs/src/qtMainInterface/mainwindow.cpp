@@ -859,23 +859,16 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 			//cout << "Switch to second" << endl;
 			break;
       
+    case Qt::Key_C:
+      mouse_mode = 2;
+      //cout << "Switch to third" << endl;
+      break;
+      
     case Qt::Key_G:
       ENV.setBool(Env::drawGrid,!ENV.getBool(Env::drawGrid));
       drawAllWinActive();
 			break;
-			
-//        case Qt::Key_C:
-//			mouse_mode = 2;
-//			//cout << "Switch to third" << endl;
-//			break;
-			
-			//            if(mouse_mode == 2)
-			//            {
-			//                mouse_mode = 0;
-			//                cout << "Switch to normal" << endl;
-			//                return;
-			//            }
-			//                break;
+      
 	}
 }
 
