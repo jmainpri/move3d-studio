@@ -207,7 +207,6 @@ int Main_threads::run(int argc, char** argv)
   }
   else {
     app = new QApplication(argc, argv);
-    app = new QApplication(argc, argv);
     app->setWindowIcon(QIcon(QPixmap(molecule_xpm)));
     coreApp = app;
     //    app->setStyle(new QCleanlooksStyle());
@@ -253,7 +252,7 @@ int Main_threads::run(int argc, char** argv)
     argv_tmp = argv;
   }
   
-  // Creat thread then initialize environment
+  // Create planner thread then initialize environment
 	QThread plannerThread;
   global_PlanningThread = &plannerThread;
 	global_plannerHandler = new PlannerHandler(argc_tmp, argv_tmp);
@@ -270,7 +269,6 @@ int Main_threads::run(int argc, char** argv)
     ENV.setBool(Env::drawDisabled,true);
     QMetaObject::invokeMethod(global_plannerHandler,"startPlanner",Qt::QueuedConnection,Q_ARG(QString, script));
   }
-  // UI
   else {
     global_PlanningThread->start();
     QMetaObject::invokeMethod(global_plannerHandler,"init",Qt::BlockingQueuedConnection);
