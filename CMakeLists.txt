@@ -6,7 +6,7 @@ cmake_minimum_required (VERSION 2.6)
 PROJECT(MOVE3DSTUDIO C CXX)
 
 set( PACKAGE_NAME move3d-studio )
-set( PACKAGE_VERSION 1.0 )
+set( PACKAGE_VERSION 1.1 )
 
 # CMake information
 message( STATUS "CMake System = ${CMAKE_SYSTEM_NAME}")
