@@ -446,7 +446,6 @@ int mainMhp(int argc, char ** argv)
 #endif
     if (!p3d_get_desc_number(P3D_ENV)) {
 			printf("loading done...\n");
-
     }
   }
 	

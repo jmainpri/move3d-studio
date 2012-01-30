@@ -202,6 +202,8 @@ int Main_threads::run(int argc, char** argv)
     ith_arg++;
   }
   
+  // The no gui mode can start the application on a distant
+  // machine whith out recompiling
   if(noGui) {
     coreApp = new QCoreApplication(argc, argv);
   }
@@ -265,6 +267,8 @@ int Main_threads::run(int argc, char** argv)
     QMetaObject::invokeMethod(global_plannerHandler,"init",Qt::BlockingQueuedConnection);
     if( move3d_studio_load_settings) loadSettings();
     
+    // Creates the wrapper to the project, be carefull to initialize in the right thread
+    global_Project = new Project(new Scene(XYZ_ENV));
     QString script("Diffusion");
     ENV.setBool(Env::drawDisabled,true);
     QMetaObject::invokeMethod(global_plannerHandler,"startPlanner",Qt::QueuedConnection,Q_ARG(QString, script));
@@ -272,6 +276,9 @@ int Main_threads::run(int argc, char** argv)
   else {
     global_PlanningThread->start();
     QMetaObject::invokeMethod(global_plannerHandler,"init",Qt::BlockingQueuedConnection);
+    
+    // Creates the wrapper to the project, be carefull to initialize in the right thread
+    global_Project = new Project(new Scene(XYZ_ENV));
     initInterface();
   }
   
