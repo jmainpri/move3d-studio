@@ -28,6 +28,7 @@
 
 #include "qtFormRobot/moverobot.hpp"
 #include "qtMainInterface/mainwindow.hpp"
+#include "qtMainInterface/mainwindowGenerated.hpp"
 #include "qtMainInterface/sideWidgets/qtRobot.hpp"
 
 #include "API/project.hpp"
@@ -39,7 +40,6 @@
 #include "planner/planEnvironment.hpp"
 #include "planner/plannerFunctions.hpp"
 
-#include "utils/MultiRun.hpp"
 #include "utils/MultiRun.hpp"
 
 #include "qtLibrary.hpp"
@@ -95,8 +95,9 @@ using namespace tr1;
 void qt_test1()
 {
   //HRICS::generateGraspConfigurations();
-  string robotName("PR2_ROBOT");
-  
+  //string robotName("PR2_ROBOT");
+  Node* node = global_w->Ui()->tabMotionPlanner->getIthNodeInActiveGraph();
+  dynamic_cast<StarRRT*>(global_Move3DPlanner)->pruneTreeFromNode( node );
 }
 
 void qt_test2()
@@ -154,7 +155,8 @@ void qt_drawAllWinActive()
  */
 void qt_runDiffusion()
 {
-	cout << "Diffusion" << endl;
+	cout << "Run Diffusion" << endl;
+  Robot* robot = global_Project->getActiveScene()->getActiveRobot();
 	
 	try 
 	{
@@ -167,11 +169,11 @@ void qt_runDiffusion()
 		cout << "ENV.getBool(Env::Env::treePlannerIsEST) = " << ENV.getBool(Env::treePlannerIsEST) << endl;
 		if (ENV.getBool(Env::treePlannerIsEST))
 		{
-			res = p3d_run_est(XYZ_GRAPH, fct_stop, fct_draw);
+			res = p3d_run_est(robot->getRobotStruct());
 		}
 		else
 		{
-			res = p3d_run_rrt(XYZ_GRAPH, fct_stop, fct_draw);
+			res = p3d_run_rrt(robot->getRobotStruct());
 		}
     
 		ChronoPrint("");
@@ -199,6 +201,9 @@ void qt_runDiffusion()
  */
 void qt_runPRM()
 {
+  cout << "Run Probabilistic Road Map" << endl;
+  Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+  
 	try 
 	{
 #ifdef P3D_PLANNER
@@ -206,25 +211,20 @@ void qt_runPRM()
 #endif
 		
 		int res;
-		int fail;
 		
 		ChronoOn();
-		
-		//        cout << "ENV.getInt(Env::PRMType)  = "  << ENV.getInt(Env::PRMType) << endl;
-		
+    
 		switch(ENV.getInt(Env::PRMType))
 		{
-#ifdef MOVE3D_CORE
 			case 0:
-				res = p3d_run_prm(XYZ_GRAPH, &fail, fct_stop, fct_draw);
+				res = p3d_run_prm(robot->getRobotStruct());
 				break;
 			case 1:
-				res = p3d_run_vis_prm(XYZ_GRAPH, &fail, fct_stop, fct_draw);
+				res = p3d_run_vis_prm(robot->getRobotStruct());
 				break;
 			case 2:
-				res = p3d_run_acr(XYZ_GRAPH, &fail, fct_stop, fct_draw);
+				res = p3d_run_acr(robot->getRobotStruct());
 				break;
-#endif
 			default:
 				cout << "Error No Other PRM"  << endl;
 				ChronoPrint("");
@@ -232,35 +232,12 @@ void qt_runPRM()
 				return;
 		}
 		
-		
 		ChronoPrint("");
 		ChronoOff();
 		
-		if (ENV.getBool(Env::expandToGoal))
-		{
-			if (res)
-			{
-				if (ENV.getBool(Env::isCostSpace))
-				{
-#ifdef P3D_PLANNER
-					p3d_ExtractBestTraj(XYZ_GRAPH);
-#endif
-				}
-				else
-				{
-					if (p3d_graph_to_traj(XYZ_ROBOT))
-					{
-						g3d_add_traj((char*) "Globalsearch",
-												 p3d_get_desc_number(P3D_TRAJ));
-					}
-					else
-					{
-						printf("Problem during trajectory extraction\n");
-					}
-				}
-				g3d_draw_allwin_active();
-			}
-		}
+    if( !ENV.getBool(Env::drawDisabled) ) {
+      g3d_draw_allwin_active();
+    }
 	}
 	catch (string str) 
 	{
@@ -754,11 +731,6 @@ mArgv(argv)
 void PlannerHandler::init()
 {
   mainMhp(mArgc, mArgv);
-  
-  // Creates the wrapper to the project 
-  // Be carefull to initialize in the right thread
-  global_Project = new Project(new Scene(XYZ_ENV));
-  
   emit initIsDone();
 }
 

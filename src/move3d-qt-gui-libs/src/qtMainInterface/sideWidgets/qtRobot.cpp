@@ -1102,8 +1102,8 @@ void RobotWidget::resetManipulationData()
   global_manipPlanTest->setInitConfiguration (qInit->getConfigStructCopy());
   global_manipPlanTest->setGoalConfiguration (qGoal->getConfigStructCopy());
   
-  global_manipPlanTest->getManipPlanner()->setPlanningMethod( planner_Function );
-  global_manipPlanTest->getManipPlanner()->setSmoothingMethod( smoothing_Function );
+  global_manipPlanTest->getManipPlanner()->setPlanningMethod( p3d_planner_function );
+  global_manipPlanTest->getManipPlanner()->setSmoothingMethod( p3d_smoothing_function );
   //global_manipPlanTest->getManipPlanner()->setReplanningMethod( replanning_Function );
   
   global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );

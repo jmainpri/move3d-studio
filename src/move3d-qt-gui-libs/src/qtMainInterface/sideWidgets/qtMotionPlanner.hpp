@@ -15,6 +15,8 @@
 #include "qtLibrary.hpp"
 #include "qtMainInterface/mainwindow.hpp"
 
+#include "API/Roadmap/node.hpp"
+
 
 #ifdef USE_QWT
 #include "qtPlot/basicPlotWindow.hpp"
@@ -38,6 +40,8 @@ public:
 	~MotionPlanner();
 	
 	void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
+  
+  Node* getIthNodeInActiveGraph();
 	
 private slots:
 	// Optim -----------------------------

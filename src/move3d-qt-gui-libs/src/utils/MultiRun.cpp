@@ -1,6 +1,7 @@
 #include "MultiRun.hpp"
 #include "SaveContext.hpp"
 
+#include "API/project.hpp"
 #include "planner/planEnvironment.hpp"
 #include "planner/plannerFunctions.hpp"
 #include "planner/TrajectoryOptim/Classic/smoothing.hpp"
@@ -113,6 +114,8 @@ void MultiRun::runMutliRRT()
 	mNames.push_back("Cost2");
 	mNames.push_back("Integral");
 	mNames.push_back("Meca-Work");
+  
+  Robot* rob = global_Project->getActiveScene()->getActiveRobot();
 	
 	mVectDoubles.resize(9);
 	
@@ -144,8 +147,8 @@ void MultiRun::runMutliRRT()
 			
 			try 
 			{
-				p3d_planner_functions_SetRunId( context );
-				nbNodes = p3d_run_rrt(XYZ_GRAPH, fct_stop, fct_draw);
+				p3d_planner_functions_set_run_id( context );
+				nbNodes = p3d_run_rrt(rob->getRobotStruct());
 			}
 			catch (string str) 
 			{

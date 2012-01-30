@@ -188,7 +188,8 @@ void MotionPlanner::initOptim()
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxSaveTrajCost,			PlanParam::trajSaveCost );
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxCheckCollision,		PlanParam::trajPartialShortcut );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxRecomputeCost,		PlanParam::trajCostRecompute );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithDescent,			PlanParam::trajComputeCollision );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithDescent,			PlanParam::withDescent );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxCheckCollision,	  PlanParam::trajComputeCollision );
   
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithDeform,				PlanParam::withDeformation );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithShortCut,			PlanParam::withShortCut );
@@ -633,37 +634,52 @@ void MotionPlanner::nodeToShowChanged()
 	m_mainWindow->drawAllWinActive();
 }
 
+Node* MotionPlanner::getIthNodeInActiveGraph()
+{
+  if (API_activeGraph == NULL) {
+    cout << "Graph is NULL" << endl;
+  }
+  
+  vector<Node*> nodes = API_activeGraph->getNodes();
+  
+  if ( nodes.empty() ) 
+  {
+    cout << "nodes is empty!!!" << endl;
+  }
+  
+  int ith = m_ui->spinBoxNodeToShow->value();
+  
+  //		cout << "removing node nb : " << ith << endl;
+  //		cout << "graph size nb : " << nodes.size() << endl;
+  if ( (ith >= 0) && ( ((int)nodes.size()) > ith) ) 
+  {
+    return nodes[ith]; 
+  }
+  else{
+    cout << "out of bounds" << endl;
+    return NULL;
+  }
+}
+
 void MotionPlanner::removeNode()
 {
-	if ( !API_activeGraph ) 
+	if ( API_activeGraph == NULL ) 
 	{
 		return;
 	}
 	
 	try 
 	{
-		Graph* graph = API_activeGraph;
-		
-		vector<Node*> nodes = graph->getNodes();
-		
-		if ( nodes.empty() ) 
+    Node* node = getIthNodeInActiveGraph();
+    
+		if ( node != NULL ) 
 		{
-			cout << "Warning :: nodes is empty!!!" << endl;
-		}
-		
-		int ith = m_ui->spinBoxNodeToShow->value();
-		
-		cout << "Removing node nb : " << ith << endl;
-		cout << "graph size nb : " << nodes.size() << endl;
-		
-		if ( (ith >= 0) && ( ((int)nodes.size()) > ith) ) 
-		{
-			graph->removeNode( nodes[ith] );
+			API_activeGraph->removeNode( node );
 		}
 		else 
 		{
-			shared_ptr<Configuration> q_init = graph->getRobot()->getInitialPosition();
-			graph->getRobot()->setAndUpdate(*q_init);
+			shared_ptr<Configuration> q_init = API_activeGraph->getRobot()->getInitialPosition();
+			API_activeGraph->getRobot()->setAndUpdate(*q_init);
 			cout << "Exede the number of nodes" << endl;
 		}
 	}

@@ -121,14 +121,14 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
       std::cout << "Cost = " << global_costSpace->cost(costConfig) << std::endl;
     }
     
-    //    if ( (costR->getName().find("HUMAN") != string::npos) && HRICS_activeNatu ) 
-    //    {
-    //      //if (HRICS_MotionPL) {
-    ////        //cout << "reachSpace->setRobotColorFromConfiguration(true)" << endl;;
-    ////        HRICS::Natural* reachSpace = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getReachability();
-    ////      }
-    //      HRICS_activeNatu->setRobotColorFromConfiguration(true);
-    //    }
+        if ( (costR->getName().find("HUMAN") != string::npos) && HRICS_activeNatu ) 
+        {
+          if (HRICS_MotionPL) {
+            cout << "reachSpace->setRobotColorFromConfiguration(true)" << endl;;
+            HRICS::Natural* reachSpace = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getReachability();
+          }
+          HRICS_activeNatu->setRobotColorFromConfiguration(true);
+        }
 #endif
   }
   //	cout << "robotPt->name = " << robotPt->name << endl;

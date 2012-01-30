@@ -49,6 +49,7 @@ private:
 
 private slots:
     void updateMainWindow(double );
+    void printValues();
 };
 
 #endif // QTMOVINGHUMAN_HPP

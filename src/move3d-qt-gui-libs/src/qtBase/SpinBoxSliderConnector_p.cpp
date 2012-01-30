@@ -1,5 +1,6 @@
 /*
  *  Copyright (c) 2008 Cyrille Berger <cberger@cberger.net>
+ *  Copyright (c) 2010 Jim Mainprice LAAS/CNRS
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,7 +33,6 @@ SpinBoxSliderConnector::SpinBoxSliderConnector( QObject* _parent,
                                                QSlider* _slider) :
 QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
 {
-    
     connect( m_spinBox, SIGNAL(valueChanged( double )), SLOT(spinBoxValueChanged( double ) ) );
     connect( m_slider, SIGNAL(valueChanged( int )), SLOT(sliderValueChanged( int ) ) );
 
@@ -54,7 +54,9 @@ QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
     connect( m_slider, SIGNAL(valueChanged( int )), SLOT(sliderValueChanged( int ) ) );
     
     connect(this, SIGNAL(valueChanged( double )), ENV.getObject(p),SLOT(set(double)));
-    connect(ENV.getObject(p), SIGNAL(valueChanged(double)),m_spinBox, SLOT(setValue(double)));
+    
+    // TODO see why this doesn't work 
+    //connect(ENV.getObject(p), SIGNAL(valueChanged(double)),m_spinBox, SLOT(setValue(double)));
     
     m_spinBox->setValue(ENV.getDouble(p));
     
@@ -73,6 +75,8 @@ QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
     connect( m_slider, SIGNAL(valueChanged( int )), SLOT(sliderValueChanged( int ) ) );
     
     connect(this, SIGNAL(valueChanged( int )), ENV.getObject(p), SLOT(set(int)));
+  
+    // TODO see why this doesn't work 
     //    connect(ENV.getObject(p), SIGNAL(valueChanged(int)),m_spinBox, SLOT(setValue(int)));
     
     m_spinBox->setValue(ENV.getInt(p));
@@ -86,15 +90,15 @@ SpinBoxSliderConnector::SpinBoxSliderConnector( QObject* _parent,
                                                PlanParam::doubleParameter p) :
 QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
 {
-	//cout << "Set SpinBoxSliderConnector, PlanParam::doubleParameter p : " << PlanEnv->getObject(p) << endl;
-	
 	m_spinBox->setValue(numeric_limits<double>::max());
 	
 	connect( m_spinBox, SIGNAL(valueChanged(double)), SLOT(spinBoxValueChanged(double)) );
 	connect( m_slider, SIGNAL(valueChanged(int)), SLOT(sliderValueChanged(int)) );
 	
 	connect(this,SIGNAL(valueChanged(double)),PlanEnv->getObject(p),SLOT(set(double)));
-	connect(PlanEnv->getObject(p),SIGNAL(valueChanged(double)),m_spinBox, SLOT(setValue(double)));
+  
+  // TODO see why this doesn't work 
+	//connect(PlanEnv->getObject(p),SIGNAL(valueChanged(double)),m_spinBox, SLOT(setValue(double)));
 	
 	m_spinBox->setValue(PlanEnv->getDouble(p));
 	
@@ -107,14 +111,14 @@ SpinBoxSliderConnector::SpinBoxSliderConnector( QObject* _parent,
                                                PlanParam::intParameter p) :
 QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
 {
-	//cout << "Set SpinBoxSliderConnector, PlanParam::intParameter p : " << PlanEnv->getObject(p) << endl;
-	
 	m_spinBox->setValue(numeric_limits<double>::max());
 	
 	connect( m_spinBox, SIGNAL(valueChanged( double )), SLOT(spinBoxValueChanged( double ) ) );
 	connect( m_slider, SIGNAL(valueChanged( int )), SLOT(sliderValueChanged( int ) ) );
 	
 	connect(this, SIGNAL(valueChanged( int )), PlanEnv->getObject(p), SLOT(set(int)));
+  
+  // TODO see why this doesn't work 
 	//    connect(ENV.getObject(p), SIGNAL(valueChanged(int)),m_spinBox, SLOT(setValue(int)));
 	
 	m_spinBox->setValue(PlanEnv->getInt(p));
@@ -133,6 +137,9 @@ void SpinBoxSliderConnector::computeScaling()
     _c =  m_spinBox->maximum();
     _d =  m_spinBox->minimum();
     
+    //cout << "a : " << _a << " , b : " << _b << " , c : " << _c << " , d : " << _d << endl;
+    //cout << "_Coeff : " << _Coeff << " , _Offset : " << _Offset << endl;
+  
     _Coeff = ( _a - _b )/( _c - _d );
     _Offset = (_a + _b)/2 - (_a - _b)*(_c + _d)/(2*(_c - _d));
 }

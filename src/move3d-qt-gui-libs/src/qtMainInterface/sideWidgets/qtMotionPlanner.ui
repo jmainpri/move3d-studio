@@ -26,7 +26,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>
@@ -60,7 +60,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-129</y>
+            <y>0</y>
             <width>449</width>
             <height>606</height>
            </rect>
@@ -622,9 +622,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-300</y>
             <width>449</width>
-            <height>1093</height>
+            <height>1070</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_37">
@@ -950,13 +950,6 @@
                      </widget>
                     </item>
                     <item row="1" column="1">
-                     <widget class="QCheckBox" name="checkBoxCheckCollision">
-                      <property name="text">
-                       <string>Check for Collision</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="2" column="1">
                      <widget class="QCheckBox" name="checkBoxShowExploration">
                       <property name="text">
                        <string>Show Exploration</string>
@@ -1271,6 +1264,13 @@
           <widget class="QCheckBox" name="isWithGoal">
            <property name="text">
             <string>With Goal</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBoxCheckCollision">
+           <property name="text">
+            <string>Check for Collision</string>
            </property>
           </widget>
          </item>
