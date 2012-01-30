@@ -34,6 +34,7 @@
 #include "API/project.hpp"
 #include "API/Search/Dijkstra/dijkstra.hpp"
 
+#include "planner/planner.hpp"
 #include "planner/Diffusion/Variants/Star-RRT.hpp"
 #include "planner/TrajectoryOptim/Classic/smoothing.hpp"
 #include "planner/TrajectoryOptim/Classic/costOptimization.hpp"
