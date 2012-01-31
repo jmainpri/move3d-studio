@@ -104,7 +104,7 @@ void qt_test1()
 
 void qt_test2()
 {
-  set_goal_solution_function( manipulation_get_free_holding_config );
+  p3d_set_goal_solution_function( manipulation_get_free_holding_config );
 //  HRICS::setSimulationRobotsTransparent();
 }
 
