@@ -42,8 +42,12 @@ public:
 	void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
   
   Node* getIthNodeInActiveGraph();
-	
+  
+public slots:
+	Node* getIthNodeInBestTraj();
+  
 private slots:
+  
 	// Optim -----------------------------
 	void test(double value);
 	void computeGrid();

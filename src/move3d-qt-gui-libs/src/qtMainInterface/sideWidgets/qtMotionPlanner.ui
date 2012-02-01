@@ -26,7 +26,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>
@@ -404,6 +404,11 @@
                      <string>ACR</string>
                     </property>
                    </item>
+                   <item>
+                    <property name="text">
+                     <string>Perturb</string>
+                    </property>
+                   </item>
                   </widget>
                  </item>
                  <item>
@@ -622,9 +627,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-300</y>
+            <y>0</y>
             <width>449</width>
-            <height>1070</height>
+            <height>1144</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_37">
@@ -963,6 +968,42 @@
                </widget>
               </item>
               <item>
+               <widget class="QGroupBox" name="groupBox_6">
+                <property name="title">
+                 <string>Show Node</string>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_9">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_9">
+                   <property name="text">
+                    <string>IIth Node</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QSpinBox" name="spinBoxIthNodeInTraj">
+                   <property name="maximum">
+                    <number>10000</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <spacer name="horizontalSpacer_7">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
                <widget class="QGroupBox" name="multiSmoothGroupBox">
                 <property name="title">
                  <string>Multi Smooth</string>
@@ -1072,8 +1113,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>464</width>
-            <height>437</height>
+            <width>386</width>
+            <height>407</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_35">

@@ -98,8 +98,17 @@ void qt_test1()
 {
   //HRICS::generateGraspConfigurations();
   //string robotName("PR2_ROBOT");
-  Node* node = global_w->Ui()->tabMotionPlanner->getIthNodeInActiveGraph();
+  Node* node = global_w->Ui()->tabMotionPlanner->getIthNodeInBestTraj();
+  
+  double t=0.0;
+  ChronoTimeOfDayOn();
+  
   dynamic_cast<StarRRT*>(global_Move3DPlanner)->pruneTreeFromNode( node );
+  
+  ChronoTimeOfDayTimes( &t );
+  ChronoTimeOfDayOff();
+  
+  cout << "Time to erase graph : " << t << endl;
 }
 
 void qt_test2()
@@ -226,6 +235,9 @@ void qt_runPRM()
 				break;
 			case 2:
 				res = p3d_run_acr(robot->getRobotStruct());
+				break;
+      case 3:
+				res = p3d_run_perturb_prm(robot->getRobotStruct());
 				break;
 			default:
 				cout << "Error No Other PRM"  << endl;

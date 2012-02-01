@@ -22,6 +22,7 @@
 
 #include "P3d-pkg.h"
 #include "Graphic-pkg.h"
+#include "Localpath-pkg.h"
 
 #include <QtCore/QMetaProperty>
 #include <QtCore/QSettings>

@@ -1,5 +1,6 @@
 #ifdef QT_UI_XML_FILES
 #include "qtMainInterface/mainwindow.hpp"
+#include "qtMainInterface/mainwindowGenerated.hpp"
 #include "qtMainInterface/settings.hpp"
 #endif
 
@@ -157,6 +158,10 @@ void Main_threads::initInterface()
   if( move3d_studio_load_settings )
   {
     w->loadParametersQuick();
+    
+    if( ENV.getBool(Env::isCostSpace) ) {
+      w->Ui()->tabCost->initCostSpace();
+    }
   }
 	
   w->refreshConstraintedDoFs();

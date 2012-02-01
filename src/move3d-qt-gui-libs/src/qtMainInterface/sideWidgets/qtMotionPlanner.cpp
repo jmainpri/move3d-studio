@@ -19,15 +19,16 @@
 #include "qtPlot/multiPlot.hpp"
 #endif
 
-
 #include "planner_handler.hpp"
 
 #include "P3d-pkg.h"
 #include "Planner-pkg.h"
-
 #include "../p3d/ParametersEnv.hpp"
+
+#include "planner/planner.hpp"
 #include "planner/planEnvironment.hpp"
 #include "planner/cost_space.hpp"
+
 #include "API/project.hpp"
 #include "API/Roadmap/compco.hpp"
 #include "API/Trajectory/trajectory.hpp"
@@ -229,12 +230,15 @@ void MotionPlanner::initOptim()
 																			this, m_ui->doubleSpinBoxTimeLimit, m_ui->horizontalSliderTimeLimit , PlanParam::optimTimeLimit );
 	
 	connect(m_ui->pushButtonRunMultiSmooth,SIGNAL(clicked()),this,SLOT(runMultiSmooth()));
+  
 	
 	// ------------------------------------------------------------
 	// ------------------------------------------------------------
 	
 	new QtShiva::SpinBoxSliderConnector(
 																			this, m_ui->doubleSpinBoxMaxDeformStep, m_ui->horizontalSliderMaxDeformStep , PlanParam::MaxFactor );
+  
+  connect(m_ui->spinBoxIthNodeInTraj, SIGNAL(valueChanged(int)), this, SLOT(getIthNodeInBestTraj()), Qt::QueuedConnection);
 	
 	//connect(connector,SIGNAL(valueChanged(double)),PlanEnv->getObject(PlanParam::optimTimeLimit),SLOT(set(double)));
 	//connect(PlanEnv->getObject(PlanParam::optimTimeLimit),SIGNAL(valueChanged(double)),this,SLOT(test(double)));
@@ -407,13 +411,45 @@ void MotionPlanner::removeRedundant()
 #endif
 }
 
-
-
 void MotionPlanner::extractBestTraj()
 {
 #ifdef P3D_PLANNER
 	p3d_ExtractBestTraj(XYZ_GRAPH);
 #endif
+}
+
+Node* MotionPlanner::getIthNodeInBestTraj()
+{
+  if (API_activeGraph == NULL) {
+    cout << "Graph is NULL" << endl;
+  }
+  
+  confPtr_t q_init = global_Move3DPlanner->getInitConf();
+  confPtr_t q_goal = global_Move3DPlanner->getGoalConf();
+  
+  vector<Node*> nodes = API_activeGraph->extractBestNodePathSoFar( q_init, q_goal );
+  
+  if ( nodes.empty() ) 
+  {
+    cout << "nodes is empty!!!" << endl;
+    return NULL;
+  }
+  
+  int ith = m_ui->spinBoxIthNodeInTraj->value();
+  
+  //		cout << "removing node nb : " << ith << endl;
+  //		cout << "graph size nb : " << nodes.size() << endl;
+  if ( (ith >= 0) && ( ((int)nodes.size()) > ith) ) 
+  {
+    Robot* rob = API_activeGraph->getRobot();
+    rob->setAndUpdate(*nodes[ith]->getConfiguration());
+    m_mainWindow->drawAllWinActive();
+    return nodes[ith]; 
+  }
+  else{
+    cout << "out of bounds" << endl;
+    return NULL;
+  }
 }
 
 //---------------------------------------------------------------------
@@ -621,7 +657,9 @@ void MotionPlanner::nodeToShowChanged()
 	
 	if ( (ith >= 0) && ( ((int)nodes.size()) > ith) ) 
 	{
-		graph->getRobot()->setAndUpdate(*nodes[ith]->getConfiguration());
+    Robot* rob = graph->getRobot();
+		rob->setAndUpdate(*nodes[ith]->getConfiguration());
+    
 		cout << "Node number : " << nodes[ith]->getNodeStruct()->num << endl ;
 		cout << "Connected Component : " << nodes[ith]->getConnectedComponent()->getId() << endl ;
 	}

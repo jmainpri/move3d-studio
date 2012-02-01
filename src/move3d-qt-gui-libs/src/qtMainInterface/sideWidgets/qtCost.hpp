@@ -68,11 +68,11 @@ public:
 public slots:
 	void setCostFunction(std::string function);
 	void setCostFunction(int costFunctionId);
-	
+	void initCostSpace();
+  
 private slots:
 	
 	// General Cost --------------------------------
-  void initCostSpace();
 	void stonesGraph();
 	void extractBestPath();
 	void newGraphAndReComputeCost();
