@@ -451,9 +451,24 @@ void qt_executePlan()
 
 void qt_showTraj()
 {
-  p3d_rob *robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
-  g3d_show_tcur_rob(robotPt,default_drawtraj_fct_qt_pipe);
-	ENV.setBool(Env::isRunning,false);
+    p3d_rob *robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
+    g3d_show_tcur_rob(robotPt,default_drawtraj_fct_qt_pipe);
+    ENV.setBool(Env::isRunning,false);
+    if (PlanEnv->getBool(PlanParam::env_showHumanTraj))
+    {
+                p3d_rob *hum_robotPt;
+                Robot* rob =	global_Project->getActiveScene()->getRobotByNameContaining("HUMAN");
+                if (rob)
+                {
+                        hum_robotPt = rob->getRobotStruct();
+//                        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,false);
+                        double tmp = ENV.getDouble(Env::showTrajFPS);
+                        ENV.setDouble(Env::showTrajFPS,tmp*5);
+                        g3d_show_tcur_rob(hum_robotPt,default_drawtraj_fct_qt_pipe);
+                        ENV.setDouble(Env::showTrajFPS,tmp);
+//                        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->showBestConf();
+                }
+    }
 }
 
 /**

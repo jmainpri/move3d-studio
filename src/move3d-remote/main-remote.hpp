@@ -6,8 +6,13 @@
 
 #include <QtCore/QString>
 
-#include "mainwindow-remote.hpp"
+
 #include "posterreader.hpp"
+
+namespace Ui {
+class MainWindowRemote;
+
+}
 
 /**
  * @ingroup qtWindow
@@ -28,8 +33,7 @@ public:
         int run(int argc, char** argv);
   
 private:        
-        void initSeperatedWidgets(MainWindowRemote& w);
-        void initDockWidget(MainWindowRemote& w);
+        void initWidgets(MainWindowRemote& w);
   
         PosterReader* m_posterHandler;
 };

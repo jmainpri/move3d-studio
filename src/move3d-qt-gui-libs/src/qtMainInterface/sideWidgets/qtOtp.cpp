@@ -68,7 +68,7 @@ void OtpWidget::initOTP()
         m_k_TimeStamp = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxTimeStamp,	m_ui->horizontalSliderTimeStamp,	PlanParam::env_timeStamp);
 
         m_k_Psi = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxPsi,		m_ui->horizontalSliderPsi,		PlanParam::env_psi);
-        m_k_delta = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxDelta,	m_ui->horizontalSliderDelta,	PlanParam::env_delta);
+        m_k_delta = new QtShiva::SpinBoxSliderConnector(this,m_ui->doubleSpinBoxDelta,	        m_ui->horizontalSliderDelta,            PlanParam::env_delta);
         m_k_ksi = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxKsi,		m_ui->horizontalSliderKsi,		PlanParam::env_ksi);
         m_k_rho = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxRho,		m_ui->horizontalSliderRho,		PlanParam::env_rho);
 
@@ -78,8 +78,10 @@ void OtpWidget::initOTP()
 
         m_k_sleep = new QtShiva::SpinBoxSliderConnector(this,         m_ui->doubleSpinBoxSleep,         m_ui->horizontalSliderSleep,        PlanParam::env_timeShow);
         m_k_timeLimit = new QtShiva::SpinBoxSliderConnector(this,     m_ui->doubleSpinBoxTimeLimit,     m_ui->horizontalSliderTimeLimit,    PlanParam::env_timeLimitation);
-        m_k_timeLimit = new QtShiva::SpinBoxSliderConnector(this,     m_ui->doubleSpinBoxTimeLimitSit,  m_ui->horizontalSliderTimeLimitSit, PlanParam::env_sitTimeLimitation);
+        m_k_timeLimitSit = new QtShiva::SpinBoxSliderConnector(this,  m_ui->doubleSpinBoxTimeLimitSit,  m_ui->horizontalSliderTimeLimitSit, PlanParam::env_sitTimeLimitation);
         m_k_sleep = new QtShiva::SpinBoxSliderConnector(this,         m_ui->doubleSpinBoxPow,           m_ui->horizontalSliderPow,          PlanParam::env_pow);
+        m_k_sleep = new QtShiva::SpinBoxSliderConnector(this,         m_ui->doubleSpinBoxPowRot,        m_ui->horizontalSliderPowRot,       PlanParam::env_anglePow);
+
 
 
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxReach,Env::drawGrid);
@@ -92,6 +94,8 @@ void OtpWidget::initOTP()
 
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawOnlyBest,PlanParam::env_drawOnlyBest);
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxIsStanding,PlanParam::env_isStanding);
+        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxOldCriteria,PlanParam::env_oldCriteria);
+        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxNoRepetition,PlanParam::env_noRepetition);
 
 //        m_ui->groupBoxTraj->hide();
 
@@ -785,4 +789,9 @@ void OtpWidget::on_pushButtonGridVar_clicked()
     {
         dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getPlanGrid()->dumpVar();
     }
+}
+
+void OtpWidget::on_radioButtonBiasAndRot_toggled(bool checked)
+{
+    PlanEnv->setBool(PlanParam::env_fusedGridAndRotRand,checked);
 }

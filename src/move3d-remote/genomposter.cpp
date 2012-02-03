@@ -68,7 +68,7 @@ void GenomPoster::update() {
                 QThread::msleep(2000);
             }
             /* poster is updated */
-
+            emit dataReady();
             //cout << "GenomPoster::refresh() poster " << _posterName << endl;
             _updatingStatus = true;
         }

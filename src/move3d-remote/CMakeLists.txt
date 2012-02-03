@@ -20,64 +20,13 @@ CMAKE_MINIMUM_REQUIRED (VERSION 2.6.4)
 
 PROJECT (MOVE3D_REMOTE CXX)
 
-file(GLOB source_files
-main-remote.cpp
-move3d.c
-sparkwidget.cpp
-niutwidget.cpp
-camerawidget.cpp
-softmotionwidget.cpp
-camerasolo.cpp 
-mainwindow-remote.cpp
-posterreader.cpp
-genomposter.cpp
-myopencv.cpp
-qtipl.cpp
-picowebimage.cpp
-tcpserver.cpp
-sparkcamera.cpp
-dockwidget.cpp)
 
-file(GLOB image_files
-images/green-man-xpm.h
-images/orange-man-xpm.h
-images/red-man-xpm.h
-images/yellow-death-xpm.h
-images/yellow-man-xpm.h)
-
-file(GLOB header_files
-duplicatedGenomStruct.hpp
-main-remote.hpp
-sparkwidget.hpp
-niutwidget.h
-camerawidget.h
-softmotionwidget.hpp
-camerasolo.hpp 
-mainwindow-remote.hpp
-posterreader.hpp
-genomposter.hpp
-myopencv.hpp
-qtipl.hpp
-picowebimage.hpp 
-tcpserver.hpp
-sparkcamera.hpp
-dockwidget.hpp)
-
-file(GLOB
-ui_files
-mainwindow-remote.ui
-sparkwidget.ui
-niutwidget.ui
-camerawidget.ui
-softmotionwidget.ui
-camerasolo.ui
-dockwidget.ui)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/move3d-qt-gui-libs/src)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/move3d-remote)
 INCLUDE_DIRECTORIES(/home/xbroquer/openrobots/include/pom)
 INCLUDE_DIRECTORIES(/home/xbroquer/openrobots/include/viam)
-
+INCLUDE_DIRECTORIES(/home/xbroquer/openrobots/include/gbM)
 
 # --- Scripts to search source files -------
 
@@ -121,6 +70,8 @@ ENDMACRO(Move3DGUI_CheckCompilationFlags)
 # --- Compilation Flags --------------------------------------------------------
 # ------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
+
+Move3D_flag(ATTENTIONAL_REMOTE "Add the attentional widget in move3d-remote" OFF)
 
 Move3D_flag(QT_LIBRARY "Sets QtLibrary compiling mode" ON)
 Move3D_flag(QT_GL "Sets QtLibrary compiling mode" ON QT_LIBRARY)
@@ -263,6 +214,64 @@ ENDMACRO(SMP_QT_GENERATE_UI_HEADERS)
 # -------------------------------------------------------------
 # --- Directories to include ----------------------------------
 # -------------------------------------------------------------
+file(GLOB source_files
+main-remote.cpp
+move3d.c
+sparkwidget.cpp
+niutwidget.cpp
+camerawidget.cpp
+softmotionwidget.cpp
+camerasolo.cpp
+mainwindow-remote.cpp
+posterreader.cpp
+genomposter.cpp
+picowebimage.cpp
+tcpserver.cpp
+sparkcamera.cpp
+paramwidget.cpp
+)
+
+file(GLOB image_files
+images/green-man-xpm.h
+images/orange-man-xpm.h
+images/red-man-xpm.h
+images/yellow-death-xpm.h
+images/yellow-man-xpm.h)
+
+file(GLOB header_files
+duplicatedGenomStruct.hpp
+main-remote.hpp
+sparkwidget.hpp
+niutwidget.h
+camerawidget.h
+softmotionwidget.hpp
+camerasolo.hpp
+mainwindow-remote.hpp
+posterreader.hpp
+genomposter.hpp
+picowebimage.hpp
+tcpserver.hpp
+sparkcamera.hpp
+paramwidget.hpp
+)
+
+file(GLOB
+ui_files
+mainwindow-remote.ui
+sparkwidget.ui
+niutwidget.ui
+camerawidget.ui
+softmotionwidget.ui
+camerasolo.ui
+paramwidget.ui)
+
+IF(ATTENTIONAL_REMOTE)
+LIST(APPEND ui_files attentionalwidget.ui)
+LIST(APPEND header_files attentionalwidget.hpp)
+LIST(APPEND source_files attentionalwidget.cpp)
+ENDIF()
+
+
 SMP_QT_GENERATE_MOC(${header_files})
 SMP_QT_GENERATE_UI_HEADERS(${ui_files})
 

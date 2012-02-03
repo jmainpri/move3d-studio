@@ -1,6 +1,7 @@
 #include "sparkwidget.hpp"
 #include "ui_sparkwidget.h"
 
+
 #include <QPainter>
 
 #include "planner_handler.hpp"
@@ -15,14 +16,11 @@
 
 using namespace std;
 
-sparkWidget::sparkWidget(PosterReader *pr,  Ui::MainWindowRemote *m_ui_parent, QWidget *parent) :
+sparkWidget::sparkWidget(QWidget *parent) :
     QWidget(parent),
-    m_pr(pr),
-    m_ui_p(m_ui_parent),
     m_ui(new Ui::sparkWidget)
 {
     m_ui->setupUi(this);
-    init(m_pr,m_ui_p);
 }
 
 sparkWidget::~sparkWidget()
@@ -30,16 +28,16 @@ sparkWidget::~sparkWidget()
     delete m_ui;
 }
 
-void sparkWidget::init(PosterReader *pr, Ui::MainWindowRemote *ui_parent)
+void sparkWidget::init(PosterReader *pr, Ui::ParamWidget *ui_param)
 {
-  if( (!pr) || (!ui_parent))
+  if( (!pr) || (!ui_param))
   {
     cout << "cameraWidget not well initialized!!!" << endl;
     return;
   }
   
   m_pr = pr;
-  m_ui_p = ui_parent;
+  m_ui_p = ui_param;
     
   connect(m_pr,SIGNAL(drawAllWinActive()), this, SLOT(drawAllWinActive()));
   /* viewer page */

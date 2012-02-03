@@ -6,19 +6,18 @@
 #include "images/yellow-death-xpm.h"
 #include "images/yellow-man-xpm.h"
 #include "images/im_still_alive-xpm.h"
+#include "images/rip-xpm.h"
+
 #include <iostream>
 
 using namespace std;
 
-niutWidget::niutWidget(PosterReader *pr, Ui::MainWindowRemote *m_ui_parent, QWidget *parent) :
+niutWidget::niutWidget(QWidget *parent) :
     QWidget(parent),
-    m_pr(pr),
-    m_ui_p(m_ui_parent),
     m_ui(new Ui::niutWidget)
         
 {
     m_ui->setupUi(this);
-    init( m_pr, m_ui_p );
 }
 
 niutWidget::~niutWidget()
@@ -26,17 +25,17 @@ niutWidget::~niutWidget()
     delete m_ui;
 }
 
-void niutWidget::init(PosterReader *pr, Ui::MainWindowRemote *ui_parent)
+void niutWidget::init(PosterReader *pr, Ui::ParamWidget *ui_param)
 {
-  if( (!pr) || (!ui_parent))
+  if( (!pr) || (!ui_param))
   {
     cout << "niutWidget not well initialized!!!" << endl;
     return;
   }
   
   m_pr = pr;
-  m_ui_p = ui_parent;
-  
+  m_ui_p = ui_param;
+
   _niutLabels.push_back( m_ui->labelNiut1 );
   _niutLabels.push_back( m_ui->labelNiut2 );
   _niutLabels.push_back( m_ui->labelNiut3 );
@@ -56,7 +55,7 @@ void niutWidget::init(PosterReader *pr, Ui::MainWindowRemote *ui_parent)
   _niutLabels.push_back( m_ui->labelNiut16 );
   
   _niutPmAlive = QPixmap(im_still_alive_img);
-  _niutPmDead = QPixmap(yellow_death);
+  _niutPmDead = QPixmap(rip_xpm);
   _niutPmRed = QPixmap(red_man);
   _niutPmOrange = QPixmap(orange_man);
   _niutPmYellow = QPixmap(yellow_man);
@@ -72,13 +71,18 @@ void niutWidget::init(PosterReader *pr, Ui::MainWindowRemote *ui_parent)
   for (unsigned int i=0; i<_niutLabels.size(); i++)
   {
     _niutLabels[i]->setPixmap(_niutPmRed);
-    _niutLabels[i]->show();
+    _niutLabels[i]->hide();
+    _showedPics.push_back(false);
   }
   m_ui->labelNiutDead->setPixmap(_niutPmAlive);
   m_ui->labelNiutDead->show();
   
   connect(m_pr,SIGNAL(niutIsAlive(bool)), this, SLOT(setNiutIsAlive(bool)));
   connect(m_pr,SIGNAL(setNiutColorLabel(int,int)), this, SLOT(setNiutColorLabel(int,int)));
+
+  m_ui->labelNiutDead->hide();
+  _showedPics.push_back(false);
+  isToHideBar();
 }
 
 void niutWidget::changeEvent(QEvent *e)
@@ -96,10 +100,15 @@ void niutWidget::changeEvent(QEvent *e)
 void niutWidget::setNiutIsAlive(bool state)
 {
     if(state) {
-        m_ui->labelNiutDead->setPixmap(_niutPmAlive);
+//        m_ui->labelNiutDead->setPixmap(_niutPmAlive);
+        m_ui->labelNiutDead->hide();
+        _showedPics.at(_showedPics.size() - 1) = false;
     } else {
+        m_ui->labelNiutDead->show();
+        _showedPics.at(_showedPics.size() - 1) = true;
         m_ui->labelNiutDead->setPixmap(_niutPmDead);
     }
+    isToHideBar();
 }
 
 void niutWidget::setNiutColorLabel(int id, int color)
@@ -110,24 +119,49 @@ void niutWidget::setNiutColorLabel(int id, int color)
         return;
     }
 
+
     switch (color) {
     case 0:
-        _niutLabels[id]->setPixmap(_niutPmRed);
+//        _niutLabels[id]->setPixmap(_niutPmRed);
+        _niutLabels[id]->setPixmap(NULL);
+        _niutLabels[id]->hide();
+        _showedPics[id] = false;
         break;
 
     case 1:
         _niutLabels[id]->setPixmap(_niutPmOrange);
+        _niutLabels[id]->show();
+        _showedPics[id] = true;
         break;
 
     case 2:
         _niutLabels[id]->setPixmap(_niutPmYellow);
+        _niutLabels[id]->show();
+        _showedPics[id] = true;
         break;
 
     case 3:
         _niutLabels[id]->setPixmap(_niutPmGreen);
+        _niutLabels[id]->show();
+        _showedPics[id] = true;
         break;
 
     default:
         break;
     }
+    isToHideBar();
+}
+
+bool niutWidget::isToHideBar()
+{
+    for (unsigned int i = 0; i < _showedPics.size(); i++)
+    {
+        if (_showedPics.at(i))
+        {
+            this->show();
+            return false;
+        }
+    }
+    this->hide();
+    return true;
 }

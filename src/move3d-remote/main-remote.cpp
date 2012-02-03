@@ -5,11 +5,12 @@
 #include "main-remote.hpp"
 
 #include "mainwindow-remote.hpp"
+#include "ui_mainwindow-remote.h"
+
 
 #include "sparkwidget.hpp"
 #include "camerawidget.h"
 #include "niutwidget.h"
-#include "dockwidget.hpp"
 #include "softmotionwidget.hpp"
 
 #include "planner_handler.hpp"
@@ -77,21 +78,14 @@ Simple_threads::~Simple_threads()
 
 //! function that initialize the remote viewer with  
 //! seperated windows
-void Simple_threads::initSeperatedWidgets(MainWindowRemote& w)
+void Simple_threads::initWidgets(MainWindowRemote& w)
 {
-  cameraWidget* wCam = new cameraWidget(m_posterHandler, w.m_ui);
-  niutWidget* wNiut = new niutWidget(m_posterHandler, w.m_ui);
-  //
-  sparkWidget* wSpark1 = new sparkWidget(m_posterHandler, w.m_ui);
-  //    sparkWidget wSpark2(m_posterHandler, w.m_ui);
-  //    sparkWidget wSpark3(m_posterHandler, w.m_ui);
 
-  softmotionWidget* wSoftmotion = new softmotionWidget(m_posterHandler, w.m_ui);
-  
-  global_w = wSpark1;
+  global_w = w.m_ui->spark;
   ext_g3d_draw_remote = draw_remote_main;
   
-  openGlWidgets.push_back(wSpark1);
+  //openGlWidgets.push_back(wSpark1);
+  openGlWidgets.push_back(w.m_ui->spark);
   //    openGlWidgets.push_back(&wSpark2);
   //    openGlWidgets.push_back(&wSpark3);
   
@@ -105,23 +99,6 @@ void Simple_threads::initSeperatedWidgets(MainWindowRemote& w)
   //    g_window.moveTo( 0, 0 );
   //
   //    w.setGeometry( g_window );
-  
-  wCam->show();
-  wNiut->show();
-  wSpark1->show();
-  wSoftmotion->show();
-  //    wSpark2.show();
-  //    wSpark3.show();
-  
-  w.show();
-}
-
-//! function that initialize the remote viewer with  
-//! docked windows
-void Simple_threads::initDockWidget(MainWindowRemote& w)
-{
-  DockWindow* severalWidgets = new DockWindow(m_posterHandler, w.m_ui);
-  severalWidgets->showMaximized();
   w.show();
 }
 
@@ -148,19 +125,8 @@ int Simple_threads::run(int argc, char** argv)
   
   MainWindowRemote w(m_posterHandler);
   
-  const bool several_widgets = true;
-  
-  if(several_widgets)
-  {
-    cout << "Init Seperated" << endl;
-    initSeperatedWidgets(w);
-  }
-  else
-  {
-    cout << "Init Dock" << endl;
-    initDockWidget(w);
-  }
-  
+  initWidgets(w);
+
   return app->exec();
 }
 

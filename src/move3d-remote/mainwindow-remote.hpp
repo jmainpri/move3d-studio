@@ -12,10 +12,13 @@ class PosterReader;
 #include "../p3d/env.hpp"
 #include "../p3d/ParametersEnv.hpp"
 
-namespace Ui
-{
+namespace Ui {
         class MainWindowRemote;
 }
+
+#ifdef ATTENTIONAL_REMOTE
+class AttentionalWidget;
+#endif
 
 /**
  * @ingroup qtMainWindowRemote
@@ -32,12 +35,6 @@ public:
         ~MainWindowRemote();
 
 
-public slots:
-
-        void setSparkStatusText(bool updating);
-
-signals:
-    void drawAllWinActive();
   
 private slots:
 
@@ -45,8 +42,6 @@ private slots:
         void on_pushButtonSaveVideo_toggled(bool checked);
         void on_pushButtonSaveSettings_clicked();
         void on_pushButtonLoadSettings_clicked();
-        void setSparkRefresh();
-        void sparkSaveScenario();
         void setRobotAsCurrent();
         void saveVideoTimer();
         //void on_checkBox_clicked(bool checked);
@@ -75,6 +70,10 @@ private:
         void loadDockSettings(QSettings & settings, QString dockName, QDockWidget * dockWidget);
 
         QTimer* timer;
+#ifdef ATTENTIONAL_REMOTE
+        QDockWidget *dockWidgetAttentional;
+        AttentionalWidget *dockAttentional;
+#endif
 };
 
 #endif // MAINWINDOWREMOTE_HPP

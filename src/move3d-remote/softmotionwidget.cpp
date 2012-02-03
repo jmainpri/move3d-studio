@@ -15,23 +15,12 @@
 
 using namespace std;
 
-softmotionWidget::softmotionWidget(PosterReader *pr, Ui::MainWindowRemote *m_ui_parent, QWidget *parent) :
+softmotionWidget::softmotionWidget(QWidget *parent) :
         QWidget(parent),
-        m_pr(pr),
-        m_ui_p(m_ui_parent),
         m_ui(new Ui::softmotionWidget)
 {
     m_ui->setupUi(this);
-   connect(m_ui->pushButtonSMPlot,SIGNAL(clicked()),pr,SLOT(softmotionPlotTraj()));
 
-
-   connect(m_ui->checkBoxSoftMotionDrawTraj, SIGNAL(toggled(bool)), pr , SLOT(softmotionDrawTraj(bool)), Qt::DirectConnection);
-
-   QtShiva::SpinBoxSliderConnector *connectordt= new QtShiva::SpinBoxSliderConnector(
-           this, m_ui->doubleSpinBoxdt, m_ui->horizontalSliderdt);
-
-
-   connect(connectordt, SIGNAL(valueChanged(double)), pr, SLOT(changesoftmotiondt(double)));
 }
 
 
@@ -42,15 +31,20 @@ softmotionWidget::~softmotionWidget()
 
 
 
-void softmotionWidget::init(PosterReader *pr, Ui::MainWindowRemote *ui_parent)
+void softmotionWidget::init(PosterReader *pr, Ui::ParamWidget *ui_param)
 {
-  if( (!pr) || (!ui_parent))
+  if( (!pr) || (!ui_param))
   {
     cout << "niutWidget not well initialized!!!" << endl;
     return;
   }
-
-
+  m_pr = pr;
+  m_ui_p = ui_param;
+  connect(m_ui->pushButtonSMPlot,SIGNAL(clicked()),pr,SLOT(softmotionPlotTraj()));
+  connect(m_ui->checkBoxSoftMotionDrawTraj, SIGNAL(toggled(bool)), pr , SLOT(softmotionDrawTraj(bool)), Qt::DirectConnection);
+  QtShiva::SpinBoxSliderConnector *connectordt= new QtShiva::SpinBoxSliderConnector(
+          this, m_ui->doubleSpinBoxdt, m_ui->horizontalSliderdt);
+  connect(connectordt, SIGNAL(valueChanged(double)), pr, SLOT(changesoftmotiondt(double)));
 }
 
 

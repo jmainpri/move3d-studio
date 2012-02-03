@@ -5,19 +5,20 @@
 #include "qtLibrary.hpp"
 
 #include "posterreader.hpp"
-#include "ui_mainwindow-remote.h"
 
 namespace Ui {
     class niutWidget;
+    class ParamWidget;
 }
 
 class niutWidget : public QWidget 
 {
     Q_OBJECT
 public:
-    niutWidget(PosterReader *pr = NULL, Ui::MainWindowRemote *m_ui_parent = NULL, QWidget *parent = 0);
+    niutWidget(QWidget *parent = 0);
     ~niutWidget();
-    void init(PosterReader *pr, Ui::MainWindowRemote *m_ui_parent);
+    void init(PosterReader *pr, Ui::ParamWidget *m_ui_parent);
+    bool isToHideBar();
 
 public slots:
     void setNiutIsAlive(bool state);
@@ -28,7 +29,7 @@ protected:
 
 private:
     PosterReader *m_pr;
-    Ui::MainWindowRemote *m_ui_p;
+    Ui::ParamWidget *m_ui_p;
     Ui::niutWidget *m_ui;
     
     std::vector<QLabel*> _niutLabels;
@@ -38,6 +39,10 @@ private:
     QPixmap _niutPmOrange;
     QPixmap _niutPmYellow;
     QPixmap _niutPmGreen;
+
+    std::vector<bool> _showedPics;
+    std::vector<int> _idDict;
+
 };
 
 #endif // niutWIDGET_H

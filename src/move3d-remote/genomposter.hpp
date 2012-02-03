@@ -45,6 +45,9 @@ public slots:
     //void setRefresh(bool checked);
     void stop();
 
+signals:
+    void dataReady();
+
 
 protected:
     std::string _posterName;

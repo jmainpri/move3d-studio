@@ -6,19 +6,19 @@
 
 #include "posterreader.hpp"
 
-#include "ui_mainwindow-remote.h"
 
 namespace Ui {
     class cameraWidget;
+    class ParamWidget;
 }
 
 class cameraWidget : public QWidget 
 {
     Q_OBJECT
 public:
-    cameraWidget(PosterReader *pr = NULL, Ui::MainWindowRemote *ui_parent = NULL, QWidget *parent = 0);
+    cameraWidget(QWidget *parent = 0);
     ~cameraWidget();
-    void init(PosterReader *pr, Ui::MainWindowRemote *ui_parent);
+    void init(PosterReader *pr, Ui::ParamWidget *ui_param);
 
 protected:
     void changeEvent(QEvent *e);
@@ -35,7 +35,7 @@ public:
 
 private:
     PosterReader *m_pr;
-    Ui::MainWindowRemote *m_ui_p;
+    Ui::ParamWidget *m_ui_p;
     Ui::cameraWidget *m_ui;
     
     uchar *_dataImageLeft;
