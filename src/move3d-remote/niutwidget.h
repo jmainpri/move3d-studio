@@ -18,6 +18,7 @@ public:
     niutWidget(QWidget *parent = 0);
     ~niutWidget();
     void init(PosterReader *pr, Ui::ParamWidget *m_ui_parent);
+    bool isToHideBar();
 
 public slots:
     void setNiutIsAlive(bool state);
@@ -38,6 +39,10 @@ private:
     QPixmap _niutPmOrange;
     QPixmap _niutPmYellow;
     QPixmap _niutPmGreen;
+
+    std::vector<bool> _showedPics;
+    std::vector<int> _idDict;
+
 };
 
 #endif // niutWIDGET_H

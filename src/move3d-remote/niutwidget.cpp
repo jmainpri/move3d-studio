@@ -35,7 +35,7 @@ void niutWidget::init(PosterReader *pr, Ui::ParamWidget *ui_param)
   
   m_pr = pr;
   m_ui_p = ui_param;
-  
+
   _niutLabels.push_back( m_ui->labelNiut1 );
   _niutLabels.push_back( m_ui->labelNiut2 );
   _niutLabels.push_back( m_ui->labelNiut3 );
@@ -71,13 +71,18 @@ void niutWidget::init(PosterReader *pr, Ui::ParamWidget *ui_param)
   for (unsigned int i=0; i<_niutLabels.size(); i++)
   {
     _niutLabels[i]->setPixmap(_niutPmRed);
-    _niutLabels[i]->show();
+    _niutLabels[i]->hide();
+    _showedPics.push_back(false);
   }
   m_ui->labelNiutDead->setPixmap(_niutPmAlive);
   m_ui->labelNiutDead->show();
   
   connect(m_pr,SIGNAL(niutIsAlive(bool)), this, SLOT(setNiutIsAlive(bool)));
   connect(m_pr,SIGNAL(setNiutColorLabel(int,int)), this, SLOT(setNiutColorLabel(int,int)));
+
+  m_ui->labelNiutDead->hide();
+  _showedPics.push_back(false);
+  isToHideBar();
 }
 
 void niutWidget::changeEvent(QEvent *e)
@@ -95,10 +100,15 @@ void niutWidget::changeEvent(QEvent *e)
 void niutWidget::setNiutIsAlive(bool state)
 {
     if(state) {
-        m_ui->labelNiutDead->setPixmap(_niutPmAlive);
+//        m_ui->labelNiutDead->setPixmap(_niutPmAlive);
+        m_ui->labelNiutDead->hide();
+        _showedPics.at(_showedPics.size() - 1) = false;
     } else {
+        m_ui->labelNiutDead->show();
+        _showedPics.at(_showedPics.size() - 1) = true;
         m_ui->labelNiutDead->setPixmap(_niutPmDead);
     }
+    isToHideBar();
 }
 
 void niutWidget::setNiutColorLabel(int id, int color)
@@ -109,24 +119,49 @@ void niutWidget::setNiutColorLabel(int id, int color)
         return;
     }
 
+
     switch (color) {
     case 0:
-        _niutLabels[id]->setPixmap(_niutPmRed);
+//        _niutLabels[id]->setPixmap(_niutPmRed);
+        _niutLabels[id]->setPixmap(NULL);
+        _niutLabels[id]->hide();
+        _showedPics[id] = false;
         break;
 
     case 1:
         _niutLabels[id]->setPixmap(_niutPmOrange);
+        _niutLabels[id]->show();
+        _showedPics[id] = true;
         break;
 
     case 2:
         _niutLabels[id]->setPixmap(_niutPmYellow);
+        _niutLabels[id]->show();
+        _showedPics[id] = true;
         break;
 
     case 3:
         _niutLabels[id]->setPixmap(_niutPmGreen);
+        _niutLabels[id]->show();
+        _showedPics[id] = true;
         break;
 
     default:
         break;
     }
+    isToHideBar();
+}
+
+bool niutWidget::isToHideBar()
+{
+    for (unsigned int i = 0; i < _showedPics.size(); i++)
+    {
+        if (_showedPics.at(i))
+        {
+            this->show();
+            return false;
+        }
+    }
+    this->hide();
+    return true;
 }
