@@ -36,7 +36,8 @@ void GenomPoster::run()
         }
         if(_refreshStatus)
         {
-            update();
+            if (this)
+                update();
         } else {
             _updatingStatus = false;
         }

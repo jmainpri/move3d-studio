@@ -34,6 +34,8 @@ public slots:
     void softmotionPlotTraj();
     void softmotionDrawTraj(bool b);
     void drawSmTraj();
+    void drawGoToPos();
+    void setDrawGoTo(bool b);
 
     void changesoftmotiondt(double dt);
 
@@ -42,6 +44,7 @@ private:
     bool updateSparkEnv();
 
     bool _drawTraj;
+    bool _drawGotoPos;
   
     // Niut fct and data
     bool updateNiut();

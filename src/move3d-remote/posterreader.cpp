@@ -30,6 +30,7 @@ void draw_smtraj_tace()
 {
     if(ptrPosterReader)
         ptrPosterReader->drawSmTraj();
+    ptrPosterReader->drawGoToPos();
 }
 
 PosterReader::PosterReader()
@@ -40,6 +41,7 @@ PosterReader::PosterReader()
     timer->start(10);
 
     _drawTraj = false;
+    _drawGotoPos = true;
     /* declaration of the poster reader threads */
     _sparkPoster = new GenomPoster("sparkEnvironment", (char*)(&_sparkPosterStruct), sizeof(SPARK_CURRENT_ENVIRONMENT), 10);
     _sparkPoster->setRefreshStatus(true);
@@ -203,9 +205,7 @@ bool PosterReader::updateSparkEnv()
                         {
                             for(j=0; j<robotPt->nb_dof; j++) {
                                 robotPt->ROBOT_GOTO[j] = _mhpRobotGoTo.q[j];
-                                cout << robotPt->ROBOT_GOTO[j]<< endl;
                             }
-                            cout << "end #####################" << endl;
                         }
                     }
 
@@ -455,5 +455,51 @@ void PosterReader::softmotionDrawTraj(bool b)
     return;
 }
 
+void PosterReader::drawGoToPos()
+{
+    if(_drawGotoPos) {
 
+        p3d_rob * robotPt = NULL;
+        for(int i=0; i<_sparkPosterStruct.robotNb; i++) {
+            robotPt = p3d_get_robot_by_name("PR2_ROBOT");
+            if( robotPt == NULL) {
+                //printf("robot not found %s\n",_sparkPosterStruct.robot[i].name.name );
+                continue;
+            }
+        }
 
+        if( robotPt == NULL) {
+            printf("robot not found %s\n","PR2_ROBOT");
+            return;
+        }
+
+        std::vector<SM_COND> cond;
+
+        configPt q = p3d_alloc_config(robotPt);
+        configPt q_todraw = robotPt->ROBOT_GOTO;
+        robotPt->draw_transparent = true;
+
+        p3d_set_and_update_this_robot_conf(robotPt, q_todraw);
+        g3d_draw_robot(robotPt->num, G3D_WIN, 0);
+        robotPt->draw_transparent = false;
+        p3d_destroy_config(robotPt, q);
+    }
+    return;
+}
+
+void PosterReader::setDrawGoTo(bool b)
+{
+    if( _mhpPoster == NULL )
+    {
+        cout << "mhp ERROR : NULL Poster" << endl;
+        return;
+    }
+    _drawGotoPos = b;
+    if(b) {
+
+        cout << "_drawGotoPos = true " << endl;
+    } else {
+        cout << "_drawGotoPos = false " << endl;
+    }
+    return;
+}
