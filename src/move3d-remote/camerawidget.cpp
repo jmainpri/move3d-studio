@@ -80,3 +80,18 @@ void cameraWidget::updateImageRight()
 }
 
 
+
+void cameraWidget::on_checkBox_toggled(bool checked)
+{
+    if(checked)
+    {
+        m_pr->_picowebLeftImg->start();
+        m_pr->_picowebRightImg->start();
+    }else{
+        m_pr->_picowebLeftImg->stop();
+        m_pr->_picowebRightImg->stop();
+    }
+}
+
+
+

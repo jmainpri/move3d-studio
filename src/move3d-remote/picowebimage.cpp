@@ -39,6 +39,8 @@ void PicowebImage::flushImage(int requestId, bool error)
         _image = _image.fromImage(qimg, 0);
         QThread::msleep(60);
         _Request =_http->get(_pathWithQuery);
+    } else if ( !_update && error==false){
+        _image = QPixmap(jimmy_img);
     } else {
         _image = QPixmap(jimmy_img);
         QThread::msleep(2000);
@@ -56,7 +58,5 @@ void PicowebImage::stop()
 {
     _update = false;
 }
-
-
 
 

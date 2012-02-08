@@ -42,6 +42,9 @@ private:
     uchar *_dataImageRight;
     QImage* _qimageLeft;
     QImage* _qimageRight;
+
+private slots:
+    void on_checkBox_toggled(bool checked);
 };
 
 #endif // CAMERAWIDGET_H
