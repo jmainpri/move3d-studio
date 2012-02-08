@@ -2,6 +2,7 @@
 #include "ui_paramwidget.h"
 #include "posterreader.hpp"
 #include "planner_handler.hpp"
+#include "planner/planEnvironment.hpp"
 
 
 ParamWidget::ParamWidget(QWidget *parent) :
@@ -9,6 +10,14 @@ ParamWidget::ParamWidget(QWidget *parent) :
   m_ui(new Ui::ParamWidget)
 {
   m_ui->setupUi(this);
+
+//  QCheckBox* box, PlanParam::boolParameter p;
+
+  connect(PlanEnv->getObject(PlanParam::env_drawFinalConf), SIGNAL(valueChanged(bool)), m_ui->checkBoxDrawGoto, SLOT(setChecked(bool)), Qt::DirectConnection);
+  connect(m_ui->checkBoxDrawGoto, SIGNAL(toggled(bool)), PlanEnv->getObject(PlanParam::env_drawFinalConf), SLOT(set(bool)), Qt::DirectConnection);
+  m_ui->checkBoxDrawGoto->setChecked(PlanEnv->getBool(PlanParam::env_drawFinalConf));
+
+//  connectCheckBoxToEnv(m_ui->checkBoxDrawGoto,PlanParam::env_drawFinalConf);
 }
 
 ParamWidget::~ParamWidget()

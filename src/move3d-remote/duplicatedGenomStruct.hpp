@@ -239,6 +239,15 @@ typedef struct POM_OBJECT_POS {
 
 
 //----------------------------------------------------
+// MHP
+//----------------------------------------------------
+
+typedef struct STRUCT_MHP_ROBOT_GO_TO {
+        GEN_STRING64 robot_name;
+        double q[M3D_MAX_DOF];
+} MHP_ROBOT_GO_TO;
+
+//----------------------------------------------------
 // VIAM
 //----------------------------------------------------
 #define VIAM_ID_MAX	64

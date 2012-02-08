@@ -84,6 +84,11 @@ PosterReader::PosterReader()
     _attentionalOutputPoster->setRefreshStatus(true);
 #endif
     ptrPosterReader = this;
+
+
+    /* poster for robot in mhp */
+    _mhpPoster = new GenomPoster("mhprobotGoToConf", (char*)(&_mhpRobotGoTo), sizeof(MHP_ROBOT_GO_TO), 10);
+    _mhpPoster->setRefreshStatus(true);
 }
 
 void PosterReader::changesoftmotiondt(double dt) {
@@ -98,6 +103,7 @@ PosterReader::~PosterReader()
     delete _picowebLeftImg;
     delete _picowebRightImg;
     delete _softmotionPoster;
+    delete _mhpPoster;
    #ifdef ATTENTIONAL_REMOTE
     delete _attentionalPoster;
     delete _attentionalOutputPoster;
@@ -128,6 +134,8 @@ void PosterReader::init()
     _attentionalOutputPoster->start();
     cout << "   ... attentionalOutput thread started" << endl;
 #endif
+    _mhpPoster->start();
+    cout << "   ... mhp thread started" << endl;
 }
 
 void PosterReader::update()
@@ -187,6 +195,22 @@ bool PosterReader::updateSparkEnv()
                 for(j=0; j<robotPt->nb_dof; j++) {
                     robotPt->ROBOT_POS[j] = _sparkPosterStruct.robot[i].q[j];
                 }
+                if(_mhpPoster!= NULL)
+                {
+                    if(_mhpPoster->getPosterStuct((char *)(&_mhpRobotGoTo)) != false)
+                    {
+                        if (!strcmp(_sparkPosterStruct.robot[i].name.name , _mhpRobotGoTo.robot_name.name))
+                        {
+                            for(j=0; j<robotPt->nb_dof; j++) {
+                                robotPt->ROBOT_GOTO[j] = _mhpRobotGoTo.q[j];
+                                cout << robotPt->ROBOT_GOTO[j]<< endl;
+                            }
+                            cout << "end #####################" << endl;
+                        }
+                    }
+
+                }
+
 
                 p3d_set_and_update_this_robot_conf(robotPt, robotPt->ROBOT_POS);
 	    }

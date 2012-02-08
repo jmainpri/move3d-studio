@@ -513,6 +513,7 @@ void MainWindow::initViewerButtons()
     connect( ENV.getObject(Env::drawGraph), SIGNAL(valueChanged(bool)), this, SLOT(test()) );
 
     connectCheckBoxToEnv(m_ui->checkBoxDisableDraw,Env::drawDisabled);
+    connectCheckBoxToEnv(m_ui->checkBoxDrawGoto,PlanParam::env_drawFinalConf);
     connectCheckBoxToEnv(m_ui->checkBoxDrawGraph,Env::drawGraph);
     connectCheckBoxToEnv(m_ui->checkBoxDrawExploration,Env::drawExploration);
     connectCheckBoxToEnv(m_ui->checkBoxDrawTraj,Env::drawTraj);

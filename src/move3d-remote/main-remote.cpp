@@ -99,7 +99,8 @@ void Simple_threads::initWidgets(MainWindowRemote& w)
   //    g_window.moveTo( 0, 0 );
   //
   //    w.setGeometry( g_window );
-  w.show();
+  w.showMaximized();
+//  w.maximize();
 }
 
 //! Main application function of the  
