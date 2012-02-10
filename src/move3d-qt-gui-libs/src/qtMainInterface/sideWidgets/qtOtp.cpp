@@ -96,6 +96,7 @@ void OtpWidget::initOTP()
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxIsStanding,PlanParam::env_isStanding);
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxOldCriteria,PlanParam::env_oldCriteria);
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxNoRepetition,PlanParam::env_noRepetition);
+        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxCreateHumanTraj,PlanParam::env_computeTrajForHuman);
 
 //        m_ui->groupBoxTraj->hide();
 

@@ -75,6 +75,12 @@ void MotionPlanner::initGeneral()
 	//	connect(m_ui->doubleSpinBoxTest, SIGNAL(valueChanged( double )), PlanEnv->getObject(PlanParam::eleven),SLOT(set(double)));
 	//	connect(PlanEnv->getObject(PlanParam::eleven), SIGNAL(valueChanged(double)),m_ui->doubleSpinBoxTest, SLOT(setValue(double)));
 	//	connect(PlanEnv->getObject(PlanParam::eleven), SIGNAL(valueChanged(double)),this,SLOT(testParam(double)));
+
+#ifdef MULTILOCALPATH
+        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxGnuplot,Env::plotSoftMotionCurve);
+        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxTrajAsArray,Env::exportSoftMotionTrajAsArrayOfConf);
+        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxExportFiles,Env::writeSoftMotionFiles);
+#endif
 }
 
 void MotionPlanner::testParam(double param)

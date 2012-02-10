@@ -26,9 +26,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-1481</y>
+        <y>-689</y>
         <width>314</width>
-        <height>2328</height>
+        <height>2356</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -779,6 +779,25 @@
               <widget class="QPushButton" name="pushButtonGridVar">
                <property name="text">
                 <string>grid variables</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget_8" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_8">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QCheckBox" name="checkBoxCreateHumanTraj">
+               <property name="text">
+                <string>create Human Traj</string>
                </property>
               </widget>
              </item>
