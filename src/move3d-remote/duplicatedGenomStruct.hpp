@@ -358,12 +358,95 @@ typedef struct ViamImageBank {
 //  double z;
 //} GEN_POINT_3D;
 
+///*
+// * Joint position
+// */
+//typedef struct NIUT_JOINT_STR {
+//	double confidence;
+//	GEN_POINT_3D position;
+//} NIUT_JOINT_STR;
+//
+///*
+// * List of joints
+// *
+// * Ordered to be binary compatible with OpenNI.
+// *
+// * Only HEAD, NECK, TORSO, SHOULDERS, ELBOW, HAND, HIP, KNEE and FOOT
+// * are used by the current version of the software.
+// */
+//typedef enum NIUT_JOINT {
+//	NIUT_HEAD = 1,
+//	NIUT_NECK = 2,
+//	NIUT_TORSO = 3,
+//	NIUT_WAIST = 4,
+//
+//	NIUT_LEFT_COLLAR = 5,
+//	NIUT_LEFT_SHOULDER = 6,
+//	NIUT_LEFT_ELBOW = 7,
+//	NIUT_LEFT_WRIST = 8,
+//	NIUT_LEFT_HAND = 9,
+//	NIUT_LEFT_FINGERTIP = 10,
+//
+//	NIUT_RIGHT_COLLAR = 11,
+//	NIUT_RIGHT_SHOULDER = 12,
+//	NIUT_RIGHT_ELBOW = 13,
+//	NIUT_RIGHT_WRIST = 14,
+//	NIUT_RIGHT_HAND = 15,
+//	NIUT_RIGHT_FINGERTIP = 16,
+//
+//	NIUT_LEFT_HIP = 17,
+//	NIUT_LEFT_KNEE = 18,
+//	NIUT_LEFT_ANKLE = 19,
+//	NIUT_LEFT_FOOT = 20,
+//
+//	NIUT_RIGHT_HIP = 21,
+//	NIUT_RIGHT_KNEE = 22,
+//	NIUT_RIGHT_ANKLE = 23,
+//	NIUT_RIGHT_FOOT = 24
+//} NIUT_JOINT;
+//
+//#define NIUT_MAX_JOINTS 25
+//
+//typedef struct NIUT_SKELETON_STR {
+//	NIUT_JOINT_STR joint[NIUT_MAX_JOINTS];
+//} NIUT_SKELETON_STR;
+//
+//typedef enum NIUT_TRACK_STATE {
+//	NIUT_NO_TRACKING,
+//	NIUT_POSE_SEARCH,
+//	NIUT_CALIBRATE,
+//	NIUT_TRACKING
+//} NIUT_TRACK_STATE;
+//
+//typedef struct NIUT_USER_STR {
+//	int id;
+//	NIUT_TRACK_STATE state;
+//	NIUT_SKELETON_STR skeleton;
+//} NIUT_USER_STR;
+//
+//#define NIUT_MAX_HUMANS 16
+//
+//typedef struct NIUT_HUMAN_LIST {
+//  int watch_dog;
+//	int num;
+//	NIUT_USER_STR users[NIUT_MAX_HUMANS];
+//} NIUT_HUMAN_LIST;
+
+/*
+ * time
+ */
+typedef struct NIUT_TIME_STR {
+  unsigned int t_sec;
+  unsigned int t_usec;
+} NIUT_TIME_STR;
+
+
 /*
  * Joint position
  */
 typedef struct NIUT_JOINT_STR {
-	double confidence;
-	GEN_POINT_3D position;
+        double confidence;
+        GEN_POINT_3D position;
 } NIUT_JOINT_STR;
 
 /*
@@ -371,65 +454,69 @@ typedef struct NIUT_JOINT_STR {
  *
  * Ordered to be binary compatible with OpenNI.
  *
- * Only HEAD, NECK, TORSO, SHOULDERS, ELBOW, HAND, HIP, KNEE and FOOT 
+ * Only HEAD, NECK, TORSO, SHOULDERS, ELBOW, HAND, HIP, KNEE and FOOT
  * are used by the current version of the software.
  */
-typedef enum NIUT_JOINT { 
-	NIUT_HEAD = 1,
-	NIUT_NECK = 2,
-	NIUT_TORSO = 3,
-	NIUT_WAIST = 4,
-  
-	NIUT_LEFT_COLLAR = 5,
-	NIUT_LEFT_SHOULDER = 6,
-	NIUT_LEFT_ELBOW = 7,
-	NIUT_LEFT_WRIST = 8,
-	NIUT_LEFT_HAND = 9,
-	NIUT_LEFT_FINGERTIP = 10,
-	
-	NIUT_RIGHT_COLLAR = 11,
-	NIUT_RIGHT_SHOULDER = 12,
-	NIUT_RIGHT_ELBOW = 13,
-	NIUT_RIGHT_WRIST = 14,
-	NIUT_RIGHT_HAND = 15,
-	NIUT_RIGHT_FINGERTIP = 16,
-  
-	NIUT_LEFT_HIP = 17,
-	NIUT_LEFT_KNEE = 18,
-	NIUT_LEFT_ANKLE = 19,
-	NIUT_LEFT_FOOT = 20,
-  
-	NIUT_RIGHT_HIP = 21,
-	NIUT_RIGHT_KNEE = 22,
-	NIUT_RIGHT_ANKLE = 23,
-	NIUT_RIGHT_FOOT = 24
+typedef enum NIUT_JOINT {
+        NIUT_HEAD = 1,
+        NIUT_NECK = 2,
+        NIUT_TORSO = 3,
+        NIUT_WAIST = 4,
+
+        NIUT_LEFT_COLLAR = 5,
+        NIUT_LEFT_SHOULDER = 6,
+        NIUT_LEFT_ELBOW = 7,
+        NIUT_LEFT_WRIST = 8,
+        NIUT_LEFT_HAND = 9,
+        NIUT_LEFT_FINGERTIP = 10,
+
+        NIUT_RIGHT_COLLAR = 11,
+        NIUT_RIGHT_SHOULDER = 12,
+        NIUT_RIGHT_ELBOW = 13,
+        NIUT_RIGHT_WRIST = 14,
+        NIUT_RIGHT_HAND = 15,
+        NIUT_RIGHT_FINGERTIP = 16,
+
+        NIUT_LEFT_HIP = 17,
+        NIUT_LEFT_KNEE = 18,
+        NIUT_LEFT_ANKLE = 19,
+        NIUT_LEFT_FOOT = 20,
+
+        NIUT_RIGHT_HIP = 21,
+        NIUT_RIGHT_KNEE = 22,
+        NIUT_RIGHT_ANKLE = 23,
+        NIUT_RIGHT_FOOT = 24
 } NIUT_JOINT;
 
 #define NIUT_MAX_JOINTS 25
 
 typedef struct NIUT_SKELETON_STR {
-	NIUT_JOINT_STR joint[NIUT_MAX_JOINTS];
+        NIUT_JOINT_STR joint[NIUT_MAX_JOINTS];
 } NIUT_SKELETON_STR;
 
 typedef enum NIUT_TRACK_STATE {
-	NIUT_NO_TRACKING,
-	NIUT_POSE_SEARCH,
-	NIUT_CALIBRATE,
-	NIUT_TRACKING
+        NIUT_NO_TRACKING,
+        NIUT_POSE_SEARCH,
+        NIUT_CALIBRATE,
+        NIUT_TRACKING
 } NIUT_TRACK_STATE;
 
 typedef struct NIUT_USER_STR {
-	int id;
-	NIUT_TRACK_STATE state;
-	NIUT_SKELETON_STR skeleton;
+        int id;
+        NIUT_TIME_STR date_discovered;
+        NIUT_TIME_STR date;
+        NIUT_TRACK_STATE state;
+        NIUT_SKELETON_STR skeleton;
 } NIUT_USER_STR;
 
 #define NIUT_MAX_HUMANS 16
 
 typedef struct NIUT_HUMAN_LIST {
-  int watch_dog;
-	int num;
-	NIUT_USER_STR users[NIUT_MAX_HUMANS];
+       int watch_dog;
+       int num;
+       NIUT_USER_STR users[NIUT_MAX_HUMANS];
+       NIUT_USER_STR filtered_users[NIUT_MAX_HUMANS];
 } NIUT_HUMAN_LIST;
+
 
 #endif // DUPLICATEDGENOMSTRUCT_HPP
