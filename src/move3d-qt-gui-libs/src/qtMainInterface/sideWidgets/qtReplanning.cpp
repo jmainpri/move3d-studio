@@ -81,6 +81,7 @@ void ReplanningWidget::init()
 #endif
   
   connect(m_ui->pushButtonComputeSM, SIGNAL(clicked()), this, SLOT(computeSoftMotion()));
+  connect(m_ui->pushButtonFixJoints, SIGNAL(clicked()), this, SLOT(setMlpCntrtsAndFixJoints()));
   
   // Smooth And Obstacle Weigth
   SpinBoxConnector(this,m_ui->doubleSpinBoxSmoothWeight,PlanParam::trajOptimSmoothWeight);
@@ -242,7 +243,14 @@ void ReplanningWidget::createSraightLine()
 
 void ReplanningWidget::initReplanning()
 {
-  //replan_initialize();
+  emit(selectedPlanner(QString("initTrajectoryOptimCostSpace")));
+  return;
+}
+
+void ReplanningWidget::setMlpCntrtsAndFixJoints()
+{
+  emit(selectedPlanner(QString("initMlpCntrtsAndFixJoints")));
+  return;
 }
 
 void ReplanningWidget::mainReplanFunction()

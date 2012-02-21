@@ -64,8 +64,10 @@ private slots:
 	void make3DHriGrid();
 	void delete3DHriGrid();
   
+  // Human costmaps
   void initGrids();
   void deleteGrids();
+  void computeAllCellCost();
   
 	void AStarIn3DGrid();
 	void HRICSRRT();

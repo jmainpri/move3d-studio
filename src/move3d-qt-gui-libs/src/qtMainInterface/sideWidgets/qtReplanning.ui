@@ -28,7 +28,7 @@
         <x>0</x>
         <y>0</y>
         <width>422</width>
-        <height>792</height>
+        <height>826</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -60,35 +60,35 @@
                </property>
               </widget>
              </item>
-             <item row="4" column="0">
+             <item row="5" column="0">
               <widget class="QCheckBox" name="checkBoxDoReplanning">
                <property name="text">
                 <string>Do Replanning</string>
                </property>
               </widget>
              </item>
-             <item row="7" column="0">
+             <item row="8" column="0">
               <widget class="QCheckBox" name="checkBoxMultiThreadGraphical">
                <property name="text">
                 <string>Multi-Thread Graphical</string>
                </property>
               </widget>
              </item>
-             <item row="10" column="0">
+             <item row="11" column="0">
               <widget class="QRadioButton" name="radioButtonNavigation">
                <property name="text">
                 <string>Navigation</string>
                </property>
               </widget>
              </item>
-             <item row="13" column="0">
+             <item row="14" column="0">
               <widget class="QRadioButton" name="radioButtonManipulation">
                <property name="text">
                 <string>Manipulation</string>
                </property>
               </widget>
              </item>
-             <item row="16" column="0">
+             <item row="17" column="0">
               <widget class="QRadioButton" name="radioButtonMobileManip">
                <property name="text">
                 <string>Mobile-manip</string>
@@ -102,45 +102,52 @@
                </property>
               </widget>
              </item>
-             <item row="4" column="1">
+             <item row="5" column="1">
               <widget class="QPushButton" name="pushButtonExecuteSimu">
                <property name="text">
                 <string>Execute Traj</string>
                </property>
               </widget>
              </item>
-             <item row="7" column="1">
+             <item row="8" column="1">
               <widget class="QPushButton" name="pushButtonReplan">
                <property name="text">
                 <string>Replan</string>
                </property>
               </widget>
              </item>
-             <item row="10" column="1">
+             <item row="11" column="1">
               <widget class="QPushButton" name="pushButtonExecutePlan">
                <property name="text">
                 <string>Execute Plan</string>
                </property>
               </widget>
              </item>
-             <item row="13" column="1">
+             <item row="14" column="1">
               <widget class="QPushButton" name="pushButtonCreateSraightLine">
                <property name="text">
                 <string>Straight Line</string>
                </property>
               </widget>
              </item>
-             <item row="16" column="1">
+             <item row="17" column="1">
               <widget class="QPushButton" name="pushButton">
                <property name="text">
                 <string>Optimize Current Traj</string>
                </property>
               </widget>
              </item>
-             <item row="17" column="1">
+             <item row="18" column="1">
               <widget class="QPushButton" name="pushButtonExecuteSimpleSim">
                <property name="text">
                 <string>Execute Simple Simu</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QPushButton" name="pushButtonFixJoints">
+               <property name="text">
+                <string>Fix joints</string>
                </property>
               </widget>
              </item>

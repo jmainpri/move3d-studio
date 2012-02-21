@@ -113,13 +113,16 @@ void qt_test1()
 
 void qt_test2()
 {
-  p3d_set_goal_solution_function( manipulation_get_free_holding_config );
+//  p3d_set_goal_solution_function( manipulation_get_free_holding_config );
 //  HRICS::setSimulationRobotsTransparent();
+   HRICS_humanCostMaps->loadAgentGrids();
 }
 
 void qt_test3()
 {
-  global_humanCostSpace->testCostFunction();
+//  HRICS_humanCostMaps->testCostFunction();
+//  HRICS_humanCostMaps->saveAgentGrids();
+  HRICS_humanCostMaps->computeCostCombination();
 }
 
 void qt_resetGraph()
@@ -382,6 +385,10 @@ void qt_simpleNav()
 #endif
 
 #ifdef MULTILOCALPATH
+void qt_initTrajectoryOptimCostSpace() {
+  //replan_initialize();
+  traj_optim_initStomp();
+}
 void qt_runStomp()
 {
   if( traj_optim_runStomp() )
@@ -391,6 +398,11 @@ void qt_runStomp()
   else {
     cout << "Stomp fail!!!" << endl;
   }
+}
+
+void qt_init_mlp_cntrts_and_fixjoints() 
+{
+  traj_optim_init_mlp_cntrts_and_fix_joints();
 }
 
 void qt_runChomp()
@@ -476,13 +488,13 @@ void qt_showTraj()
  */
 void qt_shortCut()
 {
-	cout << "Random : ShortCut "  << endl;
-	//ENV.setBool(Env::isRunning,true);
-#ifdef MOVE3D_CORE
-	API::Smoothing optimTrj(global_Project->getActiveScene()->getActiveRobot()->getCurrentTraj());
+  Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+  
+  cout << "Random shortCut for robot : " << robot->getName() << endl;
+	API::Smoothing optimTrj(robot->getCurrentTraj());
 	optimTrj.runShortCut(ENV.getInt(Env::nbCostOptimize));
 	optimTrj.replaceP3dTraj();
-#endif
+  
 	g3d_draw_allwin_active();
 	ENV.setBool(Env::isRunning,false);
 }
@@ -492,13 +504,13 @@ void qt_shortCut()
  */
 void qt_optimize()
 {
-	cout << "Random : Deformation "  << endl;
-	//ENV.setBool(Env::isRunning,true);
-#ifdef MOVE3D_CORE
-	API::CostOptimization optimTrj(global_Project->getActiveScene()->getActiveRobot()->getCurrentTraj());
+  Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+  
+	cout << "Random deformation for robot : " << robot ->getName()<< endl;
+	API::CostOptimization optimTrj(robot->getCurrentTraj());
 	optimTrj.runDeformation(ENV.getInt(Env::nbCostOptimize));
 	optimTrj.replaceP3dTraj();
-#endif
+  
 	g3d_draw_allwin_active();
 	ENV.setBool(Env::isRunning,false);
 }
@@ -851,7 +863,6 @@ void PlannerHandler::startPlanner(QString plannerName)
     }
 
 #ifdef HRI_PLANNER
-
     else if( plannerName == "realTimeOtp"){
           qtRealTimeOtp();
     }
@@ -879,6 +890,12 @@ void PlannerHandler::startPlanner(QString plannerName)
     }
     else if( plannerName == "convertToSoftMotion"){
       traj_optim_generate_softMotion();
+    }
+    else if( plannerName == "initTrajectoryOptimCostSpace" ){
+      qt_initTrajectoryOptimCostSpace();
+    }
+    else if( plannerName == "initMlpCntrtsAndFixJoints" ){
+      qt_init_mlp_cntrts_and_fixjoints();
     }
 #endif
     else if(plannerName == "test1")
@@ -915,6 +932,7 @@ void PlannerHandler::startPlanner(QString plannerName)
   emit plannerIsStopped();
 }
 
+//------------------------------------------------------------------------------
 void PlannerHandler::stopPlanner()
 {
   if(mState != running) // not running, do nothing
@@ -930,6 +948,7 @@ void PlannerHandler::stopPlanner()
   PlanEnv->setBool( PlanParam::stopPlanner, true );
 }
 
+//------------------------------------------------------------------------------
 void PlannerHandler::resetPlanner()
 {
   if(mState == running) // running, do nothing

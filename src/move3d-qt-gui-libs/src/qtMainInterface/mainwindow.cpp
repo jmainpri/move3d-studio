@@ -764,6 +764,8 @@ void MainWindow::initRunButtons()
     
 	
 	connect( ENV.getObject(Env::isRunning), SIGNAL(valueChanged(bool)), this, SLOT(planningFinished(void)) , Qt::QueuedConnection );
+  
+  connect( m_ui->pushButtonNextIteration, SIGNAL(clicked(bool)), PlanEnv->getObject(PlanParam::nextIterWaitForGui), SLOT(set(bool)) , Qt::DirectConnection );
 }
 
 //------------------------------------------------------------------------------

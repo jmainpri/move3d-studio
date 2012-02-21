@@ -193,11 +193,11 @@ void MotionPlanner::initOptim()
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxDebug2,						Env::debugCostOptim );
 
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxSaveTrajCost,			PlanParam::trajSaveCost );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxCheckCollision,		PlanParam::trajPartialShortcut );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxPartialShortcut,	PlanParam::trajPartialShortcut );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxRecomputeCost,		PlanParam::trajCostRecompute );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithDescent,			PlanParam::withDescent );
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxCheckCollision,	  PlanParam::trajComputeCollision );
   
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithDescent,			PlanParam::withDescent );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithDeform,				PlanParam::withDeformation );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithShortCut,			PlanParam::withShortCut );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithTimeLimit,		PlanParam::withTimeLimit );

@@ -56,7 +56,7 @@ QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
     connect(this, SIGNAL(valueChanged( double )), ENV.getObject(p),SLOT(set(double)));
     
     // TODO see why this doesn't work 
-    //connect(ENV.getObject(p), SIGNAL(valueChanged(double)),m_spinBox, SLOT(setValue(double)));
+    connect(ENV.getObject(p), SIGNAL(valueChanged(double)),m_spinBox, SLOT(setValue(double)));
     
     m_spinBox->setValue(ENV.getDouble(p));
     
@@ -77,7 +77,7 @@ QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
     connect(this, SIGNAL(valueChanged( int )), ENV.getObject(p), SLOT(set(int)));
   
     // TODO see why this doesn't work 
-    //    connect(ENV.getObject(p), SIGNAL(valueChanged(int)),m_spinBox, SLOT(setValue(int)));
+    connect(ENV.getObject(p), SIGNAL(valueChanged(int)),m_spinBox, SLOT(setValue(int)));
     
     m_spinBox->setValue(ENV.getInt(p));
     

@@ -99,7 +99,7 @@ int mainMhp(int argc, char ** argv)
   int file_set = FALSE;
   int scenario_set = FALSE;
   int col_det_set = FALSE;
-  int col_mode_to_be_set = p3d_col_mode_kcd; /* Nic p3d_col_mode_v_collide;*/
+  int col_mode_to_be_set = p3d_col_mode_pqp; /* Nic p3d_col_mode_v_collide;*/
   int ccntrt_active = TRUE;
   
     // Tests

@@ -35,9 +35,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>0</y>
-        <width>509</width>
-        <height>1304</height>
+        <y>-218</y>
+        <width>510</width>
+        <height>1268</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -269,17 +269,24 @@
           </item>
           <item>
            <layout class="QGridLayout" name="gridLayout_2">
-            <item row="2" column="0">
+            <item row="3" column="0">
              <widget class="QPushButton" name="pushButtonAStarIn3DGrid">
               <property name="text">
                <string>(x,y,z) A* </string>
               </property>
              </widget>
             </item>
-            <item row="0" column="0">
+            <item row="1" column="0">
              <widget class="QPushButton" name="pushButtonVectorField">
               <property name="text">
                <string>Compute Vector Field</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QPushButton" name="pushButtonComputeAllCellCost">
+              <property name="text">
+               <string>(Re)Compute All Cell Cost</string>
               </property>
              </widget>
             </item>

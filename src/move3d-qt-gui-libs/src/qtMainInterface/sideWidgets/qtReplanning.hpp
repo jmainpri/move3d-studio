@@ -60,6 +60,7 @@ private slots:
   
   void setPlannerType();
   void setPlannerTypeRadioButtons(int);
+  void setMlpCntrtsAndFixJoints();
 	
 signals:
   void selectedPlanner(QString);

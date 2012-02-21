@@ -232,16 +232,17 @@ void CostWidget::initCostFunctions()
 	connect(m_ui->comboBoxCostFunctions, SIGNAL(currentIndexChanged(int)),this, SLOT(setCostFunction(int)));
 	m_ui->comboBoxCostFunctions->setCurrentIndex( 0 );
 	
+  string function;
 	if( GroundCostObj != NULL )
 	{
-		vector<string> costFunc  = global_costSpace->getAllCost();
-		vector<string>::iterator it = std::find( costFunc.begin() , costFunc.end() , "costMap2D" );
-		m_ui->comboBoxCostFunctions->setCurrentIndex( it - costFunc.begin() );
+    function = "costMap2D";
 	}
-	else 
-	{
-		global_costSpace->setCost("NoCost");
+	else {
+    function = "costDistToObst";
 	}
+  vector<string> costFunc  = global_costSpace->getAllCost();
+  vector<string>::iterator it = std::find( costFunc.begin() , costFunc.end() , function );
+  m_ui->comboBoxCostFunctions->setCurrentIndex( it - costFunc.begin() );
 }
 
 void CostWidget::setCostFunction(std::string function)
@@ -259,11 +260,11 @@ void CostWidget::setCostFunction(std::string function)
 void CostWidget::setCostFunction(int costFunctionId)
 {
 	vector<string> AllCost = global_costSpace->getAllCost();
-        if (costFunctionId< AllCost.size() && costFunctionId>= 0)
-        {
-            global_costSpace->setCost(AllCost[costFunctionId]);
-            cout << "Cost Function is now :  " << AllCost[costFunctionId] << endl;
-        }
+  if (costFunctionId< int(AllCost.size()) && costFunctionId>= 0)
+  {
+    global_costSpace->setCost(AllCost[costFunctionId]);
+    cout << "Cost Function is now :  " << AllCost[costFunctionId] << endl;
+  }
 }
 
 void CostWidget::extractBestPath()
@@ -382,7 +383,8 @@ void CostWidget::showTrajCost()
 	
 	vector<double> cost;
 	
-	cout << "Traj cost = " << traj.costDeltaAlongTraj() << endl;
+  // Print all costs
+  traj.costDeltaAlongTraj();
 	
 	if (global_costSpace) 
   {

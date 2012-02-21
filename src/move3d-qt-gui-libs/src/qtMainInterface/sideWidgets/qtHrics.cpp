@@ -94,7 +94,7 @@ void HricsWidget::initHRI()
   
   connect(m_ui->pushButtonInitGrids,SIGNAL(clicked()),this,SLOT(initGrids()));
   connect(m_ui->pushButtonDeleteGrids,SIGNAL(clicked()),this,SLOT(deleteGrids()));
-
+  connect(m_ui->pushButtonComputeAllCellCost,SIGNAL(clicked()),this,SLOT(computeAllCellCost()));
 	
 	// -------------------------------
 	// K Sliders
@@ -103,21 +103,29 @@ void HricsWidget::initHRI()
                                                      m_ui->doubleSpinBoxDistance,		
                                                      m_ui->horizontalSliderDistance,
                                                      Env::Kdistance);
+  
+  cout << "Env::Kdistance : " << ENV.getDouble(Env::Kdistance) << endl;
 	
 	m_k_visbility = new QtShiva::SpinBoxSliderConnector(this,
                                                       m_ui->doubleSpinBoxVisibility,
                                                       m_ui->horizontalSliderVisibility,
                                                       Env::Kvisibility );
 	
+  cout << "Env::Kvisibility : " << ENV.getDouble(Env::Kvisibility) << endl;
+  
 	m_k_naturality = new QtShiva::SpinBoxSliderConnector(this, 
                                                        m_ui->doubleSpinBoxNatural,
                                                        m_ui->horizontalSliderNatural,
                                                        Env::Knatural );
 	
+  cout << "Env::Knatural : " << ENV.getDouble(Env::Knatural) << endl;
+  
 	m_k_reachability = new QtShiva::SpinBoxSliderConnector(this, 
                                                          m_ui->doubleSpinBoxReachable,		
                                                          m_ui->horizontalSliderReachable,	
                                                          Env::Kreachable );
+  
+  cout << "Env::Kreachable : " << ENV.getDouble(Env::Kreachable) << endl;
 	
 //	connect(m_k_distance,SIGNAL(valueChanged(double)),this,SLOT(KDistance(double)));
 //	connect(m_k_visbility,SIGNAL(valueChanged(double)),this,SLOT(KVisibility(double)));
@@ -147,14 +155,13 @@ void HricsWidget::initHRI()
 	connect(ENV.getObject(Env::hriCostType), SIGNAL(valueChanged(int)),this, SLOT(setWhichTestSlot(int)), Qt::DirectConnection);
 	m_ui->whichTestBox->setCurrentIndex(ENV.getInt(Env::hriCostType));
 	
-
 	// -------------------------------
 	// All widgets
 	// -------------------------------
 	initVectorField();
 	initDrawOneLineInGrid();
 //  initGrids();
-	//initObjectTransferPoint();
+//  initObjectTransferPoint();
   
   setGroupBoxDisabled(true);
 }
@@ -425,18 +432,28 @@ void HricsWidget::initGrids()
   HRICS::Workspace* ws = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL);
   
   // If a costspace allready exists delete it!
-  if(global_humanCostSpace!=NULL)
-    delete global_humanCostSpace;
+  if(HRICS_humanCostMaps!=NULL)
+    delete HRICS_humanCostMaps;
 
   // Build a costspace from the Robot and Humans in the workspace
   // This costspace will hold the agents grids
-  global_humanCostSpace = new HRICS::HumanCostSpace(ws->getRobot(),ws->getHumans(),ENV.getDouble(Env::CellSize));
+  HRICS_humanCostMaps = new HRICS::HumanCostSpace(ws->getRobot(),ws->getHumans(), HRICS_activeNatu, ENV.getDouble(Env::CellSize));
 }
 
 void HricsWidget::deleteGrids()
 {
-  delete global_humanCostSpace;
-  global_humanCostSpace = NULL;
+  delete HRICS_humanCostMaps;
+  HRICS_humanCostMaps = NULL;
+}
+
+void HricsWidget::computeAllCellCost()
+{
+  // If a costspace exists re compute all
+  // cel cost
+  if(HRICS_humanCostMaps!=NULL) 
+  {
+    HRICS_humanCostMaps->computeAllCellCost();
+  }
 }
 
 //-------------------------------------------------------------
