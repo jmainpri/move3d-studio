@@ -4,13 +4,10 @@
 #include "qtLibrary.hpp"
 #include <QtGui/QStackedLayout>
 
-#if defined( MOVE3D_CORE )
-#include "qtBase/SpinBoxSliderConnector_p.hpp"
-#endif
-
 #if defined( MOVE3D_CORE ) 
 #include "API/Device/joint.hpp"
 #include "API/ConfigSpace/configuration.hpp"
+#include "qtBase/SpinBoxSliderConnector_p.hpp"
 #ifndef ROBOT_HPP
 class Robot;
 #endif

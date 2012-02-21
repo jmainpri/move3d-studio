@@ -10,16 +10,6 @@
 #ifndef QT_COST_H
 #define QT_COST_H
 
-#if defined( MOVE3D_CORE )
-
-#include "qtLibrary.hpp"
-#include "qtMainInterface/mainwindow.hpp"
-#include "qtMainInterface/sideWidgets/qtMotionPlanner.hpp"
-
-#include <string>
-
-#endif
-
 #ifdef HRI_COSTSPACE
 #include "qtHrics.hpp"
 #include "qtOtp.hpp"

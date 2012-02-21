@@ -15,8 +15,10 @@
 #include "qtLibrary.hpp"
 #include "qtMainInterface/mainwindow.hpp"
 
-#include "API/Roadmap/node.hpp"
-
+// Foward declaration of class Node
+// problem with boost graph and moc (until fix is not node)
+// do not include boost graph in Qt headers
+class Node;
 
 #ifdef USE_QWT
 #include "qtPlot/basicPlotWindow.hpp"

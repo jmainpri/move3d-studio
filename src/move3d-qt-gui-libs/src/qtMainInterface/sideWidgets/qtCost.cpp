@@ -3,19 +3,19 @@
  *  BioMove3D
  *
  *  Created by Jim Mainprice on 01/04/10.
- *  Copyright 2010 __MyCompanyName__. All rights reserved.
+ *  Copyright 2010 LAAS-CNRS. All rights reserved.
  *
  */
 
 #include "qtCost.hpp"
 #include "ui_qtCost.h"
 
+#include <boost/function.hpp>
+#include <boost/bind.hpp>
 #include <iostream>
 #include <algorithm>
 #include <fstream>
 #include <tr1/memory>
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
 
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
 
