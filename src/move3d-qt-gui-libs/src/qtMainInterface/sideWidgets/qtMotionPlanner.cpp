@@ -193,7 +193,7 @@ void MotionPlanner::initOptim()
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxCostSpace2,				Env::isCostSpace );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxDebug2,						Env::debugCostOptim );
   
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxExtractCurrentTraj,	PlanParam::rrtExtractShortestPath );
+//  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxExtractCurrentTraj,	PlanParam::rrtExtractShortestPath );
 
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxSaveTrajCost,			PlanParam::trajSaveCost );
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxPartialShortcut,	PlanParam::trajPartialShortcut );

@@ -127,7 +127,7 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
             cout << "reachSpace->setRobotColorFromConfiguration(true)" << endl;;
             HRICS::Natural* reachSpace = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getReachability();
           }
-          HRICS_activeNatu->setRobotColorFromConfiguration(true);
+//          HRICS_activeNatu->setRobotColorFromConfiguration(true);
         }
 #endif
   }

@@ -45,6 +45,8 @@ public:
 
 private slots:
 
+        void on_pushButtonScript_clicked();
+        void on_pushButtonTestTrajs_clicked();
         void on_radioButtonBiasAndRot_toggled(bool checked);
         void on_pushButtonGridVar_clicked();
         void on_pushButtonPlan_clicked();

@@ -26,12 +26,19 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-689</y>
+        <y>-409</y>
         <width>314</width>
-        <height>2356</height>
+        <height>2416</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QPushButton" name="pushButtonScript">
+         <property name="text">
+          <string>result script</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QGroupBox" name="groupBoxInit">
          <property name="title">
@@ -520,6 +527,23 @@
             </property>
            </widget>
           </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Writing time</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="2">
+           <widget class="QSlider" name="horizontalSliderTimeToDump">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QDoubleSpinBox" name="doubleSpinBoxTimeToDump"/>
+          </item>
          </layout>
         </widget>
        </item>
@@ -648,6 +672,9 @@
               <widget class="QDoubleSpinBox" name="doubleSpinBoxMOTP">
                <property name="decimals">
                 <number>0</number>
+               </property>
+               <property name="maximum">
+                <double>300.000000000000000</double>
                </property>
                <property name="value">
                 <double>20.000000000000000</double>
@@ -829,6 +856,13 @@
               <widget class="QPushButton" name="pushButtonTestCompute">
                <property name="text">
                 <string>OTP test compute</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButtonTestTrajs">
+               <property name="text">
+                <string>Test trajs</string>
                </property>
               </widget>
              </item>

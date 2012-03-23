@@ -980,7 +980,7 @@ public:
         doubleSpinBoxTrajSpeed = new QDoubleSpinBox(groupBoxTrajectory);
         doubleSpinBoxTrajSpeed->setObjectName(QString::fromUtf8("doubleSpinBoxTrajSpeed"));
         doubleSpinBoxTrajSpeed->setMinimum(0);
-        doubleSpinBoxTrajSpeed->setMaximum(30);
+        doubleSpinBoxTrajSpeed->setMaximum(99);
         horizontalLayoutTrajSpeed->addWidget(doubleSpinBoxTrajSpeed);
 
         horizontalSliderTrajSpeed = new QSlider(groupBoxTrajectory);

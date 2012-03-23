@@ -78,6 +78,8 @@ GLWidget::GLWidget(QWidget *parent) :
                         XYZ_ENV->background_color[1],
                         XYZ_ENV->background_color[2]);
     //	setFocusPolicy(Qt::StrongFocus);
+
+    picsId = 0;
 }
 
 
@@ -98,7 +100,13 @@ void GLWidget::addCurrentImage()
 {
     //	QPixmap* image = new QPixmap(renderPixmap());
     QImage* image = new QImage(grabFrameBuffer());
-    _pictures.push_back(image);
+//    _pictures.push_back(image);
+    string str = string(getenv("HOME_MOVE3D")) + "/video/";
+    ostringstream oss(ostringstream::out);
+    oss << str << "Image_" << setfill('0') << setw(4) << picsId++ << ".jpg";
+    image->save(oss.str().c_str(), "JPG", 100);
+    delete image;
+
 }
 
 void GLWidget::saveImagesToDisk()
@@ -106,21 +114,21 @@ void GLWidget::saveImagesToDisk()
     string str = string(getenv("HOME_MOVE3D")) + "/video/";
 
     ostringstream oss(ostringstream::out);
-    oss << "cd "<< str <<";rm *.jpg";
+//    oss << "cd "<< str <<";rm *.jpg";
     system(oss.str().c_str());
 
 
     cout << "saving in : " << str << endl;
-    for (int i = 0; i < _pictures.size(); i++)
-    {
-        oss.str("");
-
-        oss << str << "Image_" << setfill('0') << setw(4) << i << ".jpg";
-        cout << "Saving : " << oss.str() << endl;
-        _pictures.at(i)->save(oss.str().c_str(), "JPG", 100);
-    }
+//    for (int i = 0; i < _pictures.size(); i++)
+//    {
+//        oss.str("");
+//
+//        oss << str << "Image_" << setfill('0') << setw(4) << i << ".jpg";
+//        cout << "Saving : " << oss.str() << endl;
+//        _pictures.at(i)->save(oss.str().c_str(), "JPG", 100);
+//    }
 //    resetImageVector();
-    cout << "Images saved to video/" << endl;
+//    cout << "Images saved to video/" << endl;
 
     oss.str("");
     //change to video directory then compress jpg files to AVI video for more parameters and video format see man pages of mencoder
@@ -135,6 +143,7 @@ void GLWidget::resetImageVector()
         delete _pictures.at(i);
     }
     _pictures.clear();
+    picsId = 0;
 }
 
 void GLWidget::saveView()

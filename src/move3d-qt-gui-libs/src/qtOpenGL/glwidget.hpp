@@ -101,6 +101,7 @@ private:
 	
 	// Vector of recorded images
 	QVector<QImage*> _pictures;
+        int picsId;
 	
 	// Counts the number of draw
 	int paintNum;
