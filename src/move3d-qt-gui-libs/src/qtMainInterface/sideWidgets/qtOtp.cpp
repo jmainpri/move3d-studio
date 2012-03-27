@@ -328,6 +328,7 @@ void OtpWidget::on_pushButtonComputeConfortCost_clicked()
 void OtpWidget::on_pushButtonInit_clicked()
 {
 
+    clock_t first = clock();
     HRICS_MotionPLConfig  = new HRICS::OTPMotionPl;
     HRICS_activeDist = HRICS_MotionPL->getDistance();
 
@@ -393,6 +394,7 @@ void OtpWidget::on_pushButtonInit_clicked()
     fileNameStandSlice = home + fileNameStandSlice;
     fileNameSitSlice = home + fileNameSitSlice;
 
+
     if ( dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
     {
             m_ui->spinBoxNavigate->setMaximum(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadConfsFromXML(fileNameStand.toStdString(),true, false) - 1);
@@ -401,7 +403,10 @@ void OtpWidget::on_pushButtonInit_clicked()
             dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadConfsFromXML(fileNameStandSlice.toStdString(),true, true);
             dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadConfsFromXML(fileNameSitSlice.toStdString(),false, true);
     }
+    clock_t second = clock();
     dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->initGrid();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->setInitTime(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getInitTime() +
+                                                                         ((double)second - first) / CLOCKS_PER_SEC );
     m_ui->checkBoxReach->setChecked(false);
     m_mainWindow->drawAllWinActive();
 }
@@ -1242,4 +1247,35 @@ void OtpWidget::on_pushButtonScript_clicked()
         }
     }
 
+}
+
+void OtpWidget::on_pushButtonPreInit_clicked()
+{
+    double avT = 0;
+    for (int i =0; i < PlanEnv->getInt(PlanParam::env_MOTP); i++)
+    {
+        on_pushButtonInit_clicked();
+        avT += dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getInitTime();
+    }
+    avT = avT / PlanEnv->getInt(PlanParam::env_MOTP);
+    cout << "average init Time = " << avT << endl;
+
+
+
+
+}
+
+void OtpWidget::on_radioButtonNormal_toggled(bool checked)
+{
+    PlanEnv->setBool(PlanParam::env_trajNormal,checked);
+}
+
+void OtpWidget::on_radioButtonSoftMotion_toggled(bool checked)
+{
+    PlanEnv->setBool(PlanParam::env_trajSoftMotion,checked);
+}
+
+void OtpWidget::on_radioButtonRos_toggled(bool checked)
+{
+    PlanEnv->setBool(PlanParam::env_trajRos,checked);
 }

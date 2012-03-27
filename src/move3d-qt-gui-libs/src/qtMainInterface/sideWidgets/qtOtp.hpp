@@ -45,6 +45,10 @@ public:
 
 private slots:
 
+        void on_radioButtonRos_toggled(bool checked);
+        void on_radioButtonSoftMotion_toggled(bool checked);
+        void on_radioButtonNormal_toggled(bool checked);
+        void on_pushButtonPreInit_clicked();
         void on_pushButtonScript_clicked();
         void on_pushButtonTestTrajs_clicked();
         void on_radioButtonBiasAndRot_toggled(bool checked);
