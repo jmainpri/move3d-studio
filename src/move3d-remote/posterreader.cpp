@@ -13,6 +13,7 @@
 #include "Graphic-pkg.h"
 #include "Util-pkg.h"
 
+
 #include "../lightPlanner/proto/lightPlanner.h"
 #include "../lightPlanner/proto/lightPlannerApi.h"
 #include "../lightPlanner/proto/ManipulationArmData.hpp"
@@ -41,7 +42,7 @@ PosterReader::PosterReader()
     timer->start(10);
 
     _drawTraj = false;
-    _drawGotoPos = true;
+    _drawGotoPos = false;
     /* declaration of the poster reader threads */
     _sparkPoster = new GenomPoster("sparkEnvironment", (char*)(&_sparkPosterStruct), sizeof(SPARK_CURRENT_ENVIRONMENT), 10);
     _sparkPoster->setRefreshStatus(true);
@@ -90,7 +91,7 @@ PosterReader::PosterReader()
 
     /* poster for robot in mhp */
     _mhpPoster = new GenomPoster("mhprobotGoToConf", (char*)(&_mhpRobotGoTo), sizeof(MHP_ROBOT_GO_TO), 10);
-    _mhpPoster->setRefreshStatus(true);
+    _mhpPoster->setRefreshStatus(false);
 }
 
 void PosterReader::changesoftmotiondt(double dt) {
@@ -496,10 +497,13 @@ void PosterReader::setDrawGoTo(bool b)
     }
     _drawGotoPos = b;
     if(b) {
-
+        _mhpPoster->setRefreshStatus(true);
         cout << "_drawGotoPos = true " << endl;
     } else {
+        _mhpPoster->setRefreshStatus(false);
         cout << "_drawGotoPos = false " << endl;
     }
     return;
 }
+
+

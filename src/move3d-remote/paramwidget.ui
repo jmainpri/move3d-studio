@@ -23,7 +23,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="page_13">
       <property name="geometry">
@@ -136,7 +136,14 @@
                     <string>Draw GoTo conf</string>
                    </property>
                    <property name="checked">
-                    <bool>true</bool>
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QCheckBox" name="checkBoxColorCost">
+                   <property name="text">
+                    <string>Color cost</string>
                    </property>
                   </widget>
                  </item>
@@ -464,8 +471,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>111</width>
-        <height>45</height>
+        <width>382</width>
+        <height>613</height>
        </rect>
       </property>
       <attribute name="label">
@@ -473,9 +480,15 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_42">
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="pushButtonNiutUpdate">
          <property name="text">
-          <string>PushButton</string>
+          <string>update</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>

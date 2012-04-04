@@ -3,7 +3,8 @@
 #include "posterreader.hpp"
 #include "planner_handler.hpp"
 #include "planner/planEnvironment.hpp"
-
+#include "HRI_costspace/HRICS_Natural.hpp"
+#include "HRI_costspace/HRICS_costspace.hpp"
 
 ParamWidget::ParamWidget(QWidget *parent) :
   QWidget(parent),
@@ -25,6 +26,12 @@ void ParamWidget::setAndConnectPosterReader(PosterReader *pr)
   connect(m_ui->sparkCheckBox, SIGNAL(clicked()), this, SLOT(setSparkRefresh()));
   connect(m_ui->sparkSaveSceBut,SIGNAL(clicked()),this,SLOT(sparkSaveScenario()));
   connect(m_ui->checkBoxDrawGoto, SIGNAL(toggled(bool)), pr , SLOT(setDrawGoTo(bool)), Qt::DirectConnection);
+//  connect(m_ui->checkBoxColorCost,SIGNAL(toggled(bool)), pr,SLOT(changeHumanColor(bool)));
+
+  connect(PlanEnv->getObject(PlanParam::drawColorConfig), SIGNAL(valueChanged(bool)), m_ui->checkBoxColorCost, SLOT(setChecked(bool)), Qt::DirectConnection);
+  connect(m_ui->checkBoxColorCost, SIGNAL(toggled(bool)), PlanEnv->getObject(PlanParam::drawColorConfig), SLOT(set(bool)), Qt::DirectConnection);
+  m_ui->checkBoxColorCost->setChecked(PlanEnv->getBool(PlanParam::drawColorConfig));
+
   //connect(m_pr, SIGNAL(sparkStatus(bool)),this, SLOT(setSparkStatusText(bool)));
 }
 
@@ -56,4 +63,14 @@ void ParamWidget::setSparkStatusText(bool updating)
   {
     m_ui->sparkStatusLineEdit->setText(QString("not updating"));
   }
+}
+
+void ParamWidget::on_checkBoxColorCost_toggled(bool checked)
+{
+
+}
+
+void ParamWidget::on_pushButtonNiutUpdate_toggled(bool checked)
+{
+    m_pr->getNiutPoster()->setRefreshStatus(checked);
 }

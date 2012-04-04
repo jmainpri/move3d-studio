@@ -253,7 +253,7 @@ void sparkWidget::initLightSource()
     m_ui_p->doubleSpinBoxLightZ->setValue(G3D_WIN->vs.lightPosition[2]);
 
 
-    setBoolSky(true);
+    setBoolSky(false);
 
     g3d_set_win_camera(G3D_WIN->vs, 7.0, -4.0,  1.0, 17, -0.7, 0.7, 0.0, 0.0, 1.0);
 }

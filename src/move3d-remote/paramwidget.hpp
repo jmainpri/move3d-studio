@@ -26,6 +26,8 @@ public slots:
     void setSparkStatusText(bool updating);
 
 private slots:
+        void on_pushButtonNiutUpdate_toggled(bool checked);
+        void on_checkBoxColorCost_toggled(bool checked);
         void setSparkRefresh();
         void sparkSaveScenario();
 

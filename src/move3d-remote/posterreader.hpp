@@ -25,6 +25,7 @@ public:
     void init();
     //const GenomPoster & getSparkPoster(){return *_sparkPoster;}
     GenomPoster *getSparkPoster(){return _sparkPoster;}
+    GenomPoster *getNiutPoster(){return _niutPoster;}
     GenomPoster *getSoftmotionPoster(){return _softmotionPoster;}
 //    GenomPoster *getVimanImageLeftPoster(){return _vimanImageLeftPoster;}
 //    GenomPoster *getVimanImageRightPoster(){return _vimanImageRightPoster;}
