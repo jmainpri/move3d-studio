@@ -60,7 +60,7 @@ private slots:
   
   void setActiveJoints();
   void setActiveJointsRadioButtons(int type);
-  void setPlannerTypeRadioButtons(int);
+  //void setPlannerTypeRadioButtons(int);
   void setMlpCntrtsAndFixJoints();
 	
 signals:

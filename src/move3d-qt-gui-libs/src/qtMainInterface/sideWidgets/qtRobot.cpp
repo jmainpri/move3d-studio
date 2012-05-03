@@ -22,7 +22,10 @@
 #include "planner_handler.hpp"
 
 #include "planner/plannerFunctions.hpp"
-#include "planner/replanning.hpp"
+#include "planner/replanningAlgorithms.hpp"
+#include "planner/replanningSimulators.hpp"
+
+#include "API/Trajectory/trajectory.hpp" 
 
 #include <QMessageBox>
 #include <QString>

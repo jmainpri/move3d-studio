@@ -68,7 +68,8 @@
 #include "../lightPlanner/proto/ManipulationViaConfPlanner.hpp"
 
 #if defined(MULTILOCALPATH)
-#include "planner/replanning.hpp"
+#include "planner/replanningAlgorithms.hpp"
+#include "planner/replanningSimulators.hpp"
 
 extern ManipulationTestFunctions* global_manipPlanTest;
 #endif

@@ -15,7 +15,8 @@
 #include "planner/TrajectoryOptim/trajectoryOptim.hpp"
 #include "planner/TrajectoryOptim/Stomp/policy_improvement_loop.hpp"
 #include "planner/planEnvironment.hpp"
-#include "planner/replanning.hpp"
+#include "planner/replanningAlgorithms.hpp"
+#include "planner/replanningSimulators.hpp"
 
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
 
