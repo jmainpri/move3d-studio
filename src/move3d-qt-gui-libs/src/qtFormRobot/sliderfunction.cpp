@@ -31,22 +31,7 @@ using namespace tr1;
 //! function that computes a cost 
 //! on the robot actual configuration
 void qtSliderFunction(p3d_rob* robotPt, configPt p)
-{
-  //cout << "qtSliderFunction" << endl;
-  
-  /*  if ( mRobot->getName().find("HUMAN") != string::npos ) 
-   {
-   shared_ptr<Configuration> qSeated = mRobot->getCurrentPos();
-   HRI_AGENTS* agents = hri_create_agents();
-   //		Eigen::Vector3d head = mRobot->getJoint(5)->getVectorPos();
-   
-   hri_agent_set_human_seated_posture(agents->humans[0], qSeated->getConfigStruct());
-   //hri_agent_compute_posture(agents->humans[0],head[2],1.3,qSeated->getConfigStruct());
-   mRobot->setAndUpdate(*qSeated);
-   //hri_destroy_agents(agents);
-   }
-   */
-  
+{  
   if (ENV.getBool(Env::isCostSpace))
   {
 #ifdef P3D_PLANNER
@@ -61,9 +46,8 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
       if( dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->computeBestFeasableTransferPoint(WSPoint) )
       {
         Robot* Object = global_Project->getActiveScene()->getRobotByNameContaining("OBJECT");
-        
-        shared_ptr<Configuration> q_curr = Object->getCurrentPos();
-        
+
+        confPtr_t q_curr = Object->getCurrentPos();
         (*q_curr)[6] = WSPoint[0];
         (*q_curr)[7] = WSPoint[1];
         (*q_curr)[8] = WSPoint[2];
@@ -83,17 +67,16 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
       std::string robotName(costRobot->name);
       
       // If the Robot moved is not ROBOT
-      if( robotName.find("JIDOKUKA") == string::npos && 
-         (global_Project->getActiveScene()->getNumberOfRobots() > 1)  ) // Does not contain Robot
+      if( robotName.find("ROBOT") == string::npos &&(global_Project->getActiveScene()->getNumberOfRobots() > 1)  ) // Does not contain Robot
       {
-        p3d_rob* robTmp = p3d_get_robot_by_name_containing("JIDOKUKA");
+        p3d_rob* robTmp = p3d_get_robot_by_name_containing("ROBOT");
         
         if (robTmp) 
         {
-          cost_q = p3d_get_robot_config(costRobot);
           costRobot = robTmp;
+          cost_q = p3d_get_robot_config(costRobot);
         }
-        //cout << "Change the robot position = " << robotPt->name << endl;
+        cout << "Change the robot position = " << robTmp->name << endl;
       }
       
       // Compute kinematic transfer point
@@ -112,13 +95,13 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
         }
       }
     }
+
 #endif
     Robot* costR(global_Project->getActiveScene()->getRobotByName(costRobot->name));
-    
+
     if ( /*true ||*/ global_costSpace && (!ENV.getBool(Env::HRINoRobot))) 
     {
       Configuration costConfig(costR,cost_q);
-      //std::cout << "Cost = " << p3d_GetConfigCost(costRobot,cost_q) << std::endl;
       std::cout << "Cost = " << global_costSpace->cost(costConfig) << std::endl;
     }
     
@@ -129,8 +112,6 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
     }
 #endif
   }
-  //	cout << "robotPt->name = " << robotPt->name << endl;
-  //	cout << "XYZ_ROBOT = " << XYZ_ROBOT->name << endl;
   
 #ifdef P3D_COLLISION_CHECKING
   int ncol = false;
