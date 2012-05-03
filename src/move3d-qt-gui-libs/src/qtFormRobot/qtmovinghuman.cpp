@@ -9,10 +9,18 @@
 
 MovingHuman::MovingHuman(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::MovingHuman)
+ui(new Ui::MovingHuman)
 {
-    ui->setupUi(this);
+  ui->setupUi(this);
+  //init(0,0,0,0);
+  Robot* human = global_Project->getActiveScene()->getRobotByNameContaining("HERAKLES");
+  if( human == NULL ) {
     init(0,0,0,0);
+  }
+  else {
+    confPtr_t q = human->getCurrentPos();
+    init((*q)[6],(*q)[7],(*q)[8],(*q)[11]);
+  }
 }
 
 MovingHuman::MovingHuman(double x, double y, double rz, QWidget *parent) :

@@ -243,33 +243,30 @@ void HricsWidget::initObjectTransferPoint()
 // Compute the object transfer point
 void HricsWidget::computeObjectTransferPoint()
 {
-        qDebug() << "HricsWidget::computeObjectTransferPoint";
-
-        ENV.setBool(Env::HRIComputeOTP,true);
-
-        if ( ENV.getBool(Env::HRIComputeOTP) )
+  qDebug() << "HricsWidget::computeObjectTransferPoint";
+  
+  ENV.setBool(Env::HRIComputeOTP,true);
+  
+  if ( ENV.getBool(Env::HRIComputeOTP) )
 	{
 		Eigen::Vector3d WSPoint;
-                qDebug() << "HricsWidget::computeObjectTransferPoint Eigen";
+    qDebug() << "HricsWidget::computeObjectTransferPoint Eigen";
 		if( dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->computeBestTransferPoint(WSPoint) )
 		{
 			HRICS::Natural* reachSpace = HRICS_MotionPL->getReachability();
-                        reachSpace->computeIsReachableAndMove(WSPoint,reachSpace->getGrid()->isReachableWithLA(WSPoint));
+      
+      reachSpace->computeIsReachableAndMove( WSPoint, reachSpace->getGrid()->isReachableWithLA(WSPoint) );
 			
 			Robot* Object = global_Project->getActiveScene()->getRobotByNameContaining("OBJECT");
 			
-			shared_ptr<Configuration> q_curr = Object->getCurrentPos();
-			
+			confPtr_t q_curr = Object->getCurrentPos();
 			(*q_curr)[6] = WSPoint[0];
 			(*q_curr)[7] = WSPoint[1];
 			(*q_curr)[8] = WSPoint[2];
-			
-//                        qDebug() << "| z : "<< WSPoint[0] <<"| z : "<<  WSPoint[1] <<  "| z : "<< WSPoint[2] ;
-
+      // qDebug() << "| z : "<< WSPoint[0] <<"| z : "<<  WSPoint[1] <<  "| z : "<< WSPoint[2] ;
+      
 			Object->setAndUpdate(*q_curr);
-			
 			cout << "Set and update : " << Object->getName() << endl << WSPoint << endl;
-			
 			m_mainWindow->drawAllWinActive();
 		}
 	}
