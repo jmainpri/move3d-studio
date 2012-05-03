@@ -58,7 +58,8 @@ private slots:
   
   void multiThreadGraphicalMode(bool);
   
-  void setPlannerType();
+  void setActiveJoints();
+  void setActiveJointsRadioButtons(int type);
   void setPlannerTypeRadioButtons(int);
   void setMlpCntrtsAndFixJoints();
 	

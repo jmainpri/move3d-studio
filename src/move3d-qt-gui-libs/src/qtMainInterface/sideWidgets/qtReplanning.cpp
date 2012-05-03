@@ -65,13 +65,21 @@ void ReplanningWidget::init()
   // Enable multi-thread graphical mode
   connect(m_ui->checkBoxMultiThreadGraphical, SIGNAL(toggled(bool)), this, SLOT(multiThreadGraphicalMode(bool)));
   
-  // Planner Type
-  connect(m_ui->radioButtonNavigation,    SIGNAL(toggled(bool)), this, SLOT(setPlannerType()));
-	connect(m_ui->radioButtonManipulation,  SIGNAL(toggled(bool)), this, SLOT(setPlannerType()));
-	connect(m_ui->radioButtonMobileManip,   SIGNAL(toggled(bool)), this, SLOT(setPlannerType()));
+  // Active Joints
+  connect(m_ui->radioButtonNavigation,    SIGNAL(toggled(bool)), this, SLOT(setActiveJoints()));
+	connect(m_ui->radioButtonManipulation,  SIGNAL(toggled(bool)), this, SLOT(setActiveJoints()));
+	connect(m_ui->radioButtonMobileManip,   SIGNAL(toggled(bool)), this, SLOT(setActiveJoints()));
   
-  connect(PlanEnv->getObject(PlanParam::plannerType), SIGNAL(valueChanged(int)),  
-          this, SLOT(setPlannerTypeRadioButtons(int)), Qt::DirectConnection);
+  // replanner Type
+  connect(m_ui->comboBoxReplanner, SIGNAL(currentIndexChanged(int)), PlanEnv->getObject(PlanParam::replanningAlgorithm),SLOT(set(int)));
+	connect( PlanEnv->getObject(PlanParam::replanningAlgorithm), SIGNAL(valueChanged(int)) ,m_ui->comboBoxReplanner, SLOT(setCurrentIndex(int)));
+	m_ui->comboBoxReplanner->setCurrentIndex( 0 /*Simple*/ );
+	// 0 => Simple
+	// 1 => SoftMotion
+	// 2 => RRT
+  
+  connect(PlanEnv->getObject(PlanParam::setOfActiveJoints), SIGNAL(valueChanged(int)),  
+          this, SLOT(setActiveJointsRadioButtons(int)), Qt::DirectConnection);
   
   // Plot Noisy trajectories
 #ifdef USE_QWT
@@ -191,26 +199,26 @@ void ReplanningWidget::computeSoftMotion()
 //---------------------------------------------------------
 // Replanning
 //---------------------------------------------------------
-void ReplanningWidget::setPlannerType()
+void ReplanningWidget::setActiveJoints()
 {
   if( m_ui->radioButtonNavigation->isChecked() )
   {
     cout << "radioButtonNavigation->isChecked()" << endl;
-    PlanEnv->setInt(PlanParam::plannerType,0);
+    PlanEnv->setInt(PlanParam::setOfActiveJoints,0);
   }
 	if ( m_ui->radioButtonManipulation->isChecked() )
   {
     cout << "radioButtonManipulation->isChecked()" << endl;
-    PlanEnv->setInt(PlanParam::plannerType,1);
+    PlanEnv->setInt(PlanParam::setOfActiveJoints,1);
   }
 	if ( m_ui->radioButtonMobileManip->isChecked() )
   {
     cout << "radioButtonMobileManip->isChecked()" << endl;
-    PlanEnv->setInt(PlanParam::plannerType,2);
+    PlanEnv->setInt(PlanParam::setOfActiveJoints,2);
   }
 }
 
-void ReplanningWidget::setPlannerTypeRadioButtons(int type)
+void ReplanningWidget::setActiveJointsRadioButtons(int type)
 {
   if( type == 0 )
   {

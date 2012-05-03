@@ -13,6 +13,7 @@
 #include <iostream>
 #include <tr1/memory>
 #include <boost/bind.hpp>
+#include <sys/time.h>
 #include <QMessageBox>
 
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
@@ -32,6 +33,8 @@
 #include "qtMotionPlanner.hpp"
 
 #include "HRI_costspace/HRICS_costspace.hpp"
+#include "planner/planEnvironment.hpp"
+#include "utils/ConfGenerator.h"
 
 using namespace std;
 using namespace tr1;
@@ -69,6 +72,8 @@ void HricsWidget::initHRI()
 //  }
   
   cout << "Init HRICS widget" << endl;
+  
+  connect(this, SIGNAL(selectedPlanner(QString)), global_plannerHandler, SLOT(startPlanner(QString)));
 	
 	m_mainWindow->connectCheckBoxToEnv(m_ui->enableHri_2,										Env::enableHri);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawGrid,							Env::drawGrid);
@@ -79,6 +84,7 @@ void HricsWidget::initHRI()
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawVectorField,				Env::drawVectorField);
   m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawOnlyOneLine,				Env::drawOnlyOneLine);
   m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawBox,               Env::drawBox);
+  m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawHumanColorFromConf,PlanParam::hriSetColorFromConfig);
   
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxHRICS_MOPL,						Env::HRIPlannerWS);
 //	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxBBDist,								Env::useBoxDist);
@@ -96,6 +102,16 @@ void HricsWidget::initHRI()
   connect(m_ui->pushButtonDeleteGrids,SIGNAL(clicked()),this,SLOT(deleteGrids()));
   connect(m_ui->pushButtonComputeAllCellCost,SIGNAL(clicked()),this,SLOT(computeAllCellCost()));
 	
+  // Load and Save agent grids
+  connect(m_ui->pushButtonLoad,SIGNAL(clicked()),this,SLOT(loadGrid()));
+  connect(m_ui->pushButtonSave,SIGNAL(clicked()),this,SLOT(saveGrid()));
+  
+  // Simple Otp test
+  connect(m_ui->pushButtonComputeOtpConfig,SIGNAL(clicked()),this,SLOT(computeOtpConfig()));
+  
+  // A*
+  connect(m_ui->pushButtonAStarInGrid,SIGNAL(clicked()),this,SLOT(computeAStarGrid()));
+  
 	// -------------------------------
 	// K Sliders
 	// -------------------------------
@@ -163,7 +179,7 @@ void HricsWidget::initHRI()
 //  initGrids();
 //  initObjectTransferPoint();
   
-  setGroupBoxDisabled(true);
+//  setGroupBoxDisabled(true);
 }
 
 void HricsWidget::setGroupBoxDisabled(bool disable)
@@ -448,12 +464,17 @@ void HricsWidget::deleteGrids()
 
 void HricsWidget::computeAllCellCost()
 {
-  // If a costspace exists re compute all
-  // cel cost
-  if(HRICS_humanCostMaps!=NULL) 
-  {
-    HRICS_humanCostMaps->computeAllCellCost();
-  }
+  emit(selectedPlanner(QString("ComputeAgentGridCost")));
+}
+
+void HricsWidget::loadGrid()
+{
+  emit(selectedPlanner(QString("LoadAgentGrid")));
+}
+
+void HricsWidget::saveGrid()
+{
+  emit(selectedPlanner(QString("SaveAgentGrid")));
 }
 
 //-------------------------------------------------------------
@@ -485,6 +506,40 @@ void HricsWidget::HRICSRRT()
 	m_mainWindow->drawAllWinActive();
 }
 
+void HricsWidget::computeOtpConfig()
+{
+  Scene* sce = global_Project->getActiveScene();
+  
+  Robot* rob = sce->getRobotByNameContaining("ROBOT");
+  Robot* hum = sce->getRobotByNameContaining("HUMAN");
+
+  ConfGenerator generator( rob, hum );
+
+  Eigen::Vector3d point = hum->getJoint("rPalm")->getVectorPos();
+  point[2] += 0.10;
+  
+  configPt q; // = q_rob->getConfigStruct();
+  
+  timeval tim;
+  gettimeofday(&tim, NULL);
+  double t_init = tim.tv_sec+(tim.tv_usec/1000000.0);
+  
+  if( generator.computeRobotGikForGrabing( q, point ) )
+  {
+    gettimeofday(&tim, NULL);
+    double dt = tim.tv_sec+(tim.tv_usec/1000000.0) - t_init;
+    cout << "Ik computed in : " << dt << " sec" << endl;
+    
+    confPtr_t q_rob(new Configuration(rob,q));
+    rob->setAndUpdate(*q_rob);
+    m_mainWindow->drawAllWinActive();
+  }
+  else
+  {
+    cout << "Could not find a robot OTP configuration" << endl;
+  }
+}
+
 void HricsWidget::on_pushButton_initColPos_clicked()
 {
     HRICS_activeNatu->setRobotToConfortPosture();
@@ -505,3 +560,9 @@ void HricsWidget::on_checkBoxPosOr_toggled(bool checked)
         delete m_mh;
     }
 }
+
+void HricsWidget::computeAStarGrid()
+{
+  emit(selectedPlanner(QString("ComputeAStar")));
+}
+

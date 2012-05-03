@@ -13,8 +13,9 @@
 #include "qtLibrary.hpp"
 #include "qtMainInterface/mainwindow.hpp"
 #include "qtMainInterface/sideWidgets/qtMotionPlanner.hpp"
-#include "API/Grids/gridsAPI.hpp"
 #include "qtFormRobot/qtmovinghuman.hpp"
+
+#include "API/Grids/gridsAPI.hpp"
 
 namespace Ui
 {
@@ -46,6 +47,9 @@ public:
 	
   void drawAllWinActive();
   
+signals:
+  void selectedPlanner(QString);
+  
 private slots:
   
   void on_checkBoxPosOr_toggled(bool checked);
@@ -68,13 +72,17 @@ private slots:
   void initGrids();
   void deleteGrids();
   void computeAllCellCost();
+  void loadGrid();
+  void saveGrid();
   
 	void AStarIn3DGrid();
 	void HRICSRRT();
 	void zoneSizeChanged();
 	void resetRandomPoints();
   void setWhichTestSlot(int);
-	
+  void computeOtpConfig();
+  void computeAStarGrid();
+  
 private:
   
   QtShiva::SpinBoxSliderConnector*	m_k_distance;

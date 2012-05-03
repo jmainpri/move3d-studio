@@ -167,16 +167,17 @@ void RobotWidget::initModel()
 
 void RobotWidget::printAbsPos()
 {
-    Robot* r = global_Project->getActiveScene()->getActiveRobot();
-
-    cout << "Print Matrix for robot " << r->getName() << endl;
-
-    unsigned int joint = m_ui->spinBoxPrintAbsPos->value();
-
-    if( joint <= r->getNumberOfJoints() )
-        cout << r->getJoint(joint)->getMatrixPos().matrix() << endl;
-    else
-        cout << "Cannont print for this robot" << endl;
+  Robot* r = global_Project->getActiveScene()->getActiveRobot();
+  
+  unsigned int joint = m_ui->spinBoxPrintAbsPos->value();
+  
+  if( joint <= r->getNumberOfJoints() ) {
+    cout << "Print Matrix of joint (" << r->getJoint(joint)->getName() ;
+    cout << ") for robot " << r->getName() << endl;
+    cout << r->getJoint(joint)->getMatrixPos().matrix() << endl;
+  }
+  else
+    cout << "Cannont print for this robot" << endl;
 
 }
 

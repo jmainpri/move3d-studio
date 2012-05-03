@@ -56,6 +56,7 @@
 #include "HRI_costspace/HRICS_costspace.hpp"
 #include "HRI_costspace/HRICS_Workspace.hpp"
 #include "HRI_costspace/HRICS_Miscellaneous.hpp"
+#include "HRI_costspace/HRICS_Navigation.hpp"
 #if defined( HRI_PLANNER )
 #include "HRI_costspace/HRICS_HAMP.hpp"
 #include "HRI_costspace/HRICS_otpmotionpl.hpp"
@@ -93,6 +94,10 @@ using namespace tr1;
 //------------------------------------------------------------------------------
 //  Callback functions  
 //------------------------------------------------------------------------------
+void qt_drawAllWinActive()
+{
+	g3d_draw_allwin_active();
+}
 
 void qt_test1()
 {
@@ -122,7 +127,39 @@ void qt_test3()
 {
 //  HRICS_humanCostMaps->testCostFunction();
 //  HRICS_humanCostMaps->saveAgentGrids();
-  HRICS_humanCostMaps->computeCostCombination();
+  Scene* sce = global_Project->getActiveScene();
+  Robot* robot = sce->getRobotByNameContaining("ROBOT");
+  Robot* human = sce->getRobotByNameContaining("HUMAN");
+  
+  ConfGenerator generator( robot, human );
+  
+  Eigen::Vector3d point = human->getJoint("rPalm")->getVectorPos();
+  point[2] += 0.10;
+  
+  configPt q;
+  if( generator.computeRobotGikForGrabing( q, point ) )
+  {
+    // Deactivate cntrts
+    p3d_rob* rob = robot->getRobotStruct();
+    for(int i=0; i<rob->cntrt_manager->ncntrts; i++) {
+      p3d_cntrt* ct = rob->cntrt_manager->cntrts[i];
+      p3d_desactivateCntrt( rob, ct );
+    }
+    
+    cout << "Ik computed " << endl;
+    confPtr_t q_rob(new Configuration(robot,q));
+    
+    // Generate trajectory
+    API::CostOptimization optim( robot->getCurrentTraj() );
+    double step = optim.getRangeMax() / 10;
+    cout << "Connect configuration " << endl;
+    optim.connectConfiguration( q_rob, step );
+    optim.replaceP3dTraj();
+    qt_drawAllWinActive();
+  }
+  else {
+    cout << "Could not find a robot OTP configuration" << endl;
+  }
 }
 
 void qt_resetGraph()
@@ -135,6 +172,8 @@ void qt_resetGraph()
 			API_activeGraph = NULL;
 			cerr << "Delete C++ API Graph" << endl;
 		}
+    
+//    XYZ_GRAPH = NULL;
 		
 #ifdef P3D_PLANNER
 		if( !p3d_del_graph(XYZ_GRAPH) )
@@ -143,7 +182,6 @@ void qt_resetGraph()
 		}
 		
 		cerr <<  "XYZ_GRAPH = " << XYZ_GRAPH << endl;
-		
 #endif
 	}
 	catch (string str) 
@@ -154,14 +192,6 @@ void qt_resetGraph()
 	{
 		cerr << "Exeption in qt_resetGraph()" << endl;
 	}
-}
-
-/**
- * Draw All Win Active
- */
-void qt_drawAllWinActive()
-{
-	g3d_draw_allwin_active();
 }
 
 /**
@@ -305,6 +335,28 @@ void qt_handover()
   //  compute_handOver();
 }
 
+HRICS::Navigation* navPlanner = NULL;
+
+void qt_computeAStar()
+{
+  cout << "Compute AStar" <<  endl;
+  Robot* rob;
+  
+  if (navPlanner == NULL) 
+  {
+    rob = global_Project->getActiveScene()->getRobotByNameContaining("ROBOT");
+    navPlanner = new HRICS::Navigation(rob);
+  }
+  else {
+    navPlanner->reset();
+    rob = navPlanner->getRobot();
+  }
+  
+  confPtr_t q_init = rob->getInitialPosition();
+  confPtr_t q_goal = rob->getGoTo();
+  
+  navPlanner->computeRobotTrajectory( q_init, q_goal );
+}
 
 #ifdef HRI_PLANNER
 
@@ -653,6 +705,28 @@ void qt_readTraj()
 	cout << "Apres lecture de la trajectoire" << endl;
 }
 
+void qt_recompute_agent_grid_cost()
+{
+  // If a costspace exists re compute all cell cost
+  if( HRICS_humanCostMaps != NULL )  {
+    HRICS_humanCostMaps->computeAllCellCost();
+  }
+}
+
+void qt_load_agent_grid()
+{
+  if( HRICS_humanCostMaps != NULL ) {
+    HRICS_humanCostMaps->loadAgentGrids();
+  }
+}
+
+void qt_save_agent_grid()
+{
+  if( HRICS_humanCostMaps != NULL ) {
+    HRICS_humanCostMaps->saveAgentGrids();
+  }
+}
+
 void qt_load_HRICS_Grid(std::string docname)
 {
 #ifdef HRI_COSTSPACE
@@ -815,6 +889,10 @@ void PlannerHandler::startPlanner(QString plannerName)
       std::cout << "Navigation thread : starting navigation." << std::endl;
       qt_runNavigation();
     }
+    else if (plannerName == "ComputeAStar" )
+    {
+      qt_computeAStar();
+    }
     else if (plannerName == "ManipCurrentTest")
     {
       std::cout << "Manipulation Test :" << std::endl;
@@ -874,6 +952,15 @@ void PlannerHandler::startPlanner(QString plannerName)
     }
     else if( plannerName == "MultipleOtp"){
       qtMultipleOTP();
+    }
+    else if( plannerName == "ComputeAgentGridCost"){
+      qt_recompute_agent_grid_cost();
+    }
+    else if( plannerName == "LoadAgentGrid"){
+      qt_load_agent_grid();
+    }
+    else if( plannerName == "SaveAgentGrid"){
+      qt_save_agent_grid();
     }
 #endif
 #ifdef GRASP_PLANNING

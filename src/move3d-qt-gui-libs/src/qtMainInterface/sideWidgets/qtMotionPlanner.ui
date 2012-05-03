@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>476</width>
-    <height>656</height>
+    <width>402</width>
+    <height>611</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>0</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>
@@ -61,8 +61,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>319</width>
-            <height>606</height>
+            <width>375</width>
+            <height>455</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -72,6 +72,18 @@
               <string>Tree Global</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_23">
+              <property name="leftMargin">
+               <number>12</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <property name="verticalSpacing">
+               <number>0</number>
+              </property>
               <item row="1" column="0">
                <widget class="QCheckBox" name="isBidir">
                 <property name="text">
@@ -86,17 +98,48 @@
                 </property>
                </widget>
               </item>
-              <item row="3" column="0">
+              <item row="1" column="1">
                <widget class="QCheckBox" name="checkBoxRandomInCompCo">
                 <property name="text">
                  <string>Connect to random</string>
                 </property>
                </widget>
               </item>
-              <item row="4" column="0">
+              <item row="2" column="1">
                <widget class="QCheckBox" name="checkBoxClosestInCompCo">
                 <property name="text">
                  <string>Connect to the closest</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_7">
+             <property name="title">
+              <string>Time Limit</string>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_11">
+              <property name="leftMargin">
+               <number>12</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>12</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QDoubleSpinBox" name="doubleSpinBoxTimeLimitPlanning"/>
+              </item>
+              <item>
+               <widget class="QSlider" name="horizontalSliderTimeLimitPlanning">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
                 </property>
                </widget>
               </item>
@@ -109,6 +152,12 @@
               <string>Tree Expansion Method</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_30">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="margin">
+               <number>0</number>
+              </property>
               <item>
                <widget class="QWidget" name="expansionWidget" native="true">
                 <layout class="QHBoxLayout" name="horizontalLayout_18">
@@ -255,6 +304,12 @@
               <string>Others</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_24">
+              <property name="verticalSpacing">
+               <number>0</number>
+              </property>
+              <property name="margin">
+               <number>0</number>
+              </property>
               <item row="0" column="1">
                <widget class="QCheckBox" name="isExpandControl">
                 <property name="text">
@@ -292,6 +347,12 @@
               <string>Multi-RRT</string>
              </property>
              <layout class="QGridLayout" name="gridLayout">
+              <property name="verticalSpacing">
+               <number>0</number>
+              </property>
+              <property name="margin">
+               <number>0</number>
+              </property>
               <item row="0" column="0">
                <widget class="QCheckBox" name="checkBoxMultiRRT">
                 <property name="text">
@@ -302,6 +363,18 @@
               <item row="1" column="0">
                <widget class="QWidget" name="widget_2" native="true">
                 <layout class="QHBoxLayout" name="horizontalLayout_3">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>5</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>5</number>
+                 </property>
                  <item>
                   <widget class="QLabel" name="label_3">
                    <property name="text">
@@ -373,12 +446,12 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>464</width>
-            <height>444</height>
+            <width>390</width>
+            <height>366</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_4">
-           <item>
+          <layout class="QGridLayout" name="gridLayout_11">
+           <item row="0" column="0">
             <widget class="QWidget" name="widget_3" native="true">
              <layout class="QHBoxLayout" name="horizontalLayout_4">
               <item>
@@ -387,6 +460,9 @@
                  <string>Planning strategy</string>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_28">
+                 <property name="margin">
+                  <number>0</number>
+                 </property>
                  <item>
                   <widget class="QComboBox" name="comboBoxPRMType">
                    <item>
@@ -427,6 +503,9 @@
                  <string>Connection strategy</string>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_27">
+                 <property name="margin">
+                  <number>0</number>
+                 </property>
                  <item>
                   <widget class="QComboBox" name="comboBox_3">
                    <item>
@@ -447,20 +526,32 @@
              </layout>
             </widget>
            </item>
-           <item>
+           <item row="1" column="0">
             <widget class="QGroupBox" name="groupBox_2">
              <property name="title">
               <string>Node connection</string>
              </property>
-             <layout class="QHBoxLayout" name="horizontalLayout">
-              <item>
-               <widget class="QLabel" name="label">
+             <layout class="QGridLayout" name="gridLayout_10">
+              <property name="leftMargin">
+               <number>12</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item row="1" column="0">
+               <widget class="QCheckBox" name="checkBoxUseDistance">
                 <property name="text">
-                 <string>Max Connect Nodes</string>
+                 <string>Use Distance</string>
                 </property>
                </widget>
               </item>
-              <item>
+              <item row="1" column="2">
                <widget class="QSpinBox" name="spinBoxMaxConnect">
                 <property name="minimum">
                  <number>1</number>
@@ -470,79 +561,40 @@
                 </property>
                </widget>
               </item>
-              <item>
-               <spacer name="horizontalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="SamplingGroupBox">
-             <property name="title">
-              <string>Sampling strategy</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_8">
-              <item row="0" column="0">
-               <widget class="QRadioButton" name="radioButton">
-                <property name="text">
-                 <string>Random</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QRadioButton" name="radioButton_3">
-                <property name="text">
-                 <string>Halton</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <widget class="QRadioButton" name="radioButton_2">
-                <property name="text">
-                 <string>Gaussian</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QRadioButton" name="radioButton_4">
-                <property name="text">
-                 <string>Bridge</string>
-                </property>
-               </widget>
-              </item>
               <item row="1" column="1">
-               <widget class="QRadioButton" name="radioButton_5">
+               <widget class="QLabel" name="label">
                 <property name="text">
-                 <string>OBPRM</string>
+                 <string>Max Connect Nodes</string>
                 </property>
                </widget>
               </item>
              </layout>
             </widget>
            </item>
-           <item>
-            <widget class="QCheckBox" name="checkBoxUseDistance">
-             <property name="text">
-              <string>Use Distance</string>
-             </property>
-            </widget>
-           </item>
-           <item>
+           <item row="3" column="0">
             <widget class="QGroupBox" name="groupBox_4">
              <property name="title">
               <string>Show</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_2">
+              <property name="leftMargin">
+               <number>12</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <property name="horizontalSpacing">
+               <number>-1</number>
+              </property>
+              <property name="verticalSpacing">
+               <number>0</number>
+              </property>
               <item row="0" column="1">
                <widget class="QSpinBox" name="spinBoxNodeToShow"/>
               </item>
@@ -580,6 +632,65 @@
                <widget class="QPushButton" name="pushButtonRemoveNode">
                 <property name="text">
                  <string>Remove</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QGroupBox" name="SamplingGroupBox">
+             <property name="title">
+              <string>Sampling strategy</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_8">
+              <property name="leftMargin">
+               <number>12</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <property name="verticalSpacing">
+               <number>0</number>
+              </property>
+              <item row="0" column="0">
+               <widget class="QRadioButton" name="radioButton">
+                <property name="text">
+                 <string>Random</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QRadioButton" name="radioButton_3">
+                <property name="text">
+                 <string>Halton</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QRadioButton" name="radioButton_2">
+                <property name="text">
+                 <string>Gaussian</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QRadioButton" name="radioButton_4">
+                <property name="text">
+                 <string>Bridge</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QRadioButton" name="radioButton_5">
+                <property name="text">
+                 <string>OBPRM</string>
                 </property>
                </widget>
               </item>
@@ -628,20 +739,26 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>355</width>
-            <height>1095</height>
+            <width>375</width>
+            <height>804</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_37">
            <item>
             <widget class="QFrame" name="PostProcessingLayout">
              <layout class="QVBoxLayout" name="verticalLayout_26">
+              <property name="spacing">
+               <number>0</number>
+              </property>
               <property name="margin">
                <number>0</number>
               </property>
               <item>
                <widget class="QWidget" name="widget_8" native="true">
                 <layout class="QGridLayout" name="gridLayout_6">
+                 <property name="margin">
+                  <number>0</number>
+                 </property>
                  <item row="0" column="0">
                   <widget class="QCheckBox" name="checkBoxSaveTrajCost">
                    <property name="text">
@@ -683,7 +800,7 @@
               <item>
                <widget class="QPushButton" name="pushButtonCutTrajAndOptimizeSM">
                 <property name="text">
-                 <string>Cut traj in small LP</string>
+                 <string>Cut traj and optimize SM</string>
                 </property>
                </widget>
               </item>
@@ -695,11 +812,61 @@
                </widget>
               </item>
               <item>
+               <widget class="QGroupBox" name="groupBoxTimeLimit">
+                <property name="title">
+                 <string>Time Limit</string>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_3">
+                 <property name="leftMargin">
+                  <number>12</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="verticalSpacing">
+                  <number>0</number>
+                 </property>
+                 <item row="1" column="0">
+                  <widget class="QDoubleSpinBox" name="doubleSpinBoxTimeLimitSmoothing">
+                   <property name="maximum">
+                    <double>60.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QSlider" name="horizontalSliderTimeLimitSmoothing">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
                <widget class="QGroupBox" name="groupBox_5">
                 <property name="title">
                  <string>Iteration Limit</string>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_5">
+                 <property name="leftMargin">
+                  <number>12</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
                  <item>
                   <widget class="QCheckBox" name="checkBoxWithIterLimit">
                    <property name="text">
@@ -710,6 +877,12 @@
                  <item>
                   <widget class="QWidget" name="widget_6" native="true">
                    <layout class="QHBoxLayout" name="horizontalLayout_7">
+                    <property name="spacing">
+                     <number>-1</number>
+                    </property>
+                    <property name="margin">
+                     <number>0</number>
+                    </property>
                     <item>
                      <widget class="QLabel" name="label_12">
                       <property name="text">
@@ -744,41 +917,14 @@
                </widget>
               </item>
               <item>
-               <widget class="QGroupBox" name="groupBoxTimeLimit">
-                <property name="title">
-                 <string>Time Limit</string>
-                </property>
-                <layout class="QGridLayout" name="gridLayout_3">
-                 <item row="0" column="0" colspan="2">
-                  <widget class="QCheckBox" name="checkBoxWithTimeLimit">
-                   <property name="text">
-                    <string>With Time Limit</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QDoubleSpinBox" name="doubleSpinBoxTimeLimit">
-                   <property name="maximum">
-                    <double>60.000000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QSlider" name="horizontalSliderTimeLimit">
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item>
                <widget class="QGroupBox" name="groupBoxShortCut">
                 <property name="title">
                  <string>Shortcut</string>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_6">
+                 <property name="spacing">
+                  <number>0</number>
+                 </property>
                  <item>
                   <widget class="QCheckBox" name="checkBoxWithShortCut">
                    <property name="text">
@@ -796,6 +942,9 @@
                  <item>
                   <widget class="QWidget" name="ShortcutButtons" native="true">
                    <layout class="QGridLayout" name="gridLayout_44">
+                    <property name="verticalSpacing">
+                     <number>0</number>
+                    </property>
                     <item row="1" column="1">
                      <widget class="QPushButton" name="pushButtonRemoveRedundantNodes">
                       <property name="text">
@@ -844,6 +993,12 @@
                     <enum>QFrame::Raised</enum>
                    </property>
                    <layout class="QGridLayout" name="gridLayout_29">
+                    <property name="verticalSpacing">
+                     <number>0</number>
+                    </property>
+                    <property name="margin">
+                     <number>0</number>
+                    </property>
                     <item row="1" column="1">
                      <widget class="QDoubleSpinBox" name="doubleSpinBoxMaxDeformStep">
                       <property name="maximum">
@@ -874,6 +1029,9 @@
                  <item row="3" column="0">
                   <widget class="QWidget" name="widget_19" native="true">
                    <layout class="QHBoxLayout" name="horizontalLayout_19">
+                    <property name="margin">
+                     <number>0</number>
+                    </property>
                     <item>
                      <widget class="QComboBox" name="comboBoxTrajCostExtimation">
                       <item>
@@ -907,6 +1065,12 @@
                  <item row="5" column="0">
                   <widget class="QWidget" name="StartDeformation" native="true">
                    <layout class="QGridLayout" name="gridLayout_38">
+                    <property name="verticalSpacing">
+                     <number>0</number>
+                    </property>
+                    <property name="margin">
+                     <number>0</number>
+                    </property>
                     <item row="0" column="1">
                      <spacer name="horizontalSpacer_27">
                       <property name="orientation">
@@ -933,6 +1097,12 @@
                  <item row="0" column="0">
                   <widget class="QWidget" name="widget_7" native="true">
                    <layout class="QGridLayout" name="gridLayout_4">
+                    <property name="verticalSpacing">
+                     <number>0</number>
+                    </property>
+                    <property name="margin">
+                     <number>0</number>
+                    </property>
                     <item row="0" column="0">
                      <widget class="QCheckBox" name="checkBoxWithDeform">
                       <property name="text">
@@ -973,6 +1143,18 @@
                  <string>Show Node</string>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_9">
+                 <property name="leftMargin">
+                  <number>12</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
                  <item row="0" column="0">
                   <widget class="QLabel" name="label_9">
                    <property name="text">
@@ -1009,9 +1191,18 @@
                  <string>Multi Smooth</string>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_32">
+                 <property name="spacing">
+                  <number>0</number>
+                 </property>
                  <item>
                   <widget class="QWidget" name="widget_17" native="true">
                    <layout class="QGridLayout" name="gridLayout_40">
+                    <property name="verticalSpacing">
+                     <number>0</number>
+                    </property>
+                    <property name="margin">
+                     <number>0</number>
+                    </property>
                     <item row="1" column="1">
                      <widget class="QDoubleSpinBox" name="doubleSpinBoxNbMultiSmooth">
                       <property name="decimals">
@@ -1042,6 +1233,9 @@
                  <item>
                   <widget class="QWidget" name="widget_18" native="true">
                    <layout class="QGridLayout" name="gridLayout_39">
+                    <property name="margin">
+                     <number>0</number>
+                    </property>
                     <item row="0" column="0">
                      <spacer name="horizontalSpacer_22">
                       <property name="orientation">
@@ -1113,8 +1307,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>464</width>
-            <height>444</height>
+            <width>386</width>
+            <height>407</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_35">
@@ -1352,20 +1546,55 @@
        <number>5</number>
       </property>
       <item>
+       <widget class="QWidget" name="widget_13" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string>With Time Limit:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBoxWithTimeLimitPlanning">
+           <property name="text">
+            <string>Planning</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBoxWithTimeLimitSmoothing">
+           <property name="text">
+            <string>Smoothing</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QWidget" name="widget_9" native="true">
         <layout class="QHBoxLayout" name="horizontalLayout_8">
-         <property name="leftMargin">
-          <number>12</number>
-         </property>
-         <property name="topMargin">
+         <property name="margin">
           <number>0</number>
          </property>
-         <property name="rightMargin">
-          <number>12</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
+         <item>
+          <widget class="QCheckBox" name="checkBoxExtractCurrentTraj">
+           <property name="text">
+            <string>Extract Tcur</string>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QCheckBox" name="isWithGoal">
            <property name="text">
@@ -1380,39 +1609,16 @@
            </property>
           </widget>
          </item>
-         <item>
-          <spacer name="horizontalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_7">
-           <property name="text">
-            <string>Test</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxTest"/>
-         </item>
         </layout>
        </widget>
       </item>
       <item>
        <widget class="QWidget" name="widget_12" native="true">
         <layout class="QGridLayout" name="gridLayout_5">
-         <property name="topMargin">
+         <property name="verticalSpacing">
           <number>0</number>
          </property>
-         <property name="bottomMargin">
+         <property name="margin">
           <number>0</number>
          </property>
          <item row="0" column="3">

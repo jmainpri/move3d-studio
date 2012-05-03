@@ -200,10 +200,12 @@ void MotionPlanner::initOptim()
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxRecomputeCost,		PlanParam::trajCostRecompute );
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxCheckCollision,	  PlanParam::trajComputeCollision );
   
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithTimeLimitSmoothing,		PlanParam::trajWithTimeLimit );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithTimeLimitPlanning,		PlanParam::planWithTimeLimit );
+  
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithDescent,			PlanParam::withDescent );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithDeform,				PlanParam::withDeformation );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithShortCut,			PlanParam::withShortCut );
-	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithTimeLimit,		PlanParam::withTimeLimit );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithGainLimit,		PlanParam::withGainLimit );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithIterLimit,		PlanParam::withMaxIteration );
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxShowExploration,	PlanParam::showExploration );
@@ -236,7 +238,9 @@ void MotionPlanner::initOptim()
 	
 	//QtShiva::SpinBoxSliderConnector* connector2 = 
 	new QtShiva::SpinBoxSliderConnector(
-																			this, m_ui->doubleSpinBoxTimeLimit, m_ui->horizontalSliderTimeLimit , PlanParam::optimTimeLimit );
+																			this, m_ui->doubleSpinBoxTimeLimitSmoothing, m_ui->horizontalSliderTimeLimitSmoothing , PlanParam::timeLimitSmoothing );
+  new QtShiva::SpinBoxSliderConnector(
+																			this, m_ui->doubleSpinBoxTimeLimitPlanning, m_ui->horizontalSliderTimeLimitPlanning , PlanParam::timeLimitPlanning );
 	
 	connect(m_ui->pushButtonRunMultiSmooth,SIGNAL(clicked()),this,SLOT(runMultiSmooth()));
   
@@ -249,21 +253,21 @@ void MotionPlanner::initOptim()
   
   connect(m_ui->spinBoxIthNodeInTraj, SIGNAL(valueChanged(int)), this, SLOT(getIthNodeInBestTraj()), Qt::QueuedConnection);
 	
-	//connect(connector,SIGNAL(valueChanged(double)),PlanEnv->getObject(PlanParam::optimTimeLimit),SLOT(set(double)));
-	//connect(PlanEnv->getObject(PlanParam::optimTimeLimit),SIGNAL(valueChanged(double)),this,SLOT(test(double)));
+	//connect(connector,SIGNAL(valueChanged(double)),PlanEnv->getObject(PlanParam::timeLimitSmoothing),SLOT(set(double)));
+	//connect(PlanEnv->getObject(PlanParam::timeLimitSmoothing),SIGNAL(valueChanged(double)),this,SLOT(test(double)));
 	//connect(connector1,SIGNAL(valueChanged(double)),this,SLOT(test(double)));
 	
 	//
-	//	PlanEnv->getObject(PlanParam::optimTimeLimit)->dumpObjectInfo();
-	//	PlanEnv->setDouble(PlanParam::optimTimeLimit,15.0);
-	//	PlanEnv->setDouble(PlanParam::optimTimeLimit,30.0);
-	//PlanEnv->getObject(PlanParam::optimTimeLimit)->metaObject()->connectSlotsByName ();
+	//	PlanEnv->getObject(PlanParam::timeLimitSmoothing)->dumpObjectInfo();
+	//	PlanEnv->setDouble(PlanParam::timeLimitSmoothing,15.0);
+	//	PlanEnv->setDouble(PlanParam::timeLimitSmoothing,30.0);
+	//PlanEnv->getObject(PlanParam::timeLimitSmoothing)->metaObject()->connectSlotsByName ();
 }
 
 void MotionPlanner::test(double value)
 {
-	//cout << "Value of PlanParam::optimTimeLimit : " << PlanEnv->getDouble(PlanParam::optimTimeLimit) << endl;
-	cout << "Value of PlanParam::optimTimeLimit : " << PlanEnv->getDouble(PlanParam::MinStep) << endl;
+	//cout << "Value of PlanParam::timeLimitSmoothing : " << PlanEnv->getDouble(PlanParam::timeLimitSmoothing) << endl;
+	cout << "Value of PlanParam::timeLimitSmoothing : " << PlanEnv->getDouble(PlanParam::MinStep) << endl;
 }
 
 void MotionPlanner::cutTrajInSmallLP()
