@@ -521,7 +521,7 @@ void HricsWidget::computeOtpConfig()
   gettimeofday(&tim, NULL);
   double t_init = tim.tv_sec+(tim.tv_usec/1000000.0);
   
-  if( generator.computeRobotGikForGrabing( q, point ) )
+  if( generator.computeRobotIkForGrabing( q, point ) )
   {
     gettimeofday(&tim, NULL);
     double dt = tim.tv_sec+(tim.tv_usec/1000000.0) - t_init;

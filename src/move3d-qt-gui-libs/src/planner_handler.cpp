@@ -138,7 +138,7 @@ void qt_test3()
   point[2] += 0.10;
   
   configPt q;
-  if( generator.computeRobotGikForGrabing( q, point ) )
+  if( generator.computeRobotIkForGrabing( q, point ) )
   {
     // Deactivate cntrts
     p3d_rob* rob = robot->getRobotStruct();
