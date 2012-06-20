@@ -1,11 +1,13 @@
 #ifndef MULTIPLOT_HPP
 #define MULTIPLOT_HPP
 
-#if defined( MOVE3D_CORE )
+//#if defined( MOVE3D_CORE )
 #include "qtPlot/basicPlot.hpp"
-#endif
+//#endif
 
 #include<vector>
+
+#include <qwt_series_data.h>
 
 //const int PLOT_SIZE = 100;      // 0 to 200
 

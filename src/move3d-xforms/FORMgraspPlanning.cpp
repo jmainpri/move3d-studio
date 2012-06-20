@@ -4,9 +4,10 @@
 #include <algorithm>
 #include "GraspPlanning-pkg.h"
 #include "Collision-pkg.h"
-#include "../lightPlanner/proto/lightPlannerApi.h"
-#include "../lightPlanner/proto/lightPlanner.h"
-#include "../localpath/proto/p3d_multiLocalPath_proto.h"
+#include <lightPlanner/proto/lightPlannerApi.h>
+#include <lightPlanner/proto/lightPlanner.h>
+#include <lightPlanner/proto/ManipulationArmData.hpp>
+#include <localpath/proto/p3d_multiLocalPath_proto.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
