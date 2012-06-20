@@ -36,6 +36,8 @@
 #include "SaveContext.hpp"
 #include "MultiRun.hpp"
 
+#include "HRI_costspace/HRICS_Navigation.hpp"
+
 using namespace std;
 using namespace tr1;
 
@@ -56,6 +58,7 @@ m_ui(new Ui::MotionPlanner)
 MotionPlanner::~MotionPlanner()
 {
 	delete m_ui;
+
 }
 
 //---------------------------------------------------------------------
@@ -743,4 +746,42 @@ void MotionPlanner::removeNode()
 	m_mainWindow->drawAllWinActive();
 }
 
+void MotionPlanner::on_pushButtonSetGoal_toggled(bool checked)
+{
+     if (checked)
+     {
+         m_mh = new MovingHuman(0,0,0);
+         m_mh->show();
+         m_mh->setMainWindow(m_mainWindow);
+         m_ui->pushButtonComputeNavigation->setEnabled(true);
+         ENV.setBool(Env::drawTraj, true);
+     }
+     else
+     {
+         m_mh->close();
+         delete m_mh;
+         m_ui->pushButtonComputeNavigation->setEnabled(false);
+         ENV.setBool(Env::drawTraj, false);
+     }
+}
 
+void MotionPlanner::on_pushButtonComputeNavigation_clicked()
+{
+    if (m_mh != NULL)
+    {
+        Robot* r = new Robot(p3d_get_robot_by_name(global_ActiveRobotName.c_str()));
+        cout << r->getName() <<endl;
+        HRICS::Navigation* n = new HRICS::Navigation(r);
+        std::vector<double> goal;
+        goal.push_back(m_mh->getX());
+        goal.push_back(m_mh->getY());
+        goal.push_back(m_mh->getRZ());
+        std::vector<std::vector<double> > path;
+        n->getSimplePath(goal,path);
+        cout << "printing the path :" <<endl;
+        for (unsigned int i =0; i< path.size(); i++)
+        {
+            cout << "(x,y,rz) = (" << path[i][0] << "," << path[i][1] << "," << path[i][2] << ")" << endl;
+        }
+    }
+}

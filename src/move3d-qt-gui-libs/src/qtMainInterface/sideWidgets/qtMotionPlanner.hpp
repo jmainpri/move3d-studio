@@ -15,6 +15,8 @@
 #include "qtLibrary.hpp"
 #include "qtMainInterface/mainwindow.hpp"
 
+#include "qtFormRobot/qtmovinghuman.hpp"
+
 // Foward declaration of class Node
 // problem with boost graph and moc (until fix is not node)
 // do not include boost graph in Qt headers
@@ -51,7 +53,9 @@ public slots:
 private slots:
   
 	// Optim -----------------------------
-	void test(double value);
+        void on_pushButtonComputeNavigation_clicked();
+        void on_pushButtonSetGoal_toggled(bool checked);
+ void test(double value);
 	void computeGrid();
 	void runMultiSmooth();
 	void optimizeCost();
@@ -106,6 +110,7 @@ private:
 	void initOptim();
 	void initGeneral();
 	void initShowGraph();
+        MovingHuman* m_mh;
 };
 
 /**

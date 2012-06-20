@@ -61,9 +61,9 @@ void MovingHuman::init(double x, double y, double z, double rz)
     m_k_rz = new QtShiva::SpinBoxSliderConnector(this, ui->doubleSpinBoxRZ,     ui->horizontalSliderRZ,   PlanParam::env_futurRZ);
     m_k_rz->setValue(rz);
 
-//    connect(m_k_x,SIGNAL(valueChanged(double)),this,SLOT(updateMainWindow(double)));
-//    connect(m_k_y,SIGNAL(valueChanged(double)),this,SLOT(updateMainWindow(double)));
-//    connect(m_k_rz,SIGNAL(valueChanged(double)),this,SLOT(updateMainWindow(double))); 
+    connect(m_k_x,SIGNAL(valueChanged(double)),this,SLOT(updateMainWindow(double)));
+    connect(m_k_y,SIGNAL(valueChanged(double)),this,SLOT(updateMainWindow(double)));
+    connect(m_k_rz,SIGNAL(valueChanged(double)),this,SLOT(updateMainWindow(double)));
 //    connect(m_k_x,SIGNAL(valueChanged(double)),this,SLOT(printValues()));
 //    connect(m_k_y,SIGNAL(valueChanged(double)),this,SLOT(printValues()));
 //    connect(m_k_rz,SIGNAL(valueChanged(double)),this,SLOT(printValues()));
@@ -120,17 +120,17 @@ void MovingHuman::printValues()
   std::cout << "PlanEnv->getDouble(PlanParam::env_futurRZ) = " << PlanEnv->getDouble(PlanParam::env_futurRZ) <<  std::endl;
 }
 
-double getX()
+double MovingHuman::getX()
 {
     return PlanEnv->getDouble(PlanParam::env_futurX);
 }
 
-double getY()
+double MovingHuman::getY()
 {
     return PlanEnv->getDouble(PlanParam::env_futurY);
 }
 
-double getRZ()
+double MovingHuman::getRZ()
 {
     return PlanEnv->getDouble(PlanParam::env_futurRZ);
 }
