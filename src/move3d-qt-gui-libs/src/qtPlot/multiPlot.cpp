@@ -11,9 +11,6 @@
 #include "../p3d/env.hpp"
 #include <iostream>
 #include <algorithm>
-//
-//  Initialize main window
-//
 
 using namespace std;
 
@@ -43,7 +40,7 @@ QwtPlot(parent)
 	d_y.clear();
 	
 	//  Initialize data
-	for ( int i = 0; i< PLOT_SIZE; i++)
+	for ( int i=0; i<PLOT_SIZE; i++)
 	{
 		d_x.push_back( i );     // time axis
 	}
@@ -56,9 +53,7 @@ QwtPlot(parent)
 	//replot();
 }
 
-//
-//  Set a plain canvas frame and align the scales to it
-//
+//! Set a plain canvas frame and align the scales to it
 void MultiPlot::alignScales()
 {
 	// The code below shows how to align the scales to
@@ -68,7 +63,7 @@ void MultiPlot::alignScales()
 	canvas()->setFrameStyle(QFrame::Box | QFrame::Plain );
 	canvas()->setLineWidth(1);
 	
-	for ( int i = 0; i < QwtPlot::axisCnt; i++ )
+	for ( int i=0; i<QwtPlot::axisCnt; i++ )
 	{
 		QwtScaleWidget *scaleWidget = (QwtScaleWidget *)axisWidget(i);
 		
@@ -92,7 +87,7 @@ void MultiPlot::rescale()
 void MultiPlot::setData(const std::vector< std::string >& names , 
 												 const std::vector< std::vector <double> >& data )
 {	
-	if(ENV.getBool(Env::initPlot) == false )
+	if( ENV.getBool(Env::initPlot) == false )
 	{
     vector< double > Max_y,Min_y;
     
@@ -115,7 +110,6 @@ void MultiPlot::setData(const std::vector< std::string >& names ,
 	}
 	
 	// Save data in plot member
-	
 	cData.clear();
 	
 	// See Qt::GlobalColor
@@ -124,30 +118,24 @@ void MultiPlot::setData(const std::vector< std::string >& names ,
 	unsigned int i=0;
 	for ( vector< vector<double> >::const_iterator it = data.begin(); 
 			 it != data.end() ; ++it)
-	{
-		QwtArray< double > d_y = QVector<double>::fromStdVector( *it );
-		
-		/*cout << "- " << i << " : " ;
-		for ( int j=0; j<PLOT_SIZE; j++) 
-		{
-			cout << " " << d_y[j] ;
-		}
-		cout << endl << endl;*/
-		
+	{		
 		// Set name and color (be carfull less that 16 plots)
-		
 		QString CurveName;
-		
-		if ( i < names.size() ) 
-		{
+		if ( i < names.size() ) {
 			CurveName = names[i].c_str();
 		}
-		else 
-		{
+		else {
 			CurveName = QString("Cost %1").arg(i);
 		}
 		
 		QColor Color((Qt::GlobalColor) QtColours[i] ); i++;
+    
+    // Compute new curves
+    QwtArray<double> d_y = QVector<double>::fromStdVector( *it );
+    
+    d_x.clear();
+    for ( int i=0; i<d_y.size(); i++)
+      d_x.push_back( i ); // time axis
 		
 		// Insert new curves
 		cData.push_back( new QwtPlotCurve( CurveName ) );
@@ -155,11 +143,6 @@ void MultiPlot::setData(const std::vector< std::string >& names ,
 		cData.back()->setData( d_x, d_y );
 		cData.back()->attach(this);
 	}
-	
-//	cData2 = new QwtPlotCurve("Cost2");
-//	cData2->setPen(QPen(Qt::blue));
-//	cData2->setRawData(d_x, d_z, PLOT_SIZE);
-//	cData2->attach(this);
 	
 	replot();
 }
