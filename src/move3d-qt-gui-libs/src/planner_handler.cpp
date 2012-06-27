@@ -16,6 +16,7 @@
 #include <limits>
 #include <algorithm>
 #include <tr1/memory>
+#include <sys/time.h>
 
 #include "P3d-pkg.h"
 #include "Util-pkg.h"
@@ -121,46 +122,83 @@ void qt_test2()
 {
 //  p3d_set_goal_solution_function( manipulation_get_free_holding_config );
 //  HRICS::setSimulationRobotsTransparent();
-   HRICS_humanCostMaps->loadAgentGrids();
+   //HRICS_humanCostMaps->loadAgentGrids();
+  
+  if (HRICS::initShelfScenario()) 
+  {
+    HRICS::execShelfScenario();
+  }
 }
+
+static bool init_generator=false;
+static ConfGenerator* generatorPtr=NULL;
 
 void qt_test3()
 {
 //  HRICS_humanCostMaps->testCostFunction();
 //  HRICS_humanCostMaps->saveAgentGrids();
+  
+  timeval tim;
+  gettimeofday(&tim, NULL);
+  double t_init = tim.tv_sec+(tim.tv_usec/1000000.0);
+  
   Scene* sce = global_Project->getActiveScene();
   Robot* robot = sce->getRobotByNameContaining("ROBOT");
   Robot* human = sce->getRobotByNameContaining("HUMAN");
   
-  ConfGenerator generator( robot, human );
-  
-  Eigen::Vector3d point = human->getJoint("rPalm")->getVectorPos();
-  point[2] += 0.10;
-  
-  configPt q;
-  if( generator.computeRobotIkForGrabing( q, point ) )
+  if( !init_generator ) 
   {
-    // Deactivate cntrts
-    p3d_rob* rob = robot->getRobotStruct();
-    for(int i=0; i<rob->cntrt_manager->ncntrts; i++) {
-      p3d_cntrt* ct = rob->cntrt_manager->cntrts[i];
-      p3d_desactivateCntrt( rob, ct );
-    }
+    string dir(getenv("HOME_MOVE3D"));
+    string file("/statFiles/OtpComputing/confHerakles.xml");
     
-    cout << "Ik computed " << endl;
-    confPtr_t q_rob(new Configuration(robot,q));
+    generatorPtr = new ConfGenerator( robot, human );
+    generatorPtr->initialize( dir+file, HRICS_activeNatu );
     
-    // Generate trajectory
-    API::CostOptimization optim( robot->getCurrentTraj() );
-    double step = optim.getRangeMax() / 10;
-    cout << "Connect configuration " << endl;
-    optim.connectConfiguration( q_rob, step );
-    optim.replaceP3dTraj();
-    qt_drawAllWinActive();
+    init_generator = true;
   }
-  else {
-    cout << "Could not find a robot OTP configuration" << endl;
+  
+  double best_cost=0.0;
+  pair<confPtr_t,confPtr_t> best_handover_conf;
+  
+  if( generatorPtr->computeHandoverConfigFromList( best_handover_conf, best_cost )) 
+  {
+    human->setAndUpdate( *best_handover_conf.first );
+    robot->setAndUpdate( *best_handover_conf.second );
   }
+  
+  cout << "Cost of configuration is : " << best_cost << endl;
+  
+  gettimeofday(&tim, NULL);
+  double dt = tim.tv_sec+(tim.tv_usec/1000000.0) - t_init;
+  cout << "Handover computed in : " << dt << " sec" << endl;
+  
+//  Eigen::Vector3d point = human->getJoint("rPalm")->getVectorPos();
+//  point[2] += 0.10;
+//  
+//  configPt q;
+//  if( generator.computeRobotIkForGrabing( q, point ) )
+//  {
+//    // Deactivate cntrts
+//    p3d_rob* rob = robot->getRobotStruct();
+//    for(int i=0; i<rob->cntrt_manager->ncntrts; i++) {
+//      p3d_cntrt* ct = rob->cntrt_manager->cntrts[i];
+//      p3d_desactivateCntrt( rob, ct );
+//    }
+//    
+//    cout << "Ik computed " << endl;
+//    confPtr_t q_rob(new Configuration(robot,q));
+//    
+//    // Generate trajectory
+//    API::CostOptimization optim( robot->getCurrentTraj() );
+//    double step = optim.getRangeMax() / 10;
+//    cout << "Connect configuration " << endl;
+//    optim.connectConfiguration( q_rob, step );
+//    optim.replaceP3dTraj();
+//    qt_drawAllWinActive();
+//  }
+//  else {
+//    cout << "Could not find a robot OTP configuration" << endl;
+//  }
 }
 
 void qt_resetGraph()
@@ -208,8 +246,10 @@ void qt_runDiffusion()
 #ifdef P3D_PLANNER
 		p3d_SetStopValue(FALSE);
 #endif
-		ChronoOn();
-		
+		timeval tim;
+    gettimeofday(&tim, NULL);
+    double t_init = tim.tv_sec+(tim.tv_usec/1000000.0);
+  
 		int res;
 		cout << "ENV.getBool(Env::Env::treePlannerIsEST) = " << ENV.getBool(Env::treePlannerIsEST) << endl;
 		if (ENV.getBool(Env::treePlannerIsEST))
@@ -221,8 +261,9 @@ void qt_runDiffusion()
 			res = p3d_run_rrt(robot->getRobotStruct());
 		}
     
-		ChronoPrint("");
-		ChronoOff();
+    gettimeofday(&tim, NULL);
+    double dt = tim.tv_sec+(tim.tv_usec/1000000.0) - t_init;
+    cout << "RRT computed in : " << dt << " sec" << endl;
 		
     if( !ENV.getBool(Env::drawDisabled) ) {
       g3d_draw_allwin_active();
@@ -300,6 +341,11 @@ void qt_runPRM()
 	ENV.setBool(Env::isRunning,false);
 }
 
+void qt_runMultiSmooth()
+{
+  MultiRun pool;
+  pool.runMutliSmooth();
+}
 
 #ifdef MULTILOCALPATH
 
@@ -498,6 +544,8 @@ void qt_executeReplanSimu()
 
 void qt_executeSimpleSimu()
 {
+  cout << "qt_executeSimpleSimu" << endl;
+  
   if( global_rePlanningEnv == NULL )
   {
     global_rePlanningEnv = new ReplanningSimulator();
@@ -670,7 +718,7 @@ void qt_readScenario()
 void qt_saveScenario()
 {
 	std::string fileToOpen(qt_fileName);
-	cout <<" Should Open scenarion " << fileToOpen << endl;
+	cout <<" Should Save scenario " << fileToOpen << endl;
 	
 	p3d_rw_scenario_init_name();
 	p3d_save_scenario(qt_fileName);
@@ -689,15 +737,15 @@ void qt_readTraj()
 		{
 			trajPt = (p3d_traj *) p3d_get_desc_curid(P3D_TRAJ);
 			ir = p3d_get_desc_curnum(P3D_ROBOT);
-      //			g3d_add_traj(p3d_get_desc_curname(P3D_TRAJ),
-      //						 p3d_get_desc_number(P3D_TRAJ));
+      // g3d_add_traj(p3d_get_desc_curname(P3D_TRAJ),
+      // p3d_get_desc_number(P3D_TRAJ));
 			qi = p3d_alloc_config(robotPt);
 			qf = p3d_alloc_config(robotPt);
 			p3d_ends_and_length_traj(trajPt, &qi, &qf);   
 			p3d_copy_config_into(robotPt, qf, &(robotPt->ROBOT_GOTO));
 			p3d_copy_config_into(robotPt, qi, &(robotPt->ROBOT_POS));
 			
-      //			g3d_draw_allwin_active();
+      // g3d_draw_allwin_active();
 			p3d_destroy_config(robotPt, qi);
 			p3d_destroy_config(robotPt, qf);
 		}
@@ -716,8 +764,22 @@ void qt_recompute_agent_grid_cost()
 
 void qt_load_agent_grid()
 {
-  if( HRICS_humanCostMaps != NULL ) {
-    HRICS_humanCostMaps->loadAgentGrids();
+  if( HRICS_humanCostMaps != NULL ) 
+  {
+    const char* move3d_home = getenv("HOME_MOVE3D");
+    
+    if( move3d_home == NULL ) 
+    {
+      cout << "HOME_MOVE3D is undefined" << endl;
+      return;
+    }
+    
+    std::string home( move3d_home );
+    std::string filename = "/statFiles/Cost3DGrids/human_grids_0.grid";
+    
+    filename = home + filename;
+    
+    HRICS_humanCostMaps->loadAgentGrids( filename );
   }
 }
 
@@ -875,6 +937,11 @@ void PlannerHandler::startPlanner(QString plannerName)
     {
       std::cout << "Planning thread : starting PRM." << std::endl;
       qt_runPRM();
+    }
+    else if(plannerName == "MultiSmooth")
+    {
+      std::cout << "Planning thread : starting MultiSmooth." << std::endl;
+      qt_runMultiSmooth();
     }
 #ifdef LIGHT_PLANNER
     else if(plannerName == "Manipulation")
