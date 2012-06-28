@@ -90,7 +90,7 @@ PosterReader::PosterReader()
 
 
     /* poster for robot in mhp */
-    _mhpPoster = new GenomPoster("mhprobotGoToConf", (char*)(&_mhpRobotGoTo), sizeof(MHP_ROBOT_GO_TO), 10);
+    _mhpPoster = new GenomPoster("mhprobotFuturPos", (char*)(&_mhpRobotGoTo), sizeof(MHP_ROBOTFUTURPOS_POSTER_STR), 10);
     _mhpPoster->setRefreshStatus(false);
 }
 
@@ -205,7 +205,7 @@ bool PosterReader::updateSparkEnv()
                         if (!strcmp(_sparkPosterStruct.robot[i].name.name , _mhpRobotGoTo.robot_name.name))
                         {
                             for(j=0; j<robotPt->nb_dof; j++) {
-                                robotPt->ROBOT_GOTO[j] = _mhpRobotGoTo.q[j];
+                                robotPt->ROBOT_GOTO[j] = _mhpRobotGoTo.robot_to_draw.q[j];
                             }
                         }
                     }

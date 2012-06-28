@@ -82,7 +82,7 @@ public:
     ATTENTIONAL_OUTPUT_STR _attentionalOutputPosterStruct;
 #endif
     GenomPoster * _mhpPoster;
-    MHP_ROBOT_GO_TO _mhpRobotGoTo;
+    MHP_ROBOTFUTURPOS_POSTER_STR _mhpRobotGoTo;
 double _dt;
     SM_TRAJ _smTraj;
 };

@@ -242,10 +242,15 @@ typedef struct POM_OBJECT_POS {
 // MHP
 //----------------------------------------------------
 
-typedef struct STRUCT_MHP_ROBOT_GO_TO {
+typedef struct MHP_ROBOTFUTURPOS_POSTER_STR {
+  MHP_ROBOT_TO_DRAW robot_to_draw;
+} MHP_ROBOTFUTURPOS_POSTER_STR;
+
+
+typedef struct STRUCT_MHP_ROBOT_TO_DRAW {
         GEN_STRING64 robot_name;
         double q[M3D_MAX_DOF];
-} MHP_ROBOT_GO_TO;
+} MHP_ROBOT_TO_DRAW;
 
 //----------------------------------------------------
 // VIAM
