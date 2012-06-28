@@ -27,6 +27,8 @@ using namespace std;
 
 PosterReader* ptrPosterReader=NULL;
 
+vector<vector<double> > _2dTraj;
+
 void draw_smtraj_tace()
 {
     if(ptrPosterReader)
@@ -202,10 +204,18 @@ bool PosterReader::updateSparkEnv()
                 {
                     if(_mhpPoster->getPosterStuct((char *)(&_mhpRobotGoTo)) != false)
                     {
-                        if (!strcmp(_sparkPosterStruct.robot[i].name.name , _mhpRobotGoTo.robot_name.name))
+                        if (!strcmp(_sparkPosterStruct.robot[i].name.name , _mhpRobotGoTo.robot_to_draw.robot_name.name))
                         {
                             for(j=0; j<robotPt->nb_dof; j++) {
                                 robotPt->ROBOT_GOTO[j] = _mhpRobotGoTo.robot_to_draw.q[j];
+                            }
+                            _2dTraj.clear();
+                            for(int m=0; m< _mhpRobotGoTo.robot_to_draw.traj.nbPts ; m++) {
+                                vector<double> v;
+                                v.push_back(_mhpRobotGoTo.robot_to_draw.traj.points[m].x);
+                                v.push_back(_mhpRobotGoTo.robot_to_draw.traj.points[m].y);
+                                v.push_back(_mhpRobotGoTo.robot_to_draw.traj.points[m].theta);
+                                _2dTraj.push_back(v);
                             }
                         }
                     }
@@ -474,14 +484,23 @@ void PosterReader::drawGoToPos()
             return;
         }
 
-        std::vector<SM_COND> cond;
 
         configPt q = p3d_alloc_config(robotPt);
+        configPt q_cur = robotPt->ROBOT_POS;
         configPt q_todraw = robotPt->ROBOT_GOTO;
         robotPt->draw_transparent = true;
 
         p3d_set_and_update_this_robot_conf(robotPt, q_todraw);
         g3d_draw_robot(robotPt->num, G3D_WIN, 0);
+
+        for (unsigned int i = 0; i < _2dTraj.size(); i++)
+        {
+            q_cur[6] = _2dTraj.at(i).at(0);
+            q_cur[7] = _2dTraj.at(i).at(1);
+            q_cur[11] = _2dTraj.at(i).at(2);
+            p3d_set_and_update_this_robot_conf(robotPt, q_cur);
+            g3d_draw_robot(robotPt->num, G3D_WIN, 0);
+        }
         robotPt->draw_transparent = false;
         p3d_destroy_config(robotPt, q);
     }

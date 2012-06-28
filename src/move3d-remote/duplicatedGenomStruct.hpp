@@ -12,6 +12,7 @@
 #define M3D_MAX_DOF 65
 #define SPARK_MAX_AGENT_NB 7
 #define SPARK_MAX_FREEFLYER_NB 30
+#define NB_MAX_TRAJ 100
 
 //typedef struct GEN_STRING64 {
 //  char name[64];
@@ -242,15 +243,28 @@ typedef struct POM_OBJECT_POS {
 // MHP
 //----------------------------------------------------
 
+typedef struct POSE {
+  double x;
+  double y;
+  double theta;
+} POSE;
+
+typedef struct TRAJ_POINTS {
+  int nbPts;
+  int dummy;
+  POSE points[NB_MAX_TRAJ];
+} TRAJ_POINTS;
+
+typedef struct STRUCT_MHP_ROBOT_TO_DRAW {
+  GEN_STRING64 robot_name;
+  double q[M3D_MAX_DOF];
+  TRAJ_POINTS traj;
+} MHP_ROBOT_TO_DRAW;
+
 typedef struct MHP_ROBOTFUTURPOS_POSTER_STR {
   MHP_ROBOT_TO_DRAW robot_to_draw;
 } MHP_ROBOTFUTURPOS_POSTER_STR;
 
-
-typedef struct STRUCT_MHP_ROBOT_TO_DRAW {
-        GEN_STRING64 robot_name;
-        double q[M3D_MAX_DOF];
-} MHP_ROBOT_TO_DRAW;
 
 //----------------------------------------------------
 // VIAM
