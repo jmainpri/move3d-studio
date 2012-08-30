@@ -86,6 +86,7 @@ void ReplanningWidget::init()
 #ifdef USE_QWT
   connect(m_ui->pushButtonPlotNoise, SIGNAL(clicked()), this, SLOT(plotNoisyTrajectories()));
   connect(m_ui->pushButtonPlotTraj, SIGNAL(clicked()), this, SLOT(plotMultiVectors()));
+  connect(m_ui->pushButtonPlotConvergence, SIGNAL(clicked()), this, SLOT(plotConvergence()));
   m_plot = new BasicPlotWindow();
 #endif
   
@@ -98,33 +99,29 @@ void ReplanningWidget::init()
   
   //---------------------------------------
   // Test the multi gaussian
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxTestMultiGauss, 
-                                     PlanParam::trajOptimTestMultiGauss );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxActiveJointsSetAtStart, PlanParam::setActiveDofs );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxTestMultiGauss, PlanParam::trajOptimTestMultiGauss );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxDrawTraj, Env::drawTraj );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxOptimizeCurrentTraj, PlanParam::withCurrentTraj );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxDoReplanning, PlanParam::doReplanning );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxMoveHuman, PlanParam::trajMoveHuman );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxRecomputeOtp, PlanParam::trajUseOtp );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxSelectedDuration, PlanParam::useSelectedDuration );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxTimeLimit, PlanParam::trajStompWithTimeLimit );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxMMatrix, PlanParam::trajStompMultiplyM );
   
-  // Draw the traj
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxDrawTraj, 
-                                      Env::drawTraj );
   
-  // Use the current trajectory
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxOptimizeCurrentTraj, 
-                                      PlanParam::withCurrentTraj );
-  
-  // Do the replanning sequences
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxDoReplanning,
-                                      PlanParam::doReplanning );
-  
-  // Use the selected duration
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxSelectedDuration,   
-                                      PlanParam::useSelectedDuration );
+  // Time Limit
+  new SpinBoxConnector(this,m_ui->doubleSpinBoxTimeLimit,PlanParam::trajStompTimeLimit);
   
   // Set the number of point to be optimized
-  SpinBoxConnector(this,m_ui->spinBoxNbPoints,PlanParam::nb_pointsOnTraj);
+  new SpinBoxConnector(this,m_ui->spinBoxNbPoints,PlanParam::nb_pointsOnTraj);
   
   // Set the duration of the optimized trajectory
-  SpinBoxConnector(this,m_ui->doubleSpinBoxDuration,PlanParam::trajDuration);
+  new SpinBoxConnector(this,m_ui->doubleSpinBoxDuration,PlanParam::trajDuration);
   
   // Set the standard deviation of the perturbations
-  SpinBoxConnector(this,m_ui->doubleSpinBoxStdDev,PlanParam::trajOptimStdDev);
+  new SpinBoxConnector(this,m_ui->doubleSpinBoxStdDev,PlanParam::trajOptimStdDev);
 }
 
 //---------------------------------------------------------
@@ -189,6 +186,40 @@ void ReplanningWidget::plotMultiVectors()
 	delete m_plot->getPlot();
 	m_plot->setPlot(myPlot);
 	m_plot->show();
+#endif
+}
+
+// static bool test_plot = true;
+void ReplanningWidget::plotConvergence()
+{
+#if defined(USE_QWT)
+  if (traj_optim_convergence.size() != 0 && traj_optim_convergence[0].size() != 0) 
+  {
+    MultiPlot* myPlot = new MultiPlot(m_plot);
+    myPlot->setGeometry(m_plot->getPlot()->geometry());
+    
+    vector<string> plotNames;
+    plotNames.push_back( "Costs" );
+    
+//    vector< vector<double> > to_plot = traj_optim_convergence;
+//    
+//    if ( test_plot )
+//    {
+//      to_plot[0].resize(100);
+//      test_plot = false;
+//    }
+//    else {
+//      test_plot = true;
+//    }
+    
+    myPlot->setData( plotNames , traj_optim_convergence );
+    myPlot->setTitle("Convergence of the traj optim");
+    myPlot->setAxisScale( QwtPlot::yLeft, 0, 8000 );
+    
+    delete m_plot->getPlot();
+    m_plot->setPlot(myPlot);
+    m_plot->show();
+  }
 #endif
 }
 

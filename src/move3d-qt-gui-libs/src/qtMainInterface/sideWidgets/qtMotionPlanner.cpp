@@ -196,12 +196,13 @@ void MotionPlanner::initOptim()
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxCostSpace2,				Env::isCostSpace );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxDebug2,						Env::debugCostOptim );
   
-//  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxExtractCurrentTraj,	PlanParam::rrtExtractShortestPath );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxExtractCurrentTraj,	PlanParam::rrtExtractShortestPath );
 
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxSaveTrajCost,			PlanParam::trajSaveCost );
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxPartialShortcut,	PlanParam::trajPartialShortcut );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxRecomputeCost,		PlanParam::trajCostRecompute );
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxCheckCollision,	  PlanParam::trajComputeCollision );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxNPoints,          PlanParam::trajNPoints );
   
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithTimeLimitSmoothing,		PlanParam::trajWithTimeLimit );
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithTimeLimitPlanning,		PlanParam::planWithTimeLimit );
@@ -209,6 +210,8 @@ void MotionPlanner::initOptim()
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithDescent,			PlanParam::withDescent );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithDeform,				PlanParam::withDeformation );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithShortCut,			PlanParam::withShortCut );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithStomp,        PlanParam::withStomp );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxStompWithTimeLimit,PlanParam::trajStompWithTimeLimit );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithGainLimit,		PlanParam::withGainLimit );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithIterLimit,		PlanParam::withMaxIteration );
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxShowExploration,	PlanParam::showExploration );
@@ -232,29 +235,22 @@ void MotionPlanner::initOptim()
 	m_ui->comboBoxTrajCostExtimation->setCurrentIndex( /*MECHANICAL_WORK*/ INTEGRAL );
 	setCostCriterium(MECHANICAL_WORK);
 	
-	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxNbRounds, m_ui->horizontalSliderNbRounds_2 , Env::nbCostOptimize );
-	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxNbMultiSmooth, m_ui->horizontalSliderNbMultiSmooth , Env::nbMultiSmooth );
-	
-	//QtShiva::SpinBoxSliderConnector* connector1 = 
-//	new QtShiva::SpinBoxSliderConnector(
-//																			this, m_ui->doubleSpinBoxMinDeformStep, m_ui->horizontalSliderMinDeformStep , PlanParam::MinStep );
-	
-	//QtShiva::SpinBoxSliderConnector* connector2 = 
-	new QtShiva::SpinBoxSliderConnector(
-																			this, m_ui->doubleSpinBoxTimeLimitSmoothing, m_ui->horizontalSliderTimeLimitSmoothing , PlanParam::timeLimitSmoothing );
-  new QtShiva::SpinBoxSliderConnector(
-																			this, m_ui->doubleSpinBoxTimeLimitPlanning, m_ui->horizontalSliderTimeLimitPlanning , PlanParam::timeLimitPlanning );
+	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxNbRounds, m_ui->horizontalSliderNbRounds , Env::nbCostOptimize );	
+	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxTimeLimitSmoothing, m_ui->horizontalSliderTimeLimitSmoothing , PlanParam::timeLimitSmoothing );
+  new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxTimeLimitPlanning, m_ui->horizontalSliderTimeLimitPlanning , PlanParam::timeLimitPlanning );
 	
 	connect(m_ui->pushButtonRunMultiSmooth,SIGNAL(clicked()),this,SLOT(runMultiSmooth()));
-  
+  connect(m_ui->pushButtonSimpleMultiRRT,SIGNAL(clicked()),this,SLOT(runMultiRRT()));
 	
 	// ------------------------------------------------------------
 	// ------------------------------------------------------------
 	
-	new QtShiva::SpinBoxSliderConnector(
-																			this, m_ui->doubleSpinBoxMaxDeformStep, m_ui->horizontalSliderMaxDeformStep , PlanParam::MaxFactor );
+	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxMaxDeformStep, m_ui->horizontalSliderMaxDeformStep , PlanParam::MaxFactor );
   
   connect(m_ui->spinBoxIthNodeInTraj, SIGNAL(valueChanged(int)), this, SLOT(getIthNodeInBestTraj()), Qt::QueuedConnection);
+
+  QtShiva::SpinBoxConnector(this,m_ui->doubleSpinBoxStompTimeLimit,PlanParam::trajStompTimeLimit);
+  QtShiva::SpinBoxConnector(this,m_ui->spinBoxNbMultiSmooth,Env::nbMultiSmooth);
 	
 	//connect(connector,SIGNAL(valueChanged(double)),PlanEnv->getObject(PlanParam::timeLimitSmoothing),SLOT(set(double)));
 	//connect(PlanEnv->getObject(PlanParam::timeLimitSmoothing),SIGNAL(valueChanged(double)),this,SLOT(test(double)));
@@ -392,13 +388,7 @@ void MotionPlanner::computeGrid()
 
 void MotionPlanner::runMultiSmooth()
 {
-#ifdef WITH_XFORMS
-	std::string str = "MultiSmooth";
-	write(qt_fl_pipe[1],str.c_str(),str.length()+1);
-#else
-	cout << "Not implemented" << endl;
-#endif
-	
+  emit selectedPlanner("MultiSmooth");
 }
 
 /**
@@ -443,9 +433,9 @@ Node* MotionPlanner::getIthNodeInBestTraj()
   confPtr_t q_init = global_Move3DPlanner->getInitConf();
   confPtr_t q_goal = global_Move3DPlanner->getGoalConf();
   
-  vector<Node*> nodes = API_activeGraph->extractBestNodePathSoFar( q_init, q_goal );
+  pair<bool,vector<Node*> > nodes = API_activeGraph->extractBestNodePathSoFar( q_init, q_goal );
   
-  if ( nodes.empty() ) 
+  if ( nodes.second.empty() ) 
   {
     cout << "nodes is empty!!!" << endl;
     return NULL;
@@ -455,12 +445,12 @@ Node* MotionPlanner::getIthNodeInBestTraj()
   
   //		cout << "removing node nb : " << ith << endl;
   //		cout << "graph size nb : " << nodes.size() << endl;
-  if ( (ith >= 0) && ( ((int)nodes.size()) > ith) ) 
+  if ( (ith >= 0) && ( ((int)nodes.second.size()) > ith) ) 
   {
     Robot* rob = API_activeGraph->getRobot();
-    rob->setAndUpdate(*nodes[ith]->getConfiguration());
+    rob->setAndUpdate(*nodes.second[ith]->getConfiguration());
     m_mainWindow->drawAllWinActive();
-    return nodes[ith]; 
+    return nodes.second[ith]; 
   }
   else{
     cout << "out of bounds" << endl;
@@ -611,6 +601,10 @@ void MultiThread::run()
 	cout << "Ends Multi Thread" << endl;
 }
 //-----------------------------------------------
+void MotionPlanner::runMultiRRT()
+{
+  emit selectedPlanner("MultiRRT"); 
+}
 
 void MotionPlanner::runAllRRT()
 {

@@ -32,7 +32,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="usesScrollButtons">
       <bool>true</bool>
@@ -80,7 +80,7 @@
             <x>0</x>
             <y>0</y>
             <width>395</width>
-            <height>1212</height>
+            <height>1246</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -358,31 +358,38 @@
               <string>CSpace Distance</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_22">
-              <item row="0" column="0">
+              <item row="1" column="0">
                <widget class="QCheckBox" name="checkBoxIsWeightedRot">
                 <property name="text">
                  <string>W-Rotation</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
+              <item row="2" column="0">
                <widget class="QLabel" name="label_11">
                 <property name="text">
                  <string>Weigth</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
+              <item row="2" column="1">
                <widget class="QDoubleSpinBox" name="doubleSpinBoxWeightedRot">
                 <property name="maximum">
                  <double>20.000000000000000</double>
                 </property>
                </widget>
               </item>
-              <item row="1" column="2">
+              <item row="2" column="2">
                <widget class="QSlider" name="horizontalSliderWeightedRot">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QPushButton" name="pushButtonVirtualJointBounds">
+                <property name="text">
+                 <string>Set Virtual Joint Bounds</string>
                 </property>
                </widget>
               </item>

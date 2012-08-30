@@ -68,7 +68,10 @@ void ConstraintsWidget::createCntrts()
     p3d_cntrt* ct = m_currentRobot->cntrt_manager->cntrts[i];
     
     std::string cntName = ct->namecntrt;
-    std::string jntName = ct->pasjnts[0]->name;
+    std::string jntName = "";
+    if( ct->pasjnts[0] != NULL ) {
+      jntName = ct->pasjnts[0]->name;
+    }
     
     std::string str =  cntName + " ( " + jntName + " )";
     

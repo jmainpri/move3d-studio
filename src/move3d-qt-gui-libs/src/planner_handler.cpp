@@ -105,29 +105,33 @@ void qt_test1()
 {
   //HRICS::generateGraspConfigurations();
   //string robotName("PR2_ROBOT");
-  Node* node = global_w->Ui()->tabMotionPlanner->getIthNodeInBestTraj();
-  
-  double t=0.0;
-  ChronoTimeOfDayOn();
-  
-  dynamic_cast<StarRRT*>(global_Move3DPlanner)->pruneTreeFromNode( node );
-  
-  ChronoTimeOfDayTimes( &t );
-  ChronoTimeOfDayOff();
-  
-  cout << "Time to erase graph : " << t << endl;
+//  Node* node = global_w->Ui()->tabMotionPlanner->getIthNodeInBestTraj();
+//  
+//  double t=0.0;
+//  ChronoTimeOfDayOn();
+//  
+//  dynamic_cast<StarRRT*>(global_Move3DPlanner)->pruneTreeFromNode( node );
+//  
+//  ChronoTimeOfDayTimes( &t );
+//  ChronoTimeOfDayOff();
+//  
+//  cout << "Time to erase graph : " << t << endl;
+  HRICS::printHumanConfig();
 }
 
 void qt_test2()
 {
+  cout << "Plan param 1 : " << PlanEnv->getBool(PlanParam::starRRT) << endl;
+  cout << "Plan param 2 : " << PlanEnv->getBool(PlanParam::starRewire) << endl;
+  
 //  p3d_set_goal_solution_function( manipulation_get_free_holding_config );
 //  HRICS::setSimulationRobotsTransparent();
    //HRICS_humanCostMaps->loadAgentGrids();
   
-  if (HRICS::initShelfScenario()) 
-  {
-    HRICS::execShelfScenario();
-  }
+//  if (HRICS::initShelfScenario()) 
+//  {
+//    HRICS::execShelfScenario();
+//  }
 }
 
 static bool init_generator=false;
@@ -199,6 +203,11 @@ void qt_test3()
 //  else {
 //    cout << "Could not find a robot OTP configuration" << endl;
 //  }
+}
+
+void qt_init_after_params()
+{
+  set_robot_active_joints();
 }
 
 void qt_resetGraph()
@@ -339,6 +348,12 @@ void qt_runPRM()
 	}
 	
 	ENV.setBool(Env::isRunning,false);
+}
+
+void qt_runMultiRRT()
+{
+  MultiRun pool;
+  pool.runMutliRRTSimple();
 }
 
 void qt_runMultiSmooth()
@@ -754,11 +769,28 @@ void qt_readTraj()
 	cout << "Apres lecture de la trajectoire" << endl;
 }
 
+//------------------------------------------------------------------
+//------------------------------------------------------------------
 void qt_recompute_agent_grid_cost()
 {
   // If a costspace exists re compute all cell cost
-  if( HRICS_humanCostMaps != NULL )  {
+  if( HRICS_humanCostMaps != NULL )  
+  {
     HRICS_humanCostMaps->computeAllCellCost();
+  }
+  else {
+    cout << "HRICS_humanCostMaps is not initialized!!!" << endl;
+  }
+}
+
+void qt_save_agent_grid()
+{
+  if( HRICS_humanCostMaps != NULL ) 
+  {
+    HRICS_humanCostMaps->saveAgentGrids();
+  }
+  else {
+    cout << "HRICS_humanCostMaps is not initialized!!!" << endl;
   }
 }
 
@@ -782,14 +814,8 @@ void qt_load_agent_grid()
     HRICS_humanCostMaps->loadAgentGrids( filename );
   }
 }
-
-void qt_save_agent_grid()
-{
-  if( HRICS_humanCostMaps != NULL ) {
-    HRICS_humanCostMaps->saveAgentGrids();
-  }
-}
-
+//------------------------------------------------------------------
+//------------------------------------------------------------------
 void qt_load_HRICS_Grid(std::string docname)
 {
 #ifdef HRI_COSTSPACE
@@ -838,7 +864,7 @@ void qt_add_traj(char* name,int id,p3d_rob* rob,p3d_traj* traj)
 {
 	std::ostringstream oss;
 	oss << name << " (" << id - 1 << " )";
-  cout << "traj = " << traj << endl;
+  //cout << "traj = " << traj << endl;
   
 #ifdef QT_GL
   if(global_manipPlanTest)
@@ -937,6 +963,11 @@ void PlannerHandler::startPlanner(QString plannerName)
     {
       std::cout << "Planning thread : starting PRM." << std::endl;
       qt_runPRM();
+    }
+    else if(plannerName == "MultiRRT")
+    {
+      std::cout << "Planning thread : starting MultiRRT." << std::endl;
+      qt_runMultiRRT();
     }
     else if(plannerName == "MultiSmooth")
     {

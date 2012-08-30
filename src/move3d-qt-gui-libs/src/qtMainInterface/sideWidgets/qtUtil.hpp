@@ -38,7 +38,6 @@ public:
 	
 	void initGreedy();
 	void initRRTthreshold();
-	void initRRTstar();
 	void initDistanceAndLocalpath();
 	
 public slots:

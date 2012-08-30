@@ -20,7 +20,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidgetUtil">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>
@@ -171,22 +171,6 @@
               </spacer>
              </item>
             </layout>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBoxRRTstar">
-         <property name="title">
-          <string>RRT star</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_4">
-          <item>
-           <widget class="QCheckBox" name="checkBoxRRTstar">
-            <property name="text">
-             <string>RRT*</string>
-            </property>
            </widget>
           </item>
          </layout>

@@ -27,6 +27,8 @@
 
 #include "API/Trajectory/trajectory.hpp" 
 
+#include "HRI_costspace/HRICS_Miscellaneous.hpp"
+
 #include <QMessageBox>
 #include <QString>
 
@@ -145,6 +147,8 @@ void RobotWidget::initModel()
     new QtShiva::SpinBoxSliderConnector(
                 this, m_ui->doubleSpinBoxWeightedRot, m_ui->horizontalSliderWeightedRot , Env::RotationWeight );
 
+    connect(m_ui->pushButtonVirtualJointBounds,SIGNAL(clicked()),	this,SLOT(SetBounds()));
+  
     connect(m_ui->pushButtonGrabObject,SIGNAL(clicked()),					this,SLOT(GrabObject()));
     connect(m_ui->pushButtonReleaseObject,SIGNAL(clicked()),			this,SLOT(ReleaseObject()));
 
@@ -329,7 +333,7 @@ void RobotWidget::currentObjectChange(int i)
 {
     if((m_FreeFlyers.size() > 0) && (i != 0))
     {
-        //        cout << "Env::ObjectToCarry  is "<< m_FreeFlyers[i-1] << endl;
+        //cout << "Env::ObjectToCarry  is "<< m_FreeFlyers[i-1] << endl;
         ENV.setString(Env::ObjectToCarry,m_FreeFlyers[i-1]);
     }
 }
@@ -375,68 +379,86 @@ void RobotWidget::SetObjectToCarry()
 
 void RobotWidget::GrabObject()
 {
-
-#if defined( LIGHT_PLANNER ) && defined( PQP )
-    p3d_rob *robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
-    cout << "Robot = " << robotPt->name <<  endl;
-    //p3d_set_object_to_carry(robotPt,ENV.getString(Env::ObjectToCarry).toStdString().c_str());
-    p3d_grab_object2(robotPt,0);
-
-    //    if(m_FreeFlyers.size() > 0)
-    //    {
-    //        p3d_rob *robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
-    //		//        p3d_rob *carriedObject;
-    //
-    //        p3d_set_object_to_carry(robotPt,ENV.getString(Env::ObjectToCarry).toStdString().c_str());
-    //		//        p3d_matrix4 saved;
-    //		//        p3d_mat4Copy(robotPt->curObjectJnt->abs_pos,saved);
-    //        p3d_mat4Copy(robotPt->carriedObject->joints[1]->abs_pos,robotPt->curObjectJnt->abs_pos);
-    //        p3d_grab_object(robotPt,0);
-    //		//        p3d_mat4Copy(saved,robotPt->curObjectJnt->abs_pos);
-    //		//        configPt q = p3d_get_robot_config(robotPt);
-    //
-    //		//        robotPt->ROBOT_POS = q;
-    //		//        p3d_set_and_update_robot_conf(q);
-    //        p3d_mat4Print(robotPt->ccCntrts[0]->Tatt,"curObject Grab");
-    //    }
-#endif
+  if( GLOBAL_AGENTS == NULL ) 
+  {
+    GLOBAL_AGENTS = hri_create_agents();
+  }
+  
+  Robot* robot = global_Project->getActiveScene()->getRobotByNameContaining("_ROBOT");
+  
+  int armId = 0;
+  string robot_name = robot->getName();
+  string object_name = ENV.getString(Env::ObjectToCarry).toStdString();
+  
+  HRI_AGENT* agent = hri_get_agent_by_name( GLOBAL_AGENTS, robot_name.c_str() );
+  
+  if( agent ) {
+    hri_agent_is_grasping_obj( agent, true , object_name.c_str() , armId );
+  }
+  else {
+    cout << "Agent not found!!!" << endl;
+  }
 }
 
 void RobotWidget::ReleaseObject()
 {
-    p3d_rob *robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
-    cout << "Robot = " << robotPt->name <<  endl;
-    /*
-  p3d_release_object(robotPt);
-  deactivateCcCntrts(robotPt, -1);
-  //	configPt qi = p3d_alloc_config(robotPt);
-  //	p3d_copy_config_into(robotPt, _robotPt->ROBOT_POS, &qi);
-  x
-  //p3d_update_virtual_object_config_for_pa10_6_arm_ik_constraint(_robotPt, qi);
-  double tx, ty, tz, ax, ay, az;
-  p3d_mat4ExtractPosReverseOrder2(robotPt->CurObjtJnt->abs_pos, &tx, &ty, &tz, &ax, &ay, &az);
+  if( GLOBAL_AGENTS == NULL ) 
+  {
+    GLOBAL_AGENTS = hri_create_agents();
+  }
+  
+  Robot* robot = global_Project->getActiveScene()->getRobotByNameContaining("_ROBOT");
+  
+  int armId = 0;
+  string robot_name = robot->getName();
+  HRI_AGENT* agent = hri_get_agent_by_name( GLOBAL_AGENTS, robot_name.c_str() );
+  
+  if( agent ) {
+    hri_agent_is_grasping_obj( agent, false, NULL, armId );
+  }
+  else {
+    cout << "Agent not found!!!" << endl;
+  }
+}
 
-  //	p3d_set_and_update_this_robot_conf(robotPt, qi);
-  //	p3d_destroy_config(_robotPt, qi);
-
-  qi = p3d_get_robot_config(robotPt);
-  p3d_copy_config_into(robotPt, qi, &_robotPt->ROBOT_POS);
-  p3d_destroy_config(_robotPt, qi);
-  m_ui->mainWindow->drawAllWindowActive();
-  */
-
-#if defined ( LIGHT_PLANNER ) && defined( PQP )
-    //    m_ui->comboBoxGrabObject-
-    //    p3d_rob *robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
-    p3d_release_object(robotPt);
-    //    m_ui->comboBoxGrabObject->setCurrentIndex(0);
-#endif
-};
+void RobotWidget::SetBounds()
+{
+  Robot* robot = global_Project->getActiveScene()->getRobotByNameContaining("_ROBOT");
+  
+  confPtr_t q = robot->getCurrentPos();
+  
+  double dist = 3.5; // 4.5 metres 
+  
+  double limits[6];
+  
+  limits[0] = (*q)[6] - dist;
+  limits[1] = (*q)[6] + dist;
+  limits[2] = (*q)[7] - dist;
+  limits[3] = (*q)[7] + dist;
+  limits[4] = 0;
+  limits[5] = 2.0;
+    
+  for ( int j=2; j<int(robot->getNumberOfJoints()); j++ )
+  {
+    if( robot->getJoint(j)->getJointStruct()->type == P3D_FREEFLYER )
+    {
+      cout << "set joint : " << robot->getJoint(j)->getName() << " bounds" << endl;
+      
+      for ( int k=0; k<3; k++ )
+      {
+        p3d_jnt_set_dof_bounds_deg (      robot->getRobotStruct()->joints[j], k, limits[2*k], limits[2*k+1] );
+        p3d_jnt_set_dof_rand_bounds_deg ( robot->getRobotStruct()->joints[j], k, limits[2*k], limits[2*k+1] );
+      }
+    }
+  }
+}
 
 void RobotWidget::printCurrentPos()
 {
-    Robot* currRobot = global_Project->getActiveScene()->getActiveRobot();
-    currRobot->getCurrentPos()->print(true);
+  Robot* currRobot = global_Project->getActiveScene()->getActiveRobot();
+  currRobot->getCurrentPos()->print(true);
+  
+  HRICS::printPr2Config();
 }
 
 #ifdef LIGHT_PLANNER
@@ -1148,15 +1170,34 @@ void RobotWidget::callToManipulationPlanner()
     }
 
     m_mainWindow->isPlanning();
-    global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
-    emit(selectedPlanner(QString("Manipulation")));
+  global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
+  emit(selectedPlanner(QString("Manipulation")));
 }
 
 void RobotWidget::armFree()
 {
-    cout << "Manipulation : free" << endl;
-    Manip::Phase = ARM_FREE;
-    callToManipulationPlanner();
+  cout << "Manipulation : free" << endl;
+  
+  double center[2];
+
+  center[0] = ((*qInit)[6] + (*qGoal)[6]) / 2;
+  center[1] = ((*qInit)[7] + (*qGoal)[7]) / 2;
+  
+  double dist = sqrt( pow( (*qInit)[6]-(*qGoal)[6] ,2)  + pow( (*qInit)[7]-(*qGoal)[7], 2 ));
+  
+  double limits[6];
+  
+  limits[0] = center[0] - 2*dist;
+  limits[1] = center[0] + 2*dist;
+  limits[2] = center[1] - 2*dist;
+  limits[3] = center[1] + 2*dist;
+  limits[4] = 0;
+  limits[5] = 0;
+  
+  p3d_change_ff_translation_bounds( qInit->getRobot()->getRobotStruct(), limits );
+  
+  Manip::Phase = ARM_FREE;
+  callToManipulationPlanner();
 }
 
 void RobotWidget::armPickGoto()

@@ -25,7 +25,6 @@ m_ui(new Ui::UtilWidget)
 	m_ui->setupUi(this);
 	
 	initRRTthreshold();
-	initRRTstar();
 	initGreedy();
 	initDistanceAndLocalpath();
 	
@@ -155,18 +154,9 @@ void UtilWidget::runThresholdPlanner()
 #endif
 }
 
-//---------------------------------------------------------------------
-// RRT*
-//---------------------------------------------------------------------
-void UtilWidget::initRRTstar()
-{
-	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxRRTstar,	Env::costStarRRT);
-
-}
-
 
 //---------------------------------------------------------------------
-// RRT*
+// Random LPs
 //---------------------------------------------------------------------
 void UtilWidget::initDistanceAndLocalpath()
 {

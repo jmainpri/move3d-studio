@@ -73,6 +73,7 @@ private slots:
     // Grab Object ------------------------
     void GrabObject();
     void ReleaseObject();
+    void SetBounds();
     void currentObjectChange(int i);
     void SetObjectToCarry();
 

@@ -98,6 +98,8 @@ void HricsWidget::initHRI()
 	connect(m_ui->checkBoxDrawGrid,SIGNAL(clicked()),m_mainWindow,SLOT(drawAllWinActive()));
 	connect(m_ui->checkBoxEntireGrid,SIGNAL(clicked()),m_mainWindow,SLOT(drawAllWinActive()));
   
+  connect(m_ui->pushButtonInitHRICS,SIGNAL(clicked()),this,SLOT(make3DHriGrid()));
+  
   connect(m_ui->pushButtonInitGrids,SIGNAL(clicked()),this,SLOT(initGrids()));
   connect(m_ui->pushButtonDeleteGrids,SIGNAL(clicked()),this,SLOT(deleteGrids()));
   connect(m_ui->pushButtonComputeAllCellCost,SIGNAL(clicked()),this,SLOT(computeAllCellCost()));
@@ -346,78 +348,8 @@ void HricsWidget::setWhichTestSlot(int test)
 //-------------------------------------------------------------
 void HricsWidget::make3DHriGrid()
 {
-  Robot* Human = global_Project->getActiveScene()->getRobotByNameContaining("HUMAN");
-  
-  shared_ptr<Configuration> q = Human->getCurrentPos();
-  
-	HRICS_MotionPL = new HRICS::Workspace;
-	dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->initGrid();
-	dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->initDistance();
-	dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->initVisibility();
-	dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->initNatural();
-  dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->initAgentGrids(ENV.getDouble(Env::CellSize));
-  
-  // Protective bubble
-  QtShiva::SpinBoxSliderConnector* connectorZoneSize  = new QtShiva::SpinBoxSliderConnector(
-                                                                                            this, m_ui->doubleSpinBoxZoneSize, m_ui->horizontalSliderZoneSize ,Env::zone_size );
-  connect(connectorZoneSize,SIGNAL(valueChanged(double)),this,SLOT(zoneSizeChanged()),Qt::DirectConnection);
-	
-	/*if (PointsToDraw != NULL) 
-	 {
-	 delete PointsToDraw;
-	 }*/
-	
-	PointsToDraw = new PointCloud;
-	
-	//m_ui->HRICSPlanner->setDisabled(false);
-	ENV.setBool(Env::HRIPlannerWS,true);
-	//    ENV.setBool(Env::biDir,false);
-	ENV.setDouble(Env::zone_size,0.5);
-	HRICS_activeDist = HRICS_MotionPL->getDistance();
-	
-  //API_activeGrid = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getGrid();
-	//API_activeGrid = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getGrid();
-	//    enableHriSpace();
-	
-	m_ui->pushButtonMakeGrid->setDisabled(true);
-	m_ui->pushButtonDeleteGrid->setDisabled(false);
-	
-	ENV.setBool(Env::enableHri,true);
-	ENV.setBool(Env::isCostSpace,true);
-	
-	if( ENV.getBool(Env::HRIAutoLoadGrid) )
-	{
-		// Reads a traj from a file
-    //		string filename("/Users/jmainpri/workspace/BioMove3DDemos/CostHriFunction/JidoTrajectory/JidoK.traj");
-    //		qt_fileName = filename.c_str();
-    //		qt_readTraj();
-		
-    QString fileName("/statFiles/Cost3DGrids/Cost3DGrid2.grid");
-    QString home( getenv("HOME_MOVE3D") );
-    fileName = home + fileName;
-		// Reads the grid from XML and sets it ti the HRICS_MotionPL
-		qt_load_HRICS_Grid(fileName.toStdString());
-		
-    //		m_ui->HRICSNatural->setDisabled(false);
-    //		m_ui->pushButtonNewNaturalCostSpace->setDisabled(true);
-    //		m_ui->activeGridsBox->addItem(dynamic_cast<HRICS::NaturalGrid*>(API_activeGrid)->getName().c_str());
-    
-//    api_store_new_grid( dynamic_cast<HRICS::NaturalGrid*>(API_activeGrid) );
-//		HRICS_activeNatu->setGrid(dynamic_cast<HRICS::NaturalGrid*>(API_activeGrid));
-//		ENV.setBool(Env::drawGrid,false);
-	}
-	
-//	ENV.setInt(Env::hriCostType,HRICS_Combine);
-  m_mainWindow->drawAllWinActive();
-  
-  Human->setAndUpdate( *q );
-  //        m_mainWindow->Ui()->tabCost->initCostFunctions();
-	m_mainWindow->Ui()->tabCost->setCostFunction("costHRI");
-  m_mainWindow->drawAllWinActive();
-  
-  cout << "new HRI Workspace" << endl;
-  cout << "set Agent Grid as API_activeGrid" << endl;
-  API_activeGrid = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getAgentGrids()[0];
+  HRICS_init();
+  m_mainWindow->Ui()->tabCost->initCostFunctions();
 }
 
 void HricsWidget::delete3DHriGrid()
@@ -432,7 +364,7 @@ void HricsWidget::delete3DHriGrid()
 	
 	m_mainWindow->drawAllWinActive();
 	
-	m_ui->pushButtonMakeGrid->setDisabled(false);
+	m_ui->pushButtonInitHRICS->setDisabled(false);
 	m_ui->pushButtonDeleteGrid->setDisabled(true);
 }
 
@@ -443,6 +375,10 @@ void HricsWidget::initGrids()
 {
   // Get the HRICS workspace
   HRICS::Workspace* ws = dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL);
+  
+  if( ws == NULL ) {
+    cout << "HRICS::Workspace is not initialized" << endl;
+  }
   
   // If a costspace allready exists delete it!
   if(HRICS_humanCostMaps!=NULL)

@@ -23,7 +23,6 @@
 #include <sys/time.h>
 #include <algorithm>
 
-
 using namespace std;
 using namespace tr1;
 
@@ -87,6 +86,61 @@ void MultiRun::loadGraph()
 	sprintf(file,"../BioMove3DDemos/CostHriFunction/SCENARIOS/JidoEasy2.graph");
 	cout << "Loading graph to : " << file << endl;
 	p3d_readGraph(file, DEFAULTGRAPH);
+}
+
+
+/**
+ * Run multiple Smooth runs
+ */
+void MultiRun::runMutliRRTSimple()
+{	
+	mNames.clear();
+	mVectDoubles.clear();
+	mTime.clear();
+	
+  mNames.push_back("Succeeded");
+	mNames.push_back("Time");
+	mNames.push_back("Cost");
+  mNames.push_back("NbOfNodes");
+  mNames.push_back("NbOfExtensions");
+	
+	mVectDoubles.resize(5);
+	
+  Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+  
+  confPtr_t q_init = robot->getInitialPosition();
+  confPtr_t q_goal = robot->getGoTo();
+  
+  RRTStatistics stat;
+  
+	for(int i =0;i<ENV.getInt(Env::nbMultiRun);i++)
+	{
+		cout << "Run Nb"  << i << " = " << endl;
+    
+    p3d_planner_functions_set_run_id( i );
+    p3d_planner_function( robot->getRobotStruct(), q_init->getConfigStruct(), q_goal->getConfigStruct() );
+    
+    p3d_get_rrt_statistics( stat );
+		
+		mTime.push_back( stat.time );
+		mVectDoubles[0].push_back( stat.succeeded );
+		mVectDoubles[1].push_back( stat.time );
+    mVectDoubles[2].push_back( stat.cost );
+    mVectDoubles[3].push_back( stat.nbNodes );
+		mVectDoubles[4].push_back( stat.nbExpansions );
+    
+		g3d_draw_allwin_active();
+		
+		if(ENV.getBool(Env::StopMultiRun))
+		{
+			break;
+		}
+	}
+	
+	saveVectorToFile(0);
+	
+	cout << " End of Tests ----------------------" << endl;
+	return;
 }
 
 /**
@@ -495,6 +549,27 @@ void MultiRun::loadTraj()
 	}
 }
 
+bool MultiRun::runSingleRRT()
+{
+  bool result = false;
+  
+  timeval tim;
+  gettimeofday(&tim, NULL);
+  double t_init = tim.tv_sec+(tim.tv_usec/1000000.0);
+  
+  result = p3d_run_rrt(mRobot->getRobotStruct());
+  
+  gettimeofday(&tim, NULL);
+  double dt = tim.tv_sec+(tim.tv_usec/1000000.0) - t_init;
+  cout << "RRT computed in : " << dt << " sec" << endl;
+  
+  if( !ENV.getBool(Env::drawDisabled) ) {
+    g3d_draw_allwin_active();
+  }
+  
+  return result;
+}
+
 
 /**
  * Run multiple Smooth runs
@@ -516,17 +591,30 @@ void MultiRun::runMutliSmooth()
 	
   mConvergence.resize( nb_runs );
   
-  Robot* robot = global_Project->getActiveScene()->getRobotByNameContaining("PR2_ROBOT");
+  mRobot = global_Project->getActiveScene()->getRobotByNameContaining("PR2_ROBOT");
+  
+  if( mRobot == NULL ) {
+    cout << "Change the robot name int " << __func__ << endl;
+    return;
+  }
+  
+  ENV.setBool(Env::isRunning,true);
   
 	for(int i =0;i<nb_runs;i++)
 	{
-		loadTraj();
+		//loadTraj();
+    ENV.setBool(Env::isCostSpace,false);
+    
+    if( !runSingleRRT() ) {
+      continue;
+    }
 		
-		API::CostOptimization optimTrj( robot, robot->getTrajStruct() );
+		API::CostOptimization optimTrj( mRobot, mRobot->getTrajStruct() );
 		
 		cout << "Run Nb"  << i << " = " << endl;
 		
-		ENV.setBool(Env::isRunning,true);
+    
+    ENV.setBool(Env::isCostSpace,true);
     
     timeval tim;
     gettimeofday(&tim, NULL);
@@ -562,14 +650,12 @@ void MultiRun::runMutliSmooth()
       
       traj_optim_runStomp();
     }
-            
-    computeConvergence( i, time_limit );
     
 		gettimeofday(&tim, NULL);
     time = tim.tv_sec+(tim.tv_usec/1000000.0) - t_init;
     cout << "Time optim : " << time << endl;
     
-		ENV.setBool(Env::isRunning,false);
+    computeConvergence( i, time_limit );
 		
 		mTime.push_back( time );
 		mVectDoubles[0].push_back( time );
@@ -587,6 +673,8 @@ void MultiRun::runMutliSmooth()
 	
   computeAverageConvergenceAndSave();
 	saveVectorToFile(0);
+  
+  ENV.setBool(Env::isRunning,false);
 	
 	cout << " End of Tests ----------------------" << endl;
 	return;

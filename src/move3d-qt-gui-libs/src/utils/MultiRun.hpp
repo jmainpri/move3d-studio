@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+#include "API/Device/robot.hpp"
+
 /**
  * Enables mutliple runs
  */
@@ -12,6 +14,7 @@ class MultiRun
 public:
   MultiRun();
   
+  void runMutliRRTSimple();
   void runMutliRRT();
   void runMutliGreedy();
   void runMutliSmooth();
@@ -21,6 +24,7 @@ private:
   void saveGraph(int i);
   void loadGraph();
   void loadTraj();
+  bool runSingleRRT();
   
   void computeConvergence(int run_id, double time);
   void computeAverageConvergenceAndSave();
@@ -29,6 +33,8 @@ private:
   std::vector< std::vector<double> >       mVectDoubles;
   std::vector< double >                    mTime;
   std::vector< std::vector<double> >       mConvergence;
+  
+  Robot* mRobot;
 };
 
 #endif // MULTIRUNS_HPP

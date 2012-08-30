@@ -74,6 +74,7 @@ private slots:
 	void printAllContext();
 	void resetContext();
 	void setToSelected();
+  void runMultiRRT();
 	void runAllRRT();
 	void runAllGreedy();
 	void showHistoWindow();

@@ -53,6 +53,7 @@ private slots:
   void executeSimpleSimu();
   void plotNoisyTrajectories();
   void plotMultiVectors();
+  void plotConvergence();
   void createSraightLine();
   void optimizeCurrentTrajectory();
   

@@ -164,6 +164,8 @@ void Main_threads::initInterface()
     }
   }
 	
+  qt_init_after_params();
+  
   w->refreshConstraintedDoFs();
  	w->setGeometry( g_window );
 	w->show();
@@ -270,7 +272,7 @@ int Main_threads::run(int argc, char** argv)
     global_PlanningThread->start();
     
     QMetaObject::invokeMethod(global_plannerHandler,"init",Qt::BlockingQueuedConnection);
-    if( move3d_studio_load_settings) loadSettings();
+    if( move3d_studio_load_settings ) loadSettings();
     
     // Creates the wrapper to the project, be carefull to initialize in the right thread
     global_Project = new Project(new Scene(XYZ_ENV));

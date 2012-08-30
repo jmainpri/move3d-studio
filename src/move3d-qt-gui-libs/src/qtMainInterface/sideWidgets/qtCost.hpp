@@ -17,6 +17,7 @@
 
 #include "qtDistanceField.hpp"
 #include "qtReplanning.hpp"
+#include "qtRRTStar.hpp"
 
 #ifdef USE_QWT
 #include "qtPlot/basicPlotWindow.hpp"
@@ -93,6 +94,8 @@ private:
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
   ReplanningWidget* m_tabReplan;
 #endif
+  
+  RRTStarWidget*   m_tabRRTStar;
 	
 };
 

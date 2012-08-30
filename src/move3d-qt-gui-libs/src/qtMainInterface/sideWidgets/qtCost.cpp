@@ -60,6 +60,7 @@ QWidget(parent),
 m_ui(new Ui::CostWidget)
 {
 	m_ui->setupUi(this);
+  
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
 // Initialize the replanning tab
   m_tabReplan = new ReplanningWidget(m_ui->Replanning);
@@ -80,6 +81,10 @@ m_ui(new Ui::CostWidget)
   tabNatural->setObjectName(QString::fromUtf8("tabNatural"));
   m_ui->naturalLayout->addWidget(tabNatural);
 #endif
+  
+  m_tabRRTStar = new RRTStarWidget(m_ui->RRTStar);
+  m_tabRRTStar->setObjectName(QString::fromUtf8("tabRRTStar"));
+  m_ui->starLayout->addWidget(m_tabRRTStar);
 }
 
 CostWidget::~CostWidget()
@@ -144,6 +149,9 @@ void CostWidget::initCost()
 	new QtShiva::SpinBoxSliderConnector(
 																			this, m_ui->doubleSpinBoxLengthWeight, m_ui->horizontalSliderLengthWeight , Env::KlengthWeight );
 	
+  new QtShiva::SpinBoxSliderConnector(
+																			this, m_ui->doubleSpinBoxResolution, m_ui->horizontalSliderResolution , PlanParam::costResolution );
+  
 	new QtShiva::SpinBoxSliderConnector(
 																			this, m_ui->doubleSpinBoxMinConnectGap, m_ui->horizontalSliderMinConnectGap , Env::minimalFinalExpansionGap );
 	
@@ -386,7 +394,13 @@ void CostWidget::showTrajCost()
 	
   // Print all costs
   traj.costDeltaAlongTraj();
-	
+  
+  int nb_points = PlanEnv->getInt( PlanParam::nb_pointsOnTraj );
+  double cost_n_points = traj.costNPoints( nb_points );
+	cout << "Cost for ( nb points : " << nb_points << " ) : " << cost_n_points << endl;
+  
+  cout << "Is trajectory valid : " << traj.isValid() << endl;
+  
 	if (global_costSpace) 
   {
     for( double param=0; param<traj.getRangeMax(); param = param + step)
@@ -464,65 +478,27 @@ void CostWidget::showCostProfile()
 int count_hri_traj = 0;
 void CostWidget::showHRITrajCost()
 {
-	if (!ENV.getBool(Env::enableHri) ) 
+	if ( HRICS_humanCostMaps == NULL ) 
 	{
-		cerr << "Hri is not enabled" << endl;
+		cerr << "HRICS_humanCostMaps is not initialized!!!" << endl;
 		return;
 	}	
 
-  double kDistanceTmp = ENV.getDouble(Env::Kdistance);
-	double kVisibiliTmp = ENV.getDouble(Env::Kvisibility);
-	double kReachablTmp = ENV.getDouble(Env::Kreachable);
-
 #if defined(USE_QWT)
 	cout << "--------------------------------" << endl;
-	
-	p3d_rob *robotPt = (p3d_rob *) p3d_get_desc_curid(P3D_ROBOT);
-	p3d_traj* CurrentTrajPt = robotPt->tcur;
-	
-	if (!CurrentTrajPt) 
-	{
-		cerr << "No trajectory" << endl;
-		return;
-	}
-#if defined(HRI_COSTSPACE)
-	ENV.setInt(Env::hriCostType,HRICS_Combine);
-#endif
+  Robot* robot = HRICS_humanCostMaps->getRobot();
+	API::Trajectory traj( robot->getCurrentTraj() );
 	
 	MultiPlot* myPlot = new MultiPlot( m_plot );
 	myPlot->setGeometry( m_plot->getPlot()->geometry() );
-	int nbSample = myPlot->getPlotSize();
 	
-	Robot* thisRob = new Robot(robotPt);
-	API::Trajectory traj(thisRob,CurrentTrajPt);
+  int nbSample = myPlot->getPlotSize();
 	
-	cout << "Traj cost = " << traj.costDeltaAlongTraj() << endl;
+	double step = traj.getRangeMax() / double(nbSample-1);
 	
-	ENV.setDouble(Env::Kreachable,0.0);
-	ENV.setDouble(Env::Kvisibility,0.0);
-	ENV.setDouble(Env::Kreachable,0.0);
-	
-	
-	// Compute the 3 costs separatly 
-	ENV.setDouble(Env::Kdistance,kDistanceTmp);
-	cout << "Distance Cost = " << traj.costDeltaAlongTraj() << endl;
-	ENV.setDouble(Env::Kdistance,0.0);
-	
-	ENV.setDouble(Env::Kvisibility,kVisibiliTmp);
-	cout << "Visibility Cost = " << traj.costDeltaAlongTraj() << endl;
-	ENV.setDouble(Env::Kvisibility,0);
-	
-	ENV.setDouble(Env::Kreachable,kReachablTmp);
-	cout << "Reachalbilty Cost = " << traj.costDeltaAlongTraj() << endl;
-	
-	ENV.setDouble(Env::Kdistance,		kDistanceTmp);
-	ENV.setDouble(Env::Kvisibility,	kVisibiliTmp);
-	ENV.setDouble(Env::Kreachable,	kReachablTmp);
-	
-	double step = traj.getRangeMax() / (double) nbSample;
-	
-	//    cout << "Traj param max = " << traj.getRangeMax() << endl;
-	//    cout << "Traj step = " << step << endl;
+  cout << "Traj cost = " << traj.costDeltaAlongTraj() << endl;
+	// cout << "Traj param max = " << traj.getRangeMax() << endl;
+	// cout << "Traj step = " << step << endl;
 	
 	std::ostringstream oss;
 	oss << "statFiles/CostAlongTraj_" << std::setw(3) << std::setfill('0') << count_hri_traj++ << ".csv";
@@ -534,96 +510,84 @@ void CostWidget::showHRITrajCost()
 	
 	cout << "Opening save file : " << res << endl;
 	
-	s << "Dista"  << ";";
-	s << "Visib"  << ";";
-	s << "Reach"  << ";";
-	
+	s << "Distance"  << ";";
+	s << "Visibility"  << ";";
+	s << "Reachability"  << ";";
+  s << "Combine"  << ";";
+  s << "Grouping"  << ";";
 	s << endl;
 	
-	vector<double> costDistance;
-	vector<double> costVisibili;
-	vector<double> costReachabl;
-	for( double param=0; param<traj.getRangeMax(); param = param + step)
+  // cost and vector variables
+  double dCost(0.0), vCost(0.0), rCost(0.0), cCost(0.0), gCost(0.0), tCost(0.0);
+	vector<double> costDistance, costVisibility, costReachable, costCombine, costGrouping, costTotal;
+  
+  
+  double p=0.0;
+  
+	for( int i=0; i<(nbSample-1); i++ )
 	{
-		shared_ptr<Configuration> q = traj.configAtParam(param);
+		confPtr_t q = traj.configAtParam(p);
+    
+    p += step;
+    
+    vector<double> costs;
 		
 #ifdef HRI_COSTSPACE
-		if(ENV.getBool(Env::HRIPlannerCS))
-		{
-			q->cost();
-			
-			double dCost = dynamic_cast<HRICS::ConfigSpace*>(HRICS_MotionPLConfig)->getLastDistanceCost();
-			double vCost = dynamic_cast<HRICS::ConfigSpace*>(HRICS_MotionPLConfig)->getLastVisibiliCost();
-			costDistance.push_back(dCost);
-			costVisibili.push_back(vCost);
-		}
-		if(ENV.getBool(Env::HRIPlannerWS))
-		{
-			ENV.setDouble(Env::Kreachable,	0.0);
-			ENV.setDouble(Env::Kvisibility,	0.0);
-			ENV.setDouble(Env::Kreachable,	0.0);
-			
-			
-			// Compute the 3 costs separatly 
-			ENV.setDouble(Env::Kdistance,		kDistanceTmp);
-			q->setCostAsNotTested();
-			double dCost = q->cost();
-			
-			ENV.setDouble(Env::Kdistance,		0.0);
-			ENV.setDouble(Env::Kvisibility,	kVisibiliTmp);
-			q->setCostAsNotTested();
-			double vCost = q->cost();
-			
-			ENV.setDouble(Env::Kvisibility,	0.0);
-			ENV.setDouble(Env::Kreachable,	kReachablTmp);
-			q->setCostAsNotTested();
-			double rCost = q->cost();
-			
-			// Put 3 costs in vector
-			costDistance.push_back( dCost );
-			costVisibili.push_back( vCost );
-			costReachabl.push_back( rCost );
-			
-			/*cout	<<	"dCost: "			<< dCost << 
-								" , vCost: "	<< vCost << 
-								" , rCost: " << rCost << endl;*/
-			
-			// Save to file
-			s << dCost << ";";
-			s << vCost << ";";
-			s << rCost << ";";
-			s << endl;
-		}
-		//        cout << cost.back() << endl;
+    HRICS_humanCostMaps->getCompleteCost( *q, costs );
+    
+    dCost = costs[0];
+    vCost = costs[1];
+    rCost = costs[2];
+    
+    cCost = costs[3];
+    gCost = costs[4];
+    tCost = costs[5];
+    
+   // Put 3 costs in vector
+    costDistance.push_back( dCost );
+    costVisibility.push_back( vCost );
+    costReachable.push_back( rCost );
+    
+    costCombine.push_back( cCost );
+    costGrouping.push_back( gCost );
+    costTotal.push_back( tCost );
+    
+    // Save to file
+    s << dCost << ";";
+    s << vCost << ";";
+    s << rCost << ";";
+    s << cCost << ";";
+    s << gCost << ";";
+    s << tCost << ";";
+    s << endl;
 #endif
 	}
-	
+  
+	cout << "Closing save file" << endl;
+  s.close();
+  
 	vector< vector<double> > curves;
 	curves.push_back( costDistance );
-	curves.push_back( costVisibili );
-	curves.push_back( costReachabl );
-	
+	curves.push_back( costVisibility );
+	//curves.push_back( costReachable );
+  curves.push_back( costCombine );
+	curves.push_back( costGrouping );
+  curves.push_back( costTotal );
+  
 	vector< string > plotNames;
 	plotNames.push_back( "Distance" );
 	plotNames.push_back( "Visibility" );
-	plotNames.push_back( "Reachability" );
-	
+	//plotNames.push_back( "Reachability" );
+  plotNames.push_back( "Combine" );
+  plotNames.push_back( "Grouping" );
+	plotNames.push_back( "Total" );
+  
 	myPlot->setData( plotNames , curves );
 	
 	delete m_plot->getPlot();
 	m_plot->setPlot(myPlot);
 	m_plot->show();
-	
-	s.close();
 #endif
-	
-	cout << "Closing save file" << endl;
-	
-	ENV.setDouble(Env::Kdistance,		kDistanceTmp);
-	ENV.setDouble(Env::Kvisibility,	kVisibiliTmp);
-	ENV.setDouble(Env::Kreachable,	kReachablTmp);
-
-	
 }
 
 void CostWidget::setPlotedVector(vector<double> v)

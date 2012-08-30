@@ -24,8 +24,8 @@ public:
 private:
 	void alignScales();
 	
-	QwtArray< double >								d_x;
-	std::vector< QwtArray< double > > d_y;
+	QVector< double >								d_x;
+	std::vector< QVector< double > > d_y;
 	
 	bool init;
 	

@@ -35,9 +35,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>0</y>
+        <y>-210</y>
         <width>389</width>
-        <height>1001</height>
+        <height>1026</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -78,9 +78,9 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QPushButton" name="pushButtonMakeGrid">
+           <widget class="QPushButton" name="pushButtonInitHRICS">
             <property name="text">
-             <string>New WS Planner</string>
+             <string>Init HRICS</string>
             </property>
            </widget>
           </item>
@@ -507,6 +507,23 @@
              </item>
              <item row="5" column="2">
               <widget class="QSlider" name="horizontalSliderNatural">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0">
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Grouping</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+             </item>
+             <item row="6" column="2">
+              <widget class="QSlider" name="horizontalSlider">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>

@@ -17,6 +17,7 @@ void qt_readScenario();
 void qt_saveScenario();
 void qt_readTraj();
 void qt_load_HRICS_Grid(std::string gridName);
+void qt_init_after_params();
 
 // Variable used for file reading
 extern const char *qt_fileName;

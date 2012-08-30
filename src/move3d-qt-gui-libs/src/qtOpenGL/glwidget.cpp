@@ -132,7 +132,8 @@ void GLWidget::saveImagesToDisk()
 
     oss.str("");
     //change to video directory then compress jpg files to AVI video for more parameters and video format see man pages of mencoder
-    oss << "cd "<< str <<";mencoder mf://*.jpg -mf w=800:h=600:fps=25:type=jpeg -ovc lavc -lavcopts vcodec=mpeg4 -oac copy -o output.avi";
+    //oss << "cd "<< str <<";mencoder mf://*.jpg -mf w=800:h=600:fps=25:type=jpeg -ovc lavc -lavcopts vcodec=mpeg4 -oac copy -o output.avi";
+    oss << "cd "<< str <<";ffmpeg -f image2 -i Image_%04d.jpg -vcodec mpeg4 -b 1600k output.mp4";
     system(oss.str().c_str());
 }
 
