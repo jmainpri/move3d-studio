@@ -116,7 +116,7 @@ void qt_test1()
 //  ChronoTimeOfDayOff();
 //  
 //  cout << "Time to erase graph : " << t << endl;
-  HRICS::printHumanConfig();
+//  HRICS::printHumanConfig();
 }
 
 void qt_test2()
