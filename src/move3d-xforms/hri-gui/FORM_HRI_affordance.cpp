@@ -95,7 +95,10 @@ static FL_OBJECT  *BT_SHOW_GRASP_FOR_HOW_TO_PLACE_OBJ;
 static FL_OBJECT  *BT_SHOW_HOW_TO_PLACE_AT_OBJ;
 static FL_OBJECT  *HRI_TASK_EFFORT_LEVEL_FRAME_OBJ;
 static FL_OBJECT  *TASKABILITY_GRAPH_FRAME_OBJ;
-
+static FL_OBJECT  *HRI_GOAL_FRAME_OBJ;
+static FL_OBJECT  *BT_PUT_ONTO_OBJECT_OBJ;
+  
+  
 static FL_OBJECT  *BT_SHOW_VISIBILE_PLACE_AGENTS_OBJ[MAXI_NUM_OF_AGENT_FOR_HRI_TASK][12];
 static FL_OBJECT  *BT_SHOW_REACHABLE_PLACE_AGENTS_HAND_OBJ[MAXI_NUM_OF_AGENT_FOR_HRI_TASK][5];
 static FL_OBJECT  *BT_SHOW_REACHABLE_PLACE_AGENTS_OBJ[MAXI_NUM_OF_AGENT_FOR_HRI_TASK][12];
@@ -154,6 +157,13 @@ static FL_OBJECT  *BT_SHOW_TN_TYPE_OBJ;
 static FL_OBJECT  *BT_SHOW_MN_TYPE_OBJ;
 static FL_OBJECT  *BT_SHOW_TASKABILITY_OBJ;
 static FL_OBJECT  *BT_HIDE_TASKABILITY_OBJ;
+static FL_OBJECT  *BT_SHOW_EFFORT_BASED_ABILITY_FOR_AGENT_OBJ[MAXI_NUM_OF_AGENT_FOR_HRI_TASK][MAXI_NUM_ABILITY_TYPE_FOR_EFFORT];
+
+static FL_OBJECT  *AG_AB_LEAST_EFFORT_FRAME_OBJ;
+static FL_OBJECT  *BT_SHOW_AG_AB_LEAST_EFFORT_OBJ;
+static FL_OBJECT  *BT_SELECT_ABILITY_TYPE;
+static FL_OBJECT  *BT_FIND_LEAST_EFFORT_OBJ;
+static FL_OBJECT  *BT_FIND_HRI_GOAL_SOLUTION_OBJ;
 
 extern int CALCULATE_AFFORDANCE;
 int SHOW_HRP2_GIK_SOL=0;
@@ -274,6 +284,10 @@ int update_taskability_graph_list();
 
 extern int SHOW_TASKABILITIES;
 extern show_taskability_params curr_params_for_show_taskability;//It includes params for manipulability also
+
+extern int CURRENT_ABILITY_TYPE_TO_FIND;
+
+extern int SHOW_LEAST_EFFORTS;
 
 #ifdef USE_HRP2_GIK
 static void CB_create_HRP2_robot_obj(FL_OBJECT *ob, long arg)
@@ -734,24 +748,34 @@ int add_effort_levels_for_agents()
     printf(" Adding for %d th\n",i); 
     //int maxi_num_vis_effort_levels=0;
     //int maxi_num_reach_effort_levels=0;
-    int is_human=0;
+    int agent_ok=0;
     if(i==HUMAN1_MA)
     {
    // maxi_num_reach_effort_levels=MA_MAXI_NUM_TRANS_REACH_EFFORT;
    // maxi_num_vis_effort_levels=MA_MAXI_NUM_TRANS_VIS_EFFORTS;
-   is_human=1;
+   agent_ok=1;
     }
 #ifdef HUMAN2_EXISTS_FOR_MA
 if(i==HUMAN2_MA)
     {
    // maxi_num_reach_effort_levels=MA_MAXI_NUM_TRANS_REACH_EFFORT;
    // maxi_num_vis_effort_levels=MA_MAXI_NUM_TRANS_VIS_EFFORTS;
-   is_human=1;
+   agent_ok=1;
       
     }
 #endif
 
-if(is_human==1)
+#ifdef PR2_EXISTS_FOR_MA
+if(i==PR2_MA)
+    {
+   // maxi_num_reach_effort_levels=MA_MAXI_NUM_TRANS_REACH_EFFORT;
+   // maxi_num_vis_effort_levels=MA_MAXI_NUM_TRANS_VIS_EFFORTS;
+   agent_ok=1;
+      
+    }
+#endif
+
+if(agent_ok==1)
 {
 std::map<int, std::string>::iterator it;
 
@@ -820,7 +844,8 @@ static void CB_create_agents_for_MA_n_ASA_obj(FL_OBJECT *ob, long arg)
 static void CB_calculate_affordance_active_obj(FL_OBJECT *ob, long arg)
 {
  ////XFORM_update_func=fl_check_forms;
- char MM_around_object[50]="HRP2TABLE";
+  ////char MM_around_object[50]="HRP2TABLE";
+  char MM_around_object[50]="TABLE_1";
    /////char MM_around_object[50]="IKEA_SHELF";
   default_drawtraj_fct_ptr=default_drawtraj_fct_with_XFORM;
  int MA_init_res=Create_and_init_Mightability_Maps(MM_around_object);
@@ -1200,6 +1225,11 @@ else
 {
   if(use_current_selected_tasks_and_agents==1)
   {
+    //TODO: Create Separate button for this
+    ////find_least_effort_state_for_agent_ability_for_obj(CURRENT_TASK_PERFORMED_BY, VIS_ABILITY, get_index_of_robot_by_name(CURRENT_OBJECT_TO_MANIPULATE));
+      
+      ////show_Ag_Ab_Obj_least_effort_states(CURRENT_TASK_PERFORMED_BY, VIS_ABILITY, get_index_of_robot_by_name(CURRENT_OBJECT_TO_MANIPULATE));
+      
  //TODO : Create separate button for this
     ////curr_task.task_type=TAKE_OBJECT;
     ////taskability_node res_node_Ag_obj;
@@ -1792,6 +1822,20 @@ static void g3d_create_show_object_visibility_obj(void)
 
 }
 
+void show_ag_obj_ability(FL_OBJECT *obj, long arg)
+{
+  /*for(int i=0;i<MAXI_NUM_OF_AGENT_FOR_HRI_TASK;i++)
+  {
+    
+  if(fl_get_button(BT_SHOW_EFFORT_BASED_ABILITY_FOR_AGENT_OBJ[i][VIS_ABILITY])==TRUE)
+   {
+    
+   }
+  }*/
+  
+  //g3d_draw_allwin_active();
+}
+
 void get_effort_level_for_agent(FL_OBJECT *obj, long arg)
 {
   init_object_facts_data();
@@ -1801,13 +1845,15 @@ void get_effort_level_for_agent(FL_OBJECT *obj, long arg)
   
 for(int i=0;i<MAXI_NUM_OF_AGENT_FOR_HRI_TASK;i++)
 {
+  
   for(int j=0;j<MAXI_NUM_ABILITY_TYPE_FOR_EFFORT;j++)
   {
-    
+    if(fl_get_button(BT_SHOW_EFFORT_BASED_ABILITY_FOR_AGENT_OBJ[i][j])==TRUE)
+    {
   int val=fl_get_choice(BT_EFFORT_LEVELS_FOR_AGENT_OBJ[i][j]);
   printf(" For ag=%d, ab=%d, selected val=%d\n",i,j,val);
   
-   {
+  //{
      if(val>=1)
      {
         printf("Getting fact for ag=%d, ab=%d, val=%d\n",i,j,val);
@@ -1967,13 +2013,22 @@ static void g3d_create_show_visible_place_agents_obj(void)
         fl_end_group();
 	y_st=y_init+label_fr_height+10;
 
-	BT_EFFORT_LEVELS_FOR_AGENT_OBJ[i][VIS_ABILITY]=fl_add_choice(FL_NORMAL_CHOICE,600,y_init+10,80,20,"Effort Level");
+	BT_EFFORT_LEVELS_FOR_AGENT_OBJ[i][VIS_ABILITY]=fl_add_choice(FL_NORMAL_CHOICE,600,y_init+10,80,20,"Vis Effort Level");
 	
 	fl_set_call_back(BT_EFFORT_LEVELS_FOR_AGENT_OBJ[i][VIS_ABILITY],get_effort_level_for_agent,0);
 	
-	BT_EFFORT_LEVELS_FOR_AGENT_OBJ[i][REACH_ABILITY]=fl_add_choice(FL_NORMAL_CHOICE,600,y_init+50,80,20,"Effort Level");
+	BT_SHOW_EFFORT_BASED_ABILITY_FOR_AGENT_OBJ[i][VIS_ABILITY]=fl_add_checkbutton(FL_PUSH_BUTTON,700,y_init+10,80,20,"Show");
+	
+	fl_set_call_back(BT_SHOW_EFFORT_BASED_ABILITY_FOR_AGENT_OBJ[i][VIS_ABILITY],show_ag_obj_ability,0);
+	
+	
+	BT_EFFORT_LEVELS_FOR_AGENT_OBJ[i][REACH_ABILITY]=fl_add_choice(FL_NORMAL_CHOICE,600,y_init+50,80,20,"Reach Effort Level");
 	
 	fl_set_call_back(BT_EFFORT_LEVELS_FOR_AGENT_OBJ[i][REACH_ABILITY],get_effort_level_for_agent,0);
+	
+	BT_SHOW_EFFORT_BASED_ABILITY_FOR_AGENT_OBJ[i][REACH_ABILITY]=fl_add_checkbutton(FL_PUSH_BUTTON,700,y_init+50,80,20,"Show");
+	
+	fl_set_call_back(BT_SHOW_EFFORT_BASED_ABILITY_FOR_AGENT_OBJ[i][REACH_ABILITY],show_ag_obj_ability,0);
 	
 	
 	 
@@ -2089,6 +2144,8 @@ static void g3d_create_hri_manipulation_task_group(void)
   BT_HIDE_OBJECT_OBJ = fl_add_checkbutton(FL_RADIO_BUTTON,200,520,50,20,"Hide");
 	//fl_set_object_color(BT_PATH_FIND_OBJ,FL_RED,FL_COL1);
 	fl_set_call_back(BT_HIDE_OBJECT_OBJ,CB_select_current_task_obj,3);
+	
+	
 /*
    BT_PUT_AWAY_OBJECT_OBJ = fl_add_checkbutton(FL_RADIO_BUTTON,200,540,50,20,"Put Away");
 	//fl_set_object_color(BT_PATH_FIND_OBJ,FL_RED,FL_COL1);
@@ -2106,6 +2163,9 @@ static void g3d_create_hri_manipulation_task_group(void)
 	//fl_set_object_color(BT_PATH_FIND_OBJ,FL_RED,FL_COL1);
 	fl_set_call_back(BT_PUT_INTO_OBJECT_OBJ,CB_select_current_task_obj,7);
 */
+ BT_PUT_ONTO_OBJECT_OBJ = fl_add_checkbutton(FL_RADIO_BUTTON,200,540,50,20,"Put Onto");
+	//fl_set_object_color(BT_PATH_FIND_OBJ,FL_RED,FL_COL1);
+	fl_set_call_back(BT_PUT_ONTO_OBJECT_OBJ,CB_select_current_task_obj,8);
    
   fl_end_group();
  
@@ -2293,6 +2353,7 @@ static void g3d_create_show_3D_turn_around_reach_hum2_obj(void)
 }
 /////////////End for Human2
 #endif
+
 
 static void g3d_create_show_human_perspective_obj(void)
 {
@@ -2536,6 +2597,13 @@ void get_manipulability_graph_node(FL_OBJECT *obj, long arg)
  
 }
 
+void CB_find_hri_goal_solution_obj(FL_OBJECT *obj, long arg)
+{
+
+  find_current_hri_goal_solution();
+  
+}
+
 void get_taskability_graph_node(FL_OBJECT *obj, long arg)
 {
 
@@ -2547,6 +2615,35 @@ void get_taskability_graph_node(FL_OBJECT *obj, long arg)
 printf(" CURRENT_TASKABILITY_NODE_ID_TO_SHOW = %d\n",CURRENT_TASKABILITY_NODE_ID_TO_SHOW);
  g3d_draw_allwin_active();
  
+}
+
+void CB_find_Ag_Ab_least_effort_obj(FL_OBJECT *obj, long arg)
+{
+find_least_effort_state_for_agent_ability_for_obj(CURRENT_TASK_PERFORMED_BY, CURRENT_ABILITY_TYPE_TO_FIND, get_index_of_robot_by_name(CURRENT_OBJECT_TO_MANIPULATE));
+ 
+}
+
+void CB_get_ability_type_obj(FL_OBJECT *obj, long arg)
+{
+  if(arg==0)
+  CURRENT_ABILITY_TYPE_TO_FIND=VIS_ABILITY;
+  if(arg==1)
+    CURRENT_ABILITY_TYPE_TO_FIND=REACH_ABILITY;
+  
+}
+
+void CB_show_Ag_Ab_least_effort_obj(FL_OBJECT *obj, long arg)
+{
+  ////show_Ag_Ab_Obj_least_effort_states(CURRENT_TASK_PERFORMED_BY, CURRENT_ABILITY_TYPE_TO_FIND, get_index_of_robot_by_name(CURRENT_OBJECT_TO_MANIPULATE));
+  int val=fl_get_button(obj);
+  printf("Val to show = %d \n",val);
+  
+  if(val==1)
+    SHOW_LEAST_EFFORTS=1;
+  else
+    SHOW_LEAST_EFFORTS=0;
+  
+  g3d_draw_allwin_active();
 }
 
 void get_hri_task_plan(FL_OBJECT *obj, long arg)
@@ -2733,6 +2830,105 @@ static void g3d_create_hri_task_effort_level_group(void)
  
 }
 
+static void g3d_create_least_effort_ability_group(void)
+{
+  //BT_SHOW_HUMAN_PERSPECTIVE_OBJ = fl_add_button(FL_NORMAL_BUTTON,400,620,50,20,"Find Least Effort State");
+ 
+	
+  //fl_set_call_back(BT_SHOW_HUMAN_PERSPECTIVE_OBJ,CB_show_human_perspective_obj,0);
+
+  int x=600, y=630;
+  
+  AG_AB_LEAST_EFFORT_FRAME_OBJ = fl_add_labelframe(FL_BORDER_FRAME,x,y,180,70,"Agent-Ability Least Effort...");
+  
+  int x_shift=10, y_shift=10;
+  
+  int curr_x=x+x_shift;
+  int curr_y=y+y_shift;
+  
+  BT_FIND_LEAST_EFFORT_OBJ = fl_add_button(FL_NORMAL_BUTTON,curr_x,curr_y,150,20,"Find Ag-Ab Least Effort");
+	//fl_set_object_color(BT_PATH_FIND_OBJ,FL_RED,FL_COL1);
+	fl_set_call_back(BT_FIND_LEAST_EFFORT_OBJ,CB_find_Ag_Ab_least_effort_obj,0);
+	
+	fl_bgn_group();
+  ////HRI_TASK_PLAN_LIST_GROUP_OBJ = fl_bgn_group();
+	y_shift=22;
+  curr_y+=y_shift;
+
+  BT_SELECT_ABILITY_TYPE=fl_add_checkbutton(FL_RADIO_BUTTON,curr_x+10,curr_y,50,20,"VisAbility");
+  fl_set_call_back(BT_SELECT_ABILITY_TYPE,CB_get_ability_type_obj,0);
+
+  
+  
+  ////printf(" >>>>>>> Y= %d, curr_y=%d\n",y, curr_y);
+  ////fl_add_text(FL_NORMAL_TEXT,curr_x,curr_y,150,150," Show TN...");
+  y_shift=10;
+  curr_y+=y_shift;
+  
+  BT_SELECT_ABILITY_TYPE = fl_add_checkbutton(FL_RADIO_BUTTON,curr_x+10,curr_y,50,20,"ReachAbility");
+	//fl_set_object_color(BT_PATH_FIND_OBJ,FL_RED,FL_COL1);
+	fl_set_call_back(BT_SELECT_ABILITY_TYPE,CB_get_ability_type_obj,1);
+ fl_end_group();
+ 
+  curr_y+=y_shift;
+  
+  BT_SHOW_AG_AB_LEAST_EFFORT_OBJ = fl_add_checkbutton(FL_PUSH_BUTTON,curr_x,curr_y,50,20,"Show Least Effort");
+	//fl_set_object_color(BT_PATH_FIND_OBJ,FL_RED,FL_COL1);
+	fl_set_call_back(BT_SHOW_AG_AB_LEAST_EFFORT_OBJ,CB_show_Ag_Ab_least_effort_obj,0);
+
+	
+}
+
+
+static void g3d_create_HRI_goal_group(void)
+{
+  //BT_SHOW_HUMAN_PERSPECTIVE_OBJ = fl_add_button(FL_NORMAL_BUTTON,400,620,50,20,"Find Least Effort State");
+ 
+	
+  //fl_set_call_back(BT_SHOW_HUMAN_PERSPECTIVE_OBJ,CB_show_human_perspective_obj,0);
+
+  int x=800, y=630;
+  
+  HRI_GOAL_FRAME_OBJ = fl_add_labelframe(FL_BORDER_FRAME,x,y,180,70,"HRI Goal...");
+  
+  int x_shift=10, y_shift=10;
+  
+  int curr_x=x+x_shift;
+  int curr_y=y+y_shift;
+  
+  BT_FIND_HRI_GOAL_SOLUTION_OBJ = fl_add_button(FL_NORMAL_BUTTON,curr_x,curr_y,150,20,"Find Solution");
+	//fl_set_object_color(BT_PATH_FIND_OBJ,FL_RED,FL_COL1);
+	fl_set_call_back(BT_FIND_HRI_GOAL_SOLUTION_OBJ,CB_find_hri_goal_solution_obj,0);
+	
+	fl_bgn_group();
+  ////HRI_TASK_PLAN_LIST_GROUP_OBJ = fl_bgn_group();
+/*	y_shift=22;
+  curr_y+=y_shift;
+
+  BT_SELECT_ABILITY_TYPE=fl_add_checkbutton(FL_RADIO_BUTTON,curr_x+10,curr_y,50,20,"VisAbility");
+  fl_set_call_back(BT_SELECT_ABILITY_TYPE,CB_get_ability_type_obj,0);
+
+  
+  
+  ////printf(" >>>>>>> Y= %d, curr_y=%d\n",y, curr_y);
+  ////fl_add_text(FL_NORMAL_TEXT,curr_x,curr_y,150,150," Show TN...");
+  y_shift=10;
+  curr_y+=y_shift;
+  
+  BT_SELECT_ABILITY_TYPE = fl_add_checkbutton(FL_RADIO_BUTTON,curr_x+10,curr_y,50,20,"ReachAbility");
+	//fl_set_object_color(BT_PATH_FIND_OBJ,FL_RED,FL_COL1);
+	fl_set_call_back(BT_SELECT_ABILITY_TYPE,CB_get_ability_type_obj,1);
+ fl_end_group();
+ 
+  curr_y+=y_shift;
+  
+  BT_SHOW_AG_AB_LEAST_EFFORT_OBJ = fl_add_checkbutton(FL_PUSH_BUTTON,curr_x,curr_y,50,20,"Show Least Effort");
+	//fl_set_object_color(BT_PATH_FIND_OBJ,FL_RED,FL_COL1);
+	fl_set_call_back(BT_SHOW_AG_AB_LEAST_EFFORT_OBJ,CB_show_Ag_Ab_least_effort_obj,0);
+*/
+	
+}
+
 static void g3d_create_taskability_graph_list_group(void)
 {
   int x=520, y=370;
@@ -2910,7 +3106,7 @@ void CB_stop_MA_update_obj(FL_OBJECT *ob, long arg)
 
 void g3d_create_stop_update_MA_obj(void)
 {
-BT_STOP_MA_UPDATE_OBJ = fl_add_checkbutton(FL_PUSH_BUTTON,550,660,50,20,"Stop MA Update");
+BT_STOP_MA_UPDATE_OBJ = fl_add_checkbutton(FL_PUSH_BUTTON,400,680,50,20,"Stop MA Update");
 	//fl_set_object_color(BT_PATH_FIND_OBJ,FL_RED,FL_COL1);
 	fl_set_call_back(BT_STOP_MA_UPDATE_OBJ,CB_stop_MA_update_obj,0);
        
@@ -2925,7 +3121,7 @@ void g3d_create_HRI_affordance_form(void)
    ////#ifdef HUMAN2_EXISTS_FOR_MA
    /////HRI_AFFORDANCE_FORM = fl_bgn_form(FL_UP_BOX,1000.0,700.0);
    /////#else
-  HRI_AFFORDANCE_FORM = fl_bgn_form(FL_UP_BOX,800.0,700.0);
+  HRI_AFFORDANCE_FORM = fl_bgn_form(FL_UP_BOX,1000.0,750.0);
   ///// #endif
   #else
   HRI_AFFORDANCE_FORM = fl_bgn_form(FL_UP_BOX,800.0,100.0);
@@ -3013,6 +3209,8 @@ void g3d_create_HRI_affordance_form(void)
    
    g3d_create_taskability_graph_list_group();
 
+   g3d_create_least_effort_ability_group();
+   g3d_create_HRI_goal_group();
 // // // //    g3d_create_show_current_how_to_placements_candidates_obj();
 // // // //    g3d_create_show_all_how_to_placements_obj();
 // // // //    g3d_create_show_current_hand_only_grasps_obj();

@@ -1281,9 +1281,9 @@ void test_manipulation()
 //   p3d_matrix4 T, tAtt;
   gpGrasp grasp;
 //   p3d_matrix4 handFrame;
-  gpHand_properties armHandProp = (*manipulation->robot()->armManipulationData)[0].getHandProperties();
+  ////AKP TMP *** gpHand_properties armHandProp = (*manipulation->robot()->armManipulationData)[0].getHandProperties();
 
-  manipulation->armPlanTask(ARM_PICK_GOTO,0,manipulation->robotStart(), manipulation->robotGoto(),  objStart, objGoto, ObjectName, (char*)"", (char*)"", grasp, confs, smTrajs);
+  ////AKP TMP *** manipulation->armPlanTask(ARM_PICK_GOTO,0,manipulation->robotStart(), manipulation->robotGoto(),  objStart, objGoto, ObjectName, (char*)"", (char*)"", grasp, confs, smTrajs);
 
 }
 

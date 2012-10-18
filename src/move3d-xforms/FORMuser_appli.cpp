@@ -658,8 +658,8 @@ fixAllJointsWithoutArm(XYZ_ROBOT, 0);
     case 22:{
 #if defined(LIGHT_PLANNER) && defined(GRASP_PLANNING)
       gpGrasp grasp;
-      double cost = computeRobotGraspArmCost(XYZ_ROBOT, 0, grasp, XYZ_ROBOT->ROBOT_POS, XYZ_ROBOT->openChainConf, (*XYZ_ROBOT->armManipulationData)[0].getManipulationJnt()->abs_pos);
-      std::cout << "Cost = "<< cost << std::endl;
+      ////AKP TMP *** double cost = computeRobotGraspArmCost(XYZ_ROBOT, 0, grasp, XYZ_ROBOT->ROBOT_POS, XYZ_ROBOT->openChainConf, (*XYZ_ROBOT->armManipulationData)[0].getManipulationJnt()->abs_pos);
+      ////AKP TMP *** std::cout << "Cost = "<< cost << std::endl;
 #endif
       break;
     }
