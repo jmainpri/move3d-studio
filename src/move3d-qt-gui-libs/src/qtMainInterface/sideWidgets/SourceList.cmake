@@ -8,6 +8,7 @@ qtUtil.cpp
 qtRobot.cpp
 qtDistanceField.cpp
 qtRRTStar.cpp
+qtmightability.cpp
 )
 
 IF(LIGHT_PLANNER AND MULTILOCALPATH)
@@ -25,6 +26,7 @@ qtUtil.hpp
 qtRobot.hpp
 qtDistanceField.hpp
 qtRRTStar.hpp
+qtmightability.hpp
 )
 
 IF(LIGHT_PLANNER AND MULTILOCALPATH)
@@ -40,6 +42,7 @@ qtUtil.ui
 qtRobot.ui
 qtDistanceField.ui
 qtRRTStar.ui
+qtmightability.ui
 )
 
 IF(LIGHT_PLANNER AND MULTILOCALPATH)

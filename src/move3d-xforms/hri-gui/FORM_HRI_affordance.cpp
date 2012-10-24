@@ -845,7 +845,7 @@ static void CB_calculate_affordance_active_obj(FL_OBJECT *ob, long arg)
 {
  ////XFORM_update_func=fl_check_forms;
   ////char MM_around_object[50]="HRP2TABLE";
-  char MM_around_object[50]="TABLE_1";
+  char MM_around_object[50]="TABLE_4";
    /////char MM_around_object[50]="IKEA_SHELF";
   default_drawtraj_fct_ptr=default_drawtraj_fct_with_XFORM;
  int MA_init_res=Create_and_init_Mightability_Maps(MM_around_object);

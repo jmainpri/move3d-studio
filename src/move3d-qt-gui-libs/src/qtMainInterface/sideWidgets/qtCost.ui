@@ -23,7 +23,7 @@
       <bool>true</bool>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>7</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>
@@ -57,9 +57,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-16</y>
-            <width>468</width>
-            <height>794</height>
+            <y>0</y>
+            <width>467</width>
+            <height>774</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -603,6 +603,16 @@
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
         <layout class="QVBoxLayout" name="starLayout"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="Mightabilitytab">
+      <attribute name="title">
+       <string>Mightability</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <layout class="QVBoxLayout" name="MightLayout"/>
        </item>
       </layout>
      </widget>
