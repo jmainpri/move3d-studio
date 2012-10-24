@@ -130,6 +130,7 @@ public:
     QCheckBox *checkBoxJoints;
     QCheckBox *checkBoxEnableLight;
     QCheckBox *checkBoxEnableShaders;
+    QCheckBox *checkBoxFlatFloor;
     QGroupBox *sceneGroupBox;
     QGridLayout *gridLayout_11;
     QCheckBox *checkBoxFloor;
@@ -569,6 +570,12 @@ public:
         checkBoxEnableShaders->setObjectName(QString::fromUtf8("checkBoxEnableShaders"));
       
         gridLayout_11->addWidget(checkBoxEnableShaders, 7, 1, 1, 1);
+
+
+        checkBoxFlatFloor = new QCheckBox(sceneGroupBox);
+        checkBoxFlatFloor->setObjectName(QString::fromUtf8("checkBoxFlatFloor"));
+
+        gridLayout_11->addWidget(checkBoxFlatFloor, 7, 0, 1, 1);
 
         checkBoxAxis = new QCheckBox(sceneGroupBox);
         checkBoxAxis->setObjectName(QString::fromUtf8("checkBoxAxis"));
@@ -1155,6 +1162,7 @@ public:
         checkBoxJoints->setText(QApplication::translate("MainWindow", "Joints", 0, QApplication::UnicodeUTF8));
         checkBoxEnableLight->setText(QApplication::translate("MainWindow", "Light Model", 0, QApplication::UnicodeUTF8));
         checkBoxEnableShaders->setText(QApplication::translate("MainWindow", "Shaders", 0, QApplication::UnicodeUTF8));
+        checkBoxFlatFloor->setText(QApplication::translate("MainWindow", "Flat Box", 0, QApplication::UnicodeUTF8));
         sceneGroupBox->setTitle(QApplication::translate("MainWindow", "Scene", 0, QApplication::UnicodeUTF8));
         checkBoxFloor->setText(QApplication::translate("MainWindow", "Floor", 0, QApplication::UnicodeUTF8));
         checkBoxTiles->setText(QApplication::translate("MainWindow", "Tiles", 0, QApplication::UnicodeUTF8));

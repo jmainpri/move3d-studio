@@ -631,8 +631,11 @@ void MainWindow::connectCheckBoxes()
 	connect(m_ui->checkBoxEnableLight, SIGNAL(toggled(bool)), this , SLOT(setBoolEnableLight(bool)), Qt::DirectConnection);
 	connect(m_ui->checkBoxEnableLight, SIGNAL(toggled(bool)), m_ui->OpenGL , SLOT(updateGL()));
     
-    connect(m_ui->checkBoxEnableShaders, SIGNAL(toggled(bool)), this , SLOT(setBoolEnableShaders(bool)), Qt::DirectConnection);
+        connect(m_ui->checkBoxEnableShaders, SIGNAL(toggled(bool)), this , SLOT(setBoolEnableShaders(bool)), Qt::DirectConnection);
 	connect(m_ui->checkBoxEnableShaders, SIGNAL(toggled(bool)), m_ui->OpenGL , SLOT(updateGL()));
+
+        connect(m_ui->checkBoxFlatFloor, SIGNAL(toggled(bool)), this , SLOT(setBoolFlatBox(bool)), Qt::DirectConnection);
+        connect(m_ui->checkBoxFlatFloor, SIGNAL(toggled(bool)), m_ui->OpenGL , SLOT(updateGL()));
 	
 	connectCheckBoxToEnv(m_ui->checkBoxAxis, Env::drawFrame);
 	connect(m_ui->checkBoxAxis, SIGNAL(toggled(bool)), m_ui->OpenGL , SLOT(updateGL()));
@@ -700,6 +703,11 @@ void MainWindow::setBoolEnableLight(bool value)
 void MainWindow::setBoolEnableShaders(bool value)
 {
 	G3D_WIN->vs.enableShaders = value;
+}
+
+void MainWindow::setBoolFlatBox(bool value)
+{
+        G3D_WIN->vs.flatBoxFloor = value;
 }
 
 void MainWindow::restoreView()

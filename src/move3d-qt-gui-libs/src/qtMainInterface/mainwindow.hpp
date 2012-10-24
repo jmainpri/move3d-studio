@@ -74,7 +74,8 @@ public slots:
 	void setBoolJoints(bool value);
 	void setBoolContour(bool value);
 	void setBoolEnableLight(bool value);
-  void setBoolEnableShaders(bool value);
+        void setBoolEnableShaders(bool value);
+        void setBoolFlatBox(bool value);
 	
 	void setJointToDraw(int joint);
 	
