@@ -61,8 +61,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>375</width>
-            <height>455</height>
+            <width>337</width>
+            <height>479</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -1625,6 +1625,13 @@
          </property>
          <property name="text">
           <string>Compute Navigation</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBoxSmooth">
+         <property name="text">
+          <string>do the smoothing</string>
          </property>
         </widget>
        </item>

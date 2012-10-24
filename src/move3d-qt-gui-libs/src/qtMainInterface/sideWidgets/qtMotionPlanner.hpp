@@ -53,6 +53,7 @@ public slots:
 private slots:
   
 	// Optim -----------------------------
+        void on_checkBoxSmooth_toggled(bool checked);
         void on_pushButtonComputeNavigation_clicked();
         void on_pushButtonSetGoal_toggled(bool checked);
  void test(double value);

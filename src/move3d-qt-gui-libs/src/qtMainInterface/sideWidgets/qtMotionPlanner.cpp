@@ -73,7 +73,7 @@ void MotionPlanner::initGeneral()
 	connect(m_ui->doubleSpinBoxDMax, SIGNAL(valueChanged( double )), SLOT(envDmaxSpinBoxValueChanged( double ) ) );
 	connect(m_ui->doubleSpinBoxDMax, SIGNAL(valueChanged( double )), ENV.getObject(Env::dmax),SLOT(set(double)));
 	connect(ENV.getObject(Env::dmax), SIGNAL(valueChanged(double)),m_ui->doubleSpinBoxDMax, SLOT(setValue(double)));
-	
+        m_ui->checkBoxSmooth->setChecked(PlanEnv->getBool(PlanParam::env_createTrajs));
 	
 	//	connect(m_ui->doubleSpinBoxTest, SIGNAL(valueChanged( double )), PlanEnv->getObject(PlanParam::eleven),SLOT(set(double)));
 	//	connect(PlanEnv->getObject(PlanParam::eleven), SIGNAL(valueChanged(double)),m_ui->doubleSpinBoxTest, SLOT(setValue(double)));
@@ -778,4 +778,9 @@ void MotionPlanner::on_pushButtonComputeNavigation_clicked()
             cout << "(x,y,rz) = (" << path[i][0] << "," << path[i][1] << "," << path[i][2] << ")" << endl;
         }
     }
+}
+
+void MotionPlanner::on_checkBoxSmooth_toggled(bool checked)
+{
+    PlanEnv->setBool(PlanParam::env_createTrajs,checked);
 }
