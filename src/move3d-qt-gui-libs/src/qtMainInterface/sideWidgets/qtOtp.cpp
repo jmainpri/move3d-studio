@@ -34,6 +34,7 @@ m_ui(new Ui::OtpWidget)
 {
     m_ui->setupUi(this);
     initOTP();
+    reloadGuiParams();
 }
 
 OtpWidget::~OtpWidget()
@@ -80,9 +81,9 @@ void OtpWidget::initOTP()
         m_k_sleep = new QtShiva::SpinBoxSliderConnector(this,         m_ui->doubleSpinBoxSleep,         m_ui->horizontalSliderSleep,        PlanParam::env_timeShow);
         m_k_timeLimit = new QtShiva::SpinBoxSliderConnector(this,     m_ui->doubleSpinBoxTimeLimit,     m_ui->horizontalSliderTimeLimit,    PlanParam::env_timeLimitation);
         m_k_timeLimitSit = new QtShiva::SpinBoxSliderConnector(this,  m_ui->doubleSpinBoxTimeLimitSit,  m_ui->horizontalSliderTimeLimitSit, PlanParam::env_sitTimeLimitation);
-        m_k_sleep = new QtShiva::SpinBoxSliderConnector(this,         m_ui->doubleSpinBoxPow,           m_ui->horizontalSliderPow,          PlanParam::env_pow);
-        m_k_sleep = new QtShiva::SpinBoxSliderConnector(this,         m_ui->doubleSpinBoxPowRot,        m_ui->horizontalSliderPowRot,       PlanParam::env_anglePow);
-        m_k_sleep = new QtShiva::SpinBoxSliderConnector(this,         m_ui->doubleSpinBoxTimeToDump,    m_ui->horizontalSliderTimeToDump,   PlanParam::env_timeToDump);
+        m_k_pow = new QtShiva::SpinBoxSliderConnector(this,           m_ui->doubleSpinBoxPow,           m_ui->horizontalSliderPow,          PlanParam::env_pow);
+        m_k_pow_rot = new QtShiva::SpinBoxSliderConnector(this,       m_ui->doubleSpinBoxPowRot,        m_ui->horizontalSliderPowRot,       PlanParam::env_anglePow);
+        m_k_time_dump = new QtShiva::SpinBoxSliderConnector(this,     m_ui->doubleSpinBoxTimeToDump,    m_ui->horizontalSliderTimeToDump,   PlanParam::env_timeToDump);
 
 
         m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxReach,Env::drawGrid);
@@ -128,8 +129,14 @@ void OtpWidget::on_pushButtonGiveConf_clicked()
 {
     if (dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getActivRobot()->getName().find("PR2") != string::npos)
     {
+
         dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->initPR2GiveConf();
         m_mainWindow->drawAllWinActive();
+    }
+    if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig) )
+    {
+        vector<vector<double> > path;
+        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getSimplePath(4.5,8,0,path);
     }
 }
 
@@ -328,6 +335,7 @@ void OtpWidget::on_pushButtonComputeConfortCost_clicked()
 void OtpWidget::on_pushButtonInit_clicked()
 {
 
+    reloadGuiParams();
     clock_t first = clock();
     HRICS_MotionPLConfig  = new HRICS::OTPMotionPl;
     HRICS_activeDist = HRICS_MotionPL->getDistance();
@@ -652,23 +660,43 @@ void OtpWidget::on_pushButtonTestCompute_clicked()
 {
     if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
     {
-        std::vector<pair<double,double> > traj;
-        std::vector<SM_TRAJ> smTraj;
-        configPt handConf = 0;
-        Eigen::Vector3d dockPos;
+
 //        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
         dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->InitMhpObjectTransfert("HERAKLES_HUMAN1");
         dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
 //        if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getOtp("HERAKLES_HUMAN1",dockPos,traj,handConf,
 //                                                                            PlanEnv->getBool(PlanParam::env_isStanding),
 //                                                                            PlanEnv->getDouble(PlanParam::env_objectNessecity)))
-        if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getOtp("HERAKLES_HUMAN1",dockPos,smTraj,handConf,
-                                                                            PlanEnv->getBool(PlanParam::env_isStanding),
-                                                                            PlanEnv->getDouble(PlanParam::env_objectNessecity)))
+        if (PlanEnv->getBool(PlanParam::env_trajRos))
         {
-            cout << dockPos << endl;
-            cout << "success" << endl;
-            ENV.setBool(Env::drawOTPTraj,true);
+            std::vector<std::vector<double> > traj;
+            configPt handConf = 0;
+            if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getOtp("HERAKLES_HUMAN1",traj,handConf,
+                                                                                PlanEnv->getBool(PlanParam::env_isStanding),
+                                                                                PlanEnv->getDouble(PlanParam::env_objectNessecity)))
+            {
+                cout << "success" << endl;
+                for (unsigned int i = 0; i < traj.size(); i++)
+                {
+                    cout << "pos nb " << i << " is : x = " << traj.at(i).at(0) << ", y = " << traj.at(i).at(1) << ", theta = " << traj.at(i).at(2) << endl;
+                }
+                ENV.setBool(Env::drawOTPTraj,true);
+            }
+        }
+        else
+        {
+            std::vector<pair<double,double> > traj;
+            std::vector<SM_TRAJ> smTraj;
+            configPt handConf = 0;
+            Eigen::Vector3d dockPos;
+            if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getOtp("HERAKLES_HUMAN1",dockPos,smTraj,handConf,
+                                                                                PlanEnv->getBool(PlanParam::env_isStanding),
+                                                                                PlanEnv->getDouble(PlanParam::env_objectNessecity)))
+            {
+                cout << dockPos << endl;
+                cout << "success" << endl;
+                ENV.setBool(Env::drawOTPTraj,true);
+            }
         }
 
     }
@@ -813,6 +841,7 @@ void OtpWidget::on_pushButtonTestTrajs_clicked()
 
 void OtpWidget::on_pushButtonScript_clicked()
 {
+
     //mobility:
 //    m_k_Obj->setValue(0.9);
 
@@ -835,30 +864,42 @@ void OtpWidget::on_pushButtonScript_clicked()
     std::vector<std::vector<double> > results;
     std::vector<QString> names;
     names.push_back("AllGridHM0.2.lst");
+    names.push_back("AllGridMM0.2.lst");
     names.push_back("AllGridLM0.2.lst");
     names.push_back("FusedGridOnlyHM0.2.lst");
+    names.push_back("FusedGridOnlyMM0.2.lst");
     names.push_back("FusedGridOnlyLM0.2.lst");
     names.push_back("FusedGridHM0.2.lst");
+    names.push_back("FusedGridMM0.2.lst");
     names.push_back("FusedGridLM0.2.lst");
     names.push_back("FusedGridBiasHM0.2.lst");
+    names.push_back("FusedGridBiasMM0.2.lst");
     names.push_back("FusedGridBiasLM0.2.lst");
 
     names.push_back("AllGridHM0.15.lst");
+    names.push_back("AllGridMM0.15.lst");
     names.push_back("AllGridLM0.15.lst");
     names.push_back("FusedGridOnlyHM0.15.lst");
     names.push_back("FusedGridOnlyLM0.15.lst");
+    names.push_back("FusedGridOnlyLM0.15.lst");
     names.push_back("FusedGridHM0.15.lst");
+    names.push_back("FusedGridMM0.15.lst");
     names.push_back("FusedGridLM0.15.lst");
     names.push_back("FusedGridBiasHM0.15.lst");
+    names.push_back("FusedGridBiasMM0.15.lst");
     names.push_back("FusedGridBiasLM0.15.lst");
 
     names.push_back("AllGridHM0.1.lst");
+    names.push_back("AllGridMM0.1.lst");
     names.push_back("AllGridLM0.1.lst");
     names.push_back("FusedGridOnlyHM0.1.lst");
     names.push_back("FusedGridOnlyLM0.1.lst");
+    names.push_back("FusedGridOnlyLM0.1.lst");
     names.push_back("FusedGridHM0.1.lst");
+    names.push_back("FusedGridMM0.1.lst");
     names.push_back("FusedGridLM0.1.lst");
     names.push_back("FusedGridBiasHM0.1.lst");
+    names.push_back("FusedGridBiasMM0.1.lst");
     names.push_back("FusedGridBiasLM0.1.lst");
 
     std::vector<std::string> numbersId;
@@ -875,6 +916,852 @@ void OtpWidget::on_pushButtonScript_clicked()
     PlanEnv->setBool(PlanParam::env_createTrajs,false);
     PlanEnv->setDouble(PlanParam::env_timeToDump,0.01);
 
+
+    int i = 0;
+    qDebug() << "\n\n###################################################\n cells size = 0.2" << endl;
+    m_k_cellSize->setValue(0.2);
+
+    qDebug() << "\n\n################ all grid \n " ;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(1.0);
+    on_radioButtonAllGrid_toggled(true);
+    on_radioButtonOldHuman_toggled(false);
+    on_radioButtonFusedGrid_toggled(false);
+    on_radioButtonBiasAndRot_toggled(false);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.35);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.0);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+    qDebug() << "\n\n################ fused grid \n " ;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(1.0);
+    on_radioButtonAllGrid_toggled(false);
+    on_radioButtonOldHuman_toggled(true);
+    on_radioButtonFusedGrid_toggled(false);
+    on_radioButtonBiasAndRot_toggled(false);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.35);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.0);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+    qDebug() << "\n\n################ fused grid  with bias\n " ;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(1.0);
+    on_radioButtonAllGrid_toggled(false);
+    on_radioButtonOldHuman_toggled(false);
+    on_radioButtonFusedGrid_toggled(true);
+    on_radioButtonBiasAndRot_toggled(false);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.35);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.0);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+
+    qDebug() << "\n\n################ fused grid  with bias and rot\n " ;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(1.0);
+    on_radioButtonAllGrid_toggled(false);
+    on_radioButtonOldHuman_toggled(false);
+    on_radioButtonFusedGrid_toggled(false);
+    on_radioButtonBiasAndRot_toggled(true);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.35);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.0);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+
+    qDebug() << "\n\n###################################################\n cells size = 0.15" << endl;
+    m_k_cellSize->setValue(0.15);
+
+    qDebug() << "\n\n################ all grid \n " ;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(1.0);
+    on_radioButtonAllGrid_toggled(true);
+    on_radioButtonOldHuman_toggled(false);
+    on_radioButtonFusedGrid_toggled(false);
+    on_radioButtonBiasAndRot_toggled(false);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.35);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.0);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+    qDebug() << "\n\n################ fused grid \n " ;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(1.0);
+    on_radioButtonAllGrid_toggled(false);
+    on_radioButtonOldHuman_toggled(true);
+    on_radioButtonFusedGrid_toggled(false);
+    on_radioButtonBiasAndRot_toggled(false);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.35);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.0);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+    qDebug() << "\n\n################ fused grid  with bias\n " ;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(1.0);
+    on_radioButtonAllGrid_toggled(false);
+    on_radioButtonOldHuman_toggled(false);
+    on_radioButtonFusedGrid_toggled(true);
+    on_radioButtonBiasAndRot_toggled(false);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.35);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.0);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+
+    qDebug() << "\n\n################ fused grid  with bias and rot\n " ;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(1.0);
+    on_radioButtonAllGrid_toggled(false);
+    on_radioButtonOldHuman_toggled(false);
+    on_radioButtonFusedGrid_toggled(false);
+    on_radioButtonBiasAndRot_toggled(true);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.35);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.0);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+
+
+
+    qDebug() << "\n\n###################################################\n cells size = 0.1" << endl;
+    m_k_cellSize->setValue(0.1);
+
+    qDebug() << "\n\n################ all grid \n " ;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(1.0);
+    on_radioButtonAllGrid_toggled(true);
+    on_radioButtonOldHuman_toggled(false);
+    on_radioButtonFusedGrid_toggled(false);
+    on_radioButtonBiasAndRot_toggled(false);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.35);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.0);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+    qDebug() << "\n\n################ fused grid \n " ;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(1.0);
+    on_radioButtonAllGrid_toggled(false);
+    on_radioButtonOldHuman_toggled(true);
+    on_radioButtonFusedGrid_toggled(false);
+    on_radioButtonBiasAndRot_toggled(false);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.35);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.0);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+    qDebug() << "\n\n################ fused grid  with bias\n " ;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(1.0);
+    on_radioButtonAllGrid_toggled(false);
+    on_radioButtonOldHuman_toggled(false);
+    on_radioButtonFusedGrid_toggled(true);
+    on_radioButtonBiasAndRot_toggled(false);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.35);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.0);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+
+    qDebug() << "\n\n################ fused grid  with bias and rot\n " ;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(1.0);
+    on_radioButtonAllGrid_toggled(false);
+    on_radioButtonOldHuman_toggled(false);
+    on_radioButtonFusedGrid_toggled(false);
+    on_radioButtonBiasAndRot_toggled(true);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.35);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+
+    qDebug() << "\n\n################\n" << names.at(i);
+    m_k_Obj->setValue(0.0);
+
+    on_pushButtonInit_clicked();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,true);
+
+    results.push_back(dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getMultipleData());
+    dir.remove(names.at(i));
+    dir.rename("configCosts.lst", names.at(i));
+    dir.remove(names.at(i)+QString("costsMax.lst"));
+    dir.rename("costsMax.lst", names.at(i)+QString("costsMax.lst"));
+    dir.remove(names.at(i)+QString("costsMin.lst"));
+    dir.rename("costsMin.lst", names.at(i)+QString("costsMin.lst"));
+    dir.remove(names.at(i)+QString("costsVariance.lst"));
+    dir.rename("costsVariance.lst", names.at(i)+QString("costsVariance.lst"));
+    i++;
+
+
+
+    for (unsigned int i = 0; i < results.size(); i++)
+    {
+
+        qDebug() << "\n\n################\n" << names.at(i);
+        if (numbersId.size() == results.at(i).size())
+        {
+            for (unsigned int j = 0; j < numbersId.size(); j++)
+            {
+                cout << numbersId.at(j) << results.at(i).at(j) <<endl;
+            }
+            for (unsigned int j = 0; j < numbersId.size(); j++)
+            {
+                cout << results.at(i).at(j) <<endl;
+            }
+        }
+        else
+        {
+            cout << "ERROR: bad numbers of results" << endl;
+        }
+    }
+
+    /*
 
     qDebug() << "\n\n###################################################\n cells size = 0.2" << endl;
     m_k_cellSize->setValue(0.2);
@@ -1246,6 +2133,7 @@ void OtpWidget::on_pushButtonScript_clicked()
             cout << "ERROR: bad numbers of results" << endl;
         }
     }
+    */
 
 }
 
@@ -1278,4 +2166,71 @@ void OtpWidget::on_radioButtonSoftMotion_toggled(bool checked)
 void OtpWidget::on_radioButtonRos_toggled(bool checked)
 {
     PlanEnv->setBool(PlanParam::env_trajRos,checked);
+}
+
+
+void OtpWidget::reloadGuiParams()
+{
+    m_ui->checkBoxIsStanding->setChecked(PlanEnv->getBool(PlanParam::env_isStanding));
+    m_k_Obj->setValue(PlanEnv->getDouble(PlanParam::env_objectNessecity));
+    m_k_cellSize->setValue(PlanEnv->getDouble(PlanParam::env_Cellsize));
+
+    m_ui->radioButtonNormalRandom->setChecked(PlanEnv->getBool(PlanParam::env_normalRand));
+    m_ui->radioButtonAllGrid->setChecked(PlanEnv->getBool(PlanParam::env_useAllGrid));
+    m_ui->radioButtonFusedGrid->setChecked(PlanEnv->getBool(PlanParam::env_fusedGridRand));
+    m_ui->radioButtonBiasAndRot->setChecked(PlanEnv->getBool(PlanParam::env_fusedGridAndRotRand));
+    m_ui->radioButtonUseSlice->setChecked(PlanEnv->getBool(PlanParam::env_useSlice));
+    m_ui->radioButtonOrientedSlice->setChecked(PlanEnv->getBool(PlanParam::env_useOrientedSlice));
+    m_ui->radioButtonOldHuman->setChecked(PlanEnv->getBool(PlanParam::env_useOldDude));
+
+    m_ui->checkBoxOldCriteria->setChecked(PlanEnv->getBool(PlanParam::env_oldCriteria));
+    m_ui->checkBoxNoRepetition->setChecked(PlanEnv->getBool(PlanParam::env_noRepetition));
+
+    m_k_sleep->setValue(PlanEnv->getInt(PlanParam::env_timeShow));
+    m_k_MaxIter->setValue(PlanEnv->getInt(PlanParam::env_maxIter));
+    m_k_TotMaxIter->setValue(PlanEnv->getInt(PlanParam::env_totMaxIter));
+    m_k_timeLimit->setValue(PlanEnv->getDouble(PlanParam::env_timeLimitation));
+    m_k_timeLimitSit->setValue(PlanEnv->getDouble(PlanParam::env_sitTimeLimitation));
+    m_k_time_dump->setValue(PlanEnv->getDouble(PlanParam::env_timeToDump));
+
+    m_ui->checkBoxHumanTraj->setChecked(PlanEnv->getBool(PlanParam::env_showHumanTraj));
+    m_k_nbComputeOTP->setValue(PlanEnv->getInt(PlanParam::env_MOTP));
+
+    m_ui->checkBoxDrawSlice->setChecked(PlanEnv->getBool(PlanParam::env_drawSlice));
+    m_ui->checkBoxCreateTrajs->setChecked(PlanEnv->getBool(PlanParam::env_createTrajs));
+    m_ui->radioButtonNormal->setChecked(PlanEnv->getBool(PlanParam::env_trajNormal));
+    m_ui->radioButtonSoftMotion->setChecked(PlanEnv->getBool(PlanParam::env_trajSoftMotion));
+    m_ui->radioButtonRos->setChecked(PlanEnv->getBool(PlanParam::env_trajRos));
+    m_ui->checkBoxCreateHumanTraj->setChecked(PlanEnv->getBool(PlanParam::env_computeTrajForHuman));
+
+    m_ui->checkBoxReach->setChecked(ENV.getBool(Env::drawGrid));
+    m_ui->checkBoxDrawPoint->setChecked(PlanEnv->getBool(PlanParam::env_drawRandomPoint));
+    m_ui->radioButtonHumGrid->setChecked(PlanEnv->getBool(PlanParam::env_humanGridDraw));
+    m_ui->radioButtonRobGrid->setChecked(PlanEnv->getBool(PlanParam::env_robotGridDraw));
+    m_ui->radioButtonDistGrid->setChecked(PlanEnv->getBool(PlanParam::env_drawDistGrid));
+
+    m_k_distance->setValue(ENV.getDouble(Env::Kdistance));
+    m_k_visbility->setValue(ENV.getDouble(Env::Kvisibility));
+    m_k_naturality->setValue(ENV.getDouble(Env::Knatural));
+    m_k_reachability->setValue(ENV.getDouble(Env::Kreachable));
+
+    m_k_pow->setValue(PlanEnv->getInt(PlanParam::env_pow));
+    m_k_pow_rot->setValue(PlanEnv->getInt(PlanParam::env_anglePow));
+
+    m_k_NbRandomRotOnly->setValue(PlanEnv->getInt(PlanParam::env_nbRandomRotOnly));
+    m_k_NbSittingRotation->setValue(PlanEnv->getInt(PlanParam::env_nbSittingRotation));
+
+    m_k_XMin->setValue(PlanEnv->getDouble(PlanParam::env_randomXMinLimit));
+    m_k_XMax->setValue(PlanEnv->getDouble(PlanParam::env_randomXMaxLimit));
+    m_k_YMin->setValue(PlanEnv->getDouble(PlanParam::env_randomYMinLimit));
+    m_k_YMax->setValue(PlanEnv->getDouble(PlanParam::env_randomYMaxLimit));
+    m_k_RobotSpeed->setValue(PlanEnv->getDouble(PlanParam::env_robotSpeed));
+    m_k_HumanSpeed->setValue(PlanEnv->getDouble(PlanParam::env_humanSpeed));
+    m_k_TimeStamp->setValue(PlanEnv->getDouble(PlanParam::env_timeStamp));
+    m_k_Psi->setValue(PlanEnv->getDouble(PlanParam::env_psi));
+    m_k_delta->setValue(PlanEnv->getDouble(PlanParam::env_delta));
+    m_k_ksi->setValue(PlanEnv->getDouble(PlanParam::env_ksi));
+    m_k_rho->setValue(PlanEnv->getDouble(PlanParam::env_rho));
+    m_k_sittingOffset->setValue(PlanEnv->getDouble(PlanParam::env_sittingOffset));
+
 }

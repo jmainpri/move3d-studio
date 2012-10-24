@@ -41,6 +41,7 @@ public:
 	Ui::OtpWidget* Ui() { return m_ui; }
         void initSliders();
         void changeDistCost();
+        void reloadGuiParams();
 
 
 private slots:
@@ -144,6 +145,8 @@ private:
         QtShiva::SpinBoxSliderConnector*        m_k_timeLimit;
         QtShiva::SpinBoxSliderConnector*        m_k_timeLimitSit;
         QtShiva::SpinBoxSliderConnector*	m_k_pow;
+        QtShiva::SpinBoxSliderConnector*	m_k_pow_rot;
+        QtShiva::SpinBoxSliderConnector*	m_k_time_dump;
 
         QtShiva::SpinBoxSliderConnector*	m_k_nbComputeOTP;
         QtShiva::SpinBoxSliderConnector*	m_k_cellSize;
