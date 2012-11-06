@@ -3,15 +3,11 @@
 
 #include "qtLibrary.hpp"
 #include "qtOpenGL/qtGLWindow.hpp"
-
 #include <QtCore/QString>
-
-
 #include "posterreader.hpp"
 
 namespace Ui {
-class MainWindowRemote;
-
+  class MainWindowRemote;
 }
 
 /**

@@ -49,7 +49,17 @@
      <string>Robots</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuDisplay">
+    <property name="title">
+     <string>Display</string>
+    </property>
+    <addaction name="actionSaveQuick"/>
+    <addaction name="actionSaveToFile"/>
+    <addaction name="actionLoadQuick"/>
+    <addaction name="actionLoadFromFile"/>
+   </widget>
    <addaction name="menuRobot"/>
+   <addaction name="menuDisplay"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="dockparamWidget">
@@ -118,6 +128,26 @@
   <action name="actionRobots">
    <property name="text">
     <string>Robots</string>
+   </property>
+  </action>
+  <action name="actionSaveQuick">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionLoadQuick">
+   <property name="text">
+    <string>Load</string>
+   </property>
+  </action>
+  <action name="actionSaveToFile">
+   <property name="text">
+    <string>Save To File</string>
+   </property>
+  </action>
+  <action name="actionLoadFromFile">
+   <property name="text">
+    <string>Load From File</string>
    </property>
   </action>
  </widget>

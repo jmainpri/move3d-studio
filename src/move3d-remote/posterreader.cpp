@@ -38,7 +38,6 @@ void draw_smtraj_tace()
 
 PosterReader::PosterReader()
 {
-
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->start(10);
@@ -58,7 +57,7 @@ PosterReader::PosterReader()
     std::string host;
     char * posterPath;
     posterPath = getenv ("POSTER_PATH");
-    printf("posterPath is %s", posterPath);
+    printf("posterPath is %s\n", posterPath);
     if(strncmp(posterPath,"jido-arm",4) == 0) {
         host = "jido-arm.laas.fr";
         _picowebLeftImg = new PicowebImage(QString(host.c_str()), 8080, QString("/viman?bank=Images&image=CameraTopLeft&quality=25"));
@@ -70,7 +69,7 @@ PosterReader::PosterReader()
         _picowebRightImg = new PicowebImage(QString(host.c_str()), 8080, QString("/viman?bank=Images&image=CAMERA_TOP_RIGHT&quality=50"));
         cout << "poster path is pr2" << endl;
     } else {
-        cout << "ERROR CANNOT DETERMINE POSTER_PATH" << endl;
+        cout << "ERROR POSTER_PATH has to contain jido-arm or pr2c2" << endl;
 
     }
 
@@ -96,8 +95,8 @@ PosterReader::PosterReader()
     _mhpPoster->setRefreshStatus(false);
 }
 
-void PosterReader::changesoftmotiondt(double dt) {
-
+void PosterReader::changesoftmotiondt(double dt) 
+{
     _dt = dt;
 }
 

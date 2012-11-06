@@ -58,6 +58,9 @@
 #include <iostream>
 using namespace std;
 
+// External varialbe handled when compiled with move3d studio
+bool move3d_studio_load_settings = false;
+
 static int FILTER_TO_BE_SET_ACTIVE = FALSE;
 //extern void g3d_create_main_form(void);
 //extern void g3d_loop(void);
@@ -65,8 +68,6 @@ static int FILTER_TO_BE_SET_ACTIVE = FALSE;
 //extern void kcd_set_user_defined_small_volume(double);
 //extern double p3d_get_env_dmax(void);
 static void use(void);
-
-
 
 int mainMhp(int argc, char ** argv) {
 	
@@ -161,6 +162,10 @@ int mainMhp(int argc, char ** argv) {
         return 0;
       }
     }
+    else if (strcmp(argv[i], "-setgui") == 0) {
+      ++i;
+      move3d_studio_load_settings = true;
+    } 
 #ifdef P3D_COLLISION_CHECKING
 		else if (strcmp(argv[i], "-o") == 0) {
       set_collision_by_object(FALSE);

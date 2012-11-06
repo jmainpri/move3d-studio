@@ -4,6 +4,7 @@
 
 #include "posterreader.hpp"
 
+#include "qtMainInterface/settings.hpp"
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
 #include <iostream>
 #include <vector>
@@ -70,6 +71,11 @@ MainWindowRemote::MainWindowRemote(PosterReader *pr, QWidget *parent) :
   //timer for recording
   timer = new QTimer(this);
   connect(timer, SIGNAL(timeout()), this, SLOT(saveVideoTimer()));
+  
+  connect(m_ui->actionLoadFromFile,SIGNAL(triggered()),this,SLOT(loadInterfaceParameters()));
+  connect(m_ui->actionSaveToFile,SIGNAL(triggered()),this,SLOT(saveInterfaceParameters()));
+  connect(m_ui->actionLoadQuick,SIGNAL(triggered()),this,SLOT(loadParametersQuick()));
+  connect(m_ui->actionSaveQuick,SIGNAL(triggered()),this,SLOT(saveParametersQuick()));
 
   //connect(m_ui->pushButtonSaveSettings,SIGNAL(toggled(bool)), this, SLOT(on_pushButtonSaveVideo_toggled(bool)));
 }
@@ -271,6 +277,92 @@ void MainWindowRemote::on_pushButtonSaveSettings_clicked()
 //{
 //
 //}
+
+void MainWindowRemote::loadInterfaceParameters()
+{
+	QString fileName = QFileDialog::getOpenFileName(this);
+	
+	if (!fileName.isEmpty())
+	{
+		qt_loadInterfaceParameters( true, fileName.toStdString() );
+		cout << "Loading parameters at : " << fileName.toStdString() << endl;
+		global_w->getOpenGL()->updateGL();
+	}
+}
+
+void MainWindowRemote::saveInterfaceParameters()
+{
+  QString fileName = QFileDialog::getSaveFileName(this);
+	
+	if (!fileName.isEmpty())
+	{
+    //    if( remove( (home+fileName).c_str() ) != 0 )
+    //    {
+    //      cout << "Error deleting file" << endl;
+    //      return;
+    //    }
+    
+		qt_saveInterfaceParameters( true, fileName.toStdString() );
+		cout << "Saving parameters at : " << fileName.toStdString() << endl;
+		global_w->getOpenGL()->updateGL();
+	}
+}
+
+void MainWindowRemote::loadParametersQuick()
+{
+  char* home_path = getenv("HOME_MOVE3D");
+  
+  if( home_path == NULL)
+  {
+    cout << "HOME_MOVE3D is not defined" << endl;
+    return;
+  }
+  
+  string home(home_path);
+  string fileName("/.save_interface_params");
+  
+  if (!home.empty())
+  {
+    qt_loadInterfaceParameters( false, home+fileName );
+    cout << "Loading parameters at : " << home+fileName << endl;
+    cout << "quick load succeded" << endl;
+    global_w->getOpenGL()->updateGL();
+  }
+  else
+  {
+    cout << "Error : HOME_MOVE3D is not defined" << endl;
+  }
+}
+
+void MainWindowRemote::saveParametersQuick()
+{
+  char* home_path = getenv("HOME_MOVE3D");
+  
+  if( home_path == NULL)
+  {
+    cout << "HOME_MOVE3D is not defined" << endl;
+    return;
+  }
+  
+  string home(home_path);
+  string fileName("/.save_interface_params");
+  
+  if (!home.empty())
+  {
+    if( remove( (home+fileName).c_str() ) != 0 )
+    {
+      cout << "Not deleting file!!!" << endl;
+    }
+    
+    qt_saveInterfaceParameters( true, home+fileName );
+    cout << "Saving parameters at : " << home+fileName << endl;
+    global_w->getOpenGL()->updateGL();
+  }
+  else
+  {
+    cout << "Error : HOME_MOVE3D is not defined" << endl;
+  }
+}
 
 void MainWindowRemote::on_pushButtonSaveVideo_toggled(bool checked)
 {

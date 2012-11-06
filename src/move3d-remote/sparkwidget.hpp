@@ -1,9 +1,9 @@
 #ifndef SPARKWIDGET_H
 #define SPARKWIDGET_H
+
 #include "qtOpenGL/glwidget.hpp"
 #include <QWidget>
 #include "posterreader.hpp"
-
 #include "ui_paramwidget.h"
 
 

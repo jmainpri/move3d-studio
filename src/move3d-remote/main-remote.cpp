@@ -31,6 +31,7 @@ using namespace std;
 QSemaphore* sem;
 
 extern int mainMhp(int argc, char** argv);
+extern bool move3d_studio_load_settings;
 
 // Worker thread
 PlannerHandler* global_plannerHandler(NULL);
@@ -101,6 +102,11 @@ void Simple_threads::initWidgets(MainWindowRemote& w)
   //    w.setGeometry( g_window );
   w.showMaximized();
 //  w.maximize();
+  
+  if( move3d_studio_load_settings )
+  {
+    w.loadParametersQuick();
+  }
 }
 
 //! Main application function of the  

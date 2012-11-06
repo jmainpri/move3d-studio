@@ -34,10 +34,14 @@ public:
         MainWindowRemote(PosterReader *pr, QWidget *parent = 0);
         ~MainWindowRemote();
 
-
+public slots:
+        void loadParametersQuick();
   
 private slots:
-
+        void saveInterfaceParameters();
+        void loadInterfaceParameters();
+        void saveParametersQuick();
+  
         //void on_switchSparkView_clicked(bool checked);
         void on_pushButtonSaveVideo_toggled(bool checked);
         void on_pushButtonSaveSettings_clicked();
