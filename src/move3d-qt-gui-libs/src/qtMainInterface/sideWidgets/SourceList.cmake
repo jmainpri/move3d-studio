@@ -8,7 +8,6 @@ qtUtil.cpp
 qtRobot.cpp
 qtDistanceField.cpp
 qtRRTStar.cpp
-qtmightability.cpp
 )
 
 IF(LIGHT_PLANNER AND MULTILOCALPATH)
@@ -26,7 +25,6 @@ qtUtil.hpp
 qtRobot.hpp
 qtDistanceField.hpp
 qtRRTStar.hpp
-qtmightability.hpp
 )
 
 IF(LIGHT_PLANNER AND MULTILOCALPATH)
@@ -42,7 +40,6 @@ qtUtil.ui
 qtRobot.ui
 qtDistanceField.ui
 qtRRTStar.ui
-qtmightability.ui
 )
 
 IF(LIGHT_PLANNER AND MULTILOCALPATH)
@@ -68,6 +65,14 @@ qtOtp.cpp
 qtNatural.cpp
 )
 ENDIF(HRI_COSTSPACE)
+
+
+IF(MIGHTABILITY_MAPS)
+BM3D_QT_GENERATE_MOC( qtmightability.hpp )
+BM3D_QT_GENERATE_UI_HEADERS( qtmightability.ui )
+BM3D_SRC_SUBDIR_PROCESS( qtmightability.cpp )
+ENDIF(MIGHTABILITY_MAPS)
+
 
 SET(BM3D_MODULE_NAME ${BM3D_MODULE_NAME_TMP2})
 
