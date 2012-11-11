@@ -56,6 +56,7 @@ void ReplanningWidget::init()
   
   connect(m_ui->pushButtonRunStomp, SIGNAL(clicked()), this, SLOT(runStomp()));
   connect(m_ui->pushButtonRunChomp, SIGNAL(clicked()), this, SLOT(runChomp()));
+  connect(m_ui->pushButtonRunNoReset, SIGNAL(clicked()), this, SLOT(runNoReset()));
   
   connect(m_ui->pushButtonInitialize, SIGNAL(clicked()), this, SLOT(initReplanning()));
   connect(m_ui->pushButtonExecuteSimu, SIGNAL(clicked()), this, SLOT(executeReplanTraj()));
@@ -79,8 +80,7 @@ void ReplanningWidget::init()
 	// 1 => SoftMotion
 	// 2 => RRT
   
-  connect(PlanEnv->getObject(PlanParam::setOfActiveJoints), SIGNAL(valueChanged(int)),  
-          this, SLOT(setActiveJointsRadioButtons(int)), Qt::DirectConnection);
+  connect( ENV.getObject(Env::setOfActiveJoints), SIGNAL(valueChanged(int)), this, SLOT(setActiveJointsRadioButtons(int)), Qt::DirectConnection );
   
   // Plot Noisy trajectories
 #ifdef USE_QWT
@@ -99,7 +99,9 @@ void ReplanningWidget::init()
   
   //---------------------------------------
   // Test the multi gaussian
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxActiveJointsSetAtStart, PlanParam::setActiveDofs );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxActiveJointsSetAtStart, Env::setActiveJointsGroup );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxInitStomp,              Env::setStompPlanner );
+  
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxTestMultiGauss, PlanParam::trajOptimTestMultiGauss );
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxDrawTraj, Env::drawTraj );
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxOptimizeCurrentTraj, PlanParam::withCurrentTraj );
@@ -109,6 +111,8 @@ void ReplanningWidget::init()
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxSelectedDuration, PlanParam::useSelectedDuration );
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxTimeLimit, PlanParam::trajStompWithTimeLimit );
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxMMatrix, PlanParam::trajStompMultiplyM );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithRRT, PlanParam::trajStompWithRRT );
+  
   
   
   // Time Limit
@@ -130,7 +134,6 @@ void ReplanningWidget::init()
 void ReplanningWidget::computeHandOver()
 {
   emit(selectedPlanner(QString("computeHandover")));
-  return;
 }
 
 void ReplanningWidget::runStomp()
@@ -141,6 +144,11 @@ void ReplanningWidget::runStomp()
 void ReplanningWidget::runChomp()
 {
   emit(selectedPlanner(QString("runChomp")));
+}
+
+void ReplanningWidget::runNoReset()
+{
+  emit(selectedPlanner(QString("runNoReset")));
 }
 
 void ReplanningWidget::plotNoisyTrajectories()
@@ -236,17 +244,17 @@ void ReplanningWidget::setActiveJoints()
   if( m_ui->radioButtonNavigation->isChecked() )
   {
     cout << "radioButtonNavigation->isChecked()" << endl;
-    PlanEnv->setInt(PlanParam::setOfActiveJoints,0);
+    ENV.setInt(Env::setOfActiveJoints,0);
   }
 	if ( m_ui->radioButtonManipulation->isChecked() )
   {
     cout << "radioButtonManipulation->isChecked()" << endl;
-    PlanEnv->setInt(PlanParam::setOfActiveJoints,1);
+    ENV.setInt(Env::setOfActiveJoints,1);
   }
 	if ( m_ui->radioButtonMobileManip->isChecked() )
   {
     cout << "radioButtonMobileManip->isChecked()" << endl;
-    PlanEnv->setInt(PlanParam::setOfActiveJoints,2);
+    ENV.setInt(Env::setOfActiveJoints,2);
   }
 }
 

@@ -78,9 +78,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
-            <width>395</width>
-            <height>1246</height>
+            <y>-273</y>
+            <width>411</width>
+            <height>979</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -102,6 +102,9 @@
               <string>Foward/Inverse Kinematics</string>
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_6">
+              <property name="margin">
+               <number>0</number>
+              </property>
               <item>
                <widget class="QPushButton" name="pushButtonSwitchFKIK">
                 <property name="text">
@@ -138,6 +141,9 @@
               <string>Time</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_15">
+              <property name="margin">
+               <number>0</number>
+              </property>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_2">
                 <item>
@@ -284,30 +290,24 @@
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_3">
               <item>
-               <widget class="QWidget" name="widget" native="true">
-                <layout class="QGridLayout" name="gridLayout">
-                 <item row="0" column="0">
-                  <widget class="QPushButton" name="pushButtonAttMat">
-                   <property name="text">
-                    <string>Set Att Matrix</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QPushButton" name="pushButtonComputeLeftArmGIK">
-                   <property name="text">
-                    <string>LeftArm Hri GIK</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QPushButton" name="pushButtonComputeRightArmGIK">
-                   <property name="text">
-                    <string>RightArm Hri GIK</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+               <widget class="QPushButton" name="pushButtonComputeLeftArmGIK">
+                <property name="text">
+                 <string>Left Hri GIK</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonComputeRightArmGIK">
+                <property name="text">
+                 <string>Right Hri GIK</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonAttMat">
+                <property name="text">
+                 <string>Set Att Matrix</string>
+                </property>
                </widget>
               </item>
              </layout>
@@ -319,6 +319,9 @@
               <string>Grab Object</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_15">
+              <property name="margin">
+               <number>0</number>
+              </property>
               <item row="0" column="0">
                <widget class="QPushButton" name="pushButtonGrabObject">
                 <property name="text">
@@ -335,17 +338,10 @@
                 </item>
                </widget>
               </item>
-              <item row="2" column="0">
+              <item row="1" column="0">
                <widget class="QPushButton" name="pushButtonReleaseObject">
                 <property name="text">
                  <string>Release Object</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QPushButton" name="pushButtonSetObjectToCarry">
-                <property name="text">
-                 <string>Set Object To Carry</string>
                 </property>
                </widget>
               </item>
@@ -358,39 +354,51 @@
               <string>CSpace Distance</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_22">
-              <item row="1" column="0">
-               <widget class="QCheckBox" name="checkBoxIsWeightedRot">
-                <property name="text">
-                 <string>W-Rotation</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label_11">
-                <property name="text">
-                 <string>Weigth</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QDoubleSpinBox" name="doubleSpinBoxWeightedRot">
-                <property name="maximum">
-                 <double>20.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="2">
-               <widget class="QSlider" name="horizontalSliderWeightedRot">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
+              <property name="margin">
+               <number>0</number>
+              </property>
               <item row="0" column="0">
                <widget class="QPushButton" name="pushButtonVirtualJointBounds">
                 <property name="text">
                  <string>Set Virtual Joint Bounds</string>
                 </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QWidget" name="widget" native="true">
+                <layout class="QGridLayout" name="gridLayout">
+                 <property name="margin">
+                  <number>0</number>
+                 </property>
+                 <item row="0" column="0">
+                  <widget class="QCheckBox" name="checkBoxIsWeightedRot">
+                   <property name="text">
+                    <string>W-Rotation</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLabel" name="label_11">
+                   <property name="text">
+                    <string>Weigth</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QDoubleSpinBox" name="doubleSpinBoxWeightedRot">
+                   <property name="maximum">
+                    <double>20.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <widget class="QSlider" name="horizontalSliderWeightedRot">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>
@@ -402,6 +410,9 @@
               <string>Print Joint Matrix</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_3">
+              <property name="margin">
+               <number>0</number>
+              </property>
               <item row="0" column="1">
                <widget class="QSpinBox" name="spinBoxPrintAbsPos"/>
               </item>
@@ -428,6 +439,9 @@
               <string> FF Box</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_2">
+              <property name="margin">
+               <number>0</number>
+              </property>
               <item row="1" column="1">
                <widget class="QDoubleSpinBox" name="doubleSpinBoxSizeX"/>
               </item>
@@ -490,6 +504,9 @@
               <string>Voxel collision checker</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_2">
+              <property name="margin">
+               <number>0</number>
+              </property>
               <item>
                <widget class="QCheckBox" name="checkBoxDrawVoxelGrid">
                 <property name="text">
@@ -500,6 +517,9 @@
               <item>
                <widget class="QWidget" name="widget_3" native="true">
                 <layout class="QHBoxLayout" name="horizontalLayout_5">
+                 <property name="margin">
+                  <number>0</number>
+                 </property>
                  <item>
                   <widget class="QLabel" name="label_6">
                    <property name="text">
@@ -529,6 +549,15 @@
               <item>
                <widget class="QWidget" name="widget_2" native="true">
                 <layout class="QHBoxLayout" name="horizontalLayout_4">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
                  <item>
                   <widget class="QPushButton" name="pushButtonCreateVoxelCollisionChecker">
                    <property name="text">

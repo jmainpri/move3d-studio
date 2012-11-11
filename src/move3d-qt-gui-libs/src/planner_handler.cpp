@@ -101,6 +101,8 @@ void qt_drawAllWinActive()
 	g3d_draw_allwin_active();
 }
 
+static bool switch_cart_mode=false;
+
 void qt_test1()
 {
   //HRICS::generateGraspConfigurations();
@@ -117,12 +119,18 @@ void qt_test1()
 //  
 //  cout << "Time to erase graph : " << t << endl;
 //  HRICS::printHumanConfig();
+  cout << "switch_cart_mode to " << switch_cart_mode << endl;
+  traj_optim_switch_cartesian_mode( switch_cart_mode );
+  switch_cart_mode = !switch_cart_mode;
 }
 
 void qt_test2()
 {
-  cout << "Plan param 1 : " << PlanEnv->getBool(PlanParam::starRRT) << endl;
-  cout << "Plan param 2 : " << PlanEnv->getBool(PlanParam::starRewire) << endl;
+//  cout << "Plan param 1 : " << PlanEnv->getBool(PlanParam::starRRT) << endl;
+//  cout << "Plan param 2 : " << PlanEnv->getBool(PlanParam::starRewire) << endl;
+  
+  HRICS::printHumanConfig();
+  //HRICS::setTenAccessiblePositions();
   
 //  p3d_set_goal_solution_function( manipulation_get_free_holding_config );
 //  HRICS::setSimulationRobotsTransparent();
@@ -205,9 +213,44 @@ void qt_test3()
 //  }
 }
 
+extern void* GroundCostObj;
+
+void qt_init_costspace()
+{
+  GlobalCostSpace::initialize();
+  
+  std::string function;
+  
+	if( GroundCostObj != NULL )
+    function = "costMap2D";
+	else
+    function = "costDistToObst";
+
+  if (ENV.getBool(Env::enableHri))
+  {
+    function = "costHumanGrids";
+    HRICS_init();
+  }
+  
+  global_costSpace->setCost( function );
+}
+
 void qt_init_after_params()
 {
-  set_robot_active_joints();
+  if(ENV.getBool(Env::isCostSpace) || ENV.getBool(Env::useTRRT) )
+  {
+    qt_init_costspace();
+  }
+  
+  if( ENV.getBool(Env::setActiveJointsGroup) ) 
+  {
+    traj_optim_init_mlp_cntrts_and_fix_joints();
+  }
+  
+  if( ENV.getBool(Env::setStompPlanner) ) 
+  {
+    traj_optim_initStomp();
+  }
 }
 
 void qt_resetGraph()
@@ -505,7 +548,18 @@ void qt_initTrajectoryOptimCostSpace() {
 }
 void qt_runStomp()
 {
-  if( traj_optim_runStomp() )
+  if( traj_optim_runStomp(0) )
+  {
+    cout << "Stomp has run succesfully!!!" << endl;
+  }
+  else {
+    cout << "Stomp fail!!!" << endl;
+  }
+}
+
+void qt_runStompNoReset()
+{
+  if( traj_optim_runStompNoReset(0) )
   {
     cout << "Stomp has run succesfully!!!" << endl;
   }
@@ -608,7 +662,7 @@ void qt_shortCut()
   
   cout << "Random shortCut for robot : " << robot->getName() << endl;
 	API::Smoothing optimTrj(robot->getCurrentTraj());
-	optimTrj.runShortCut(ENV.getInt(Env::nbCostOptimize));
+	optimTrj.runShortCut(PlanEnv->getInt(PlanParam::smoothMaxIterations));
 	optimTrj.replaceP3dTraj();
   
 	g3d_draw_allwin_active();
@@ -624,7 +678,7 @@ void qt_optimize()
   
 	cout << "Random deformation for robot : " << robot ->getName()<< endl;
 	API::CostOptimization optimTrj(robot->getCurrentTraj());
-	optimTrj.runDeformation(ENV.getInt(Env::nbCostOptimize));
+	optimTrj.runDeformation(PlanEnv->getInt(PlanParam::smoothMaxIterations));
 	optimTrj.replaceP3dTraj();
   
 	g3d_draw_allwin_active();
@@ -1074,8 +1128,12 @@ void PlannerHandler::startPlanner(QString plannerName)
     else if( plannerName == "runChomp"){
       qt_runChomp();
     }
+    else if( plannerName == "runNoReset") {
+      qt_runStompNoReset();
+    }
     else if( plannerName == "convertToSoftMotion"){
-      traj_optim_generate_softMotion();
+      //traj_optim_generate_softMotion();
+      traj_optim_generate_pointsOnTraj();
     }
     else if( plannerName == "initTrajectoryOptimCostSpace" ){
       qt_initTrajectoryOptimCostSpace();

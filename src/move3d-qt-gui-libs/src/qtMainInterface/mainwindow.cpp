@@ -508,7 +508,6 @@ void MainWindow::initViewerButtons()
     connect(m_ui->checkBoxDrawGraph,SIGNAL(toggled(bool)),this,SLOT(drawAllWinActive()),Qt::QueuedConnection);
     connect(m_ui->checkBoxDrawTraj,SIGNAL(toggled(bool)),this,SLOT(drawAllWinActive()),Qt::QueuedConnection);
 
-    cout <<  "Graph Draw = " << ENV.getBool(Env::drawGraph) << endl;
 
     connect( ENV.getObject(Env::drawGraph), SIGNAL(valueChanged(bool)), this, SLOT(test()) );
 

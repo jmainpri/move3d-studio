@@ -16,9 +16,7 @@ using namespace std;
 
 MainWindowTestFunctions::MainWindowTestFunctions(MainWindow* MainWinPt) : m_mainWindow(MainWinPt)
 {
-  cout << "Init test Functions" << endl;
-  connect(this, SIGNAL(selectedPlanner(QString)),
-          global_plannerHandler, SLOT(startPlanner(QString)));
+  connect(this, SIGNAL(selectedPlanner(QString)),global_plannerHandler, SLOT(startPlanner(QString)));
   
 	connect(m_mainWindow->Ui()->pushButtonTest1,SIGNAL(clicked()),this,SLOT(test1()));
 	connect(m_mainWindow->Ui()->pushButtonTest2,SIGNAL(clicked()),this,SLOT(test2()));

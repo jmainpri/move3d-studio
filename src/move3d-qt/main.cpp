@@ -147,8 +147,8 @@ void Main_threads::initInterface()
 	//  w.showMaximized();
   
  	QRect g = QApplication::desktop()->screenGeometry();
- 	cout << " x = " << g.x() << " y = " << g.y() << endl;
- 	cout << " width = " << g.width() << " height = " << g.height() << endl;
+  cout << "QApplication::desktop()->screenGeometry() : ";
+ 	cout << " x = " << g.x() << " y = " << g.y() << ", width = " << g.width() << " height = " << g.height() << endl;
  	
  	QRect g_window = w->geometry();
  	g_window.setWidth( g.width() );
@@ -157,14 +157,15 @@ void Main_threads::initInterface()
   
   if( move3d_studio_load_settings )
   {
+    cout << "Load Saved Parameters!!! " << endl;
     w->loadParametersQuick();
-    
-    if( ENV.getBool(Env::isCostSpace) ) {
-      w->Ui()->tabCost->initCostSpace();
-    }
   }
-	
+
   qt_init_after_params();
+  
+  if( ENV.getBool(Env::isCostSpace) ) {
+    w->Ui()->tabCost->initCostSpace();
+  }
   
   w->refreshConstraintedDoFs();
  	w->setGeometry( g_window );
@@ -267,16 +268,23 @@ int Main_threads::run(int argc, char** argv)
 	global_plannerHandler = new PlannerHandler(argc_tmp, argv_tmp);
 	global_plannerHandler->moveToThread(&plannerThread);
 
-  if(noGui) {
+  if(noGui) 
+  {
     connect(global_plannerHandler, SIGNAL(plannerIsStopped()), this, SLOT(exit()));
     global_PlanningThread->start();
     
     QMetaObject::invokeMethod(global_plannerHandler,"init",Qt::BlockingQueuedConnection);
-    if( move3d_studio_load_settings ) loadSettings();
     
     // Creates the wrapper to the project, be carefull to initialize in the right thread
     global_Project = new Project(new Scene(XYZ_ENV));
-    QString script("Diffusion");
+    
+    if( move3d_studio_load_settings ) 
+      loadSettings();
+    
+    qt_init_after_params();
+    
+//    QString script("Diffusion");
+    QString script("MultiRRT");
     ENV.setBool(Env::drawDisabled,true);
     QMetaObject::invokeMethod(global_plannerHandler,"startPlanner",Qt::QueuedConnection,Q_ARG(QString, script));
   }
@@ -286,6 +294,10 @@ int Main_threads::run(int argc, char** argv)
     
     // Creates the wrapper to the project, be carefull to initialize in the right thread
     global_Project = new Project(new Scene(XYZ_ENV));
+    
+    cout << endl;
+    cout << "  ------------------ Init Interface ------------------" << endl;
+    cout << "  ----------------------------------------------------" << endl;
     initInterface();
   }
   

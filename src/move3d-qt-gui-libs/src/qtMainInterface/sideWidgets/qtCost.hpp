@@ -80,11 +80,13 @@ private slots:
 	void computeAStar();
 	//void computeGridAndExtract();
 	void graphSearchTest();
-	
+  void setCostCriterium(int);
+	void setDistanceCriterium(int);
+  
 private:
 	Ui::CostWidget*		m_ui;
 	
-	MotionPlanner*		m_motionWidget;
+	MotionPlanner*	m_motionWidget;
 	MainWindow*			m_mainWindow;
 	
 #ifdef USE_QWT

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>402</width>
+    <width>439</width>
     <height>602</height>
    </rect>
   </property>
@@ -26,7 +26,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>2</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>
@@ -61,8 +61,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>337</width>
-            <height>479</height>
+            <width>412</width>
+            <height>455</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -134,7 +134,11 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QDoubleSpinBox" name="doubleSpinBoxTimeLimitPlanning"/>
+               <widget class="QDoubleSpinBox" name="doubleSpinBoxTimeLimitPlanning">
+                <property name="maximum">
+                 <double>50000.000000000000000</double>
+                </property>
+               </widget>
               </item>
               <item>
                <widget class="QSlider" name="horizontalSliderTimeLimitPlanning">
@@ -446,7 +450,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>390</width>
+            <width>427</width>
             <height>357</height>
            </rect>
           </property>
@@ -739,8 +743,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>377</width>
-            <height>817</height>
+            <width>412</width>
+            <height>840</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_37">
@@ -784,6 +788,13 @@
                   <widget class="QCheckBox" name="checkBoxCostSpace2">
                    <property name="text">
                     <string>Cost Space</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QCheckBox" name="checkBoxUseCostSmooth">
+                   <property name="text">
+                    <string>Use Cost Smooth</string>
                    </property>
                   </widget>
                  </item>
@@ -889,11 +900,8 @@
                     </item>
                     <item>
                      <widget class="QDoubleSpinBox" name="doubleSpinBoxNbRounds">
-                      <property name="decimals">
-                       <number>0</number>
-                      </property>
                       <property name="maximum">
-                       <double>10000.000000000000000</double>
+                       <double>100000.000000000000000</double>
                       </property>
                      </widget>
                     </item>
@@ -1352,7 +1360,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>375</width>
+            <width>412</width>
             <height>371</height>
            </rect>
           </property>

@@ -39,6 +39,7 @@ public:
 	void initGreedy();
 	void initRRTthreshold();
 	void initDistanceAndLocalpath();
+  void initMultiRRT();
 	
 public slots:
 	
@@ -46,13 +47,19 @@ public slots:
 	void greedyPlan();
 	void drawAllWinActive();
 	void runThresholdPlanner();
-	
 	void computeRandomLP();
 	
+  void startMultiTRRT();
+  void clearConfig();
+  void saveCurrentConfigToVector();
+  void setCurrentConfig(int index);
+  
+signals:
+  void selectedPlanner(QString);
+  
 private:
-	
+  
 	Ui::UtilWidget*					m_ui;
-	
 	MainWindow*							m_mainWindow;
 	
 	QPushButton* greedy;

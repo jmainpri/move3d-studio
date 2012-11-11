@@ -13,6 +13,8 @@
 #include "API/project.hpp"
 #include "API/ConfigSpace/localpath.hpp"
 
+#include "planner/Diffusion/Variants/Multi-TRRT.hpp"
+
 #include "P3d-pkg.h"
 
 using namespace std;
@@ -189,3 +191,53 @@ void UtilWidget::computeRandomLP()
 	
 	rob->setAndUpdate( *q3 );
 }
+
+//---------------------------------------------------------------------
+// Multi RRT
+//---------------------------------------------------------------------
+void UtilWidget::initMultiRRT()
+{
+  // 
+  connect( m_ui->pushButtonStartTRRT,SIGNAL(clicked()),this,SLOT(startMultiTRRT()));
+  // Connect the stored configs
+  connect( m_ui->comboBoxConfig, SIGNAL(currentIndexChanged(int)), this, SLOT(setCurrentConfig(int))); 
+  m_ui->comboBoxConfig->setCurrentIndex( 0 );
+}
+
+void UtilWidget::startMultiTRRT()
+{
+  emit("startMultiTRRT");
+}
+
+void UtilWidget::clearConfig()
+{
+  multi_rrt_configs.clear();
+  m_ui->comboBoxConfig->setCurrentIndex( 0 );
+}
+
+void UtilWidget::saveCurrentConfigToVector()
+{
+  Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+  
+  multi_rrt_configs.push_back( robot->getCurrentPos() );
+  
+  QString name = QString("Config %1").arg( multi_rrt_configs.size() );
+  
+  m_ui->comboBoxConfig->addItem(name);
+  m_ui->comboBoxConfig->setCurrentIndex( multi_rrt_configs.size() - 1 );
+  
+  cout << "Save Config in Pos: " << multi_rrt_configs.size() << endl;
+}
+
+void UtilWidget::setCurrentConfig(int index)
+{
+  if ( multi_rrt_configs.empty() || ((unsigned int)index >= multi_rrt_configs.size()) ) 
+  {
+    return;
+  }
+  
+  Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+  robot->setAndUpdate( *multi_rrt_configs[index] );
+  m_mainWindow->drawAllWinActive();
+}
+

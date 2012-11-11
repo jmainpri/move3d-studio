@@ -346,22 +346,22 @@ public:
         tabMotionPlanner = new MotionPlanner();
         tabMotionPlanner->setObjectName(QString::fromUtf8("tabMotionPlanner"));
 				
-        verticalLayout_19 = new QVBoxLayout(tabMotionPlanner);
-        verticalLayout_19->setSpacing(6);
-        verticalLayout_19->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_19->setObjectName(QString::fromUtf8("verticalLayout_19"));
-        verticalLayout_19->setContentsMargins(0, 5, 0, 5);
+//        verticalLayout_19 = new QVBoxLayout(tabMotionPlanner);
+//        verticalLayout_19->setSpacing(6);
+//        verticalLayout_19->setContentsMargins(11, 11, 11, 11);
+//        verticalLayout_19->setObjectName(QString::fromUtf8("verticalLayout_19"));
+//        verticalLayout_19->setContentsMargins(0, 5, 0, 5);
 			
         mainTabWidget->addTab(tabMotionPlanner, QString());
 			
         tabCost = new CostWidget();
         tabCost->setObjectName(QString::fromUtf8("tabCost"));
 			
-        verticalLayout_11 = new QVBoxLayout(tabCost);
-        verticalLayout_11->setSpacing(6);
-        verticalLayout_11->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_11->setObjectName(QString::fromUtf8("verticalLayout_11"));
-        verticalLayout_11->setContentsMargins(0, 5, 0, 5);
+//        verticalLayout_11 = new QVBoxLayout(tabCost);
+//        verticalLayout_11->setSpacing(6);
+//        verticalLayout_11->setContentsMargins(11, 11, 11, 11);
+//        verticalLayout_11->setObjectName(QString::fromUtf8("verticalLayout_11"));
+//        verticalLayout_11->setContentsMargins(0, 5, 0, 5);
 			
         mainTabWidget->addTab(tabCost, QString());
 			
@@ -380,11 +380,11 @@ public:
 //				localPathGroups->setObjectName(QString::fromUtf8("MultiLocalPathWidget"));	
 #endif
 			
-        verticalLayout_12 = new QVBoxLayout(tabRobot);
-        verticalLayout_12->setSpacing(6);
-        verticalLayout_12->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_12->setObjectName(QString::fromUtf8("verticalLayout_12"));
-        verticalLayout_12->setContentsMargins(0, 5, 0, 5);
+//        verticalLayout_12 = new QVBoxLayout(tabRobot);
+//        verticalLayout_12->setSpacing(6);
+//        verticalLayout_12->setContentsMargins(11, 11, 11, 11);
+//        verticalLayout_12->setObjectName(QString::fromUtf8("verticalLayout_12"));
+//        verticalLayout_12->setContentsMargins(0, 5, 0, 5);
 			
         mainTabWidget->addTab(tabRobot, QString());
 			
@@ -392,11 +392,11 @@ public:
         tabUtil->setObjectName(QString::fromUtf8("tabUtil"));
         tabUtil->setFocusPolicy(Qt::NoFocus);
 			
-        verticalLayout_17 = new QVBoxLayout(tabUtil);
-        verticalLayout_17->setSpacing(6);
-        verticalLayout_17->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_17->setObjectName(QString::fromUtf8("verticalLayout_17"));
-        verticalLayout_17->setContentsMargins(0, 5, 0, 5);
+//        verticalLayout_17 = new QVBoxLayout(tabUtil);
+//        verticalLayout_17->setSpacing(6);
+//        verticalLayout_17->setContentsMargins(11, 11, 11, 11);
+//        verticalLayout_17->setObjectName(QString::fromUtf8("verticalLayout_17"));
+//        verticalLayout_17->setContentsMargins(0, 5, 0, 5);
 			
         mainTabWidget->addTab(tabUtil, QString());
 			

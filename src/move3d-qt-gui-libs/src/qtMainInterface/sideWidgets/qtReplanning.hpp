@@ -46,6 +46,7 @@ private slots:
   void mainReplanFunction();
   void runStomp();
   void runChomp();
+  void runNoReset();
   
   void initReplanning();
   void executeReplanTraj();

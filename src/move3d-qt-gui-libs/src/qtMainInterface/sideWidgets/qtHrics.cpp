@@ -63,16 +63,7 @@ HricsWidget::~HricsWidget()
 // HRI
 //---------------------------------------------------------------------
 void HricsWidget::initHRI()
-{	
-//  if (ENV.getBool(Env::isCostSpace)) 
-//  {
-//    std::cout << "Initializing HRI Cost Function" << std::endl;
-//    global_costSpace->addCost("costHRI",boost::bind(HRICS_getConfigCost,_1));
-//    global_costSpace->setCost("costHRI");
-//  }
-  
-  cout << "Init HRICS widget" << endl;
-  
+{	  
   connect(this, SIGNAL(selectedPlanner(QString)), global_plannerHandler, SLOT(startPlanner(QString)));
 	
 	m_mainWindow->connectCheckBoxToEnv(m_ui->enableHri_2,										Env::enableHri);
@@ -122,28 +113,22 @@ void HricsWidget::initHRI()
                                                      m_ui->horizontalSliderDistance,
                                                      Env::Kdistance);
   
-  cout << "Env::Kdistance : " << ENV.getDouble(Env::Kdistance) << endl;
 	
 	m_k_visbility = new QtShiva::SpinBoxSliderConnector(this,
                                                       m_ui->doubleSpinBoxVisibility,
                                                       m_ui->horizontalSliderVisibility,
                                                       Env::Kvisibility );
-	
-  cout << "Env::Kvisibility : " << ENV.getDouble(Env::Kvisibility) << endl;
+
   
 	m_k_naturality = new QtShiva::SpinBoxSliderConnector(this, 
                                                        m_ui->doubleSpinBoxNatural,
                                                        m_ui->horizontalSliderNatural,
                                                        Env::Knatural );
-	
-  cout << "Env::Knatural : " << ENV.getDouble(Env::Knatural) << endl;
   
 	m_k_reachability = new QtShiva::SpinBoxSliderConnector(this, 
                                                          m_ui->doubleSpinBoxReachable,		
                                                          m_ui->horizontalSliderReachable,	
                                                          Env::Kreachable );
-  
-  cout << "Env::Kreachable : " << ENV.getDouble(Env::Kreachable) << endl;
 	
 //	connect(m_k_distance,SIGNAL(valueChanged(double)),this,SLOT(KDistance(double)));
 //	connect(m_k_visbility,SIGNAL(valueChanged(double)),this,SLOT(KVisibility(double)));

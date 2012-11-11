@@ -30,7 +30,6 @@ public:
     double getZ();
     double getRZ();
 
-
     void init(double x, double y, double z, double rz);
     void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
 

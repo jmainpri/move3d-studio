@@ -16,7 +16,6 @@ KCDpropertiesWindow::KCDpropertiesWindow(QWidget *parent) :
   //  connect(ENV.getObject(Env::costDeltaMethod), SIGNAL(valueChanged(int)),m_ui->comboBoxTrajMethod, SLOT(setCurrentIndex(int)));
 	
 	p3d_traj_test_type TrajMethod = p3d_col_env_get_traj_method();
-	cout << "KCDpropertiesWindow::TrajMethod = " << TrajMethod << endl;
   m_ui->comboBoxTrajMethod->setCurrentIndex( TrajMethod );
 
   connect( m_ui->pushButtonDrawAllOBBs, SIGNAL(clicked()), this, SLOT(drawOBBs()));  
@@ -42,7 +41,6 @@ void KCDpropertiesWindow::changeEvent(QEvent *e)
 void KCDpropertiesWindow::setTestTrajMethod(int TrajMethod)
 {
 	p3d_col_env_set_traj_method((p3d_traj_test_type)TrajMethod);
-	cout << "KCDpropertiesWindow::TrajMethod = " << TrajMethod << endl;
 }
 
 bool all_obbs = false;

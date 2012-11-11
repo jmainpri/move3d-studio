@@ -52,10 +52,7 @@ QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
     
     connect( m_spinBox, SIGNAL(valueChanged( double )), SLOT(spinBoxValueChanged( double ) ) );
     connect( m_slider, SIGNAL(valueChanged( int )), SLOT(sliderValueChanged( int ) ) );
-    
     connect(this, SIGNAL(valueChanged( double )), ENV.getObject(p),SLOT(set(double)));
-    
-    // TODO see why this doesn't work 
     connect(ENV.getObject(p), SIGNAL(valueChanged(double)),m_spinBox, SLOT(setValue(double)));
     
     m_spinBox->setValue(ENV.getDouble(p));
@@ -73,12 +70,9 @@ QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
     
     connect( m_spinBox, SIGNAL(valueChanged( double )), SLOT(spinBoxValueChanged( double ) ) );
     connect( m_slider, SIGNAL(valueChanged( int )), SLOT(sliderValueChanged( int ) ) );
-    
     connect(this, SIGNAL(valueChanged( int )), ENV.getObject(p), SLOT(set(int)));
+    connect(ENV.getObject(p), SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
   
-    // TODO see why this doesn't work 
-    connect(ENV.getObject(p), SIGNAL(valueChanged(int)),m_spinBox, SLOT(setValue(int)));
-    
     m_spinBox->setValue(ENV.getInt(p));
     
     _init = false;
@@ -94,11 +88,8 @@ QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
 	
 	connect( m_spinBox, SIGNAL(valueChanged(double)), SLOT(spinBoxValueChanged(double)) );
 	connect( m_slider, SIGNAL(valueChanged(int)), SLOT(sliderValueChanged(int)) );
-	
 	connect(this,SIGNAL(valueChanged(double)),PlanEnv->getObject(p),SLOT(set(double)));
-  
-  // TODO see why this doesn't work 
-	//connect(PlanEnv->getObject(p),SIGNAL(valueChanged(double)),m_spinBox, SLOT(setValue(double)));
+	connect(PlanEnv->getObject(p),SIGNAL(valueChanged(double)),m_spinBox, SLOT(setValue(double)));
 	
 	m_spinBox->setValue(PlanEnv->getDouble(p));
 	
@@ -115,11 +106,8 @@ QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
 	
 	connect( m_spinBox, SIGNAL(valueChanged( double )), SLOT(spinBoxValueChanged( double ) ) );
 	connect( m_slider, SIGNAL(valueChanged( int )), SLOT(sliderValueChanged( int ) ) );
-	
 	connect(this, SIGNAL(valueChanged( int )), PlanEnv->getObject(p), SLOT(set(int)));
-  
-  // TODO see why this doesn't work 
-	//    connect(ENV.getObject(p), SIGNAL(valueChanged(int)),m_spinBox, SLOT(setValue(int)));
+	connect(PlanEnv->getObject(p), SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
 	
 	m_spinBox->setValue(PlanEnv->getInt(p));
 	

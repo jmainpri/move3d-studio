@@ -136,7 +136,6 @@ void MotionPlanner::initDiffusion()
 	connect(m_ui->spinBoxMaxNodes, SIGNAL(valueChanged(int)), ENV.getObject(Env::maxNodeCompco), SLOT(set(int)));
 	connect(ENV.getObject(Env::maxNodeCompco), SIGNAL(valueChanged( int )), m_ui->spinBoxMaxNodes, SLOT(setValue(int)));
   
-  cout << "Set planner max iter : " << PlanEnv->getInt(PlanParam::plannerMaxIterations) << endl;
   m_ui->spinBoxMaxIterations->setValue( PlanEnv->getInt(PlanParam::plannerMaxIterations) );
 	connect(m_ui->spinBoxMaxIterations, SIGNAL(valueChanged(int)), PlanEnv->getObject(PlanParam::plannerMaxIterations), SLOT(set(int)));
 	connect(PlanEnv->getObject(PlanParam::plannerMaxIterations), SIGNAL(valueChanged(int)), m_ui->spinBoxMaxIterations, SLOT(setValue(int)));
@@ -194,6 +193,7 @@ void MotionPlanner::initPRM()
 void MotionPlanner::initOptim()
 {	
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxCostSpace2,				Env::isCostSpace );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxUseCostSmooth,    PlanParam::trajUseCost );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxDebug2,						Env::debugCostOptim );
   
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxExtractCurrentTraj,	PlanParam::rrtExtractShortestPath );
@@ -211,7 +211,7 @@ void MotionPlanner::initOptim()
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithDeform,				PlanParam::withDeformation );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithShortCut,			PlanParam::withShortCut );
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithStomp,        PlanParam::withStomp );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxStompWithTimeLimit,PlanParam::trajStompWithTimeLimit );
+  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxStompWithTimeLimit, PlanParam::trajStompWithTimeLimit );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithGainLimit,		PlanParam::withGainLimit );
 	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithIterLimit,		PlanParam::withMaxIteration );
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxShowExploration,	PlanParam::showExploration );
@@ -235,7 +235,9 @@ void MotionPlanner::initOptim()
 	m_ui->comboBoxTrajCostExtimation->setCurrentIndex( /*MECHANICAL_WORK*/ INTEGRAL );
 	setCostCriterium(MECHANICAL_WORK);
 	
-	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxNbRounds, m_ui->horizontalSliderNbRounds , Env::nbCostOptimize );	
+  	new QtShiva::SpinBoxSliderConnector( this, m_ui->doubleSpinBoxNbRounds, m_ui->horizontalSliderNbRounds , PlanParam::smoothMaxIterations );
+//	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxNbRounds, m_ui->horizontalSliderNbRounds , Env::nbCostOptimize );	
+  
 	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxTimeLimitSmoothing, m_ui->horizontalSliderTimeLimitSmoothing , PlanParam::timeLimitSmoothing );
   new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxTimeLimitPlanning, m_ui->horizontalSliderTimeLimitPlanning , PlanParam::timeLimitPlanning );
 	
@@ -286,17 +288,6 @@ int __traj_id=0;
 void MotionPlanner::cutTrajAndOptimizeSM()
 {
   Robot* rob =	global_Project->getActiveScene()->getActiveRobot();
-	double dmax = global_Project->getActiveScene()->getDMax();
-        Q_UNUSED(dmax);
-  
-// 	p3d_multilocalpath_switch_to_linear_groups ( rob->getRobotStruct() );
-  
-// 	API::Trajectory traj( rob, p3d_get_last_linear_traj() );
-	
-// 	cout << "Cutting into small LP" << endl;
-// 	traj.cutTrajInSmallLP( floor( traj.getRangeMax() / dmax ) );
-// 	traj.replaceP3dTraj();
-  //qt_add_traj("smallLP",__traj_id);
 
 #ifdef LIGHT_PLANNER
   MANPIPULATION_TRAJECTORY_CONF_STR confs;
@@ -313,44 +304,44 @@ void MotionPlanner::cutTrajAndOptimizeSM()
   __traj_id++;
 #endif
   
-#if defined(USE_QWT)
-	cout << "Plot speed --------------------------------" << endl;
-  
-	MultiPlot* myPlot = new MultiPlot(this->plot);
-	myPlot->setGeometry(this->plot->getPlot()->geometry());
-	
-	vector< vector<double> > curves(7);
-	curves[0] = confs.second[0];
-	curves[1] = confs.second[1];
-	curves[2] = confs.second[2];
-  curves[3] = confs.second[3];
-  curves[4] = confs.second[4];
-  curves[5] = confs.second[5];
-  curves[6] = confs.second[6];
-  
-  for (unsigned int i=0; i<curves.size(); i++) 
-  {
-    for (unsigned int j=1; j<curves[i].size(); j++) 
-    {
-      curves[i][j] = (curves[i][j]-curves[i][j-1])/0.01; 
-    }
-  }
-	
-	vector< string > plotNames;
-	plotNames.push_back( "V1" );
-	plotNames.push_back( "V2" );
-	plotNames.push_back( "V3" );
-	plotNames.push_back( "V4" );
-  plotNames.push_back( "V5" );
-  plotNames.push_back( "V6" );
-  plotNames.push_back( "V7" );
-  
-	myPlot->setData( plotNames , curves );
-	
-	delete this->plot->getPlot();
-	this->plot->setPlot(myPlot);
-	this->plot->show();
-#endif
+//#if defined(USE_QWT)
+//	cout << "Plot speed --------------------------------" << endl;
+//  
+//	MultiPlot* myPlot = new MultiPlot(this->plot);
+//	myPlot->setGeometry(this->plot->getPlot()->geometry());
+//	
+//	vector< vector<double> > curves(7);
+//	curves[0] = confs.second[0];
+//	curves[1] = confs.second[1];
+//	curves[2] = confs.second[2];
+//  curves[3] = confs.second[3];
+//  curves[4] = confs.second[4];
+//  curves[5] = confs.second[5];
+//  curves[6] = confs.second[6];
+//  
+//  for (unsigned int i=0; i<curves.size(); i++) 
+//  {
+//    for (unsigned int j=1; j<curves[i].size(); j++) 
+//    {
+//      curves[i][j] = (curves[i][j]-curves[i][j-1])/0.01; 
+//    }
+//  }
+//	
+//	vector< string > plotNames;
+//	plotNames.push_back( "V1" );
+//	plotNames.push_back( "V2" );
+//	plotNames.push_back( "V3" );
+//	plotNames.push_back( "V4" );
+//  plotNames.push_back( "V5" );
+//  plotNames.push_back( "V6" );
+//  plotNames.push_back( "V7" );
+//  
+//	myPlot->setData( plotNames , curves );
+//	
+//	delete this->plot->getPlot();
+//	this->plot->setPlot(myPlot);
+//	this->plot->show();
+//#endif
 }
 
 void MotionPlanner::eraseDebugTraj()
@@ -360,8 +351,7 @@ void MotionPlanner::eraseDebugTraj()
 
 void MotionPlanner::setCostCriterium(int choice) 
 {
-  cout << "Set Delta Step Choise to " << choice << endl;
-	
+  //cout << "Set Delta Step Choise to " << choice << endl;
 #ifdef P3D_PLANNER
 	p3d_SetDeltaCostChoice(choice);
 #endif
@@ -472,9 +462,6 @@ void MotionPlanner::initMultiRun()
 	
 	contextList = new QListWidget;
 	m_ui->multiRunLayout->addWidget(contextList);
-	
-	//    new QtShiva::SpinBoxSliderConnector(
-	//            this, m_ui->doubleSpinBoxNbRounds, m_ui->horizontalSliderNbRounds , Env::nbMultiRun );
 	
 	
 	connect(m_ui->horizontalSliderNbMutliRun, SIGNAL(valueChanged(int)), m_ui->spinBoxNbMutliRun, SLOT(setValue(int)) );

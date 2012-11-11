@@ -98,38 +98,67 @@ void MultiRun::runMutliRRTSimple()
 	mVectDoubles.clear();
 	mTime.clear();
 	
+  // RRT
   mNames.push_back("Succeeded");
 	mNames.push_back("Time");
 	mNames.push_back("Cost");
   mNames.push_back("NbOfNodes");
   mNames.push_back("NbOfExtensions");
-	
-	mVectDoubles.resize(5);
+  
+  // Trajectory
+  mNames.push_back("Length");
+	mNames.push_back("Max");
+	mNames.push_back("Average");
+  mNames.push_back("Integral");
+  mNames.push_back("Mecha_Work");
+  
+	mVectDoubles.resize( mNames.size() );
 	
   Robot* robot = global_Project->getActiveScene()->getActiveRobot();
   
   confPtr_t q_init = robot->getInitialPosition();
   confPtr_t q_goal = robot->getGoTo();
   
-  RRTStatistics stat;
+  RRTStatistics rrt_stat;
+  TrajectoryStatistics traj_stat;
   
 	for(int i =0;i<ENV.getInt(Env::nbMultiRun);i++)
 	{
-		cout << "Run Nb"  << i << " = " << endl;
+		cout << "Run Nb = " << i << endl;
     
     p3d_planner_functions_set_run_id( i );
-    p3d_planner_function( robot->getRobotStruct(), q_init->getConfigStruct(), q_goal->getConfigStruct() );
+    p3d_traj* path = NULL;
     
-    p3d_get_rrt_statistics( stat );
-		
-		mTime.push_back( stat.time );
-		mVectDoubles[0].push_back( stat.succeeded );
-		mVectDoubles[1].push_back( stat.time );
-    mVectDoubles[2].push_back( stat.cost );
-    mVectDoubles[3].push_back( stat.nbNodes );
-		mVectDoubles[4].push_back( stat.nbExpansions );
+    if (PlanEnv->getBool(PlanParam::trajStompWithRRT))
+    {
+      traj_optim_switch_cartesian_mode( true );
+      path = p3d_planner_function( robot->getRobotStruct(), q_init->getConfigStruct(), q_goal->getConfigStruct() );
+    }
     
-		g3d_draw_allwin_active();
+    p3d_get_rrt_statistics( rrt_stat );
+    
+    if( !PlanEnv->getBool(PlanParam::stopPlanner) && PlanEnv->getBool(PlanParam::withSmoothing) )
+    {
+      p3d_smoothing_function( robot->getRobotStruct(), path, PlanEnv->getInt(PlanParam::smoothMaxIterations), 4.0);
+    }
+    
+    p3d_get_traj_statistics( traj_stat );
+    
+		mTime.push_back( rrt_stat.time );
+		mVectDoubles[0].push_back( rrt_stat.succeeded );
+		mVectDoubles[1].push_back( rrt_stat.time );
+    mVectDoubles[2].push_back( rrt_stat.cost );
+    mVectDoubles[3].push_back( rrt_stat.nbNodes );
+		mVectDoubles[4].push_back( rrt_stat.nbExpansions );
+    
+    mVectDoubles[5].push_back( traj_stat.length );
+		mVectDoubles[6].push_back( traj_stat.max );
+    mVectDoubles[7].push_back( traj_stat.average );
+    mVectDoubles[8].push_back( traj_stat.integral );
+		mVectDoubles[9].push_back( traj_stat.mecha_work );
+    
+    if(!ENV.getBool(Env::drawDisabled)) 
+      g3d_draw_allwin_active();
 		
 		if(ENV.getBool(Env::StopMultiRun))
 		{
@@ -628,7 +657,7 @@ void MultiRun::runMutliSmooth()
       PlanEnv->setDouble( PlanParam::timeLimitSmoothing, time_limit );
       
       optimTrj.cutTrajInSmallLP( PlanEnv->getInt( PlanParam::nb_pointsOnTraj ) );
-			optimTrj.runDeformation( ENV.getInt(Env::nbCostOptimize) , i );
+			optimTrj.runDeformation( PlanEnv->getInt(PlanParam::smoothMaxIterations) , i );
       optimTrj.replaceP3dTraj();
 		}
     else if( PlanEnv->getBool(PlanParam::withShortCut) )
@@ -638,7 +667,7 @@ void MultiRun::runMutliSmooth()
       PlanEnv->setDouble( PlanParam::timeLimitSmoothing, time_limit );
       
       optimTrj.cutTrajInSmallLP( PlanEnv->getInt( PlanParam::nb_pointsOnTraj ) );
-			optimTrj.runShortCut( ENV.getInt(Env::nbCostOptimize) , i );
+			optimTrj.runShortCut( PlanEnv->getInt(PlanParam::smoothMaxIterations) , i );
       optimTrj.replaceP3dTraj();
 		}
 		else if( PlanEnv->getBool(PlanParam::withStomp) )
@@ -648,7 +677,7 @@ void MultiRun::runMutliSmooth()
       PlanEnv->setBool( PlanParam::trajStompWithTimeLimit, true );
       PlanEnv->setDouble( PlanParam::trajStompTimeLimit , time_limit );
       
-      traj_optim_runStomp();
+      traj_optim_runStomp(i);
     }
     
 		gettimeofday(&tim, NULL);
