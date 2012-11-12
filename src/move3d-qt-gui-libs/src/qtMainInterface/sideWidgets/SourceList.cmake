@@ -13,6 +13,7 @@ qtRRTStar.cpp
 IF(LIGHT_PLANNER AND MULTILOCALPATH)
 BM3D_SRC_SUBDIR_PROCESS(
 qtReplanning.cpp
+qtGraspPlanner.cpp
 )
 ENDIF()
 
@@ -30,6 +31,7 @@ qtRRTStar.hpp
 IF(LIGHT_PLANNER AND MULTILOCALPATH)
 BM3D_QT_GENERATE_MOC(
 qtReplanning.hpp
+qtGraspPlanner.hpp
 )
 ENDIF()
 
@@ -44,6 +46,7 @@ qtRRTStar.ui
 
 IF(LIGHT_PLANNER AND MULTILOCALPATH)
 BM3D_QT_GENERATE_UI_HEADERS(
+qtGraspPlanner.ui
 qtReplanning.ui
 )
 ENDIF()

@@ -16,8 +16,10 @@
 #endif
 
 #include "qtDistanceField.hpp"
-#include "qtReplanning.hpp"
 #include "qtRRTStar.hpp"
+#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
+#include "qtReplanning.hpp"
+#endif
 
 #ifdef USE_QWT
 #include "qtPlot/basicPlotWindow.hpp"
@@ -95,7 +97,7 @@ private:
   
 #ifdef HRI_COSTSPACE
 	HricsWidget* m_tabHri;
-        OtpWidget* m_tabOtp;
+  OtpWidget* m_tabOtp;
 #endif
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
   ReplanningWidget* m_tabReplan;

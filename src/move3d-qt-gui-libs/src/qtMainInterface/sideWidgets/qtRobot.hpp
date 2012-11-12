@@ -14,6 +14,10 @@
 #include "qtFormRobot/moverobot.hpp"
 #include "qtMainInterface/mainwindow.hpp"
 
+#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
+#include "qtGraspPlanner.hpp"
+#endif
+
 namespace Ui
 {
     class RobotWidget;
@@ -152,6 +156,10 @@ private:
     QString m_SupportName;
     QString m_PlacementName;
     int m_configNum;
+  
+#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
+  GraspPlannerWidget* m_tabGrasp;
+#endif
 };
 
 #endif

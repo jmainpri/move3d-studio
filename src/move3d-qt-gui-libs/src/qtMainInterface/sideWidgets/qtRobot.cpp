@@ -71,6 +71,14 @@ RobotWidget::RobotWidget(QWidget *parent) :
     initManipulation();
     //initVoxelCollisionChecker();
     initTrajectoryFromConfig();
+  
+#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
+  cout << "Set grasp tab" << endl;
+  // Initialize the grasp planner tab
+  m_tabGrasp = new GraspPlannerWidget(m_ui->GraspPlanner);
+  m_tabGrasp->setObjectName(QString::fromUtf8("tabGraspPlanner"));
+  m_ui->graspplannerLayout->addWidget(m_tabGrasp);
+#endif
 }
 
 RobotWidget::~RobotWidget()
@@ -167,9 +175,8 @@ void RobotWidget::initModel()
 
     connect(m_ui->pushButtonPrintPQPColPair,SIGNAL(clicked()),		this,SLOT(printPQPColPair()));
 
-    void	setMaximum ( int max );
-    void	setMinimum ( int min );
-
+//    void	setMaximum ( int max );
+//    void	setMinimum ( int min );
 }
 
 void RobotWidget::printAbsPos()
