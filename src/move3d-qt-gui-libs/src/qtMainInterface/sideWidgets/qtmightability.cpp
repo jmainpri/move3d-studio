@@ -181,8 +181,11 @@ void qtMightability::on_pushButtonInitialiazeCreateAgents_clicked()
     cout << "begin Create Agents For MA_ASA" << endl;
     cout << "##########################################" << endl;
 
-
+#ifdef MIGHTABILITY_MAPS
     init_agents_for_MA_and_ASA();
+#else
+    cout<< "Flag MIGHTABILITY_MAPS not on" <<endl;
+#endif
 
     cout << "##########################################" << endl;
     cout << "End of Create Agents For MA_ASA" << endl;
@@ -224,7 +227,11 @@ void qtMightability::on_pushButtonInitialiazeComputeMM_clicked()
      char MM_around_object[50]="TABLE_4";
       /////char MM_around_object[50]="IKEA_SHELF";
 //     default_drawtraj_fct_ptr=default_drawtraj_fct_with_XFORM;
+#ifdef MIGHTABILITY_MAPS
     int MA_init_res=Create_and_init_Mightability_Maps(MM_around_object);
+#else
+    cout<< "Flag MIGHTABILITY_MAPS not on" <<endl;
+#endif
 //    fflush();
     fflush(stdout);
 
@@ -247,8 +254,12 @@ void qtMightability::on_pushButtonTaskability_clicked()
     cout << "Begin compute Taskalities" << endl;
     cout << "##########################################" << endl;
 
+#ifdef MIGHTABILITY_MAPS
     find_taskability_graph();
     print_taskability_graph();
+#else
+    cout<< "Flag MIGHTABILITY_MAPS not on"<<endl;
+#endif
 //    update_taskability_graph_list();
 
     cout << "##########################################" << endl;
