@@ -13,6 +13,7 @@
 #define SPARK_MAX_AGENT_NB 7
 #define SPARK_MAX_FREEFLYER_NB 30
 #define NB_MAX_TRAJ 100
+#define SPARK_NUM_SPHERES_MAX 10
 
 //typedef struct GEN_STRING64 {
 //  char name[64];
@@ -238,6 +239,43 @@ typedef struct POM_OBJECT_POS {
 
 #endif /* _POMSTRUCT_H */
 
+/* --- monitoring spheres ------------------------------------------------ */
+typedef struct STRUCT_SPARK_3D_COORD {
+  double x;
+  double y;
+  double z;
+} SPARK_3D_COORD;
+
+typedef enum ENUM_SPARK_SPHERE_TYPE {
+  SPARK_SIMPLE_ENTRY = 0, // simple sphere defined through radius and center. To monitor entrance in the sphere;
+  SPARK_SIMPLE_EXIT = 1,  // simple sphere defined through radius and center. To monitor exit from the sphere.
+  SPARK_THROW_IN_CONTAINER = 2, // simple sphere those radius and center is automatically defined as fitting above the container.
+  SPARK_PICK_OBJECT =  3, // simple sphere those radius and center is automatically defined as around object to pick.
+  SPARK_PERMANENT_STOP_MONITOR = 4  //
+} SPARK_SPHERE_TYPE; // Monitor that hands are fixed at some points.
+
+typedef struct STRUCT_SPARK_ACTION_MONITORING_SPHERE {
+  int isSphereActive; // TRUE if monitor is active, FALSE otherwise.
+  GEN_STRING64  agentName; // agent name whose action is monitored.
+  int agentIndex; // agent index.
+  GEN_STRING64  objectName; // Object name used to define sphere for certain sphereType
+  int entityIndex; // entity index of the object
+  int handIndexInput; // -1 if we don't want to precise hand index > -1 otherwise.
+  SPARK_3D_COORD sphereCenter; //  sphere center.
+  double sphereRadius; // sphere radius.
+  double filteringTimeThreshold; // time delay to wait for monitor success condition to triger monitor success
+  SPARK_SPHERE_TYPE sphereType; // what is the type of this sphere as far as creating it is concerned
+  int monitorEnterInResult; // TRUE if monitor trigger for enter in spheres and FALSE otherwise.
+  int monitorGetOutResult; // TRUE if monitor trigger for get out of spheres (if it was in) and FALSE otherwise.
+  int handIndexResult; // Whose agent hands trigger monitor.
+  int modifIndex; // each time there is something new on this sphere the index is incremented. This is used to update poster from move3d spheres.
+} SPARK_ACTION_MONITORING_SPHERE;
+
+
+typedef struct STRUCT_SPARK_ALL_MONITORING_SPHERES {
+  SPARK_ACTION_MONITORING_SPHERE spheres[SPARK_NUM_SPHERES_MAX];
+  int modifIndex;  //each time there is something new in spheres the index is incremented. This is used to update poster from move3d spheres.
+} SPARK_ALL_MONITORING_SPHERES;
 
 //----------------------------------------------------
 // MHP

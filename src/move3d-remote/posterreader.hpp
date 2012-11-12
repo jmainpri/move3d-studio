@@ -14,6 +14,8 @@
 
 
 extern void draw_smtraj_tace();
+extern void draw_monitoring_spheres();
+
 
 class PosterReader : public QObject
 {
@@ -34,11 +36,14 @@ public slots:
     void update();
     void softmotionPlotTraj();
     void softmotionDrawTraj(bool b);
+    void monitoringSpheresDraw(bool b);
     void drawSmTraj();
     void drawGoToPos();
+    void drawMS();
     void setDrawGoTo(bool b);
 
     void changesoftmotiondt(double dt);
+    void changesOpacity(double opacity);
 
 private:
     // Spark ftc and data
@@ -46,6 +51,7 @@ private:
 
     bool _drawTraj;
     bool _drawGotoPos;
+    bool _drawMonitoringSphere;
   
     // Niut fct and data
     bool updateNiut();
@@ -69,6 +75,9 @@ public:
     GenomPoster * _softmotionPoster;
     SM_TRAJ_STR _softmotionPosterStruct;
 
+    GenomPoster * _monitoringSpheresPoster;
+    SPARK_ALL_MONITORING_SPHERES _monitoringSpheresPosterStruct;
+
     PicowebImage * _picowebLeftImg;
     PicowebImage * _picowebRightImg;
 
@@ -84,6 +93,7 @@ public:
     GenomPoster * _mhpPoster;
     MHP_ROBOTFUTURPOS_POSTER_STR _mhpRobotGoTo;
 double _dt;
+double _opacity;
     SM_TRAJ _smTraj;
 };
 

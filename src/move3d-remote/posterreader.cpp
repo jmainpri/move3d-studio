@@ -27,13 +27,26 @@ using namespace std;
 
 PosterReader* ptrPosterReader=NULL;
 
+bool drawTrajOnRemote;
+bool drawMonitoringSpheresOnRemote;
+
 vector<vector<double> > _2dTraj;
 
 void draw_smtraj_tace()
 {
     if(ptrPosterReader)
+    {
         ptrPosterReader->drawSmTraj();
-    ptrPosterReader->drawGoToPos();
+        ptrPosterReader->drawGoToPos();
+    }
+}
+
+void draw_monitoring_spheres()
+{
+    if(ptrPosterReader)
+    {
+        ptrPosterReader->drawMS();
+    }
 }
 
 PosterReader::PosterReader()
@@ -52,6 +65,12 @@ PosterReader::PosterReader()
     /* declaration of the poster reader threads */
     _softmotionPoster = new GenomPoster("mhpArmTraj", (char*)(&_softmotionPosterStruct), sizeof(SM_TRAJ_STR), 10);
     _softmotionPoster->setRefreshStatus(true);
+
+    /* declaration of the poster reader threads */
+    _monitoringSpheresPoster = new GenomPoster("sparkMonitoringSpheres", (char*)(&_monitoringSpheresPosterStruct), sizeof(SPARK_ALL_MONITORING_SPHERES), 10);
+    _monitoringSpheresPoster->setRefreshStatus(true);
+
+
     // Camera
 
     std::string host;
@@ -93,11 +112,19 @@ PosterReader::PosterReader()
     /* poster for robot in mhp */
     _mhpPoster = new GenomPoster("mhprobotFuturPos", (char*)(&_mhpRobotGoTo), sizeof(MHP_ROBOTFUTURPOS_POSTER_STR), 10);
     _mhpPoster->setRefreshStatus(false);
+
+    drawTrajOnRemote = false;
+    drawMonitoringSpheresOnRemote = false;
 }
 
 void PosterReader::changesoftmotiondt(double dt) 
 {
     _dt = dt;
+}
+
+void PosterReader::changesOpacity(double opacity)
+{
+    _opacity = opacity;
 }
 
 PosterReader::~PosterReader()
@@ -121,10 +148,10 @@ void PosterReader::init()
     _sparkPoster->start();
     cout << "   ... spark thread started" << endl;
     cout << "start thread for picowebLeftImg ..." << endl;
-    _picowebLeftImg->start();
+//    _picowebLeftImg->start();
     cout << "   ... picowebLeftImg thread started" << endl;
     cout << "start thread for _picowebRightImg ..." << endl;
-    _picowebRightImg->start();
+//    _picowebRightImg->start();
     cout << "   ... _picowebRightImg thread started" << endl;
     cout << "start thread for niut ..." << endl;
     _niutPoster->start();
@@ -342,8 +369,6 @@ void PosterReader::softmotionPlotTraj()
     return;
 }
 
-
-
 void PosterReader::drawSmTraj()
 {
     if(_drawTraj == true) {
@@ -465,6 +490,24 @@ void PosterReader::softmotionDrawTraj(bool b)
     return;
 }
 
+void PosterReader::monitoringSpheresDraw(bool b)
+{
+    if( _monitoringSpheresPoster == NULL )
+    {
+        cout << "monitoringSpherePoster : NULL Poster" << endl;
+        return;
+    }
+
+    _drawMonitoringSphere = b;
+    if(b) {
+
+        cout << "_drawMonitoringSphere = true " << endl;
+    } else {
+        cout << "_drawMonitoringSphere = false " << endl;
+    }
+    return;
+}
+
 void PosterReader::drawGoToPos()
 {
     if(_drawGotoPos) {
@@ -504,6 +547,63 @@ void PosterReader::drawGoToPos()
         p3d_destroy_config(robotPt, q);
     }
     return;
+}
+
+void PosterReader::drawMS()
+{
+    cout << "banzaiiii" <<endl;
+
+
+    if (false)
+    {
+    double x,y,z,r,opacity;
+    GLdouble color[4];
+
+    if(_monitoringSpheresPoster == NULL){
+      return;
+    }
+    if(!drawMonitoringSpheresOnRemote){
+      return;
+    }
+
+
+    opacity = _opacity;
+    if(opacity > 1)
+      opacity = 1.0;
+    if(opacity < 0)
+      opacity = 0.0;
+
+    for(int i=0; i<SPARK_NUM_SPHERES_MAX; i++) {
+      if(_monitoringSpheresPosterStruct.spheres[i].isSphereActive){
+        //If monitor has already triggered, we don't need to test it again.
+        if(_monitoringSpheresPosterStruct.spheres[i].monitorEnterInResult && _monitoringSpheresPosterStruct.spheres[i].monitorGetOutResult){
+          color[0] = 1.0; color[1]= 0.0; color[2]= 0.0; color[3]= opacity;
+        }
+        else if(_monitoringSpheresPosterStruct.spheres[i].monitorEnterInResult){
+          color[0] = 1.0; color[1]= 0.5; color[2]= 0.0; color[3]= opacity;
+        }
+        else{
+          color[0] = 0.0; color[1]= 1.0; color[2]= 0.0; color[3]= opacity;
+        }
+
+        //glColor4f(color[0], color[1], color[2], color[3]);
+        x = _monitoringSpheresPosterStruct.spheres[i].sphereCenter.x;
+        y = _monitoringSpheresPosterStruct.spheres[i].sphereCenter.y;
+        z = _monitoringSpheresPosterStruct.spheres[i].sphereCenter.z;
+        r = _monitoringSpheresPosterStruct.spheres[i].sphereRadius;
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        g3d_set_color(Any,color);
+        g3d_draw_solid_sphere(x,y,z,r,20);
+
+        glDisable(GL_BLEND);///g3d_drawSphere(x,y,z,r);
+      }
+    }
+    }
+
+
+
 }
 
 void PosterReader::setDrawGoTo(bool b)

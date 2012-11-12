@@ -29,6 +29,10 @@ private:
 
 
 
+
+private slots:
+    void on_checkBoxSoftMotionDrawTraj_toggled(bool checked);
+    void on_checkBoxMonitoringSphere_toggled(bool checked);
 };
 
 #endif // SOFTMOTIONWIDGET_HPP

@@ -31,6 +31,7 @@ using namespace std;
 
 extern sparkWidget* global_w;
 
+
 MainWindowRemote::MainWindowRemote(PosterReader *pr, QWidget *parent) :
   QMainWindow(parent),
   m_pr(pr),

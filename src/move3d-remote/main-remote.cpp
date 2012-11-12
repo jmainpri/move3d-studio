@@ -12,6 +12,7 @@
 #include "camerawidget.h"
 #include "niutwidget.h"
 #include "softmotionwidget.hpp"
+#include "posterreader.hpp"
 
 #include "planner_handler.hpp"
 
@@ -32,6 +33,9 @@ QSemaphore* sem;
 
 extern int mainMhp(int argc, char** argv);
 extern bool move3d_studio_load_settings;
+
+extern bool drawTrajOnRemote;
+extern bool drawMonitoringSpheresOnRemote;
 
 // Worker thread
 PlannerHandler* global_plannerHandler(NULL);
@@ -59,7 +63,12 @@ void draw_opengl()
 
 void draw_remote_main()
 {
-    draw_smtraj_tace();
+    if (drawTrajOnRemote)
+        draw_smtraj_tace();
+
+    if (drawMonitoringSpheresOnRemote)
+        draw_monitoring_spheres();
+
 }
 
 

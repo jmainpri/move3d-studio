@@ -41,7 +41,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuRobot">
@@ -88,7 +88,7 @@
     <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>Soft motion</string>
+    <string>poster viewer</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
