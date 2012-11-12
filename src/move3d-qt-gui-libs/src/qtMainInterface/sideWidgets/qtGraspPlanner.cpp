@@ -148,7 +148,7 @@ void redraw()
   win->vs.fov= 30;
   g3d_set_projection_matrix(win->vs.projection_mode);
   
-  g3d_draw_allwin();
+  //g3d_draw_allwin();
   g3d_draw_allwin_active();
 }
 
