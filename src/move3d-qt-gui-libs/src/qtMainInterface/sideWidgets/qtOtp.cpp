@@ -389,8 +389,12 @@ void OtpWidget::on_pushButtonInit_clicked()
             fileNameStandSlice = "/statFiles/OtpComputing/confOldDude.xml";
             fileNameSitSlice = "/statFiles/OtpComputing/confOldDudeSit.xml";
         }
-        else if (hum->getName().find("ACHILE")!= string::npos)
+        else
         {
+            if (hum->getName().find("ACHILE")== string::npos)
+            {
+                cout << "WARNING : no file found for this HUMAN : " << hum->getName() << " ACHILE file are loaded but that might not work." <<endl;
+            }
             fileNameStand = "/statFiles/OtpComputing/confAchile.xml";
             fileNameSit = "/statFiles/OtpComputing/confAchileSit.xml";
             fileNameStandSlice = "/statFiles/OtpComputing/confAchileTranche.xml";
