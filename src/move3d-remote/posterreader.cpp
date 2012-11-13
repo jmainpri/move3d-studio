@@ -148,10 +148,10 @@ void PosterReader::init()
     _sparkPoster->start();
     cout << "   ... spark thread started" << endl;
     cout << "start thread for picowebLeftImg ..." << endl;
-//    _picowebLeftImg->start();
+    _picowebLeftImg->start();
     cout << "   ... picowebLeftImg thread started" << endl;
     cout << "start thread for _picowebRightImg ..." << endl;
-//    _picowebRightImg->start();
+    _picowebRightImg->start();
     cout << "   ... _picowebRightImg thread started" << endl;
     cout << "start thread for niut ..." << endl;
     _niutPoster->start();
