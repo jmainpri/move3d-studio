@@ -77,8 +77,10 @@ m_ui(new Ui::CostWidget)
   m_tabOtp->setObjectName(QString::fromUtf8("tabOTP"));
   m_ui->otpLayout->addWidget(m_tabOtp);
   
+#ifdef MIGHTABILITY_MAPS
   m_tabMightabiliby = new qtMightability(m_ui->Mightabilitytab);
   m_ui->MightLayout->addWidget(m_tabMightabiliby);
+#endif
 
   NaturalWidget* tabNatural = new NaturalWidget(m_ui->Natural);
   tabNatural->setObjectName(QString::fromUtf8("tabNatural"));

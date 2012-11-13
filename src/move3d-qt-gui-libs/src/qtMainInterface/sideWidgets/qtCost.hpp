@@ -105,9 +105,9 @@ private:
   
   RRTStarWidget*   m_tabRRTStar;
 
-//#ifdef MIGHTABILITY_MAPS
+#ifdef MIGHTABILITY_MAPS
   qtMightability* m_tabMightabiliby;
-//#endif
+#endif
 	
 };
 
