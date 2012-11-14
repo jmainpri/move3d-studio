@@ -114,7 +114,7 @@ PosterReader::PosterReader()
     _mhpPoster->setRefreshStatus(false);
 
     drawTrajOnRemote = false;
-    drawMonitoringSpheresOnRemote = false;
+    drawMonitoringSpheresOnRemote = true;
 }
 
 void PosterReader::changesoftmotiondt(double dt) 
@@ -134,6 +134,7 @@ PosterReader::~PosterReader()
     delete _picowebLeftImg;
     delete _picowebRightImg;
     delete _softmotionPoster;
+    delete _monitoringSpheresPoster;
     delete _mhpPoster;
    #ifdef ATTENTIONAL_REMOTE
     delete _attentionalPoster;
@@ -158,7 +159,11 @@ void PosterReader::init()
     cout << "   ... niut thread started" << endl;
 
     _softmotionPoster->start();
-    cout << "   ... niut thread started" << endl;
+    cout << "   ... softmotion thread started" << endl;
+
+    _monitoringSpheresPoster->start();
+    cout << "   ... monitoring sphere thread started" << endl;
+
      #ifdef ATTENTIONAL_REMOTE
     _attentionalPoster->start();
     cout << "   ... attentional thread started" << endl;
@@ -551,58 +556,52 @@ void PosterReader::drawGoToPos()
 
 void PosterReader::drawMS()
 {
-    cout << "banzaiiii" <<endl;
-
-
-    if (false)
-    {
     double x,y,z,r,opacity;
     GLdouble color[4];
 
     if(_monitoringSpheresPoster == NULL){
-      return;
+        cout << "monitoring Spheres : NULL Poster" << endl;
+        return;
     }
     if(!drawMonitoringSpheresOnRemote){
-      return;
+        return;
     }
 
 
     opacity = _opacity;
     if(opacity > 1)
-      opacity = 1.0;
+        opacity = 1.0;
     if(opacity < 0)
-      opacity = 0.0;
+        opacity = 0.0;
 
     for(int i=0; i<SPARK_NUM_SPHERES_MAX; i++) {
-      if(_monitoringSpheresPosterStruct.spheres[i].isSphereActive){
-        //If monitor has already triggered, we don't need to test it again.
-        if(_monitoringSpheresPosterStruct.spheres[i].monitorEnterInResult && _monitoringSpheresPosterStruct.spheres[i].monitorGetOutResult){
-          color[0] = 1.0; color[1]= 0.0; color[2]= 0.0; color[3]= opacity;
-        }
-        else if(_monitoringSpheresPosterStruct.spheres[i].monitorEnterInResult){
-          color[0] = 1.0; color[1]= 0.5; color[2]= 0.0; color[3]= opacity;
-        }
-        else{
-          color[0] = 0.0; color[1]= 1.0; color[2]= 0.0; color[3]= opacity;
-        }
+        cout << "sphere nb : " << i << endl;
+        if(_monitoringSpheresPosterStruct.spheres[i].isSphereActive){
+            //If monitor has already triggered, we don't need to test it again.
+            if(_monitoringSpheresPosterStruct.spheres[i].monitorEnterInResult && _monitoringSpheresPosterStruct.spheres[i].monitorGetOutResult){
+                color[0] = 1.0; color[1]= 0.0; color[2]= 0.0; color[3]= opacity;
+            }
+            else if(_monitoringSpheresPosterStruct.spheres[i].monitorEnterInResult){
+                color[0] = 1.0; color[1]= 0.5; color[2]= 0.0; color[3]= opacity;
+            }
+            else{
+                color[0] = 0.0; color[1]= 1.0; color[2]= 0.0; color[3]= opacity;
+            }
 
-        //glColor4f(color[0], color[1], color[2], color[3]);
-        x = _monitoringSpheresPosterStruct.spheres[i].sphereCenter.x;
-        y = _monitoringSpheresPosterStruct.spheres[i].sphereCenter.y;
-        z = _monitoringSpheresPosterStruct.spheres[i].sphereCenter.z;
-        r = _monitoringSpheresPosterStruct.spheres[i].sphereRadius;
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            //glColor4f(color[0], color[1], color[2], color[3]);
+            x = _monitoringSpheresPosterStruct.spheres[i].sphereCenter.x;
+            y = _monitoringSpheresPosterStruct.spheres[i].sphereCenter.y;
+            z = _monitoringSpheresPosterStruct.spheres[i].sphereCenter.z;
+            r = _monitoringSpheresPosterStruct.spheres[i].sphereRadius;
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        g3d_set_color(Any,color);
-        g3d_draw_solid_sphere(x,y,z,r,20);
+            g3d_set_color(Any,color);
+            g3d_draw_solid_sphere(x,y,z,r,20);
 
-        glDisable(GL_BLEND);///g3d_drawSphere(x,y,z,r);
-      }
+            glDisable(GL_BLEND);///g3d_drawSphere(x,y,z,r);
+        }
     }
-    }
-
-
 
 }
 

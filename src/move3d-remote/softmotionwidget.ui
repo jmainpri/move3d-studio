@@ -46,7 +46,14 @@
        <widget class="QWidget" name="widgetSphereOpacity" native="true">
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxOpacity"/>
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxOpacity">
+           <property name="maximum">
+            <double>1.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.500000000000000</double>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QLabel" name="labelOpacity">
@@ -57,6 +64,9 @@
          </item>
          <item>
           <widget class="QSlider" name="horizontalSliderOpacity">
+           <property name="value">
+            <number>50</number>
+           </property>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>

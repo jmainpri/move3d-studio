@@ -65,7 +65,6 @@ void draw_remote_main()
 {
     if (drawTrajOnRemote)
         draw_smtraj_tace();
-
     if (drawMonitoringSpheresOnRemote)
         draw_monitoring_spheres();
 

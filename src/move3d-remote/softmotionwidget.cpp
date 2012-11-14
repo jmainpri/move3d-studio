@@ -45,13 +45,16 @@ void softmotionWidget::init(PosterReader *pr, Ui::ParamWidget *ui_param)
   m_ui_p = ui_param;
   connect(m_ui->pushButtonSMPlot,SIGNAL(clicked()),pr,SLOT(softmotionPlotTraj()));
   connect(m_ui->checkBoxSoftMotionDrawTraj, SIGNAL(toggled(bool)), pr , SLOT(softmotionDrawTraj(bool)), Qt::DirectConnection);
-  connect(m_ui->checkBoxMonitoringSphere, SIGNAL(toggled(bool)), pr , SLOT(softmotionDrawTraj(bool)), Qt::DirectConnection);
+  connect(m_ui->checkBoxMonitoringSphere, SIGNAL(toggled(bool)), pr , SLOT(monitoringSpheresDraw(bool)), Qt::DirectConnection);
 
   QtShiva::SpinBoxSliderConnector *connectordt= new QtShiva::SpinBoxSliderConnector(
           this, m_ui->doubleSpinBoxdt, m_ui->horizontalSliderdt);
 
   QtShiva::SpinBoxSliderConnector *connectorOpacity= new QtShiva::SpinBoxSliderConnector(
           this, m_ui->doubleSpinBoxOpacity, m_ui->horizontalSliderOpacity);
+  double initialOpacity = 0.5;
+  connectorOpacity->setValue(initialOpacity);
+  pr->changesOpacity(initialOpacity);
 
   connect(connectordt, SIGNAL(valueChanged(double)), pr, SLOT(changesoftmotiondt(double)));
   connect(connectorOpacity, SIGNAL(valueChanged(double)), pr, SLOT(changesOpacity(double)));
