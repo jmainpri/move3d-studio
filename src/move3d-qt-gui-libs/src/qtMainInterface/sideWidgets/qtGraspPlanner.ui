@@ -19,11 +19,38 @@
      <property name="title">
       <string>GroupBox</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QPushButton" name="pushButtonShowGrasp">
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QComboBox" name="comboBoxChoseRobot"/>
+      </item>
+      <item row="2" column="2">
+       <widget class="QPushButton" name="pushButtonBrowseGrasp">
         <property name="text">
-         <string>Test Button</string>
+         <string>browseGrasp</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QPushButton" name="pushButtonDeleteGrasp">
+        <property name="text">
+         <string>deleteGrasp</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QComboBox" name="comboBoxChoseObject"/>
+      </item>
+      <item row="5" column="0">
+       <widget class="QPushButton" name="pushButtonSaveGrasp">
+        <property name="text">
+         <string>saveGrasp</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QPushButton" name="pushButtonAddGrasp">
+        <property name="text">
+         <string>addGrasp</string>
         </property>
        </widget>
       </item>

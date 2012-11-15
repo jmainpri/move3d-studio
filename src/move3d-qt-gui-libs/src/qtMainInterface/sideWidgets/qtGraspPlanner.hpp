@@ -33,14 +33,25 @@ public:
 	~GraspPlannerWidget();
   
   void initGraspPlanner();
-  
+  void browseHandRobot();
+  void browseObject();
+
+
 	void setMainWindow(MainWindow *ptrMW) 
   { 
     m_mainWindow = ptrMW; 
   }
+
+
 	
 private slots:
-  void showGrasp();
+
+  void selectHandRobot(int);
+  void browseGrasp();
+
+  void deleteGrasp();
+  void saveGrasp();
+  void addGrasp();
   
 signals:
   void selectedPlanner(QString);

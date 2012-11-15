@@ -41,6 +41,8 @@ static char RobotName[]= "JIDO_ROBOT";
 //! needed by the user interface
 static bool DISPLAY_GRASPS= false;
 static bool INIT_IS_DONE= false;
+static std::vector<p3d_rob*> handRobots;
+static std::vector<p3d_rob*> freeflyers;
 static p3d_rob *HAND_ROBOT= NULL; // pointer to the hand robot
 static p3d_rob *OBJECT= NULL; // pointer to the object to grasp
 static gpHand_properties HAND_PROP;  // information about the used hand
@@ -50,6 +52,9 @@ static gpGrasp GRASP;   // the current grasp
 static gpDoubleGrasp DOUBLEGRASP;
 int initialize_grasp_planner();
 void draw_grasp_planner();
+int addCurrentGraspToList(p3d_rob *, p3d_rob *, gpHand_properties &, std::list<gpGrasp> &);
+
+void redraw();
 
 gpConvexHull chull;
 gpConvexHull3D chull3d;
@@ -65,12 +70,22 @@ static ManipulationPlanner *manipulation= NULL;
 void dynamic_grasping();
 void contact_points();
 
+p3d_rob* select_object();
+
+
+
+
+
 GraspPlannerWidget::GraspPlannerWidget(QWidget *parent) :
 QWidget(parent),
 m_ui(new Ui::GraspPlannerWidget)
 {
 	m_ui->setupUi(this);
 	initGraspPlanner();
+
+        browseHandRobot();
+        browseObject();
+
 }
 
 GraspPlannerWidget::~GraspPlannerWidget()
@@ -80,13 +95,238 @@ GraspPlannerWidget::~GraspPlannerWidget()
 
 void GraspPlannerWidget::initGraspPlanner()
 {
-  connect(m_ui->pushButtonShowGrasp,SIGNAL(clicked()),this,SLOT(showGrasp()));
+
+connect(m_ui->comboBoxChoseRobot, SIGNAL(currentIndexChanged(int)),this, SLOT(selectHandRobot(int)));
+
+connect(m_ui->pushButtonBrowseGrasp, SIGNAL(clicked()),this, SLOT(browseGrasp()));
+connect(m_ui->pushButtonDeleteGrasp, SIGNAL(clicked()),this, SLOT(deleteGrasp()));
+connect(m_ui->pushButtonAddGrasp, SIGNAL(clicked()),this, SLOT(addGrasp()));
+connect(m_ui->pushButtonSaveGrasp, SIGNAL(clicked()),this, SLOT(saveGrasp()));
+
 }
 
-void GraspPlannerWidget::showGrasp()
-{
-  cout << "show grasp" << endl;
+
+void GraspPlannerWidget::browseHandRobot() {
+
+    // first get all the robots with specific names:
+    for(int i=0; i<XYZ_ENV->nr; ++i)
+    {
+      if( strcmp(XYZ_ENV->robot[i]->name,GP_GRIPPER_ROBOT_NAME)==0 || strcmp(XYZ_ENV->robot[i]->name,GP_SAHAND_RIGHT_ROBOT_NAME)==0 || strcmp(XYZ_ENV->robot[i]->name,GP_SAHAND_LEFT_ROBOT_NAME)==0 || strcmp(XYZ_ENV->robot[i]->name,GP_PR2_GRIPPER_ROBOT_NAME)==0 )
+      {
+        handRobots.push_back(XYZ_ENV->robot[i]);
+        continue;
+      }
+    }
+    if(handRobots.empty())
+    {
+      printf("%s: %d: select_hand_robot(): There is no robot that could be a robot hand.\n",__FILE__,__LINE__);
+      printf("It should be one of: %s %s %s %s.\n", GP_GRIPPER_ROBOT_NAME, GP_SAHAND_RIGHT_ROBOT_NAME, GP_SAHAND_LEFT_ROBOT_NAME, GP_PR2_GRIPPER_ROBOT_NAME);
+      return;
+    }
+
+    if(HAND_ROBOT==NULL)
+    {
+      HAND_ROBOT= handRobots[0];
+    }
+
+    for(int i=0; i != handRobots.size(); ++i) {
+        m_ui->comboBoxChoseRobot->addItem(handRobots[i]->name, QVariant(i));
+    }
 }
+
+
+void GraspPlannerWidget::browseObject() {
+    for(int i=0; i<XYZ_ENV->nr; ++i)
+    {
+      if(XYZ_ENV->robot[i]->njoints!=1)
+      { continue; }
+      if(XYZ_ENV->robot[i]->joints[1]->type!=P3D_FREEFLYER)
+      { continue; }
+      freeflyers.push_back(XYZ_ENV->robot[i]);
+    }
+    if(freeflyers.empty())
+    {
+      printf("%s: %d: select_object(): There is no possible objects (simple freeflyer robots).\n",__FILE__,__LINE__);
+      return;
+    }
+
+    if(OBJECT == NULL) {
+
+        OBJECT= freeflyers[0];
+    }
+
+    for(int i=0; i != freeflyers.size(); ++i) {
+        m_ui->comboBoxChoseObject->addItem(freeflyers[i]->name, QVariant(i));
+    }
+}
+
+void GraspPlannerWidget::browseGrasp() {
+
+unsigned int i;
+static unsigned int count= 0;
+
+if(!INIT_IS_DONE)
+{
+  if(initialize_grasp_planner()==GP_ERROR)
+  {
+    printf("%s: %d: CB_browse_grasps(): Can not initialize.\n",__FILE__,__LINE__);
+    return;
+  }
+  gpGet_grasp_list(OBJECT->name, HAND_PROP.type, GRASP_LIST);
+}
+
+i= 0;
+for (std::list<gpGrasp>::iterator iter=GRASP_LIST.begin(); iter!=GRASP_LIST.end(); iter++ )
+{
+  GRASP= (*iter);
+  i++;
+  if(i>count)
+  {  break; }
+}
+count++;
+if(count >= GRASP_LIST.size())
+{  count= 0;  }
+if(GRASP.hand_type == GP_HAND_NONE){
+  GRASP = gpGrasp(HAND_PROP);
+}
+gpSet_robot_hand_grasp_configuration(HAND_ROBOT, OBJECT, GRASP);
+//   gpSet_robot_hand_grasp_open_configuration(HAND_ROBOT, OBJECT, GRASP);
+p3d_copy_config_into(HAND_ROBOT, p3d_get_robot_config(HAND_ROBOT), &HAND_ROBOT->ROBOT_POS);
+
+printf("Selected grasp: #%d\n",GRASP.ID);
+//   GRASP.print();
+
+ //redraw();
+//if redraw, get bug:
+//Warning Draw Outside of Planning thread
+//QMetaMethod::invoke: Dead lock detected in BlockingQueuedConnection: Receiver is GLWidget(0x8cc78e0)
+
+return;
+}
+
+void GraspPlannerWidget::addGrasp() {
+    if(!INIT_IS_DONE)
+    {
+      if(initialize_grasp_planner()==GP_ERROR)
+      {
+        printf("%s: %d: CB_add_grasp(): Can not initialize.\n",__FILE__,__LINE__);
+        return;
+      }
+    }
+    addCurrentGraspToList(HAND_ROBOT, OBJECT, HAND_PROP, GRASP_LIST);
+}
+
+void GraspPlannerWidget::saveGrasp() {
+
+    if(GRASP_LIST.empty())
+      {
+        printf("%s: %d: CB_save_grasps(): The grasp list is empty.\n",__FILE__,__LINE__);
+        return;
+      }
+      std::string pathName, handFolderName, graspListFile;
+      DIR *directory= NULL;
+
+
+      pathName= std::string(getenv("HOME_MOVE3D")) + std::string("/graspPlanning/graspLists/");
+      handFolderName= pathName + gpHand_type_to_folder_name (HAND_PROP.type);
+
+        //look for a directory for the chosen hand:
+      directory= opendir(handFolderName.c_str());
+      if(directory==NULL)
+      {
+        // directory needs to be created:
+        if(mkdir(handFolderName.c_str(), S_IRWXU|S_IRWXG|S_IROTH|S_IXOTH ) ==-1)
+        {
+          printf("%s: %d: CB_save_grasps(): failed to create directory \"%s\".\n", __FILE__, __LINE__, handFolderName.c_str() );
+          return;
+        }
+      }
+      else
+      {
+        closedir(directory);
+      }
+
+      pathName= std::string(getenv("HOME_MOVE3D")) + std::string("/graspPlanning/graspLists/");
+      handFolderName= pathName + gpHand_type_to_folder_name(GRASP_LIST.front().hand_type);
+      graspListFile= handFolderName  + std::string ( "/" ) + std::string(GRASP_LIST.front().object_name) + std::string("Grasps_new.xml");
+
+      gpSave_grasp_list(GRASP_LIST, graspListFile);
+
+}
+
+void GraspPlannerWidget::deleteGrasp() {
+
+        std::list<gpGrasp>::iterator igrasp;
+        for(igrasp=GRASP_LIST.begin(); igrasp!=GRASP_LIST.end(); ++igrasp )
+        {
+          if(igrasp->ID==GRASP.ID)
+          {
+            igrasp= GRASP_LIST.erase(igrasp);
+            break;
+          }
+        }
+        printf("Delete grasp #%d\n",GRASP.ID);
+        if(igrasp!=GRASP_LIST.end())
+        {
+          GRASP= *igrasp;
+          gpSet_robot_hand_grasp_configuration(HAND_ROBOT, OBJECT, GRASP);
+        }
+        printf("Delete grasp #%d\n",GRASP.ID);
+       // redraw();
+
+        // problem with redraw()
+}
+
+void GraspPlannerWidget::selectHandRobot(int index) {
+
+    int value = m_ui->comboBoxChoseRobot->itemData(index).toInt();
+    cout << "chosed " << value << endl;
+}
+
+/*
+void GraspPlannerWidget::browseGrasp()
+{
+    cout << "Browse Grasp" << endl;
+      unsigned int i;
+      static unsigned int count= 0;
+
+      if(!INIT_IS_DONE)
+      {
+        if(initialize_grasp_planner()==GP_ERROR)
+        {
+          printf("%s: %d: CB_browse_grasps(): Can not initialize.\n",__FILE__,__LINE__);
+          return;
+        }
+        gpGet_grasp_list(OBJECT->name, HAND_PROP.type, GRASP_LIST);
+      }
+
+      i= 0;
+      for (std::list<gpGrasp>::iterator iter=GRASP_LIST.begin(); iter!=GRASP_LIST.end(); iter++ )
+      {
+        GRASP= (*iter);
+        i++;
+        if(i>count)
+        {  break; }
+      }
+      count++;
+      if(count >= GRASP_LIST.size())
+      {  count= 0;  }
+      if(GRASP.hand_type == GP_HAND_NONE){
+        GRASP = gpGrasp(HAND_PROP);
+      }
+      gpSet_robot_hand_grasp_configuration(HAND_ROBOT, OBJECT, GRASP);
+      //   gpSet_robot_hand_grasp_open_configuration(HAND_ROBOT, OBJECT, GRASP);
+      p3d_copy_config_into(HAND_ROBOT, p3d_get_robot_config(HAND_ROBOT), &HAND_ROBOT->ROBOT_POS);
+
+      printf("Selected grasp: #%d\n",GRASP.ID);
+    //  //   GRASP.print();
+
+
+      return;
+}
+*/
+
+
 
 /* -------------------- MAIN GROUP --------------------- */
 //static void g3d_create_grasp_planning_group(void)
@@ -838,7 +1078,7 @@ int initialize_grasp_planner()
 //! \return a pointer to the selected object, NULL if no object was found
 p3d_rob* select_object()
 {
-  std::vector<p3d_rob*> freeflyers;
+
   
   // first get all the simple freeflyer robots (potential objects):
   for(int i=0; i<XYZ_ENV->nr; ++i)
@@ -1079,21 +1319,6 @@ int addCurrentGraspToList(p3d_rob *hand_robot, p3d_rob *object, gpHand_propertie
   return 0;
 }
 
-//! Interface function:
-//! Adds a grasp to the list from the current hand configuration.
-//static void CB_add_grasp(FL_OBJECT *obj, long arg)
-//{
-//  if(!INIT_IS_DONE)
-//  {
-//    if(initialize_grasp_planner()==GP_ERROR)
-//    {
-//      printf("%s: %d: CB_add_grasp(): Can not initialize.\n",__FILE__,__LINE__);
-//      return;
-//    }
-//  }
-//  
-//  addCurrentGraspToList(HAND_ROBOT, OBJECT, HAND_PROP, GRASP_LIST);
-//}
 
 //! Interface function:
 //! Saves the current grasp list into a file.
