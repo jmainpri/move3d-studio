@@ -69,7 +69,7 @@ PosterReader::PosterReader()
     /* declaration of the poster reader threads */
     _monitoringSpheresPoster = new GenomPoster("sparkMonitoringSpheres", (char*)(&_monitoringSpheresPosterStruct), sizeof(SPARK_ALL_MONITORING_SPHERES), 10);
     _monitoringSpheresPoster->setRefreshStatus(true);
-
+//    _monitoringSpheresPoster->update();
 
     // Camera
 
@@ -567,7 +567,6 @@ void PosterReader::drawMS()
         return;
     }
 
-
     opacity = _opacity;
     if(opacity > 1)
         opacity = 1.0;
@@ -575,7 +574,6 @@ void PosterReader::drawMS()
         opacity = 0.0;
 
     for(int i=0; i<SPARK_NUM_SPHERES_MAX; i++) {
-        cout << "sphere nb : " << i << endl;
         if(_monitoringSpheresPosterStruct.spheres[i].isSphereActive){
             //If monitor has already triggered, we don't need to test it again.
             if(_monitoringSpheresPosterStruct.spheres[i].monitorEnterInResult && _monitoringSpheresPosterStruct.spheres[i].monitorGetOutResult){
@@ -596,6 +594,7 @@ void PosterReader::drawMS()
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+            cout << "x = " << x << " , y = " << y << " , z = " << z << " ,r = " << r << endl;
             g3d_set_color(Any,color);
             g3d_draw_solid_sphere(x,y,z,r,20);
 

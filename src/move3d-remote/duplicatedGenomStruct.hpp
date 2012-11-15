@@ -240,11 +240,13 @@ typedef struct POM_OBJECT_POS {
 #endif /* _POMSTRUCT_H */
 
 /* --- monitoring spheres ------------------------------------------------ */
+
 typedef struct STRUCT_SPARK_3D_COORD {
   double x;
   double y;
   double z;
 } SPARK_3D_COORD;
+
 
 typedef enum ENUM_SPARK_SPHERE_TYPE {
   SPARK_SIMPLE_ENTRY = 0, // simple sphere defined through radius and center. To monitor entrance in the sphere;
@@ -269,8 +271,8 @@ typedef struct STRUCT_SPARK_ACTION_MONITORING_SPHERE {
   int monitorGetOutResult; // TRUE if monitor trigger for get out of spheres (if it was in) and FALSE otherwise.
   int handIndexResult; // Whose agent hands trigger monitor.
   int modifIndex; // each time there is something new on this sphere the index is incremented. This is used to update poster from move3d spheres.
+  int dummy;
 } SPARK_ACTION_MONITORING_SPHERE;
-
 
 typedef struct STRUCT_SPARK_ALL_MONITORING_SPHERES {
   SPARK_ACTION_MONITORING_SPHERE spheres[SPARK_NUM_SPHERES_MAX];
