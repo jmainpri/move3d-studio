@@ -60,23 +60,7 @@ QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
     _init = false;
 }
 
-SpinBoxSliderConnector::SpinBoxSliderConnector( QObject* _parent,
-                                               QDoubleSpinBox* _spinBox,
-                                               QSlider* _slider,
-                                               Env::intParameter p) :
-QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
-{
-    m_spinBox->setValue(numeric_limits<double>::max());
-    
-    connect( m_spinBox, SIGNAL(valueChanged( double )), SLOT(spinBoxValueChanged( double ) ) );
-    connect( m_slider, SIGNAL(valueChanged( int )), SLOT(sliderValueChanged( int ) ) );
-    connect(this, SIGNAL(valueChanged( int )), ENV.getObject(p), SLOT(set(int)));
-    connect(ENV.getObject(p), SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
-  
-    m_spinBox->setValue(ENV.getInt(p));
-    
-    _init = false;
-}
+
 
 SpinBoxSliderConnector::SpinBoxSliderConnector( QObject* _parent,
                                                QDoubleSpinBox* _spinBox,
@@ -99,6 +83,24 @@ QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
 SpinBoxSliderConnector::SpinBoxSliderConnector( QObject* _parent,
                                                QDoubleSpinBox* _spinBox,
                                                QSlider* _slider,
+                                               Env::intParameter p) :
+QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
+{
+    m_spinBox->setValue(numeric_limits<double>::max());
+
+    connect( m_spinBox, SIGNAL(valueChanged( double )), SLOT(spinBoxValueChanged( double ) ) );
+    connect( m_slider, SIGNAL(valueChanged( int )), SLOT(sliderValueChanged( int ) ) );
+    connect(this, SIGNAL(valueChanged( int )), ENV.getObject(p), SLOT(set(int)));
+    connect(ENV.getObject(p), SIGNAL(valueChanged(int)), this, SLOT(spinBoxValueChanged(int)));
+
+    m_spinBox->setValue(ENV.getInt(p));
+
+    _init = false;
+}
+
+SpinBoxSliderConnector::SpinBoxSliderConnector( QObject* _parent,
+                                               QDoubleSpinBox* _spinBox,
+                                               QSlider* _slider,
                                                PlanParam::intParameter p) :
 QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
 {
@@ -106,9 +108,9 @@ QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
 	
 	connect( m_spinBox, SIGNAL(valueChanged( double )), SLOT(spinBoxValueChanged( double ) ) );
 	connect( m_slider, SIGNAL(valueChanged( int )), SLOT(sliderValueChanged( int ) ) );
-	connect(this, SIGNAL(valueChanged( int )), PlanEnv->getObject(p), SLOT(set(int)));
-	connect(PlanEnv->getObject(p), SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
-	
+        connect( this, SIGNAL(valueChanged( int )), PlanEnv->getObject(p), SLOT(set(int)));
+        connect(PlanEnv->getObject(p), SIGNAL(valueChanged(int)), this, SLOT(spinBoxValueChanged(int)));
+
 	m_spinBox->setValue(PlanEnv->getInt(p));
 	
 	_init = false;
@@ -142,6 +144,17 @@ void SpinBoxSliderConnector::setValue( double _value )
     m_spinBox->setValue( _value );
 }
 
+void SpinBoxSliderConnector::spinBoxValueChanged( int _value )
+{
+    int newValue = (int) ( _value * _Coeff + _Offset );
+
+    m_slider->setValue( newValue );
+
+    emit( valueChanged( m_spinBox->value() ) );
+    emit( valueChanged( (int)(m_spinBox->value()) ) );
+//    m_slider->setValue(_value);
+}
+
 void SpinBoxSliderConnector::spinBoxValueChanged( double _value )
 {
     bool v = m_slider->blockSignals(true);
@@ -155,7 +168,7 @@ void SpinBoxSliderConnector::spinBoxValueChanged( double _value )
     int newValue = (int) ( _value * _Coeff + _Offset );
     
     m_slider->setValue( newValue );
-    m_slider->blockSignals(v);
+    m_slider->blockSignals(false);
     emit( valueChanged( m_spinBox->value() ) );
     emit( valueChanged( (int)(m_spinBox->value()) ) );
 }
@@ -173,7 +186,7 @@ void SpinBoxSliderConnector::sliderValueChanged( int _value )
     double newValue = (double) (( _value - _Offset) / _Coeff );
     
     m_spinBox->setValue( newValue );
-    m_spinBox->blockSignals(v);
+    m_spinBox->blockSignals(false);
 	
     //cout << "vauleChanged : " << m_spinBox->value() << endl;
     emit( this->valueChanged( m_spinBox->value() ) );

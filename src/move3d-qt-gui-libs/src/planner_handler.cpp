@@ -774,8 +774,8 @@ void qt_makeTrajFromViaPoints()
  */
 void qt_readScenario()
 {
-	std::string fileToOpen(qt_fileName);
-	cout <<" Should Open scenarion " << fileToOpen << endl;
+//	std::string fileToOpen(qt_fileName);
+        cout <<" Should Open scenarion " /*<< fileToOpen << " or "*/ << qt_fileName << endl;
 	
 	p3d_rw_scenario_init_name();
 	p3d_read_scenario(qt_fileName);

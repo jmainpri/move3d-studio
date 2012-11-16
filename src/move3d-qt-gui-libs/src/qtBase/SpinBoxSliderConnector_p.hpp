@@ -54,16 +54,16 @@ namespace QtShiva
                                 QDoubleSpinBox* _spinBox,
                                 QSlider* _slider,
                                 Env::intParameter p);
-			
-				SpinBoxSliderConnector( QObject* _parent,
-																QDoubleSpinBox* _spinBox,
-																QSlider* _slider,
-																PlanParam::doubleParameter p);
-			
-				SpinBoxSliderConnector( QObject* _parent,
-																QDoubleSpinBox* _spinBox,
-																QSlider* _slider,
-																PlanParam::intParameter p);
+
+        SpinBoxSliderConnector( QObject* _parent,
+                                QDoubleSpinBox* _spinBox,
+                                QSlider* _slider,
+                                PlanParam::doubleParameter p);
+
+        SpinBoxSliderConnector( QObject* _parent,
+                                QDoubleSpinBox* _spinBox,
+                                QSlider* _slider,
+                                PlanParam::intParameter p);
 
 
         ~SpinBoxSliderConnector();
@@ -80,6 +80,7 @@ namespace QtShiva
 
     private slots:
         void spinBoxValueChanged( double _value );
+        void spinBoxValueChanged( int _value);
         void sliderValueChanged( int _value );
 
     signals:
