@@ -86,6 +86,14 @@ RobotWidget::~RobotWidget()
     delete m_ui;
 }
 
+void RobotWidget::setMainWindow(MainWindow *ptrMW) 
+{ 
+  m_mainWindow = ptrMW; 
+#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
+  m_tabGrasp->setMainWindow( m_mainWindow );
+#endif
+}
+
 //---------------------------------------------------------------------
 // Robot
 //---------------------------------------------------------------------

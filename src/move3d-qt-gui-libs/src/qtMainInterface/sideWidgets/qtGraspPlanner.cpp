@@ -54,7 +54,7 @@ int initialize_grasp_planner();
 void draw_grasp_planner();
 int addCurrentGraspToList(p3d_rob *, p3d_rob *, gpHand_properties &, std::list<gpGrasp> &);
 
-void redraw();
+//void redraw();
 
 gpConvexHull chull;
 gpConvexHull3D chull3d;
@@ -73,9 +73,6 @@ void contact_points();
 p3d_rob* select_object();
 
 
-
-
-
 GraspPlannerWidget::GraspPlannerWidget(QWidget *parent) :
 QWidget(parent),
 m_ui(new Ui::GraspPlannerWidget)
@@ -83,9 +80,8 @@ m_ui(new Ui::GraspPlannerWidget)
 	m_ui->setupUi(this);
 	initGraspPlanner();
 
-        browseHandRobot();
-        browseObject();
-
+  browseHandRobot();
+  browseObject();
 }
 
 GraspPlannerWidget::~GraspPlannerWidget()
@@ -105,6 +101,18 @@ connect(m_ui->pushButtonSaveGrasp, SIGNAL(clicked()),this, SLOT(saveGrasp()));
 
 }
 
+void GraspPlannerWidget::redraw()
+{
+  g3d_win *win= NULL;
+  
+  win= g3d_get_cur_win();
+  win->fct_draw2= &(draw_grasp_planner);
+  
+  win->vs.fov= 30;
+  g3d_set_projection_matrix(win->vs.projection_mode);
+  
+  m_mainWindow->drawAllWinActive();
+}
 
 void GraspPlannerWidget::browseHandRobot() {
 
@@ -196,7 +204,7 @@ p3d_copy_config_into(HAND_ROBOT, p3d_get_robot_config(HAND_ROBOT), &HAND_ROBOT->
 printf("Selected grasp: #%d\n",GRASP.ID);
 //   GRASP.print();
 
- //redraw();
+ redraw();
 //if redraw, get bug:
 //Warning Draw Outside of Planning thread
 //QMetaMethod::invoke: Dead lock detected in BlockingQueuedConnection: Receiver is GLWidget(0x8cc78e0)
@@ -272,7 +280,7 @@ void GraspPlannerWidget::deleteGrasp() {
           gpSet_robot_hand_grasp_configuration(HAND_ROBOT, OBJECT, GRASP);
         }
         printf("Delete grasp #%d\n",GRASP.ID);
-       // redraw();
+        redraw();
 
         // problem with redraw()
 }
@@ -378,19 +386,19 @@ void GraspPlannerWidget::browseGrasp()
 //}
 
 
-void redraw()
-{
-  g3d_win *win= NULL;
-  
-  win= g3d_get_cur_win();
-  win->fct_draw2= &(draw_grasp_planner);
-  
-  win->vs.fov= 30;
-  g3d_set_projection_matrix(win->vs.projection_mode);
-  
-  //g3d_draw_allwin();
-  g3d_draw_allwin_active();
-}
+//void redraw()
+//{
+//  g3d_win *win= NULL;
+//  
+//  win= g3d_get_cur_win();
+//  win->fct_draw2= &(draw_grasp_planner);
+//  
+//  win->vs.fov= 30;
+//  g3d_set_projection_matrix(win->vs.projection_mode);
+//  
+//  //g3d_draw_allwin();
+//  g3d_draw_allwin_active();
+//}
 
 void draw_grasp_planner()
 {   
@@ -499,7 +507,7 @@ static void CB_SAHandRight(FL_OBJECT *obj, long arg)
   p3d_copy_config_into(robot, p3d_get_robot_config(robot), &robot->ROBOT_POS);
   printf("grasp %d\n",GRASP.ID);
   
-  redraw();
+//  redraw();
   return;
 }
 
@@ -552,7 +560,7 @@ static void CB_double_grasp(FL_OBJECT *obj, long arg)
   gpSet_robot_hand_grasp_configuration(hand1, object, DOUBLEGRASP.grasp1);
   gpSet_robot_hand_grasp_configuration(hand2, object, DOUBLEGRASP.grasp2);
   
-  redraw();
+//  redraw();
 }
 
 
@@ -704,12 +712,13 @@ static void CB_test(FL_OBJECT *obj, long arg)
   //  chull3d.compute(false, -1.0, true); 
   //  compute_object_border();
   //   gpCompute_stable_placements((p3d_rob*)p3d_get_robot_by_name(ObjectName), POSELIST);
-  redraw();
+//  redraw();
   return;
   p3d_rob *object= (p3d_rob*)p3d_get_robot_by_name(ObjectName);
   
   p3d_compute_mean_curvature(object->o[0]->pol[0]->poly);
-  redraw();return;
+//  redraw();
+  return;
   
   gpHand_properties handProp;
   //   p3d_rob *robot= (p3d_rob*)p3d_get_robot_by_name(GP_SAHAND_RIGHT_ROBOT_NAME);

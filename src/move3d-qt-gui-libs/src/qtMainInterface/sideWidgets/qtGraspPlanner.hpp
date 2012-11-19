@@ -36,13 +36,12 @@ public:
   void browseHandRobot();
   void browseObject();
 
-
 	void setMainWindow(MainWindow *ptrMW) 
   { 
     m_mainWindow = ptrMW; 
   }
 
-
+  void redraw();
 	
 private slots:
 

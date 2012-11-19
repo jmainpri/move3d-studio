@@ -44,7 +44,7 @@ public:
     RobotWidget(QWidget *parent = 0);
     ~RobotWidget();
 
-    void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
+    void setMainWindow(MainWindow *ptrMW);
 
     void initRobot();
     void initTrajectoryFromConfig();
