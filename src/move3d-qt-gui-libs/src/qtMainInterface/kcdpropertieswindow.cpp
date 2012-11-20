@@ -49,10 +49,12 @@ void KCDpropertiesWindow::drawOBBs()
   if( all_obbs )
   {
     g3d_set_kcd_draw_all_obbs(false);
+    all_obbs =true;
   }
   else 
   {
     g3d_set_kcd_draw_all_obbs(true);
+    all_obbs = false;
   }
 }
 
