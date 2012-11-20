@@ -368,6 +368,7 @@ void OtpWidget::on_pushButtonInit_clicked()
     }
 
     QString home( getenv("HOME_MOVE3D") );
+    dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->changeHumanByName("HERAKLES_HUMAN1");
     Robot* hum = dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->getHuman();
 
 
@@ -572,21 +573,10 @@ void OtpWidget::on_pushButtonEraseTraj_clicked()
 
 void OtpWidget::on_pushButtonDump_clicked()
 {
-	cout << "------------ OTP variable -----------" <<endl;
-//	cout << " isStanding = " << PlanEnv->getBool(PlanParam::env_isStanding)?"true":"false" << endl;
-	cout << " objectNecessity = " <<PlanEnv->getDouble(PlanParam::env_objectNessecity) << endl;
-	cout << " maxIter = " << PlanEnv->getInt(PlanParam::env_maxIter)<< endl;
-	cout << " totMaxIter = " <<PlanEnv->getInt(PlanParam::env_totMaxIter) << endl;
-	cout << " robotSpeed = " << PlanEnv->getDouble(PlanParam::env_robotSpeed)<< endl;
-	cout << " humanSpeed = " <<PlanEnv->getDouble(PlanParam::env_humanSpeed) << endl;
-	cout << " timeStamp = " <<PlanEnv->getDouble(PlanParam::env_timeStamp) << endl;
-	cout << " psi = " <<PlanEnv->getDouble(PlanParam::env_psi) << endl;
-	cout << " delta = " <<PlanEnv->getDouble(PlanParam::env_delta) << endl;
-	cout << " ksi = " <<PlanEnv->getDouble(PlanParam::env_ksi) << endl;
-	cout << " rho = " <<PlanEnv->getDouble(PlanParam::env_rho) << endl;
-	cout << " sittingOffset = " <<PlanEnv->getDouble(PlanParam::env_sittingOffset) << endl;
-
-	cout << "------------ OTP variable end--------" <<endl;
+    if (dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig))
+    {
+        dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->dumpVar();
+    }
 }
 
 void OtpWidget::on_pushButtonComputeHumanRobotDist_clicked()
@@ -685,6 +675,10 @@ void OtpWidget::on_pushButtonTestCompute_clicked()
                     cout << "pos nb " << i << " is : x = " << traj.at(i).at(0) << ", y = " << traj.at(i).at(1) << ", theta = " << traj.at(i).at(2) << endl;
                 }
                 ENV.setBool(Env::drawOTPTraj,true);
+            }
+            else
+            {
+                cout << "fail! looser!" <<endl;
             }
         }
         else
