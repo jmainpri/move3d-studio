@@ -18,12 +18,12 @@
 #include "Graphic-pkg.h"
 #include "Collision-pkg.h"
 
-
 #include "planner_handler.hpp"
 
 #include "planner/plannerFunctions.hpp"
 #include "planner/replanningAlgorithms.hpp"
 #include "planner/replanningSimulators.hpp"
+#include "planner/TrajectoryOptim/trajectoryOptim.hpp"
 
 #include "API/Trajectory/trajectory.hpp" 
 
@@ -469,26 +469,14 @@ void RobotWidget::printCurrentPos()
 }
 
 #ifdef LIGHT_PLANNER
+static bool switch_cart_mode=false;
+
 void RobotWidget::switchFKIK()
 {
-    cout << "Switching FK to IK" << endl;
-
-    Robot* ptrRob = global_Project->getActiveScene()->getActiveRobot();
-
-    if ( ptrRob->isActiveCcConstraint() )
-    {
-        ptrRob->deactivateCcConstraint();
-    }
-    else
-    {
-        ptrRob->activateCcConstraint();
-    }
-
-    getMoveRobot()->setRobotConstraintedDof(ptrRob);
-
+  traj_optim_switch_cartesian_mode( switch_cart_mode );
+  switch_cart_mode = !switch_cart_mode;
 }
 #endif
-
 
 void RobotWidget::printPQPColPair()
 {
