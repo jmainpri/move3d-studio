@@ -139,6 +139,7 @@ void CostWidget::initCost()
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxCostBefore,		Env::costBeforeColl);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxCostExpandToGoal,	Env::costExpandToGoal);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxCostWithGradient,	Env::tRrtComputeGradient);
+  m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxPrintAndComputeCostAfterPlannif,	PlanParam::trajComputeCostAfterPlannif);
   
   connect(m_ui->pushButtonInitCostSpace,SIGNAL(clicked()),this,SLOT(initCostSpace()));
 		
