@@ -46,6 +46,7 @@ public:
 	void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
   
   Node* getIthNodeInActiveGraph();
+    Ui::MotionPlanner* getMui(){return m_ui;}
   
 public slots:
 	Node* getIthNodeInBestTraj();
@@ -83,17 +84,24 @@ private slots:
 	// General ---------------------------
 	void checkAllEdges();
 	void envDmaxSpinBoxValueChanged( double dmax );
+    void envIsWithGoalValueChanged( bool state );
+    void envBiDirValueChanged( bool state );
+    void envRandomConnectionToGoalValueChanged( bool state );
+    void envTryClosestValueChanged( bool state );
+    void envMultiRRTValueChanged( bool state );
+    void envPRMTypeChanged(int type );
 	void testParam(double param);
 	
 	// Show ------------------------------
 	void nodeToShowChanged();
-	void removeNode();
+    void edgeToShowChanged();
+    void removeNode();
   
 signals:
   void selectedPlanner(QString);
 	
 private:
-	Ui::MotionPlanner *m_ui;
+    Ui::MotionPlanner *m_ui;
 	
 	MainWindow *m_mainWindow;
 	

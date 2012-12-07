@@ -84,6 +84,8 @@ private slots:
 	void graphSearchTest();
   void setCostCriterium(int);
 	void setDistanceCriterium(int);
+    void envUseTRRTValueChanged( bool state );
+    void envIsCostSpaceValueChanged( bool state );
   
 private:
 	Ui::CostWidget*		m_ui;

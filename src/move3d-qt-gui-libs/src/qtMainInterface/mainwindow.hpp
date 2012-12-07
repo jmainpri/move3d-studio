@@ -134,6 +134,7 @@ private slots:
 	// Global
 	//    void setLineEditWithNumber(Env::intParameter p , int val );
 	void changeEvent(QEvent *e);
+    void envSelectedPlannerTypeChanged(bool isPRMvsDiffusion);
   
 signals:
   void selectedPlanner(QString);
@@ -153,7 +154,7 @@ private:
 	void initRunButtons();
 	void initViewerButtons();
 	void initLightSource();
-	
+
 	p3d_traj* m_currentTraj;
 
         QTimer *timer;

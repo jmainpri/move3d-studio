@@ -123,6 +123,22 @@ DistFieldWidget* CostWidget::getDistFieldWidget()
 {
   return m_ui->tabDistField;
 }
+
+void CostWidget::envUseTRRTValueChanged( bool state )
+{
+    if(state && !m_ui->isCostSpaceCopy->isChecked())
+    {
+        m_ui->isCostSpaceCopy->setChecked(true);
+    }
+}
+
+void CostWidget::envIsCostSpaceValueChanged( bool state )
+{
+    if(!state && m_ui->checkBoxUseTRRT->isChecked())
+    {
+        m_ui->checkBoxUseTRRT->setChecked(false);
+    }
+}
 //---------------------------------------------------------------------
 // COST
 //---------------------------------------------------------------------
@@ -135,7 +151,9 @@ void CostWidget::initCost()
   }
   
 	m_mainWindow->connectCheckBoxToEnv(m_ui->isCostSpaceCopy,			Env::isCostSpace);
+    connect(m_ui->isCostSpaceCopy, SIGNAL(toggled( bool )), SLOT(envIsCostSpaceValueChanged( bool ) ) );
   m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxUseTRRT,             Env::useTRRT);
+      connect(m_ui->checkBoxUseTRRT, SIGNAL(toggled( bool )), SLOT(envUseTRRTValueChanged( bool ) ) );
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxCostBefore,		Env::costBeforeColl);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxCostExpandToGoal,	Env::costExpandToGoal);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxCostWithGradient,	Env::tRrtComputeGradient);
@@ -541,7 +559,7 @@ void CostWidget::showHRITrajCost()
 	// cout << "Traj step = " << step << endl;
 	
 	std::ostringstream oss;
-	oss << "statFiles/CostAlongTraj_" << std::setw(3) << std::setfill('0') << count_hri_traj++ << ".csv";
+    oss << getenv("HOME_MOVE3D") << "/statFiles/CostAlongTraj_" << std::setw(3) << std::setfill('0') << count_hri_traj++ << ".csv";
   
 	const char *res = oss.str().c_str();
 	

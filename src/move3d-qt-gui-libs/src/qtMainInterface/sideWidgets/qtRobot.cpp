@@ -1277,11 +1277,11 @@ void RobotWidget::loadWorkspace()
     {
         resetManipulationData();
     }
+    std::string home(getenv("HOME_MOVE3D"));
+    std::string fileName("/statFiles/workspace.csv" );
+    cout << "Loading file : "<<home<< fileName << endl;
 
-    std::string fileName( "./statFiles/workspace.csv" );
-    cout << "Loading file : " << fileName << endl;
-
-    global_manipPlanTest->readWorkspaceFromFile( fileName );
+    global_manipPlanTest->readWorkspaceFromFile( home + fileName );
 }
 //#endif // MULTILOCALPATH
 

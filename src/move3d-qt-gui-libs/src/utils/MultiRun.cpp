@@ -2,6 +2,8 @@
 #include "SaveContext.hpp"
 
 #include "API/project.hpp"
+#include "API/Roadmap/graph.hpp"
+#include "API/Roadmap/graphConverter.hpp"
 #include "planner/planEnvironment.hpp"
 #include "planner/plannerFunctions.hpp"
 #include "planner/TrajectoryOptim/Classic/smoothing.hpp"
@@ -36,152 +38,59 @@ MultiRun::MultiRun()
  */
 void MultiRun::saveVectorToFile(int Context)
 {
-	std::ostringstream oss;
-	oss << "statFiles/"<< ENV.getString(Env::nameOfFile).toStdString() << ".csv";
-	
-	const char *res = oss.str().c_str();
-	
-	std::ofstream s;
-	s.open(res);
-	
-	cout << "Opening save file : " << res << endl;
-	
-	for (unsigned int i = 0; i < mNames.size(); i++)
-	{
-		s << mNames.at(i) << ";";
-	}
-	
-	s << endl;
-	
-	
-	for (int i=0; i<ENV.getInt(Env::nbMultiRun); i++)
-	{
-		for (int j=0; j<int(mVectDoubles.size()); j++)
-		{
-			s << mVectDoubles[j][Context*ENV.getInt(Env::nbMultiRun)+i] << ";";
-		}
-		s << endl;
-	}
-	
-	s << endl;
-	
-	cout << "Closing save file" << endl;
-	
-  s.close();
+    std::ostringstream oss;
+    oss << getenv("HOME_MOVE3D") << "/statFiles/"<<ENV.getString(Env::nameOfFile).toStdString();
+
+    std::ofstream s;
+    s.open(oss.str().c_str());
+
+    cout << "Opening save file : " << oss.str() << endl;
+
+    for (char i = 0; i < mNames.size(); i++)
+    {
+        s << mNames.at(i) << ";";
+    }
+
+    s << endl;
+
+
+    for (char i=0; i<ENV.getInt(Env::nbMultiRun); i++)
+    {
+        for (char j=0; j<int(mVectDoubles.size()); j++)
+        {
+            s << mVectDoubles[j][Context*ENV.getInt(Env::nbMultiRun)+i] << ";";
+        }
+        s << endl;
+    }
+
+    s << endl;
+
+    cout << "Closing save file" << endl;
+
+    s.close();
 }
 
 void MultiRun::saveGraph(int i)
 {
-	char file[256];
-	sprintf(file,"statFiles/Graph_%d.graph",i);
-	cout << "Saving graph to : " << file << endl;
-	p3d_writeGraph(XYZ_GRAPH, file, DEFAULTGRAPH);//Mokhtar Using XML Format
-	
-}
+    std::ostringstream oss;
+    oss << getenv("HOME_MOVE3D") << "/statFiles/Graph_"<<i<<".graph";
 
-void MultiRun::loadGraph()
-{
-	char file[256];
-	// /Users/jmainpri/workspace/BioMove3DDemos/CostHriFunction/SCENARIOS
-	sprintf(file,"../BioMove3DDemos/CostHriFunction/SCENARIOS/JidoEasy2.graph");
-	cout << "Loading graph to : " << file << endl;
-	p3d_readGraph(file, DEFAULTGRAPH);
-}
-
-
-/**
- * Run multiple Smooth runs
- */
-void MultiRun::runMutliRRTSimple()
-{	
-	mNames.clear();
-	mVectDoubles.clear();
-	mTime.clear();
-	
-  // RRT
-  mNames.push_back("Succeeded");
-	mNames.push_back("Time");
-	mNames.push_back("Cost");
-  mNames.push_back("NbOfNodes");
-  mNames.push_back("NbOfExtensions");
-  
-  // Trajectory
-  mNames.push_back("Length");
-	mNames.push_back("Max");
-	mNames.push_back("Average");
-  mNames.push_back("Integral");
-  mNames.push_back("Mecha_Work");
-  
-	mVectDoubles.resize( mNames.size() );
-	
-  Robot* robot = global_Project->getActiveScene()->getActiveRobot();
-  
-  confPtr_t q_init = robot->getInitialPosition();
-  confPtr_t q_goal = robot->getGoTo();
-  
-  RRTStatistics rrt_stat;
-  TrajectoryStatistics traj_stat;
-  
-	for(int i =0;i<ENV.getInt(Env::nbMultiRun);i++)
-	{
-		cout << "Run Nb = " << i << endl;
-    
-    p3d_planner_functions_set_run_id( i );
-    p3d_traj* path = NULL;
-    
-    if (PlanEnv->getBool(PlanParam::trajStompWithRRT))
-    {
-      traj_optim_switch_cartesian_mode( true );
-      path = p3d_planner_function( robot->getRobotStruct(), q_init->getConfigStruct(), q_goal->getConfigStruct() );
-    }
-    
-    p3d_get_rrt_statistics( rrt_stat );
-    
-    if( !PlanEnv->getBool(PlanParam::stopPlanner) && PlanEnv->getBool(PlanParam::withSmoothing) )
-    {
-      p3d_smoothing_function( robot->getRobotStruct(), path, PlanEnv->getInt(PlanParam::smoothMaxIterations), 4.0);
-    }
-    
-    p3d_get_traj_statistics( traj_stat );
-    
-		mTime.push_back( rrt_stat.time );
-		mVectDoubles[0].push_back( rrt_stat.succeeded );
-		mVectDoubles[1].push_back( rrt_stat.time );
-    mVectDoubles[2].push_back( rrt_stat.cost );
-    mVectDoubles[3].push_back( rrt_stat.nbNodes );
-		mVectDoubles[4].push_back( rrt_stat.nbExpansions );
-    
-    mVectDoubles[5].push_back( traj_stat.length );
-		mVectDoubles[6].push_back( traj_stat.max );
-    mVectDoubles[7].push_back( traj_stat.average );
-    mVectDoubles[8].push_back( traj_stat.integral );
-		mVectDoubles[9].push_back( traj_stat.mecha_work );
-    
-    if(!ENV.getBool(Env::drawDisabled)) 
-      g3d_draw_allwin_active();
-		
-		if(ENV.getBool(Env::StopMultiRun))
-		{
-			break;
-		}
-	}
-	
-	saveVectorToFile(0);
-	
-	cout << " End of Tests ----------------------" << endl;
-	return;
+    cout << "Saving graph to : "<<oss.str() << endl;
+    p3d_writeGraph(XYZ_GRAPH, oss.str().c_str(), DEFAULTGRAPH);//Mokhtar Using XML Format.
 }
 
 /**
  * Run multiple RRT runs
  */
-void MultiRun::runMutliRRT()
+void MultiRun::runMultiRRT()
 {
 	cout << "Running Multi RRT" << endl;
 	if (storedContext.getNumberStored() == 0)
 	{
-		cout << "WARNING: No context on the context stack" << endl;
-		return;
+        cout << "WARNING: No context on the context stack, using current one" << endl;
+
+        storedContext.saveCurrentEnvToStack();
+
 	}
 	else
 	{
@@ -211,7 +120,7 @@ void MultiRun::runMutliRRT()
 	for (unsigned int j = 0; j < storedContext.getNumberStored(); j++)
 	{
 		storedContext.switchCurrentEnvTo( j );
-		storedPlannerContext->switchCurrentEnvTo( j );
+//		storedPlannerContext->switchCurrentEnvTo( j );
 		// storedContext.getTime(j).clear();
 		// vector<double> time = storedContext.getTime(j);
 		
@@ -229,8 +138,8 @@ void MultiRun::runMutliRRT()
 			PlanEnv->setBool(PlanParam::stopPlanner,false);
 			
 			int nbNodes;
-			
-			if ( XYZ_GRAPH ) p3d_del_graph(XYZ_GRAPH);
+
+            if ( XYZ_GRAPH ) XYZ_GRAPH=NULL;//p3d_del_graph(XYZ_GRAPH);
 			
 			try 
 			{
@@ -261,8 +170,12 @@ void MultiRun::runMutliRRT()
 				API::Trajectory Traj(
 														 &currRobot,
 														 currRobot.getTrajStruct());
-				
-				mVectDoubles[0].push_back(XYZ_GRAPH->rrtTime);
+                if(XYZ_GRAPH==NULL)
+                {
+                    GraphConverter gc;
+                    XYZ_GRAPH= gc.convert(*API_activeGraph,true);
+                }
+                mVectDoubles[0].push_back(XYZ_GRAPH->rrtTime);
 				mVectDoubles[1].push_back(XYZ_GRAPH->optTime);
 				mVectDoubles[2].push_back(XYZ_GRAPH->totTime);
 				
@@ -340,7 +253,7 @@ void MultiRun::runMutliRRT()
 		}
 
 		storedContext.addTime( mTime );
-		storedPlannerContext->addTime( mTime );
+//		storedPlannerContext->addTime( mTime );
 		saveVectorToFile( j );
 		ENV.setBool(Env::StopMultiRun,false);
 		cout << "Save to file" << endl;
@@ -351,7 +264,7 @@ void MultiRun::runMutliRRT()
 
 
 
-void MultiRun::runMutliGreedy()
+void MultiRun::runMultiGreedy()
 {
 	
 	if (storedContext.getNumberStored() == 0)
@@ -379,7 +292,7 @@ void MultiRun::runMutliGreedy()
 	for (unsigned int j = 0; j < storedContext.getNumberStored(); j++)
 	{
 		storedContext.switchCurrentEnvTo(j);
-		storedPlannerContext->switchCurrentEnvTo(j);
+//		storedPlannerContext->switchCurrentEnvTo(j);
 		//			storedContext.getTime(j).clear();
 		//			vector<double> time = storedContext.getTime(j);
 		for (int i = 0; i < ENV.getInt(Env::nbMultiRun); i++)
@@ -429,7 +342,7 @@ void MultiRun::runMutliGreedy()
 			cout << " Mean Collision test : "  << optimTrj.meanCollTest() << endl;
 		}
 		storedContext.addTime(mTime);
-		storedPlannerContext->addTime(mTime);
+//		storedPlannerContext->addTime(mTime);
 		saveVectorToFile(j);
 	}
 	
@@ -546,7 +459,7 @@ void MultiRun::computeAverageConvergenceAndSave()
   s.close();
 }
 
-void MultiRun::loadTraj()
+void MultiRun::loadTrajectory()
 {
 	char file_name[256];
 	sprintf(file_name,"/Users/jmainpri/Desktop/STomp/ManipTraj.traj");
@@ -603,7 +516,7 @@ bool MultiRun::runSingleRRT()
 /**
  * Run multiple Smooth runs
  */
-void MultiRun::runMutliSmooth()
+void MultiRun::runMultiSmooth()
 {
   int nb_runs = ENV.getInt(Env::nbMultiSmooth);
   double time_limit = 10.0;

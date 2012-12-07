@@ -67,7 +67,7 @@ MotionPlanner::~MotionPlanner()
 void MotionPlanner::initGeneral()
 {
 	connect(m_ui->pushButtonCheckAllEdges,SIGNAL(clicked()),this,SLOT(checkAllEdges()));
-	
+    m_ui->doubleSpinBoxDMax->setMaximum(p3d_get_env_dmax());
 	// Connecting the Dmax Env variable
 	m_ui->doubleSpinBoxDMax->setValue(p3d_get_env_dmax());
 	connect(m_ui->doubleSpinBoxDMax, SIGNAL(valueChanged( double )), SLOT(envDmaxSpinBoxValueChanged( double ) ) );
@@ -94,21 +94,87 @@ void MotionPlanner::testParam(double param)
 
 void MotionPlanner::checkAllEdges()
 {
-	Graph* tmpGraph = new Graph(XYZ_GRAPH);
+    if(API_activeGraph)
+    {
+    Graph* tmpGraph = new Graph(*API_activeGraph);
 	
 	if(tmpGraph->checkAllEdgesValid())
 	{
 		cout << "Graph valid" << endl;
 	}
 	else {
-		cout << "Graph Not valid" << endl;
-	}
-	
+        cout << "Graph Not valid" << endl;
+    }
+    }
+    else
+    {
+        cout << "Graph Empty" << endl;
+    }
 }
 
 void MotionPlanner::envDmaxSpinBoxValueChanged( double dmax )
 {
 	p3d_set_env_dmax( dmax );
+}
+
+void MotionPlanner::envIsWithGoalValueChanged( bool state )
+{
+    if(!state && m_ui->isBidir->isChecked())
+    {
+        m_ui->isBidir->setChecked(false);
+        ENV.setBool(Env::biDir,false);
+    }
+    ENV.setBool(Env::expandToGoal,state);
+    m_ui->isWithGoal->setChecked(state);
+}
+
+void MotionPlanner::envBiDirValueChanged( bool state )
+{
+    if(state && !m_ui->isWithGoal->isChecked())
+    {
+        m_ui->isWithGoal->setChecked(true);
+        ENV.setBool(Env::expandToGoal,true);
+    }
+    ENV.setBool(Env::biDir,state);
+    m_ui->isBidir->setChecked(state);
+}
+
+void MotionPlanner::envRandomConnectionToGoalValueChanged( bool state )
+{
+    ENV.setBool(Env::tryClosest,!state);
+    m_ui->checkBoxClosestInCompCo->setChecked(!state);
+}
+
+void MotionPlanner::envTryClosestValueChanged( bool state )
+{
+    ENV.setBool(Env::randomConnectionToGoal,!state);
+    m_ui->checkBoxRandomInCompCo->setChecked(!state);
+}
+
+void MotionPlanner::envMultiRRTValueChanged( bool state )
+{
+    if(state)
+    {
+        m_ui->spinBoxNumberOfSeeds->setEnabled(true);
+    }
+    else
+    {
+        m_ui->spinBoxNumberOfSeeds->setDisabled(true);
+    }
+}
+
+void MotionPlanner::envPRMTypeChanged(int type )
+{
+    if(type==2)
+    {
+        m_ui->label->setVisible(true);
+        m_ui->spinBoxMaxConnect->setVisible(true);
+    }
+    else
+    {
+        m_ui->label->setVisible(false);
+        m_ui->spinBoxMaxConnect->setVisible(false);
+    }
 }
 
 
@@ -117,17 +183,28 @@ void MotionPlanner::envDmaxSpinBoxValueChanged( double dmax )
 //---------------------------------------------------------------------
 void MotionPlanner::initDiffusion()
 {
-	m_mainWindow->connectCheckBoxToEnv(m_ui->isWithGoal,              Env::expandToGoal);
+    m_mainWindow->connectCheckBoxToEnv(m_ui->isWithGoal,              Env::expandToGoal);
+    m_mainWindow->connectCheckBoxToEnv(m_ui->isBidir,                 Env::biDir);
+
+    connect(m_ui->isWithGoal, SIGNAL(toggled( bool )), SLOT(envIsWithGoalValueChanged( bool ) ) );
+    connect(m_ui->isBidir, SIGNAL(toggled( bool )), SLOT(envBiDirValueChanged( bool ) ) );
+
 	m_mainWindow->connectCheckBoxToEnv(m_ui->isManhattan,             Env::isManhattan);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->isEST,                   Env::treePlannerIsEST);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->isBidir,                 Env::biDir);
+    #ifndef BIO
+        m_ui->isManhattan->setDisabled(true);
+    #endif
+
+    m_mainWindow->connectCheckBoxToEnv(m_ui->isEST,                   Env::treePlannerIsEST);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->isBalanced,              Env::expandBalanced);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->isExpandControl,         Env::expandControl);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->isDiscardingNodes,       Env::discardNodes);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxIsGoalBias,      Env::isGoalBiased);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxRandomInCompCo,  Env::randomConnectionToGoal);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxClosestInCompCo, Env::tryClosest);
-	
+
+    connect(m_ui->checkBoxRandomInCompCo, SIGNAL(toggled( bool )), SLOT(envRandomConnectionToGoalValueChanged( bool ) ) );
+    connect(m_ui->checkBoxClosestInCompCo, SIGNAL(toggled( bool )), SLOT(envTryClosestValueChanged( bool ) ) );
+
 	m_ui->expansionMethod->setCurrentIndex((int)ENV.getExpansionMethod());
 	connect(m_ui->expansionMethod, SIGNAL(currentIndexChanged(int)),&ENV, SLOT(setExpansionMethodSlot(int)), Qt::DirectConnection);
 	connect(&ENV, SIGNAL(expansionMethodChanged(int)),m_ui->expansionMethod, SLOT(setCurrentIndex(int)));
@@ -153,9 +230,10 @@ void MotionPlanner::initDiffusion()
 void MotionPlanner::initMultiRRT()
 {
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxMultiRRT,         Env::isMultiRRT);
-	
+    connect(m_ui->checkBoxMultiRRT, SIGNAL(toggled( bool )), SLOT(envMultiRRTValueChanged( bool ) ) );
 	connect(m_ui->spinBoxNumberOfSeeds,SIGNAL(valueChanged(int)),ENV.getObject(Env::nbOfSeeds),SLOT(set(int)));
 	connect(ENV.getObject(Env::nbOfSeeds),SIGNAL(valueChanged(int)),m_ui->spinBoxNumberOfSeeds,SLOT(setValue(int)));	
+    m_ui->spinBoxNumberOfSeeds->setDisabled(true);
 }
 //void MainWindow::setLineEditWithNumber(Env::intParameter p,int num)
 //{
@@ -171,20 +249,23 @@ void MotionPlanner::initMultiRRT()
 void MotionPlanner::initPRM()
 {
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxUseDistance,Env::useDist);
+    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBox_9,PlanParam::orientedGraph);
 	// PRMType
 	connect(m_ui->comboBoxPRMType, SIGNAL(currentIndexChanged(int)),ENV.getObject(Env::PRMType),SLOT(set(int)));
 	connect( ENV.getObject(Env::PRMType), SIGNAL(valueChanged(int)),m_ui->comboBoxPRMType, SLOT(setCurrentIndex(int)));
+    connect(m_ui->comboBoxPRMType, SIGNAL(currentIndexChanged(int)), SLOT(envPRMTypeChanged( int ) ) );
 	m_ui->comboBoxPRMType->setCurrentIndex( 0 /*INTEGRAL*/ );
 	// 0 => PRM
 	// 1 => Visib
 	// 2 => ACR
-	
+
 	//    connect(ENV.getObject(Env::PRMType), SIGNAL(valueChanged(int)),m_ui->comboBoxPRMType, SLOT(setCurrentIndex(int)));
 	
 	m_ui->spinBoxMaxConnect->setValue(ENV.getInt(Env::maxConnect));
 	connect(m_ui->spinBoxMaxConnect, SIGNAL(valueChanged(int)), ENV.getObject(Env::maxConnect), SLOT(set(int)));
 	connect(ENV.getObject(Env::maxConnect), SIGNAL(valueChanged(int)), m_ui->spinBoxMaxConnect, SLOT(setValue(int)));
-	
+    m_ui->spinBoxMaxConnect->setVisible(false);
+    m_ui->label->setVisible(false);
 }
 
 //---------------------------------------------------------------------
@@ -242,7 +323,7 @@ void MotionPlanner::initOptim()
   new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxTimeLimitPlanning, m_ui->horizontalSliderTimeLimitPlanning , PlanParam::timeLimitPlanning );
 	
 	connect(m_ui->pushButtonRunMultiSmooth,SIGNAL(clicked()),this,SLOT(runMultiSmooth()));
-  connect(m_ui->pushButtonSimpleMultiRRT,SIGNAL(clicked()),this,SLOT(runMultiRRT()));
+  connect(m_ui->pushButtonSimpleMultiRRT,SIGNAL(clicked()),this,SLOT(runAllRRT()));
 	
 	// ------------------------------------------------------------
 	// ------------------------------------------------------------
@@ -274,7 +355,7 @@ void MotionPlanner::test(double value)
 void MotionPlanner::cutTrajInSmallLP()
 {
 	Robot* rob =	global_Project->getActiveScene()->getActiveRobot();
-	double dmax = global_Project->getActiveScene()->getDMax();
+    double dmax = global_Project->getActiveScene()->getDMax();
 
   API::Trajectory traj = rob->getCurrentTraj();
 		
@@ -403,7 +484,7 @@ void MotionPlanner::removeRedundant()
 	std::string str = "removeRedunantNodes";
 	write(qt_fl_pipe[1],str.c_str(),str.length()+1);
 #else
-	cout << "Not implemented" << endl;
+    cout << "Not implemented" << endl;
 #endif
 }
 
@@ -440,7 +521,7 @@ Node* MotionPlanner::getIthNodeInBestTraj()
     Robot* rob = API_activeGraph->getRobot();
     rob->setAndUpdate(*nodes.second[ith]->getConfiguration());
     m_mainWindow->drawAllWinActive();
-    return nodes.second[ith]; 
+    return nodes.second[ith];
   }
   else{
     cout << "out of bounds" << endl;
@@ -480,14 +561,28 @@ void MotionPlanner::initMultiRun()
 
 void MotionPlanner::saveContext()
 {
+
+    if(itemList.size()!=storedContext.getNumberStored())
+    {
+        storedContext.clear();
+    }
+
+    if(m_ui->lineEditContext->text()=="")
+    {
+        std::ostringstream oss;
+        oss << "Context" <<itemList.size();
+
+        m_ui->lineEditContext->setText(oss.str().c_str());
+    }
+    QListWidgetItem* item= new QListWidgetItem(contextList);
+    itemList.push_back(item);
+
 	ENV.setString(Env::nameOfFile,m_ui->lineEditContext->text());
 	
-	QListWidgetItem* item= new QListWidgetItem(contextList);
-	itemList.push_back(item);
-	itemList.back()->setText(m_ui->lineEditContext->text());
+    itemList.back()->setText(m_ui->lineEditContext->text());
 	
 	storedContext.saveCurrentEnvToStack();
-	storedPlannerContext->saveCurrentEnvToStack();
+//	storedPlannerContext->saveCurrentEnvToStack();
 }
 
 void MotionPlanner::printAllContext()
@@ -497,7 +592,7 @@ void MotionPlanner::printAllContext()
 		for(uint i=0;i<storedContext.getNumberStored();i++){
 			std::cout << "------------ Context Number " << i << " ------------" << std::endl;
 			storedContext.printData(i);
-			storedPlannerContext->printData(i);
+//			storedPlannerContext->printData(i);
 		}
 		std::cout << "-------------------------------------------" << std::endl;
 		std::cout << " Total number of contexts in stack =  " << storedContext.getNumberStored() << std::endl;
@@ -514,7 +609,7 @@ void MotionPlanner::setToSelected()
 	{
 		int i =  contextList->currentRow();
 		storedContext.switchCurrentEnvTo(i);
-		storedPlannerContext->switchCurrentEnvTo(i);
+//		storedPlannerContext->switchCurrentEnvTo(i);
 	}
 	else{
 		std::cout << "Warning: no context in stack" << std::endl;
@@ -527,8 +622,9 @@ void MotionPlanner::deleteSelected()
 	{
 		int i =  contextList->currentRow();
 		storedContext.deleteEnv(i);
-		storedPlannerContext->deleteEnv(i);
-		std::cout << "Delete context " << i << std::endl;
+//		storedPlannerContext->deleteEnv(i);
+        std::cout << "Delete context " << i << std::endl;
+        contextList->takeItem(contextList->row(contextList->currentItem()));
 	}
 	else{
 		std::cout << "Warning: no context in stack" << std::endl;
@@ -542,7 +638,7 @@ void MotionPlanner::printContext()
 		int i =  contextList->currentRow();
 		std::cout << "------------ Context Number " << i << " ------------" << std::endl;
 		storedContext.printData(i);
-		storedPlannerContext->printData(i);
+//		storedPlannerContext->printData(i);
 	}
 	else
 	{
@@ -553,7 +649,7 @@ void MotionPlanner::printContext()
 void MotionPlanner::resetContext()
 {
 	storedContext.clear();
-	storedPlannerContext->clear();
+//	storedPlannerContext->clear();
 	//	setContextUserApp(context);
 	for(unsigned int i=0;i<itemList.size();i++)
 	{
@@ -579,11 +675,9 @@ void MultiThread::run()
 	if (m_isRRT) 
 	{
 		MultiRun multiRRTs;
-		multiRRTs.runMutliRRT();
-	}
-	else {
-		
-	}
+        multiRRTs.runMultiRRT();
+
+    }
 	
 	cout << "Ends Multi Thread" << endl;
 }
@@ -630,6 +724,7 @@ void MotionPlanner::initShowGraph()
 {
 	//connect(m_ui->spinBoxNodeToShow, SIGNAL(valueChanged(int)),ENV.getObject(Env::cellToShow),SLOT(set(int)), Qt::DirectConnection);
 	connect(m_ui->spinBoxNodeToShow, SIGNAL(valueChanged(int)),this,SLOT(nodeToShowChanged()), Qt::QueuedConnection);
+    connect(m_ui->spinBoxEdgeToShow, SIGNAL(valueChanged(int)),this,SLOT(edgeToShowChanged()), Qt::QueuedConnection);
 	connect(m_ui->pushButtonRemoveNode, SIGNAL(clicked()),this,SLOT(removeNode()) );
 	
 }
@@ -639,9 +734,8 @@ void MotionPlanner::nodeToShowChanged()
 	if ( !API_activeGraph ) {
 		return;
 	}
-	
-	Graph* graph = API_activeGraph;
-	vector<Node*> nodes = graph->getNodes();
+
+    vector<Node*> nodes = API_activeGraph->getNodes();
 	
 	if (nodes.empty()) {
 		cout << "Warning :: nodes is empty!!!" << endl;
@@ -654,25 +748,65 @@ void MotionPlanner::nodeToShowChanged()
 	
 	if ( (ith >= 0) && ( ((int)nodes.size()) > ith) ) 
 	{
-    Robot* rob = graph->getRobot();
-		rob->setAndUpdate(*nodes[ith]->getConfiguration());
+    Robot* rob = API_activeGraph->getRobot();
+        rob->setAndUpdate(*nodes[ith]->getConfiguration());
     
 		cout << "Node number : " << nodes[ith]->getNodeStruct()->num << endl ;
 		cout << "Connected Component : " << nodes[ith]->getConnectedComponent()->getId() << endl ;
 	}
 	else 
 	{
-		shared_ptr<Configuration> q_init = graph->getRobot()->getInitialPosition();
-		graph->getRobot()->setAndUpdate(*q_init);
+        shared_ptr<Configuration> q_init = API_activeGraph->getRobot()->getInitialPosition();
+        API_activeGraph->getRobot()->setAndUpdate(*q_init);
 		cout << "Exede the number of nodes" << endl;
 	}
 	m_mainWindow->drawAllWinActive();
 }
 
+void MotionPlanner::edgeToShowChanged()
+{
+    if ( !API_activeGraph ) {
+        return;
+    }
+
+    vector<Edge*> edges = API_activeGraph->getEdges();
+
+    if (edges.empty()) {
+        cout << "Warning :: edges is empty!!!" << endl;
+    }
+
+    int ith = m_ui->spinBoxEdgeToShow->value();
+
+    cout << "Showing edge nb : " << ith << endl;
+    cout << "graph size nb : " << edges.size() << endl;
+
+    if ( (ith >= 0) && ( ((int)edges.size()) > ith) )
+    {
+    Robot* rob = API_activeGraph->getRobot();
+    std::tr1::shared_ptr<LocalPath> lp=edges[ith]->getLocalPath();
+    configPt q = lp->getLocalpathStruct()->config_at_distance(rob->getRobotStruct(), lp->getLocalpathStruct(), lp->length()/2);
+    Configuration* config=new Configuration(rob);
+    config->setConfiguration(q);
+        rob->setAndUpdate(*config);
+
+//        cout << "Edge number : " << edges[ith]->getNodeStruct()->num << endl ;
+//        cout << "Connected Component : " << edges[ith]->getConnectedComponent()->getId() << endl ;
+    }
+    else
+    {
+        shared_ptr<Configuration> q_init = API_activeGraph->getRobot()->getInitialPosition();
+        API_activeGraph->getRobot()->setAndUpdate(*q_init);
+        cout << "Exede the number of edges" << endl;
+    }
+    m_mainWindow->drawAllWinActive();
+}
+
+
 Node* MotionPlanner::getIthNodeInActiveGraph()
 {
-  if (API_activeGraph == NULL) {
+  if (!API_activeGraph) {
     cout << "Graph is NULL" << endl;
+    return NULL;
   }
   
   vector<Node*> nodes = API_activeGraph->getNodes();

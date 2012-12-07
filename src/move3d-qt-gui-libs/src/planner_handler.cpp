@@ -302,15 +302,15 @@ void qt_runDiffusion()
     gettimeofday(&tim, NULL);
     double t_init = tim.tv_sec+(tim.tv_usec/1000000.0);
   
-		int res;
+        int res;
 		cout << "ENV.getBool(Env::Env::treePlannerIsEST) = " << ENV.getBool(Env::treePlannerIsEST) << endl;
 		if (ENV.getBool(Env::treePlannerIsEST))
 		{
-			res = p3d_run_est(robot->getRobotStruct());
+            res = p3d_run_est(robot->getRobotStruct());
 		}
 		else
 		{
-			res = p3d_run_rrt(robot->getRobotStruct());
+            res = p3d_run_rrt(robot->getRobotStruct());
 		}
     
     gettimeofday(&tim, NULL);
@@ -342,29 +342,29 @@ void qt_runPRM()
   cout << "Run Probabilistic Road Map" << endl;
   Robot* robot = global_Project->getActiveScene()->getActiveRobot();
   
-	try 
-	{
+    try
+    {
 #ifdef P3D_PLANNER
 		p3d_SetStopValue(FALSE);
 #endif
 		
-		int res;
+        int res;
 		
 		ChronoOn();
     
 		switch(ENV.getInt(Env::PRMType))
 		{
 			case 0:
-				res = p3d_run_prm(robot->getRobotStruct());
+                res = p3d_run_prm(robot->getRobotStruct());
 				break;
 			case 1:
-				res = p3d_run_vis_prm(robot->getRobotStruct());
+                res = p3d_run_vis_prm(robot->getRobotStruct());
 				break;
 			case 2:
-				res = p3d_run_acr(robot->getRobotStruct());
+                res = p3d_run_acr(robot->getRobotStruct());
 				break;
       case 3:
-				res = p3d_run_perturb_prm(robot->getRobotStruct());
+                res = p3d_run_perturb_prm(robot->getRobotStruct());
 				break;
 			default:
 				cout << "Error No Other PRM"  << endl;
@@ -379,16 +379,16 @@ void qt_runPRM()
     if( !ENV.getBool(Env::drawDisabled) ) {
       g3d_draw_allwin_active();
     }
-	}
-	catch (string str) 
-	{
-		cerr << "Exeption in run qt_runPRM : " << endl;
-		cerr << str << endl;
-	}
-	catch (...) 
-	{
-		cerr << "Exeption in run qt_runPRM" << endl;
-	}
+    }
+    catch (string str)
+    {
+        cerr << "Exeption in run qt_runPRM : " << endl;
+        cerr << str << endl;
+    }
+    catch (...)
+    {
+        cerr << "Exeption in run qt_runPRM" << endl;
+    }
 	
 	ENV.setBool(Env::isRunning,false);
 }
@@ -396,13 +396,13 @@ void qt_runPRM()
 void qt_runMultiRRT()
 {
   MultiRun pool;
-  pool.runMutliRRTSimple();
+  pool.runMultiRRT();
 }
 
 void qt_runMultiSmooth()
 {
   MultiRun pool;
-  pool.runMutliSmooth();
+  pool.runMultiSmooth();
 }
 
 #ifdef MULTILOCALPATH

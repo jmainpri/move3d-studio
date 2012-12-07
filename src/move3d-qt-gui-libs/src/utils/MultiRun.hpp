@@ -13,17 +13,15 @@ class MultiRun
 {
 public:
   MultiRun();
-  
-  void runMutliRRTSimple();
-  void runMutliRRT();
-  void runMutliGreedy();
-  void runMutliSmooth();
+
+  void runMultiRRT();
+  void runMultiGreedy();
+  void runMultiSmooth();
   
 private:
   void saveVectorToFile(int Context);
   void saveGraph(int i);
-  void loadGraph();
-  void loadTraj();
+  void loadTrajectory();
   bool runSingleRRT();
   
   void computeConvergence(int run_id, double time);

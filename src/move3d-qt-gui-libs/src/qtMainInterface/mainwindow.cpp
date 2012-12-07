@@ -37,9 +37,11 @@
 #include "API/Grids/BaseGrid.hpp"
 #include "API/Grids/TwoDGrid.hpp"
 //#include "API/Roadmap2/BoostGraphTest.h"
+#include "API/Roadmap/graphConverter.hpp"
 
 #include "utils/testModel.hpp"
 #include "utils/SaveContext.hpp"
+#include "ui_qtMotionPlanner.h"
 
 using namespace std;
 using namespace tr1;
@@ -258,7 +260,7 @@ void MainWindow::loadGraph()
 		char file[256];
 		sprintf(file,"%s",qt_fileName);
 		cout << "Loading graph at : " << file << endl;
-		p3d_readGraph(qt_fileName, DEFAULTGRAPH);
+        p3d_readGraph(file, DEFAULTGRAPH);
 		this->drawAllWinActive();
 	}
 }
@@ -274,20 +276,30 @@ void MainWindow::saveGraph()
 		char file[256];
 		sprintf(file,"%s",qt_fileName);
 		cout <<"Saving Graph at " << file << endl;
-		p3d_writeGraph(XYZ_GRAPH, file, DEFAULTGRAPH);//Mokhtar Using XML Format
+        GraphConverter gc;
+        p3d_graph* G= gc.convert(*API_activeGraph,true);
+        cout<<XYZ_GRAPH<<endl;
+        p3d_writeGraph(G, file, DEFAULTGRAPH);//Mokhtar Using XML Format
+        cout<<XYZ_GRAPH<<endl;
 		this->drawAllWinActive();
 	}
 }
 
 void MainWindow::saveXYZGraphToDot()
 {
-	string filename("/Users/jmainpri/workspace/BioMove3D/video/graph_BGL.dot");
-	cout << "Saving graph to Dot file : " << filename <<  endl;
-	if (!ENV.getBool(Env::isRunning)) 
-	{
-		p3d_saveGraphToDotFormat(0);
-		API_activeGraph->saveBGLGraphToDotFile(filename);
-	}
+    QString fileName = QFileDialog::getSaveFileName(this);
+
+    if (!fileName.isEmpty())
+    {
+        qt_fileName = fileName.toStdString().c_str();
+        char file[256];
+        sprintf(file,"%s",qt_fileName);
+        cout <<"Saving Graph at " << file << endl;
+        if (!ENV.getBool(Env::isRunning))
+        {
+            API_activeGraph->saveBGLGraphToDotFile(file);
+        }
+    }
 }
 
 void MainWindow::loadTraj()
@@ -412,12 +424,12 @@ void MainWindow::connectCheckBoxToEnv(QCheckBox* box, Env::boolParameter p)
 {
 	connect(ENV.getObject(p), SIGNAL(valueChanged(bool)), box, SLOT(setChecked(bool)), Qt::DirectConnection);
 	connect(box, SIGNAL(toggled(bool)), ENV.getObject(p), SLOT(set(bool)), Qt::DirectConnection);
-	box->setChecked(ENV.getBool(p));
+    box->setChecked(ENV.getBool(p));
 }
 
 void MainWindow::connectCheckBoxToEnv(QCheckBox* box, PlanParam::boolParameter p)
 {
-	connect(PlanEnv->getObject(p), SIGNAL(valueChanged(bool)), box, SLOT(setChecked(bool)), Qt::DirectConnection);
+    connect(PlanEnv->getObject(p), SIGNAL(valueChanged(bool)), box, SLOT(setChecked(bool)), Qt::DirectConnection);
 	connect(box, SIGNAL(toggled(bool)), PlanEnv->getObject(p), SLOT(set(bool)), Qt::DirectConnection);
 	box->setChecked(PlanEnv->getBool(p));
 }
@@ -762,10 +774,11 @@ void MainWindow::initRunButtons()
 	m_ui->pushButtonStop->setDisabled(true);
 	m_ui->pushButtonReset->setDisabled(true);
 	
-	connect(ENV.getObject(Env::isPRMvsDiffusion), SIGNAL(valueChanged(bool)), m_ui->radioButtonPRM, SLOT(setChecked(bool)), Qt::DirectConnection);
-	connect(m_ui->radioButtonPRM, SIGNAL(toggled(bool)), ENV.getObject(Env::isPRMvsDiffusion), SLOT(set(bool)), Qt::DirectConnection);
-	m_ui->radioButtonDiff->setChecked(!ENV.getBool(Env::isPRMvsDiffusion));
-	
+    connect(ENV.getObject(Env::isPRMvsDiffusion), SIGNAL(valueChanged(bool)), m_ui->radioButtonPRM, SLOT(setChecked(bool)), Qt::DirectConnection);
+    connect(m_ui->radioButtonPRM, SIGNAL(toggled(bool)), ENV.getObject(Env::isPRMvsDiffusion), SLOT(set(bool)), Qt::DirectConnection);
+     connect(m_ui->radioButtonPRM, SIGNAL(toggled(bool)), SLOT(envSelectedPlannerTypeChanged(bool)), Qt::DirectConnection);
+    m_ui->radioButtonDiff->setChecked(!ENV.getBool(Env::isPRMvsDiffusion));
+    envSelectedPlannerTypeChanged(ENV.getBool(Env::isPRMvsDiffusion));
 	connectCheckBoxToEnv(m_ui->checkBoxWithSmoothing,					PlanParam::withSmoothing);
 	connectCheckBoxToEnv(m_ui->checkBoxUseP3DStructures,      Env::use_p3d_structures);
     
@@ -773,6 +786,15 @@ void MainWindow::initRunButtons()
 	connect( ENV.getObject(Env::isRunning), SIGNAL(valueChanged(bool)), this, SLOT(planningFinished(void)) , Qt::QueuedConnection );
   
   connect( m_ui->pushButtonNextIteration, SIGNAL(clicked(bool)), PlanEnv->getObject(PlanParam::nextIterWaitForGui), SLOT(set(bool)) , Qt::DirectConnection );
+}
+
+void MainWindow::envSelectedPlannerTypeChanged(bool isPRMvsDiffusion)
+{
+
+        m_ui->tabMotionPlanner->getMui()->tabPRM->setEnabled(isPRMvsDiffusion);
+
+        m_ui->tabMotionPlanner->getMui()->tabDiffu->setEnabled(!isPRMvsDiffusion);
+
 }
 
 //------------------------------------------------------------------------------
