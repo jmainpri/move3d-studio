@@ -185,10 +185,9 @@ extern void* GroundCostObj;
 
 void CostWidget::initCostSpace()
 {  
-  if (ENV.getBool(Env::isCostSpace) && global_costSpace ) 
+  if (ENV.getBool(Env::isCostSpace) && global_costSpace == NULL ) 
   {
-//    cout << "Nothing to do" << endl;
-//    return;
+    GlobalCostSpace::initialize();
   }
 
 //  GlobalCostSpace::initialize();

@@ -29,6 +29,28 @@ namespace Ui
 	class MainWindow;
 }
 
+class VideoRecorder : public QThread
+{
+  Q_OBJECT
+  
+public:
+  //VideoRecorder(QObject* parent = 0);
+  VideoRecorder(double msec, GLWidget* display) { 
+    m_msec = msec; 
+    m_display = display;
+  }
+	~VideoRecorder() { } 
+  
+signals:
+  void timeout();
+  
+protected:
+	void run();
+  
+  double m_msec;
+  GLWidget* m_display;
+};
+
 /**
  * @ingroup qtMainWindow
  * @brief Qt Main Window container
@@ -104,6 +126,8 @@ private slots:
 	
 	void openScenario();
 	void saveScenario();
+  
+  void setDrawColl();
 	
 	void loadGraph();
 	void saveGraph();

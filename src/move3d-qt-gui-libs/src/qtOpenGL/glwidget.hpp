@@ -35,6 +35,7 @@ public:
 
 	void setMainWindow(MainWindow* w) { m_mainWindow = w; }
 	void setWinSize(double size);
+  void setSaveTraj(bool save_traj) { m_save_traj = save_traj; }
 	void resetImageVector();
 	void setThreadWorking(bool isWorking);
 	void newG3dWindow();
@@ -69,8 +70,10 @@ protected:
 	void mouseDoubleClickEvent(QMouseEvent *event);
 
 private:
-        // Viewer ID
-        int m_id;
+  // Viewer ID
+  int m_id;
+  
+  bool m_save_traj;
 
 	// Pointer that allows resizing
 	MainWindow*	m_mainWindow;

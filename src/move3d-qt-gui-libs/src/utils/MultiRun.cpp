@@ -139,7 +139,7 @@ void MultiRun::runMutliRRTSimple()
     
     if( !PlanEnv->getBool(PlanParam::stopPlanner) && PlanEnv->getBool(PlanParam::withSmoothing) )
     {
-      p3d_smoothing_function( robot->getRobotStruct(), path, PlanEnv->getInt(PlanParam::smoothMaxIterations), 4.0);
+      p3d_smoothing_function( robot->getRobotStruct(), path, PlanEnv->getInt(PlanParam::smoothMaxIterations), -1);
     }
     
     p3d_get_traj_statistics( traj_stat );

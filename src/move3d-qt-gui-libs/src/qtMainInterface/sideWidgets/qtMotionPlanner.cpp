@@ -764,6 +764,7 @@ void MotionPlanner::on_pushButtonComputeNavigation_clicked()
         {
             cout << "(x,y,rz) = (" << path[i][0] << "," << path[i][1] << "," << path[i][2] << ")" << endl;
         }
+        m_mainWindow->drawAllWinActive();
     }
 }
 
