@@ -315,9 +315,9 @@
                <number>0</number>
               </property>
               <item row="0" column="1">
-               <widget class="QCheckBox" name="isExpandControl">
+               <widget class="QCheckBox" name="isRefinementControl">
                 <property name="text">
-                 <string>Expand Control</string>
+                 <string>Refinement Control</string>
                 </property>
                </widget>
               </item>
