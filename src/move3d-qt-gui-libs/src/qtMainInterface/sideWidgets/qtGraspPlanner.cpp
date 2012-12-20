@@ -26,7 +26,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
-#include "forms.h"
+//#include "forms.h"
 
 #include "../lightPlanner/proto/Manipulation.h"
 
@@ -473,6 +473,7 @@ void draw_grasp_planner()
   //dynamic_grasping(); 
 }
 
+/*
 static void CB_SAHandRight(FL_OBJECT *obj, long arg)
 { 
   printf("CB_SAHandRight\n");
@@ -562,7 +563,7 @@ static void CB_double_grasp(FL_OBJECT *obj, long arg)
   
 //  redraw();
 }
-
+*/
 
 struct gpBorderEdge
 {
@@ -701,6 +702,7 @@ void compute_object_border()
   //   fclose(file);
 }
 
+/*
 static void CB_test(FL_OBJECT *obj, long arg)
 {
   //p3d_export_as_OFF(XYZ_ENV->cur_robot->o[0]->pol[0]->poly);
@@ -734,7 +736,7 @@ static void CB_test(FL_OBJECT *obj, long arg)
   
   filename= "../graspPlanning/graspLists/SAHandRight/"+ std::string(ObjectName) + "Grasps.xml";
   
-  
+  */
   /*
    for(int i=0; i<24; ++i)
    {
@@ -782,8 +784,8 @@ static void CB_test(FL_OBJECT *obj, long arg)
   // std::cout << filename << std::endl;
   //   gpSave_grasp_list(GRASP_LIST, filename);
   
-  return;
-}
+ // return;
+//}
 
 
 void dynamic_grasping()

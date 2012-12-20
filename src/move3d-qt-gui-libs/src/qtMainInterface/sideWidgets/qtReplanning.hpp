@@ -43,7 +43,6 @@ public:
 private slots:
   void computeSoftMotion();
   void computeHandOver();
-  void mainReplanFunction();
   void runStomp();
   void runChomp();
   void runNoReset();
@@ -52,7 +51,6 @@ private slots:
   void plotNoisyTrajectories();
   void plotMultiVectors();
   void plotConvergence();
-  void createSraightLine();
   void multiThreadGraphicalMode(bool);
   
   void setInitMethod();

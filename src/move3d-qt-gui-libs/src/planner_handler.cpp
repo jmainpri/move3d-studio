@@ -179,7 +179,7 @@ void qt_test3()
 //  HRICS_humanCostMaps->testCostFunction();
 //  HRICS_humanCostMaps->saveAgentGrids();
   
-    qt_set_otp_cost_recompute();
+  //qt_set_otp_cost_recompute();
   
 //  API_activeGrid = HRICS_activeNatu->getGrid();
   
