@@ -289,13 +289,11 @@ void MainWindow::saveGraph()
 		qt_fileName = fileName.toStdString().c_str();
 		char file[256];
 		sprintf(file,"%s",qt_fileName);
-		cout <<"Saving Graph at " << file << endl;
+        cout <<"Saving Graph at " << file << endl;
         GraphConverter gc;
         p3d_graph* G= gc.convert(*API_activeGraph,true);
-        cout<<XYZ_GRAPH<<endl;
         p3d_writeGraph(G, file, DEFAULTGRAPH);//Mokhtar Using XML Format
-        cout<<XYZ_GRAPH<<endl;
-		this->drawAllWinActive();
+        this->drawAllWinActive();
 	}
 }
 
@@ -309,10 +307,7 @@ void MainWindow::saveXYZGraphToDot()
         char file[256];
         sprintf(file,"%s",qt_fileName);
         cout <<"Saving Graph at " << file << endl;
-        if (!ENV.getBool(Env::isRunning))
-        {
-            API_activeGraph->saveBGLGraphToDotFile(file);
-        }
+        API_activeGraph->saveBGLGraphToDotFile(file);
     }
 }
 
