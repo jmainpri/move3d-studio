@@ -459,37 +459,37 @@ void MultiRun::computeAverageConvergenceAndSave()
   s.close();
 }
 
-void MultiRun::loadTraj()
-{
-    char file_name[256];
-    sprintf(file_name,"/Users/jmainpri/Desktop/STomp/ManipTraj.traj");
+//void MultiRun::loadTraj()
+//{
+//    char file_name[256];
+//    sprintf(file_name,"/Users/jmainpri/Desktop/STomp/ManipTraj.traj");
 
-    p3d_rob *robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
-    int ir;
-    configPt qi, qf;
-    pp3d_traj trajPt;
+//    p3d_rob *robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
+//    int ir;
+//    configPt qi, qf;
+//    pp3d_traj trajPt;
 
-  cout << "Read for robot : " << robotPt->name << endl;
+//  cout << "Read for robot : " << robotPt->name << endl;
 
-    if (file_name!=NULL)
-    {
-        if (p3d_read_traj(file_name))
-        {
-            trajPt = (p3d_traj *) p3d_get_desc_curid(P3D_TRAJ);
-            ir = p3d_get_desc_curnum(P3D_ROBOT);
+//    if (file_name!=NULL)
+//    {
+//        if (p3d_read_traj(file_name))
+//        {
+//            trajPt = (p3d_traj *) p3d_get_desc_curid(P3D_TRAJ);
+//            ir = p3d_get_desc_curnum(P3D_ROBOT);
 
-            qi = p3d_alloc_config(robotPt);
-            qf = p3d_alloc_config(robotPt);
-            p3d_ends_and_length_traj(trajPt, &qi, &qf);
-            p3d_copy_config_into(robotPt, qf, &(robotPt->ROBOT_GOTO));
-            p3d_copy_config_into(robotPt, qi, &(robotPt->ROBOT_POS));
+//            qi = p3d_alloc_config(robotPt);
+//            qf = p3d_alloc_config(robotPt);
+//            p3d_ends_and_length_traj(trajPt, &qi, &qf);
+//            p3d_copy_config_into(robotPt, qf, &(robotPt->ROBOT_GOTO));
+//            p3d_copy_config_into(robotPt, qi, &(robotPt->ROBOT_POS));
 
-      g3d_draw_allwin_active();
-            p3d_destroy_config(robotPt, qi);
-            p3d_destroy_config(robotPt, qf);
-        }
-    }
-}
+//      g3d_draw_allwin_active();
+//            p3d_destroy_config(robotPt, qi);
+//            p3d_destroy_config(robotPt, qf);
+//        }
+//    }
+//}
 
 bool MultiRun::runSingleRRT()
 {
