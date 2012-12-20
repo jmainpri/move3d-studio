@@ -43,23 +43,18 @@ public:
 private slots:
   void computeSoftMotion();
   void computeHandOver();
-  void mainReplanFunction();
   void runStomp();
   void runChomp();
   void runNoReset();
   
-  void initReplanning();
-  void executeReplanTraj();
-  void executePlan();
   void executeSimpleSimu();
   void plotNoisyTrajectories();
   void plotMultiVectors();
   void plotConvergence();
-  void createSraightLine();
-  void optimizeCurrentTrajectory();
-  
   void multiThreadGraphicalMode(bool);
   
+  void setInitMethod();
+  void setInitMethodRadioButtons(int type);
   void setActiveJoints();
   void setActiveJointsRadioButtons(int type);
   //void setPlannerTypeRadioButtons(int);

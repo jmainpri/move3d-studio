@@ -13,6 +13,7 @@
 #include "P3d-pkg.h"
 #include "Graphic-pkg.h"
 #include "Collision-pkg.h" // Necessary to get access to the robotboxlist variable.
+#include "Util-pkg.h"
 
 #include "move3d-headless.h"
 #include "move3d-gui.h"
@@ -58,7 +59,8 @@ GLWidget::GLWidget(QWidget *parent) :
     trolltechGrey = trolltechWhite;
 
     m_mainWindow = false;
-
+    m_save_traj = false;
+  
     _isThreadWorking = true;
     _light = false;
 
@@ -93,20 +95,35 @@ void GLWidget::setWinSize(double size)
     this->size = size;
 }
 
+static bool save_on_disk = false;
+
 // -------------------------------------------------------
 // Save images to disk functions
 // -------------------------------------------------------
+static double time_current=0.0;
+static double time_last_save=0.0;
+
 void GLWidget::addCurrentImage()
 {
-    //	QPixmap* image = new QPixmap(renderPixmap());
-    QImage* image = new QImage(grabFrameBuffer());
-//    _pictures.push_back(image);
+  //ChronoTimeOfDayOn();
+  //	QPixmap* image = new QPixmap(renderPixmap());
+  QImage* image = new QImage(grabFrameBuffer());
+  
+  if( save_on_disk ) {
     string str = string(getenv("HOME_MOVE3D")) + "/video/";
     ostringstream oss(ostringstream::out);
     oss << str << "Image_" << setfill('0') << setw(4) << picsId++ << ".jpg";
     image->save(oss.str().c_str(), "JPG", 100);
     delete image;
-
+  }
+  else {
+    _pictures.push_back(image);
+    //cout << "pictures.size() : " << _pictures.size() << endl;
+  }
+  
+  ChronoTimeOfDayTimes(&time_current);
+  cout << "time addCurrentImage : " << time_current-time_last_save << endl;
+  time_last_save = time_current;
 }
 
 void GLWidget::saveImagesToDisk()
@@ -116,24 +133,24 @@ void GLWidget::saveImagesToDisk()
     ostringstream oss(ostringstream::out);
 //    oss << "cd "<< str <<";rm *.jpg";
     system(oss.str().c_str());
-
-
     cout << "saving in : " << str << endl;
-//    for (int i = 0; i < _pictures.size(); i++)
-//    {
-//        oss.str("");
-//
-//        oss << str << "Image_" << setfill('0') << setw(4) << i << ".jpg";
-//        cout << "Saving : " << oss.str() << endl;
-//        _pictures.at(i)->save(oss.str().c_str(), "JPG", 100);
-//    }
-//    resetImageVector();
-//    cout << "Images saved to video/" << endl;
+  
+  if( !save_on_disk ) {
+    for (int i = 0; i < _pictures.size(); i++)
+    {
+      oss.str("");
+      oss << str << "Image_" << setfill('0') << setw(4) << i << ".jpg";
+      cout << "Saving : " << oss.str() << endl;
+      _pictures.at(i)->save(oss.str().c_str(), "JPG", 100);
+    }
+    resetImageVector();
+    cout << "Images saved to video/" << endl;
+  }
 
     oss.str("");
     //change to video directory then compress jpg files to AVI video for more parameters and video format see man pages of mencoder
     //oss << "cd "<< str <<";mencoder mf://*.jpg -mf w=800:h=600:fps=25:type=jpeg -ovc lavc -lavcopts vcodec=mpeg4 -oac copy -o output.avi";
-    oss << "cd "<< str <<";ffmpeg -f image2 -i Image_%04d.jpg -vcodec mpeg4 -b 1600k output.mp4";
+    oss << "cd "<< str <<";ffmpeg -f image2 -r 25 -i Image_%04d.jpg -vcodec mpeg4 -b 1600k output.mp4";
     system(oss.str().c_str());
 }
 
@@ -326,6 +343,10 @@ void GLWidget::paintGL()
     g3d_draw(m_id);
 
     glPopMatrix();
+  
+  if( m_save_traj ) {
+    addCurrentImage();
+  }
 }
 
 void GLWidget::myPaintGL()

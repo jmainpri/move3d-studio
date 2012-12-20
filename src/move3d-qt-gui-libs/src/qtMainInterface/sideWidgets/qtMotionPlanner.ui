@@ -315,9 +315,9 @@
                <number>0</number>
               </property>
               <item row="0" column="1">
-               <widget class="QCheckBox" name="isExpandControl">
+               <widget class="QCheckBox" name="isRefinementControl">
                 <property name="text">
-                 <string>Expand Control</string>
+                 <string>Refinement Control</string>
                 </property>
                </widget>
               </item>
@@ -742,7 +742,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-313</y>
             <width>412</width>
             <height>840</height>
            </rect>
@@ -1007,7 +1007,7 @@
                     <item row="1" column="1">
                      <widget class="QDoubleSpinBox" name="doubleSpinBoxMaxDeformStep">
                       <property name="maximum">
-                       <double>500.000000000000000</double>
+                       <double>20.000000000000000</double>
                       </property>
                      </widget>
                     </item>

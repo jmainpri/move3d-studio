@@ -52,17 +52,12 @@ void ReplanningWidget::init()
 {
   // This function enables multi-threading
   connect(this, SIGNAL(selectedPlanner(QString)), global_plannerHandler, SLOT(startPlanner(QString)));
-  connect(m_ui->pushButtonReplan, SIGNAL(clicked()), this, SLOT(mainReplanFunction()));
   
   connect(m_ui->pushButtonRunStomp, SIGNAL(clicked()), this, SLOT(runStomp()));
   connect(m_ui->pushButtonRunChomp, SIGNAL(clicked()), this, SLOT(runChomp()));
   connect(m_ui->pushButtonRunNoReset, SIGNAL(clicked()), this, SLOT(runNoReset()));
   
-  connect(m_ui->pushButtonInitialize, SIGNAL(clicked()), this, SLOT(initReplanning()));
-  connect(m_ui->pushButtonExecuteSimu, SIGNAL(clicked()), this, SLOT(executeReplanTraj()));
-  connect(m_ui->pushButtonExecutePlan, SIGNAL(clicked()), this, SLOT(executePlan()));
   connect(m_ui->pushButtonExecuteSimpleSim, SIGNAL(clicked()), this, SLOT(executeSimpleSimu()));
-  connect(m_ui->pushButtonCreateSraightLine, SIGNAL(clicked()), this, SLOT(createSraightLine()));
   
   // Enable multi-thread graphical mode
   connect(m_ui->checkBoxMultiThreadGraphical, SIGNAL(toggled(bool)), this, SLOT(multiThreadGraphicalMode(bool)));
@@ -71,6 +66,12 @@ void ReplanningWidget::init()
   connect(m_ui->radioButtonNavigation,    SIGNAL(toggled(bool)), this, SLOT(setActiveJoints()));
 	connect(m_ui->radioButtonManipulation,  SIGNAL(toggled(bool)), this, SLOT(setActiveJoints()));
 	connect(m_ui->radioButtonMobileManip,   SIGNAL(toggled(bool)), this, SLOT(setActiveJoints()));
+  connect( ENV.getObject(Env::setOfActiveJoints), SIGNAL(valueChanged(int)), this, SLOT(setActiveJointsRadioButtons(int)), Qt::DirectConnection );
+  
+  // Init Method
+  connect(m_ui->radioButtonRRT,             SIGNAL(toggled(bool)), this, SLOT(setInitMethod()));
+	connect(m_ui->radioButtonStraightLine,    SIGNAL(toggled(bool)), this, SLOT(setInitMethod()));
+  connect( PlanEnv->getObject(PlanParam::replanningInitMethod), SIGNAL(valueChanged(int)), this, SLOT(setInitMethodRadioButtons(int)), Qt::DirectConnection );
   
   // replanner Type
   connect(m_ui->comboBoxReplanner, SIGNAL(currentIndexChanged(int)), PlanEnv->getObject(PlanParam::replanningAlgorithm),SLOT(set(int)));
@@ -79,8 +80,6 @@ void ReplanningWidget::init()
 	// 0 => Simple
 	// 1 => SoftMotion
 	// 2 => RRT
-  
-  connect( ENV.getObject(Env::setOfActiveJoints), SIGNAL(valueChanged(int)), this, SLOT(setActiveJointsRadioButtons(int)), Qt::DirectConnection );
   
   // Plot Noisy trajectories
 #ifdef USE_QWT
@@ -113,19 +112,24 @@ void ReplanningWidget::init()
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxMMatrix, PlanParam::trajStompMultiplyM );
   m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithRRT, PlanParam::trajStompWithRRT );
   
-  
+  // Stomp draw iteration
+  SpinBoxConnector(this,m_ui->spinBoxStompDrawIteration,PlanParam::stompDrawIteration);
   
   // Time Limit
-  new SpinBoxConnector(this,m_ui->doubleSpinBoxTimeLimit,PlanParam::trajStompTimeLimit);
+  SpinBoxConnector(this,m_ui->doubleSpinBoxTimeLimit,PlanParam::trajStompTimeLimit);
   
   // Set the number of point to be optimized
-  new SpinBoxConnector(this,m_ui->spinBoxNbPoints,PlanParam::nb_pointsOnTraj);
+  SpinBoxConnector(this,m_ui->spinBoxNbPoints,PlanParam::nb_pointsOnTraj);
   
   // Set the duration of the optimized trajectory
-  new SpinBoxConnector(this,m_ui->doubleSpinBoxDuration,PlanParam::trajDuration);
+  SpinBoxConnector(this,m_ui->doubleSpinBoxDuration,PlanParam::trajDuration);
   
   // Set the standard deviation of the perturbations
-  new SpinBoxConnector(this,m_ui->doubleSpinBoxStdDev,PlanParam::trajOptimStdDev);
+  SpinBoxConnector(this,m_ui->doubleSpinBoxStdDev,PlanParam::trajOptimStdDev);
+  
+  // The replanning window 
+  SpinBoxSliderConnector( this, m_ui->doubleSpinBoxReplanningWindow, m_ui->horizontalSliderReplanningWindow , PlanParam::trajReplanningWindow );
+  SpinBoxSliderConnector( this, m_ui->doubleSpinBoxTotalTrajDuration, m_ui->horizontalSliderTotalTrajDuration , PlanParam::trajReplanningTotalTime );
 }
 
 //---------------------------------------------------------
@@ -260,20 +264,48 @@ void ReplanningWidget::setActiveJoints()
 
 void ReplanningWidget::setActiveJointsRadioButtons(int type)
 {
-  if( type == 0 )
+  if( type == 0 && !m_ui->radioButtonNavigation->isChecked() )
   {
     cout << "radioButtonNavigation->toggle()" << endl;
     m_ui->radioButtonNavigation->toggle();
   }
-	if( type == 1 )
+	if( type == 1 && !m_ui->radioButtonManipulation->isChecked())
   {
     cout << "radioButtonManipulation->toggle()" << endl;
     m_ui->radioButtonManipulation->toggle();
   }
-	if( type == 2 )
+	if( type == 2 && !m_ui->radioButtonMobileManip->isChecked())
   {
     cout << "radioButtonMobileManip->toggle()" << endl;
     m_ui->radioButtonMobileManip->toggle();
+  }
+}
+
+void ReplanningWidget::setInitMethod()
+{
+  if( m_ui->radioButtonStraightLine->isChecked() )
+  {
+    PlanEnv->setInt(PlanParam::replanningInitMethod,0);
+    cout << "radioButtonStraightLine->isChecked()" << endl;
+  }
+	if ( m_ui->radioButtonRRT->isChecked() )
+  {
+    PlanEnv->setInt(PlanParam::replanningInitMethod,1);
+    cout << "radioButtonRRT->isChecked()" << endl;
+  }
+}
+
+void ReplanningWidget::setInitMethodRadioButtons(int type)
+{
+  if( type == 0 && !m_ui->radioButtonStraightLine->isChecked() )
+  {
+    cout << "radioButtonNavigation->toggle()" << endl;
+    m_ui->radioButtonStraightLine->toggle();
+  }
+	if( type == 1 && !m_ui->radioButtonRRT->isChecked())
+  {
+    cout << "radioButtonManipulation->toggle()" << endl;
+    m_ui->radioButtonRRT->toggle();
   }
 }
 
@@ -282,44 +314,10 @@ void ReplanningWidget::multiThreadGraphicalMode(bool enable)
   global_rePlanningEnv->set_multithread_graphical( enable );
 }
 
-void ReplanningWidget::createSraightLine()
-{
-  //global_rePlanningEnv->init_simple_replanning();
-  
-  m_mainWindow->drawAllWinActive();
-}
-
-void ReplanningWidget::initReplanning()
-{
-  emit(selectedPlanner(QString("initTrajectoryOptimCostSpace")));
-  return;
-}
-
 void ReplanningWidget::setMlpCntrtsAndFixJoints()
 {
   emit(selectedPlanner(QString("initMlpCntrtsAndFixJoints")));
   return;
-}
-
-void ReplanningWidget::mainReplanFunction()
-{
-  emit(selectedPlanner(QString("Replanning")));
-  return; 
-}
-
-void ReplanningWidget::optimizeCurrentTrajectory()
-{
-  emit(selectedPlanner(QString("ExecuteOptimizeOnCurrentTraj")));
-}
-
-void ReplanningWidget::executeReplanTraj()
-{
-  emit(selectedPlanner(QString("ExecuteReplanTraj")));
-}
-
-void ReplanningWidget::executePlan()
-{
-  emit(selectedPlanner(QString("ExecuteManipulationPlan")));
 }
 
 void ReplanningWidget::executeSimpleSimu()

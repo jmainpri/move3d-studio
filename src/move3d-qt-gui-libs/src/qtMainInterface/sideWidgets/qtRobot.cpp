@@ -132,6 +132,8 @@ void RobotWidget::initModel()
   
   connect(m_ui->pushButtonAttMat,SIGNAL(clicked()),this,SLOT(setAttMatrix()));
   
+  new QtShiva::SpinBoxConnector( this, m_ui->spinBoxArmId, Env::currentArmId );
+  
   QString RobotObjectToCarry("No Object");
   
   ENV.setString(Env::ObjectToCarry,RobotObjectToCarry);
@@ -391,9 +393,11 @@ void RobotWidget::GrabObject()
   
   Robot* robot = global_Project->getActiveScene()->getRobotByNameContaining("_ROBOT");
   
-  int armId = 0;
+  int armId = ENV.getInt( Env::currentArmId );
   string robot_name = robot->getName();
   string object_name = ENV.getString(Env::ObjectToCarry).toStdString();
+  cout << "Robot " << robot_name << " grasp object " << object_name;
+  cout << " with arm " << armId << endl;
   
   HRI_AGENT* agent = hri_get_agent_by_name( GLOBAL_AGENTS, robot_name.c_str() );
   
@@ -414,8 +418,10 @@ void RobotWidget::ReleaseObject()
   
   Robot* robot = global_Project->getActiveScene()->getRobotByNameContaining("_ROBOT");
   
-  int armId = 0;
+  int armId = ENV.getInt( Env::currentArmId );
   string robot_name = robot->getName();
+  cout << "Robot " << robot_name << " release object with arm " << armId << endl;
+  
   HRI_AGENT* agent = hri_get_agent_by_name( GLOBAL_AGENTS, robot_name.c_str() );
   
   if( agent ) {

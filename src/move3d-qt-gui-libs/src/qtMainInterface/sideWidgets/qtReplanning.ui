@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>542</width>
-    <height>702</height>
+    <width>503</width>
+    <height>706</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,9 +26,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-171</y>
-        <width>525</width>
-        <height>894</height>
+        <y>-107</y>
+        <width>486</width>
+        <height>885</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -59,101 +59,79 @@
              <property name="margin">
               <number>0</number>
              </property>
-             <item row="3" column="1">
-              <widget class="QPushButton" name="pushButtonInitialize">
-               <property name="text">
-                <string>Init</string>
-               </property>
-              </widget>
-             </item>
-             <item row="7" column="1">
-              <widget class="QPushButton" name="pushButtonExecuteSimu">
-               <property name="text">
-                <string>Execute Traj</string>
-               </property>
-              </widget>
-             </item>
-             <item row="10" column="1">
-              <widget class="QPushButton" name="pushButtonReplan">
-               <property name="text">
-                <string>Replan</string>
-               </property>
-              </widget>
-             </item>
-             <item row="13" column="1">
-              <widget class="QPushButton" name="pushButtonExecutePlan">
-               <property name="text">
-                <string>Execute Plan</string>
-               </property>
-              </widget>
-             </item>
-             <item row="16" column="1">
-              <widget class="QPushButton" name="pushButtonCreateSraightLine">
-               <property name="text">
-                <string>Straight Line</string>
-               </property>
-              </widget>
-             </item>
-             <item row="19" column="1">
-              <widget class="QPushButton" name="pushButton">
-               <property name="text">
-                <string>Optimize Current Traj</string>
-               </property>
-              </widget>
-             </item>
-             <item row="20" column="1">
-              <widget class="QPushButton" name="pushButtonExecuteSimpleSim">
-               <property name="text">
-                <string>Execute Simple Simu</string>
-               </property>
-              </widget>
-             </item>
-             <item row="7" column="0">
-              <widget class="QRadioButton" name="radioButtonManipulation">
-               <property name="text">
-                <string>Manip</string>
-               </property>
-              </widget>
-             </item>
-             <item row="10" column="0">
-              <widget class="QRadioButton" name="radioButtonMobileManip">
-               <property name="text">
-                <string>Mob-Man</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QPushButton" name="pushButtonFixJoints">
-               <property name="text">
-                <string>Fix joints</string>
-               </property>
-              </widget>
-             </item>
              <item row="2" column="0">
               <widget class="QLabel" name="labelActiveJoints">
                <property name="text">
-                <string>Active Joints:</string>
+                <string>Active Joint Group:</string>
                </property>
               </widget>
              </item>
-             <item row="3" column="0">
+             <item row="4" column="0">
               <widget class="QRadioButton" name="radioButtonNavigation">
                <property name="text">
                 <string>Nav</string>
                </property>
               </widget>
              </item>
-             <item row="13" column="0">
+             <item row="8" column="0">
+              <widget class="QRadioButton" name="radioButtonManipulation">
+               <property name="text">
+                <string>Manip</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
               <widget class="QCheckBox" name="checkBoxActiveJointsSetAtStart">
                <property name="text">
                 <string>Set at start</string>
                </property>
               </widget>
              </item>
+             <item row="4" column="1">
+              <widget class="QPushButton" name="pushButtonFixJoints">
+               <property name="text">
+                <string>Fix joints</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="0">
+              <widget class="QRadioButton" name="radioButtonMobileManip">
+               <property name="text">
+                <string>Mob-Man</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="1">
+              <widget class="QPushButton" name="pushButtonExecuteSimpleSim">
+               <property name="text">
+                <string>Execute Simple Simu</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QWidget" name="widget_10" native="true">
+               <layout class="QGridLayout" name="gridLayout_12">
+                <item row="0" column="0">
+                 <widget class="QRadioButton" name="radioButtonStraightLine">
+                  <property name="text">
+                   <string>StraightLine</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QRadioButton" name="radioButtonRRT">
+                  <property name="text">
+                   <string>RRT</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
             </layout>
            </widget>
           </item>
-          <item row="3" column="0">
+          <item row="4" column="0">
            <widget class="QWidget" name="widget_5" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout">
              <property name="margin">
@@ -162,19 +140,19 @@
              <item>
               <widget class="QLabel" name="label_6">
                <property name="text">
-                <string>Traj. Duration </string>
+                <string>Replanning Total Duration </string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="doubleSpinBoxTrajDuration">
+              <widget class="QDoubleSpinBox" name="doubleSpinBoxTotalTrajDuration">
                <property name="maximum">
                 <double>120.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSliderTrajDuration">
+              <widget class="QSlider" name="horizontalSliderTotalTrajDuration">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -249,6 +227,37 @@
                  <string>AStar</string>
                 </property>
                </item>
+               <item>
+                <property name="text">
+                 <string>Stomp</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QWidget" name="widget_9" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_8">
+               <property name="text">
+                <string>Replanning Window</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="doubleSpinBoxReplanningWindow"/>
+             </item>
+             <item>
+              <widget class="QSlider" name="horizontalSliderReplanningWindow">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
               </widget>
              </item>
             </layout>
@@ -303,6 +312,16 @@
           </item>
           <item row="0" column="1">
            <widget class="QDoubleSpinBox" name="doubleSpinBoxTimeLimit"/>
+          </item>
+          <item row="3" column="1">
+           <widget class="QSpinBox" name="spinBoxStompDrawIteration"/>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_9">
+            <property name="text">
+             <string>Draw Every n Iteration</string>
+            </property>
+           </widget>
           </item>
           <item row="1" column="0">
            <widget class="QCheckBox" name="checkBoxWithRRT">

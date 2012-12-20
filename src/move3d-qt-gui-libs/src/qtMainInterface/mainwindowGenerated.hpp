@@ -57,6 +57,7 @@ public:
 		// Actions
     QAction *actionQuit;
     QAction *action3DViewer;
+    QAction *actionDrawColl;
     QAction *actionKCDPropietes;
     QAction *actionAbout;
     QAction *actionCloseEnvironement;
@@ -179,7 +180,6 @@ public:
     QGridLayout *gridLayout_30;
     QWidget *widget_4;
     QPushButton *pushButtonReset;
-    QPushButton *pushButtonResetGraph;
     QPushButton *pushButtonNextIteration;
     QPushButton *pushButtonRun;
     QPushButton *pushButtonStop;
@@ -188,7 +188,7 @@ public:
     QRadioButton *radioButtonDiff;
     QRadioButton *radioButtonPRM;
     QCheckBox *checkBoxWithSmoothing;
-    QCheckBox *checkBoxUseP3DStructures;
+//    QCheckBox *checkBoxUseP3DStructures;
 	
     QGroupBox *groupBoxTrajectory;
     QVBoxLayout *verticalLayout_34;
@@ -246,6 +246,9 @@ public:
         action3DViewer = new QAction(MainWindow);
         action3DViewer->setObjectName(QString::fromUtf8("action3DViewer"));
 			
+        actionDrawColl = new QAction(MainWindow);
+        actionDrawColl->setObjectName(QString::fromUtf8("actionDrawColl"));
+      
         actionKCDPropietes = new QAction(MainWindow);
         actionKCDPropietes->setObjectName(QString::fromUtf8("actionKCDPropietes"));
 			
@@ -892,9 +895,9 @@ public:
         horizontalLayoutRunStrategy->addWidget(checkBoxWithSmoothing);
 
         // Add checkbox p3d structures
-        checkBoxUseP3DStructures = new QCheckBox(groupBoxRunButtons);
-        checkBoxUseP3DStructures->setObjectName(QString::fromUtf8("checkBoxUseP3DStructures"));
-        horizontalLayoutRunStrategy->addWidget(checkBoxUseP3DStructures);
+//        checkBoxUseP3DStructures = new QCheckBox(groupBoxRunButtons);
+//        checkBoxUseP3DStructures->setObjectName(QString::fromUtf8("checkBoxUseP3DStructures"));
+//        horizontalLayoutRunStrategy->addWidget(checkBoxUseP3DStructures);
       
         // Next iter. Button
         pushButtonNextIteration = new QPushButton(groupBoxRunButtons);
@@ -917,7 +920,7 @@ public:
         pushButtonReset->setStyleSheet(QString::fromUtf8("QPushButton {\n"
                                                        "border-image:url(images/media-playback-stop.svg) 1 1 1 1 ;\n"
                                                        "}\n"
-                                                       "\n"
+//                                                       "\n"
                                                        "QPushButton:hover {\n"
                                                        "border-image:url(images/media-playback-stop.svg) -2 -2 -2 -2 ;\n"
                                                        "}\n"
@@ -929,16 +932,6 @@ public:
                                                        "QPushButton:disabled {\n"
                                                        "border-image:url(images/media-playback-stop-disabled.svg) 1 1 1 1 ;\n"
                                                        "}"));
-        // Reset Graph
-        pushButtonResetGraph = new QPushButton(widget_4);
-        pushButtonResetGraph->setObjectName(QString::fromUtf8("pushButtonResetGraph"));
-        pushButtonResetGraph->setGeometry(QRect(150, 10, 117, 32));
-      
-        QSizePolicy sizePolicy5(QSizePolicy::Minimum, QSizePolicy::Fixed);
-        sizePolicy5.setHorizontalStretch(0);
-        sizePolicy5.setVerticalStretch(0);
-        sizePolicy5.setHeightForWidth(pushButtonResetGraph->sizePolicy().hasHeightForWidth());
-        pushButtonResetGraph->setSizePolicy(sizePolicy5);
 
 				//----------------------------------------------------------------------
 				// Button Trajectory
@@ -1085,6 +1078,7 @@ public:
         menuHelp->addAction(actionAbout);
 			
         menuCollisionCheker->addAction(actionKCDPropietes);
+        menuCollisionCheker->addAction(actionDrawColl);
 			
         menuGraph->addAction(actionLoadGraph);
         menuGraph->addAction(actionSaveGraph_2);
@@ -1117,6 +1111,7 @@ public:
         actionQuit->setText(QApplication::translate("MainWindow", "Quit", 0, QApplication::UnicodeUTF8));
         action3DViewer->setText(QApplication::translate("MainWindow", "3D-Viewer", 0, QApplication::UnicodeUTF8));
         actionKCDPropietes->setText(QApplication::translate("MainWindow", "KCD Propietes", 0, QApplication::UnicodeUTF8));
+        actionDrawColl->setText(QApplication::translate("MainWindow", "Draw Collisions", 0, QApplication::UnicodeUTF8));
         actionAbout->setText(QApplication::translate("MainWindow", "About", 0, QApplication::UnicodeUTF8));
         actionCloseEnvironement->setText(QApplication::translate("MainWindow", "Close", 0, QApplication::UnicodeUTF8));
         actionRobotForm->setText(QApplication::translate("MainWindow", "Robot Forms", 0, QApplication::UnicodeUTF8));
@@ -1198,7 +1193,6 @@ public:
         mainTabWidget->setTabText(mainTabWidget->indexOf(tabViewerSettings), QApplication::translate("MainWindow", "Viewer Settings", 0, QApplication::UnicodeUTF8));
         groupBoxRunButtons->setTitle(QApplication::translate("MainWindow", "Run Motion Planning", 0, QApplication::UnicodeUTF8));
         pushButtonReset->setText(QString());
-        pushButtonResetGraph->setText(QApplication::translate("MainWindow", "Reset Graph", 0, QApplication::UnicodeUTF8));
         pushButtonNextIteration->setText(QApplication::translate("MainWindow", "Next", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
         pushButtonRun->setToolTip(QApplication::translate("MainWindow", "Run Motion Planner", 0, QApplication::UnicodeUTF8));
@@ -1221,8 +1215,8 @@ public:
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt; color:#008d00;\">Not Running</span></p></body></html>", 0, QApplication::UnicodeUTF8));
         radioButtonDiff->setText(QApplication::translate("MainWindow", "Diffusion", 0, QApplication::UnicodeUTF8));
         radioButtonPRM->setText(QApplication::translate("MainWindow", "PRM", 0, QApplication::UnicodeUTF8));
-        checkBoxWithSmoothing->setText(QApplication::translate("MainWindow", "With Smoothing", 0, QApplication::UnicodeUTF8));
-        checkBoxUseP3DStructures->setText(QApplication::translate("MainWindow", "p3d Structs", 0, QApplication::UnicodeUTF8));
+        checkBoxWithSmoothing->setText(QApplication::translate("MainWindow", "Smoothing", 0, QApplication::UnicodeUTF8));
+//        checkBoxUseP3DStructures->setText(QApplication::translate("MainWindow", "p3d Structs", 0, QApplication::UnicodeUTF8));
         groupBoxTrajectory->setTitle(QApplication::translate("MainWindow", "Trajectory", 0, QApplication::UnicodeUTF8));
         pushButtonSaveVideo->setText(QApplication::translate("MainWindow", "Save video", 0, QApplication::UnicodeUTF8));
         pushButtonShowTraj->setText(QApplication::translate("MainWindow", "Show Trajectory", 0, QApplication::UnicodeUTF8));

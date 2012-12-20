@@ -94,6 +94,7 @@ MainWindow::MainWindow(QWidget *parent)
     //	connect(m_ui->actionLocalPathGroups,SIGNAL(triggered()),m_ui->localPathGroups,SLOT(show()));
     //#endif
     connect(m_ui->actionKCDPropietes,SIGNAL(triggered()),mKCDpropertiesWindow,SLOT(show()));
+    connect(m_ui->actionDrawColl,SIGNAL(triggered()),this,SLOT(setDrawColl()));
 
     connect(m_ui->actionLoadGraph,SIGNAL(triggered()),this,SLOT(loadGraph()));
     connect(m_ui->actionSaveGraph_2,SIGNAL(triggered()),this,SLOT(saveGraph()));
@@ -120,7 +121,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //timer for recording
     timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(saveVideoTimer()));
+    connect( timer, SIGNAL(timeout()), this, SLOT(saveVideoTimer()), Qt::DirectConnection );
     isRecording = false;
 }
 
@@ -248,6 +249,19 @@ void MainWindow::changeCamera()
   {
     qt_reset_mob_frame(win);
   }
+}
+
+void MainWindow::setDrawColl()
+{
+  static int n=0;
+  
+  g3d_set_draw_coll(n);
+  cout << "Set draw collision to :  " << n << endl;
+  
+  if( n == 0 )
+    n = 1;
+  else
+    n = 0;
 }
 
 void MainWindow::loadGraph()
@@ -780,7 +794,7 @@ void MainWindow::initRunButtons()
     m_ui->radioButtonDiff->setChecked(!ENV.getBool(Env::isPRMvsDiffusion));
     envSelectedPlannerTypeChanged(ENV.getBool(Env::isPRMvsDiffusion));
 	connectCheckBoxToEnv(m_ui->checkBoxWithSmoothing,					PlanParam::withSmoothing);
-	connectCheckBoxToEnv(m_ui->checkBoxUseP3DStructures,      Env::use_p3d_structures);
+//	connectCheckBoxToEnv(m_ui->checkBoxUseP3DStructures,      Env::use_p3d_structures);
     
 	
 	connect( ENV.getObject(Env::isRunning), SIGNAL(valueChanged(bool)), this, SLOT(planningFinished(void)) , Qt::QueuedConnection );
@@ -899,6 +913,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
       drawAllWinActive();
 			break;
       
+    case Qt::Key_D:
+      drawAllWinActive();
+			break;
+      
 	}
 }
 
@@ -947,26 +965,93 @@ void MainWindow::changeEvent(QEvent *e)
 	}
 }
 
+static double last_record=0.0;
+static double recording_time=0.0;
+static int image_id=0;
+static bool do_video_record=false;
+static bool use_timer=true;
+
 void MainWindow::saveVideo()
 {
-    if (!isRecording)
+  if (!isRecording)
+  {
+    image_id=0;
+    recording_time=0.0;
+    ChronoTimeOfDayOn();
+    getOpenGL()->resetImageVector();
+    
+    if( use_timer ) 
     {
-        getOpenGL()->resetImageVector();
-        timer->start(40);
-        cout << "begin recording" << endl;
+      //VideoRecorder* video_record = new VideoRecorder(80,getOpenGL());
+      //connect(video_record,SIGNAL(timeout()),getOpenGL(),SLOT(addCurrentImage()));
+      //do_video_record=true;
+      //video_record->start();
+      timer->start(80);
     }
-    else
-    {
-        timer->stop();
-        getOpenGL()->saveImagesToDisk();
-        cout << "end recording" << endl;
+    else {
+      getOpenGL()->setSaveTraj( true );
     }
-    isRecording = !isRecording;
-
+    
+    cout << "begin recording" << endl;
+  }
+  else
+  {
+    timer->stop();
+    double time=0.0;
+    ChronoTimeOfDayTimes(&time);
+    ChronoTimeOfDayOff();
+    do_video_record = false;
+    getOpenGL()->setSaveTraj( false );
+    getOpenGL()->saveImagesToDisk();
+    getOpenGL()->resetImageVector();
+    //cout << "Nb Image : " << time*80 << endl;
+    //cout << "time recording : " << time << endl;
+    cout << "end recording" << endl;
+  }
+  isRecording = !isRecording;
 }
 
 void MainWindow::saveVideoTimer()
 {
+    ChronoTimeOfDayTimes(&recording_time);
+//    image_id++;
+    cout << ++image_id << " , recording_time : " << recording_time-last_record << endl;
+//    if( recording_time-last_record > 0.09 ) {
+//      cout << "Error in recording image : " << recording_time-last_record << endl;
+//    }
     getOpenGL()->addCurrentImage();
+    last_record = recording_time;
+    //double time_to_save=0.0;
+    //ChronoTimeOfDayTimes(&time_to_save);
+    //cout << "time_to_save : " << time_to_save-recording_time << endl;
+}
+
+void VideoRecorder::run()
+{
+  do_video_record = true;
+  
+  double time_video=0.0;
+  double time_last_saved=0.0;
+
+  while (do_video_record) 
+  {
+    //m_display->addCurrentImage();
+    emit(timeout());
+    ChronoTimeOfDayTimes(&time_video);
+    //cout << "time save : " << time_video-time_last_saved << endl;
+    time_last_saved = time_video;
+    usleep((m_msec-20)*1000);
+    
+    bool wait=true;
+    
+    while (wait) 
+    {
+      ChronoTimeOfDayTimes(&time_video);
+      //cout << "time_video : " << time_video << endl;
+      if( time_video-time_last_saved > ((m_msec-0.1)/1000) ) {
+        wait = false;
+      }
+    }
+  }
 }
 

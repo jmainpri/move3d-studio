@@ -28,6 +28,7 @@
 #include "move3d-gui.h"
 
 #include "qtFormRobot/moverobot.hpp"
+#include "qtFormRobot/sliderfunction.hpp"
 #include "qtMainInterface/mainwindow.hpp"
 #include "qtMainInterface/mainwindowGenerated.hpp"
 #include "qtMainInterface/sideWidgets/qtRobot.hpp"
@@ -101,10 +102,33 @@ void qt_drawAllWinActive()
 	g3d_draw_allwin_active();
 }
 
-static bool switch_cart_mode=false;
+static HRICS::Navigation* m_navigation = NULL;
 
 void qt_test1()
 {
+  Scene* sce = global_Project->getActiveScene();
+  Robot* robot = sce->getRobotByName("PR2_ROBOT");
+  if( robot == NULL ) {
+    cout << "NO robot PR2_ROBOT in the scene" << endl;
+    return;
+  }
+  
+  if( m_navigation == NULL ) {
+    m_navigation = new HRICS::Navigation( robot );
+  }
+  else {
+    m_navigation->reset();
+  }
+  
+  confPtr_t q_init = robot->getInitialPosition();
+  confPtr_t q_goal = robot->getGoTo();
+  
+  API::Trajectory* path_ = m_navigation->computeRobotTrajectory( q_init, q_goal );
+  
+  if( path_ )
+    path_->replaceP3dTraj();
+
+  
   //HRICS::generateGraspConfigurations();
   //string robotName("PR2_ROBOT");
 //  Node* node = global_w->Ui()->tabMotionPlanner->getIthNodeInBestTraj();
@@ -119,9 +143,6 @@ void qt_test1()
 //  
 //  cout << "Time to erase graph : " << t << endl;
 //  HRICS::printHumanConfig();
-  cout << "switch_cart_mode to " << switch_cart_mode << endl;
-  traj_optim_switch_cartesian_mode( switch_cart_mode );
-  switch_cart_mode = !switch_cart_mode;
 }
 
 void qt_test2()
@@ -129,7 +150,7 @@ void qt_test2()
 //  cout << "Plan param 1 : " << PlanEnv->getBool(PlanParam::starRRT) << endl;
 //  cout << "Plan param 2 : " << PlanEnv->getBool(PlanParam::starRewire) << endl;
   
-  HRICS::printHumanConfig();
+  //HRICS::printHumanConfig();
   //HRICS::setTenAccessiblePositions();
   
 //  p3d_set_goal_solution_function( manipulation_get_free_holding_config );
@@ -140,9 +161,17 @@ void qt_test2()
 //  {
 //    HRICS::execShelfScenario();
 //  }
+  cout << "Clear traj" << endl;
+  Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+  p3d_destroy_traj( robot->getRobotStruct(), robot->getRobotStruct()->tcur );
+  
+  if( global_rePlanningEnv != NULL )
+    global_rePlanningEnv->resetTrajectoriesToDraw();
 }
 
+static bool recompute_cost=false;
 static bool init_generator=false;
+static bool use_list_generator=false;
 static ConfGenerator* generatorPtr=NULL;
 
 void qt_test3()
@@ -150,39 +179,74 @@ void qt_test3()
 //  HRICS_humanCostMaps->testCostFunction();
 //  HRICS_humanCostMaps->saveAgentGrids();
   
-  timeval tim;
-  gettimeofday(&tim, NULL);
-  double t_init = tim.tv_sec+(tim.tv_usec/1000000.0);
+  //qt_set_otp_cost_recompute();
   
-  Scene* sce = global_Project->getActiveScene();
-  Robot* robot = sce->getRobotByNameContaining("ROBOT");
-  Robot* human = sce->getRobotByNameContaining("HUMAN");
+//  API_activeGrid = HRICS_activeNatu->getGrid();
   
-  if( !init_generator ) 
-  {
-    string dir(getenv("HOME_MOVE3D"));
-    string file("/statFiles/OtpComputing/confHerakles.xml");
-    
-    generatorPtr = new ConfGenerator( robot, human );
-    generatorPtr->initialize( dir+file, HRICS_activeNatu );
-    
-    init_generator = true;
-  }
-  
-  double best_cost=0.0;
-  pair<confPtr_t,confPtr_t> best_handover_conf;
-  
-  if( generatorPtr->computeHandoverConfigFromList( best_handover_conf, best_cost )) 
-  {
-    human->setAndUpdate( *best_handover_conf.first );
-    robot->setAndUpdate( *best_handover_conf.second );
-  }
-  
-  cout << "Cost of configuration is : " << best_cost << endl;
-  
-  gettimeofday(&tim, NULL);
-  double dt = tim.tv_sec+(tim.tv_usec/1000000.0) - t_init;
-  cout << "Handover computed in : " << dt << " sec" << endl;
+//  timeval tim;
+//  gettimeofday(&tim, NULL);
+//  double t_init = tim.tv_sec+(tim.tv_usec/1000000.0);
+//  
+//  Scene* sce = global_Project->getActiveScene();
+//  Robot* robot = sce->getRobotByNameContaining("ROBOT");
+//  Robot* human = sce->getRobotByNameContaining("HUMAN");
+//  
+//  if( !init_generator ) 
+//  {
+//    string dir(getenv("HOME_MOVE3D"));
+//    string file("/statFiles/OtpComputing/confHerakles.xml");
+//    
+//    generatorPtr = new ConfGenerator( robot, human );
+//    generatorPtr->initialize( dir+file, HRICS_activeNatu );
+//    
+//    init_generator = true;
+//  }
+//  
+//  if( use_list_generator )
+//  {
+//    // Compute LIST
+//    pair<confPtr_t,confPtr_t> best_handover_conf;
+//    double best_cost=0.0;
+//    
+//    if( generatorPtr->computeHandoverConfigFromList( best_handover_conf, best_cost )) 
+//    {
+//      human->setAndUpdate( *best_handover_conf.first );
+//      robot->setAndUpdate( *best_handover_conf.second );
+//    }
+//    cout << "Cost of configuration is : " << best_cost << endl;
+//  }
+//  else 
+//  {
+//    // Compute IK
+//    std::vector<Eigen::Vector3d> points;
+//    HRICS_humanCostMaps->getHandoverPointList( points, recompute_cost, true );
+//    
+//    configPt q;
+//    bool found_ik = false;
+//    for (int i=0; i<int(points.size()) && found_ik==false; i++) {
+//      found_ik = generatorPtr->computeRobotIkForGrabing( q, points[i] );
+//    }
+//    
+//    recompute_cost = !recompute_cost;
+//    
+//    // Disable cntrts
+//    p3d_cntrt* ct;
+//    p3d_rob* rob = robot->getRobotStruct();
+//    for(int i=0; i<rob->cntrt_manager->ncntrts; i++) {
+//      ct = rob->cntrt_manager->cntrts[i];
+//      p3d_desactivateCntrt( rob, ct );
+//    }
+//    
+//    if( found_ik ) {
+//      confPtr_t target_new_ = confPtr_t(new Configuration( robot, q ));
+//      robot->setAndUpdate( *target_new_ );
+//    }
+//  }
+//
+//  gettimeofday(&tim, NULL);
+//  double dt = tim.tv_sec+(tim.tv_usec/1000000.0) - t_init;
+//  cout << "Handover computed in : " << dt << " sec" << endl;
+//  g3d_draw_allwin_active();
   
 //  Eigen::Vector3d point = human->getJoint("rPalm")->getVectorPos();
 //  point[2] += 0.10;
@@ -422,16 +486,6 @@ void qt_runNavigation()
     Manip::runNavigation();
 }
 
-void qt_runReplanning()
-{
-//  Robot* rob =	global_Project->getActiveScene()->getActiveRobot();
-//  p3d_vector3 otp;
-//  otp[0] = 4.250;
-//  otp[1] = -2.60;
-//  otp[2] = 1.000;
-  
-  //replanning_Function(rob->getRobotStruct(), rob->getRobotStruct()->tcur, otp, 5);
-}
 #endif
 
 void qt_handover()
@@ -542,10 +596,6 @@ void qt_simpleNav()
 #endif
 
 #ifdef MULTILOCALPATH
-void qt_initTrajectoryOptimCostSpace() {
-  //replan_initialize();
-  traj_optim_initStomp();
-}
 void qt_runStomp()
 {
   if( traj_optim_runStomp(0) )
@@ -556,6 +606,7 @@ void qt_runStomp()
     cout << "Stomp fail!!!" << endl;
   }
 }
+
 
 void qt_runStompNoReset()
 {
@@ -606,11 +657,6 @@ static int default_drawtraj_fct_qt_pipe(p3d_rob* robot, p3d_localpath* curLp)
 }
 
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
-void qt_executeReplanSimu()
-{
-  global_rePlanningEnv->execute_softmotion_simulation(default_drawtraj_fct_qt_pipe);
-}
-
 void qt_executeSimpleSimu()
 {
   cout << "qt_executeSimpleSimu" << endl;
@@ -619,7 +665,7 @@ void qt_executeSimpleSimu()
   {
     global_rePlanningEnv = new ReplanningSimulator();
   }
-  global_rePlanningEnv->execute_simple_simulation(default_drawtraj_fct_qt_pipe);
+  global_rePlanningEnv->execute_simple_simulation( default_drawtraj_fct_qt_pipe );
 }
 
 void qt_executePlan()
@@ -1053,16 +1099,6 @@ void PlannerHandler::startPlanner(QString plannerName)
     }
 #endif
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
-    else if(plannerName == "Replanning")
-    {
-      std::cout << "Re-Planning thread : starting Re-planning." << std::endl;
-      qt_runReplanning();
-    }
-    else if(plannerName == "ExecuteReplanTraj")
-    {
-      std::cout << "Re-Planning thread : starting simulation." << std::endl;
-      qt_executeReplanSimu();
-    }
     else if(plannerName == "ExecuteManipulationPlan")
     {
       std::cout << "execute manipulation thread : starting plan." << std::endl;
@@ -1134,9 +1170,6 @@ void PlannerHandler::startPlanner(QString plannerName)
     else if( plannerName == "convertToSoftMotion"){
       //traj_optim_generate_softMotion();
       traj_optim_generate_pointsOnTraj();
-    }
-    else if( plannerName == "initTrajectoryOptimCostSpace" ){
-      qt_initTrajectoryOptimCostSpace();
     }
     else if( plannerName == "initMlpCntrtsAndFixJoints" ){
       qt_init_mlp_cntrts_and_fixjoints();

@@ -196,7 +196,7 @@ void MotionPlanner::initDiffusion()
 
     m_mainWindow->connectCheckBoxToEnv(m_ui->isEST,                   Env::treePlannerIsEST);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->isBalanced,              Env::expandBalanced);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->isExpandControl,         Env::expandControl);
+	m_mainWindow->connectCheckBoxToEnv(m_ui->isRefinementControl,     Env::refinementControl);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->isDiscardingNodes,       Env::discardNodes);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxIsGoalBias,      Env::isGoalBiased);
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxRandomInCompCo,  Env::randomConnectionToGoal);
@@ -898,6 +898,7 @@ void MotionPlanner::on_pushButtonComputeNavigation_clicked()
         {
             cout << "(x,y,rz) = (" << path[i][0] << "," << path[i][1] << "," << path[i][2] << ")" << endl;
         }
+        m_mainWindow->drawAllWinActive();
     }
 }
 

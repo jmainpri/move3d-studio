@@ -162,7 +162,7 @@ void CostWidget::initCost()
   connect(m_ui->pushButtonInitCostSpace,SIGNAL(clicked()),this,SLOT(initCostSpace()));
 		
 	new QtShiva::SpinBoxSliderConnector( this, m_ui->doubleSpinBoxInitTemp, m_ui->horizontalSliderInitTemp , Env::initialTemperature );
-	new QtShiva::SpinBoxSliderConnector( this, m_ui->doubleSpinBoxNFailMax, m_ui->horizontalSliderNFailMax , Env::temperatureRate );
+	new QtShiva::SpinBoxSliderConnector( this, m_ui->doubleSpinBoxTempRate, m_ui->horizontalSliderTempRate , Env::temperatureRate );
 	new QtShiva::SpinBoxSliderConnector( this, m_ui->doubleSpinBoxLengthWeight, m_ui->horizontalSliderLengthWeight , Env::KlengthWeight );
   new QtShiva::SpinBoxSliderConnector( this, m_ui->doubleSpinBoxResolution, m_ui->horizontalSliderResolution , PlanParam::costResolution );
 	new QtShiva::SpinBoxSliderConnector( this, m_ui->doubleSpinBoxMinConnectGap, m_ui->horizontalSliderMinConnectGap , Env::minimalFinalExpansionGap );
@@ -203,10 +203,9 @@ extern void* GroundCostObj;
 
 void CostWidget::initCostSpace()
 {  
-  if (ENV.getBool(Env::isCostSpace) && global_costSpace ) 
+  if (ENV.getBool(Env::isCostSpace) && global_costSpace == NULL ) 
   {
-//    cout << "Nothing to do" << endl;
-//    return;
+    GlobalCostSpace::initialize();
   }
 
 //  GlobalCostSpace::initialize();

@@ -339,8 +339,12 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
   // ------------------------------------------------------------------
   // Cntrts and Localpaths
   // ------------------------------------------------------------------
-  qt_loadCntrts(print,global_Project->getActiveScene()->getActiveRobot(),settings);
-  qt_loadMultiLocalPath(print,global_Project->getActiveScene()->getActiveRobot(),settings);
+  Scene* sce = global_Project->getActiveScene();
+  
+  for (int i=0; i<int(sce->getNumberOfRobots()); i++) {
+    qt_loadCntrts(print,sce->getRobot(i),settings);
+    qt_loadMultiLocalPath(print,sce->getRobot(i),settings);
+  }
   
   if( opengl )
     qt_loadCameraAndAxis( print, g3d_get_cur_states(), settings) ;
@@ -463,8 +467,13 @@ void qt_saveInterfaceParameters(bool print, std::string fileName)
   // ------------------------------------------------------------------
   // Cntrts and Localpaths
   // ------------------------------------------------------------------
-  qt_saveCntrts(print,global_Project->getActiveScene()->getActiveRobot(),settings);
-  qt_saveMultiLocalPath(print,global_Project->getActiveScene()->getActiveRobot(),settings);
+  Scene* sce = global_Project->getActiveScene();
+  
+  for (int i=0; i<int(sce->getNumberOfRobots()); i++) {
+    qt_saveCntrts(print,sce->getRobot(i),settings);
+    qt_saveMultiLocalPath(print,sce->getRobot(i),settings);
+  }
+  
   qt_saveCameraAndAxis( print, g3d_get_cur_states(), settings) ;
   
   //  
