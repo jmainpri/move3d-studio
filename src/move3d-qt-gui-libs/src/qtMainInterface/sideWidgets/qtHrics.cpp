@@ -75,6 +75,8 @@ void HricsWidget::initHRI()
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawVectorField,				Env::drawVectorField);
   m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawOnlyOneLine,				Env::drawOnlyOneLine);
   m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawBox,               Env::drawBox);
+  m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawReachable,         PlanParam::drawReachableGrid);
+  
   m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawHumanColorFromConf,PlanParam::hriSetColorFromConfig);
   
 	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxHRICS_MOPL,						Env::HRIPlannerWS);

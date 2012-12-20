@@ -35,9 +35,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-210</y>
+        <y>0</y>
         <width>389</width>
-        <height>1026</height>
+        <height>1042</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -172,6 +172,13 @@
            <widget class="QCheckBox" name="checkBoxDrawHumanColorFromConf">
             <property name="text">
              <string>Hum. Color From Conf.</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QCheckBox" name="checkBoxDrawReachable">
+            <property name="text">
+             <string>Reachable</string>
             </property>
            </widget>
           </item>
