@@ -273,8 +273,9 @@ void MainWindow::loadGraph()
 		qt_fileName = fileName.toStdString().c_str();
 		char file[256];
 		sprintf(file,"%s",qt_fileName);
-		cout << "Loading graph at : " << file << endl;
+        cout << "Loading graph at : " << file << endl;
         p3d_readGraph(file, DEFAULTGRAPH);
+        API_activeGraph=new Graph(XYZ_GRAPH);
 		this->drawAllWinActive();
 	}
 }
