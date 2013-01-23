@@ -26,7 +26,7 @@
 #endif
 
 #include "qtMainInterface/mainwindow.hpp"
-#include "qtMainInterface/mainwindowGenerated.hpp"
+//#include "qtMainInterface/mainwindowGenerated.hpp"
 
 #include "qtMotionPlanner.hpp"
 

@@ -45,6 +45,7 @@
 #include "planner/plannerFunctions.hpp"
 
 #include "utils/MultiRun.hpp"
+#include "utils/RecordMotion.hpp"
 
 #include "qtLibrary.hpp"
 #include <QtCore/QMutexLocker>
@@ -76,6 +77,8 @@
 extern ManipulationTestFunctions* global_manipPlanTest;
 #endif
 #endif
+
+
 
 const char *qt_fileName = NULL;
 
@@ -161,6 +164,7 @@ void qt_test2()
 //  {
 //    HRICS::execShelfScenario();
 //  }
+
   cout << "Clear traj" << endl;
   Robot* robot = global_Project->getActiveScene()->getActiveRobot();
   p3d_destroy_traj( robot->getRobotStruct(), robot->getRobotStruct()->tcur );
@@ -959,6 +963,36 @@ void qt_load_HRICS_Grid(std::string docname)
 #endif
 }
 
+//------------------------------------------------------------------
+//------------------------------------------------------------------
+
+void qt_load_recorded_motion()
+{
+    cout << "Load recorded motion" << endl;
+
+    if(!global_motionRecorder) {
+        global_motionRecorder = new RecordMotion( "HERAKLES_HUMAN1" );
+    }
+
+    global_motionRecorder->loadMotionFromMultipleFiles( "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/motion_saved_" , 37 );
+    //m_recorder->loadFromXml("/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/motion_saved_00000.xml");
+}
+
+void qt_show_recorded_motion()
+{
+    cout << "Show recorded motion" << endl;
+
+    if(!global_motionRecorder) {
+        cout << "recorder not initialized" << endl;
+        return;
+    }
+
+    global_motionRecorder->showRecordedMotion();
+}
+
+//------------------------------------------------------------------
+//------------------------------------------------------------------
+
 // Add a trajectory to the interface
 void qt_add_traj(char* name,int id,p3d_rob* rob,p3d_traj* traj)
 {
@@ -1152,6 +1186,12 @@ void PlannerHandler::startPlanner(QString plannerName)
       qt_save_agent_grid();
     }
 #endif
+    else if( plannerName == "LoadRecordedMotion"){
+      qt_load_recorded_motion();
+    }
+    else if( plannerName == "ShowRecordedMotion"){
+      qt_show_recorded_motion();
+    }
 #ifdef GRASP_PLANNING
     else if( plannerName == "makeTrajFromViaPoints"){
       qt_makeTrajFromViaPoints();

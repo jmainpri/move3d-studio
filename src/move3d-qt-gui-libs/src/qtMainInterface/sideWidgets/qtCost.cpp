@@ -398,7 +398,7 @@ void CostWidget::graphSearchTest()
 	cout << "-------------------------------" << endl;
 	cout << "Trajectory Cost = "<< traj->cost() << endl;
 	cout << "   nl = "<< traj->getNbOfPaths() << endl;
-	cout << "   length = "<< traj->getRangeMax() << endl;
+    cout << "   length = "<< traj->getRangeMax() << endl;
 	
 	ENV.setBool(Env::drawGraph,false);
 	ENV.setBool(Env::drawTraj,true);

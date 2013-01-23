@@ -54,7 +54,13 @@ QT_BEGIN_NAMESPACE
 class Ui_MainWindow
 {
 public:
-		// Actions
+    Ui_MainWindow() {
+        m_opengl_sidewidget = false;
+        m_start_buttons = true;
+        m_start_traj_and_test_buttons = true;
+    };
+
+    // Actions
     QAction *actionQuit;
     QAction *action3DViewer;
     QAction *actionDrawColl;
@@ -62,15 +68,15 @@ public:
     QAction *actionAbout;
     QAction *actionCloseEnvironement;
     QAction *actionOpenScenario;
-		QAction	*actionRobotForm;
-		QAction	*actionLocalPathGroups;
-  
+    QAction	*actionRobotForm;
+    QAction	*actionLocalPathGroups;
+
     QAction *actionOpen;
     QAction *actionLoadInterfaceParameters;
     QAction *actionSaveInterfaceParameters;
     QAction *actionLoadParametersQuick;
     QAction *actionSaveParametersQuick;
-  
+
     QAction *actionSaveScenario;
     QAction *actionNameOfEnv;
     QAction *actionSaveGraph;
@@ -81,12 +87,12 @@ public:
     QAction *actionAllDevices;
     QAction *actionSave_Graph_To_Dot;
     QAction *actionSaveToDot;
-	
-		// Widgets
+
+    // Widgets
     QWidget *centralWidget;
-		MoveRobot *formRobot;
+    MoveRobot *formRobot;
 #if defined( MULTILOCALPATH )
-		//MultiLocalPathWidget* localPathGroups;
+    //MultiLocalPathWidget* localPathGroups;
 #endif
     QVBoxLayout *verticalLayout_21;
     QSplitter *vSplitter;
@@ -119,10 +125,10 @@ public:
     QSpinBox *spinBoxJointToDraw;
     QWidget *widgetMobCamButton;
     QHBoxLayout *horizontalLayout_5;
-  
+
     QPushButton *pushButtonMobileCamera;
     QPushButton *pushButtonChangeCamera;
-  
+
     QSpacerItem *horizontalSpacer;
     QGroupBox *threeDGroupBox;
     QGridLayout *gridLayout_13;
@@ -160,7 +166,7 @@ public:
     QVBoxLayout *verticalLayout_22;
     
     QPushButton *pushButtonRestoreLight;
-  
+
     QCheckBox *checkBoxDrawLightSource;
     QGroupBox *groupBox;
     QGridLayout *gridLayout_41;
@@ -188,8 +194,8 @@ public:
     QRadioButton *radioButtonDiff;
     QRadioButton *radioButtonPRM;
     QCheckBox *checkBoxWithSmoothing;
-//    QCheckBox *checkBoxUseP3DStructures;
-	
+    //    QCheckBox *checkBoxUseP3DStructures;
+
     QGroupBox *groupBoxTrajectory;
     QVBoxLayout *verticalLayout_34;
     QHBoxLayout *horizontalLayoutShowTraj;
@@ -199,7 +205,7 @@ public:
     QPushButton *pushButtonSaveVideo;
     QSpacerItem *horizontalSpacerShowTraj2;
     QHBoxLayout *horizontalLayoutTrajSpeed;
-	
+
     QLabel *label;
     QDoubleSpinBox *doubleSpinBoxTrajSpeed;
     QSlider *horizontalSliderTrajSpeed;
@@ -216,206 +222,209 @@ public:
     QMenu *menuEnvironement;
     QMenu *menuRobot;
     QStatusBar *statusBar;
-	
+
+    bool m_opengl_sidewidget;
+    bool m_start_buttons;
+    bool m_start_traj_and_test_buttons;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-			
+
         MainWindow->setWindowModality(Qt::NonModal);
         MainWindow->setEnabled(true);
-        MainWindow->resize(1440, 700);
-			
+        MainWindow->resize(800, 700);
+
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(MainWindow->sizePolicy().hasHeightForWidth());
-			
+
         MainWindow->setSizePolicy(sizePolicy);
         MainWindow->setSizeIncrement(QSize(0, 0));
         MainWindow->setTabShape(QTabWidget::Rounded);
-			
-			
-				//----------------------------------------------------------------------
-				// Upper window
-				//----------------------------------------------------------------------
-				actionQuit = new QAction(MainWindow);
+
+
+        //----------------------------------------------------------------------
+        // Upper window
+        //----------------------------------------------------------------------
+        actionQuit = new QAction(MainWindow);
         actionQuit->setObjectName(QString::fromUtf8("actionQuit"));
-			
+
         action3DViewer = new QAction(MainWindow);
         action3DViewer->setObjectName(QString::fromUtf8("action3DViewer"));
-			
+
         actionDrawColl = new QAction(MainWindow);
         actionDrawColl->setObjectName(QString::fromUtf8("actionDrawColl"));
-      
+
         actionKCDPropietes = new QAction(MainWindow);
         actionKCDPropietes->setObjectName(QString::fromUtf8("actionKCDPropietes"));
-			
+
         actionAbout = new QAction(MainWindow);
         actionAbout->setObjectName(QString::fromUtf8("actionAbout"));
-			
+
         actionCloseEnvironement = new QAction(MainWindow);
         actionCloseEnvironement->setObjectName(QString::fromUtf8("actionCloseEnvironement"));
-			
+
         actionOpenScenario = new QAction(MainWindow);
         actionOpenScenario->setObjectName(QString::fromUtf8("actionOpenScenario"));
-			
-				actionRobotForm = new QAction(MainWindow);
-				actionRobotForm->setObjectName(QString::fromUtf8("actionRobotForm"));
-			
-//				actionLocalPathGroups = new QAction(MainWindow);
-//				actionLocalPathGroups->setObjectName(QString::fromUtf8("actionLocalPathGroups"));
-			
+
+        actionRobotForm = new QAction(MainWindow);
+        actionRobotForm->setObjectName(QString::fromUtf8("actionRobotForm"));
+
+        //				actionLocalPathGroups = new QAction(MainWindow);
+        //				actionLocalPathGroups->setObjectName(QString::fromUtf8("actionLocalPathGroups"));
+
         actionOpen = new QAction(MainWindow);
         actionLoadInterfaceParameters = new QAction(MainWindow);
         actionSaveInterfaceParameters = new QAction(MainWindow);
         actionLoadParametersQuick = new QAction(MainWindow);
         actionSaveParametersQuick = new QAction(MainWindow);
-			
+
         actionSaveScenario = new QAction(MainWindow);
         actionSaveScenario->setObjectName(QString::fromUtf8("actionSaveScenario"));
-			
+
         actionNameOfEnv = new QAction(MainWindow);
         actionNameOfEnv->setObjectName(QString::fromUtf8("actionNameOfEnv"));
-			
+
         actionSaveGraph = new QAction(MainWindow);
         actionSaveGraph->setObjectName(QString::fromUtf8("actionSaveGraph"));
-			
+
         actionLoadGraph = new QAction(MainWindow);
         actionLoadGraph->setObjectName(QString::fromUtf8("actionLoadGraph"));
-			
+
         actionSaveGraph_2 = new QAction(MainWindow);
         actionSaveGraph_2->setObjectName(QString::fromUtf8("actionSaveGraph_2"));
-			
+
         actionLoadTrajectory = new QAction(MainWindow);
         actionLoadTrajectory->setObjectName(QString::fromUtf8("actionLoadTrajectory"));
-			
+
         actionSaveTrajectory = new QAction(MainWindow);
         actionSaveTrajectory->setObjectName(QString::fromUtf8("actionSaveTrajectory"));
-			
+
         actionAllDevices = new QAction(MainWindow);
         actionAllDevices->setObjectName(QString::fromUtf8("actionAllDevices"));
-			
+
         actionSave_Graph_To_Dot = new QAction(MainWindow);
         actionSave_Graph_To_Dot->setObjectName(QString::fromUtf8("actionSave_Graph_To_Dot"));
-			
+
         actionSaveToDot = new QAction(MainWindow);
         actionSaveToDot->setObjectName(QString::fromUtf8("actionSaveToDot"));
-			
+
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
-			
+
         sizePolicy.setHeightForWidth(centralWidget->sizePolicy().hasHeightForWidth());
-			
+
         centralWidget->setSizePolicy(sizePolicy);
-			
+
         verticalLayout_21 = new QVBoxLayout(centralWidget);
         verticalLayout_21->setSpacing(6);
         verticalLayout_21->setContentsMargins(11, 11, 11, 11);
         verticalLayout_21->setObjectName(QString::fromUtf8("verticalLayout_21"));
         verticalLayout_21->setContentsMargins(-1, 0, -1, 2);
-			
-				//----------------------------------------------------------------------
-				// Main splitter
-			 //----------------------------------------------------------------------
+
+        //----------------------------------------------------------------------
+        // Main splitter
+        //----------------------------------------------------------------------
         vSplitter = new QSplitter(centralWidget);
         vSplitter->setObjectName(QString::fromUtf8("vSplitter"));
         vSplitter->setOrientation(Qt::Horizontal);
-			
-				//----------------------------------------------------------------------
-				// Side Window
-				//----------------------------------------------------------------------
+
+        //----------------------------------------------------------------------
+        // Side Window
+        //----------------------------------------------------------------------
         sidePanel = new QWidget(vSplitter);
         sidePanel->setObjectName(QString::fromUtf8("sidePanel"));
-			
+
         QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy1.setHorizontalStretch(2);
         sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(sidePanel->sizePolicy().hasHeightForWidth());
         sidePanel->setSizePolicy(sizePolicy1);
-			
+
         verticalLayout_6 = new QVBoxLayout(sidePanel);
         verticalLayout_6->setSpacing(6);
         verticalLayout_6->setContentsMargins(11, 11, 11, 11);
         verticalLayout_6->setObjectName(QString::fromUtf8("verticalLayout_6"));
         verticalLayout_6->setContentsMargins(-1, 0, -1, 2);
-			
+
         mainTabWidget = new QTabWidget(sidePanel);
         mainTabWidget->setObjectName(QString::fromUtf8("mainTabWidget"));
         mainTabWidget->setDocumentMode(true);
-			
-				// Main widget
+
+        // Main widget
         tabMotionPlanner = new MotionPlanner();
         tabMotionPlanner->setObjectName(QString::fromUtf8("tabMotionPlanner"));
-				
-//        verticalLayout_19 = new QVBoxLayout(tabMotionPlanner);
-//        verticalLayout_19->setSpacing(6);
-//        verticalLayout_19->setContentsMargins(11, 11, 11, 11);
-//        verticalLayout_19->setObjectName(QString::fromUtf8("verticalLayout_19"));
-//        verticalLayout_19->setContentsMargins(0, 5, 0, 5);
-			
+
+        //        verticalLayout_19 = new QVBoxLayout(tabMotionPlanner);
+        //        verticalLayout_19->setSpacing(6);
+        //        verticalLayout_19->setContentsMargins(11, 11, 11, 11);
+        //        verticalLayout_19->setObjectName(QString::fromUtf8("verticalLayout_19"));
+        //        verticalLayout_19->setContentsMargins(0, 5, 0, 5);
+
         mainTabWidget->addTab(tabMotionPlanner, QString());
-			
+
         tabCost = new CostWidget();
         tabCost->setObjectName(QString::fromUtf8("tabCost"));
-			
-//        verticalLayout_11 = new QVBoxLayout(tabCost);
-//        verticalLayout_11->setSpacing(6);
-//        verticalLayout_11->setContentsMargins(11, 11, 11, 11);
-//        verticalLayout_11->setObjectName(QString::fromUtf8("verticalLayout_11"));
-//        verticalLayout_11->setContentsMargins(0, 5, 0, 5);
-			
+
+        //        verticalLayout_11 = new QVBoxLayout(tabCost);
+        //        verticalLayout_11->setSpacing(6);
+        //        verticalLayout_11->setContentsMargins(11, 11, 11, 11);
+        //        verticalLayout_11->setObjectName(QString::fromUtf8("verticalLayout_11"));
+        //        verticalLayout_11->setContentsMargins(0, 5, 0, 5);
+
         mainTabWidget->addTab(tabCost, QString());
-			
-				// Tab robot
+
+        // Tab robot
         tabRobot = new RobotWidget();
         tabRobot->setObjectName(QString::fromUtf8("tabRobot"));
-			
-				// Form robot
-				formRobot = new MoveRobot();
-				formRobot->setObjectName(QString::fromUtf8("formRobot"));
-				formRobot->setMaximumSize(QSize(16777215, 16777215));
-			
+
+        // Form robot
+        formRobot = new MoveRobot();
+        formRobot->setObjectName(QString::fromUtf8("formRobot"));
+        formRobot->setMaximumSize(QSize(16777215, 16777215));
+
 #if defined( MULTILOCALPATH )
-				// Form robot
-//				localPathGroups = new MultiLocalPathWidget();
-//				localPathGroups->setObjectName(QString::fromUtf8("MultiLocalPathWidget"));	
+        // Form robot
+        //				localPathGroups = new MultiLocalPathWidget();
+        //				localPathGroups->setObjectName(QString::fromUtf8("MultiLocalPathWidget"));
 #endif
-			
-//        verticalLayout_12 = new QVBoxLayout(tabRobot);
-//        verticalLayout_12->setSpacing(6);
-//        verticalLayout_12->setContentsMargins(11, 11, 11, 11);
-//        verticalLayout_12->setObjectName(QString::fromUtf8("verticalLayout_12"));
-//        verticalLayout_12->setContentsMargins(0, 5, 0, 5);
-			
+
+        //        verticalLayout_12 = new QVBoxLayout(tabRobot);
+        //        verticalLayout_12->setSpacing(6);
+        //        verticalLayout_12->setContentsMargins(11, 11, 11, 11);
+        //        verticalLayout_12->setObjectName(QString::fromUtf8("verticalLayout_12"));
+        //        verticalLayout_12->setContentsMargins(0, 5, 0, 5);
+
         mainTabWidget->addTab(tabRobot, QString());
-			
+
         tabUtil = new UtilWidget();
         tabUtil->setObjectName(QString::fromUtf8("tabUtil"));
         tabUtil->setFocusPolicy(Qt::NoFocus);
-			
-//        verticalLayout_17 = new QVBoxLayout(tabUtil);
-//        verticalLayout_17->setSpacing(6);
-//        verticalLayout_17->setContentsMargins(11, 11, 11, 11);
-//        verticalLayout_17->setObjectName(QString::fromUtf8("verticalLayout_17"));
-//        verticalLayout_17->setContentsMargins(0, 5, 0, 5);
-			
+
+        //        verticalLayout_17 = new QVBoxLayout(tabUtil);
+        //        verticalLayout_17->setSpacing(6);
+        //        verticalLayout_17->setContentsMargins(11, 11, 11, 11);
+        //        verticalLayout_17->setObjectName(QString::fromUtf8("verticalLayout_17"));
+        //        verticalLayout_17->setContentsMargins(0, 5, 0, 5);
+
         mainTabWidget->addTab(tabUtil, QString());
-			
+
         tabViewerSettings = new QWidget();
         tabViewerSettings->setObjectName(QString::fromUtf8("tabViewerSettings"));
-			
-			
-				//----------------------------------------------------------------------
-				// Horizontal and buttons
-				//----------------------------------------------------------------------
+
+
+        //----------------------------------------------------------------------
+        // Horizontal and buttons
+        //----------------------------------------------------------------------
         horizontalLayout = new QHBoxLayout(tabViewerSettings);
         horizontalLayout->setSpacing(6);
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         horizontalLayout->setContentsMargins(0, 5, 0, 5);
-			
+
         scrollAreaViewer = new QScrollArea(tabViewerSettings);
         scrollAreaViewer->setObjectName(QString::fromUtf8("scrollAreaViewer"));
         scrollAreaViewer->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -423,42 +432,42 @@ public:
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
         scrollAreaWidgetContents->setGeometry(QRect(0, -169, 357, 785));
-			
+
         horizontalLayout_2 = new QHBoxLayout(scrollAreaWidgetContents);
         horizontalLayout_2->setSpacing(6);
         horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-			
-			
-				//----------------------------------------------------------------------
-				// Viewer Widget
-				//----------------------------------------------------------------------
+
+
+        //----------------------------------------------------------------------
+        // Viewer Widget
+        //----------------------------------------------------------------------
         widgetViewer = new QWidget(scrollAreaWidgetContents);
         widgetViewer->setObjectName(QString::fromUtf8("widgetViewer"));
-			
+
         verticalLayout_3 = new QVBoxLayout(widgetViewer);
         verticalLayout_3->setSpacing(6);
         verticalLayout_3->setContentsMargins(0, 0, 0, 0);
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
-			
+
         groupBoxDrawEnv = new QGroupBox(widgetViewer);
         groupBoxDrawEnv->setObjectName(QString::fromUtf8("groupBoxDrawEnv"));
-			
+
         gridLayout_12 = new QGridLayout(groupBoxDrawEnv);
         gridLayout_12->setSpacing(6);
         gridLayout_12->setContentsMargins(11, 11, 11, 11);
         gridLayout_12->setObjectName(QString::fromUtf8("gridLayout_12"));
-			
+
         checkBoxDrawGraph = new QCheckBox(groupBoxDrawEnv);
         checkBoxDrawGraph->setObjectName(QString::fromUtf8("checkBoxDrawGraph"));
         checkBoxDrawGraph->setChecked(false);
 
         gridLayout_12->addWidget(checkBoxDrawGraph, 1, 0, 1, 1);
-      
+
         checkBoxDrawExploration = new QCheckBox(groupBoxDrawEnv);
         checkBoxDrawExploration->setObjectName(QString::fromUtf8("checkBoxDrawExploration"));
         checkBoxDrawExploration->setChecked(false);
-      
+
         gridLayout_12->addWidget(checkBoxDrawExploration, 2, 0, 1, 1);
 
         checkBoxDrawTraj = new QCheckBox(groupBoxDrawEnv);
@@ -495,16 +504,16 @@ public:
 
         widgetMobCamButton = new QWidget(widgetViewer);
         widgetMobCamButton->setObjectName(QString::fromUtf8("widgetMobCamButton"));
-			
+
         horizontalLayout_5 = new QHBoxLayout(widgetMobCamButton);
         horizontalLayout_5->setSpacing(6);
         horizontalLayout_5->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
-			
+
         pushButtonMobileCamera = new QPushButton(widgetMobCamButton);
         pushButtonMobileCamera->setObjectName(QString::fromUtf8("pushButtonMobileCamera"));
         horizontalLayout_5->addWidget(pushButtonMobileCamera);
-      
+
         pushButtonChangeCamera = new QPushButton(widgetMobCamButton);
         pushButtonChangeCamera->setObjectName(QString::fromUtf8("pushButtonChangeCamera"));
         horizontalLayout_5->addWidget(pushButtonChangeCamera);
@@ -518,12 +527,12 @@ public:
 
         threeDGroupBox = new QGroupBox(widgetViewer);
         threeDGroupBox->setObjectName(QString::fromUtf8("threeDGroupBox"));
-			
+
         gridLayout_13 = new QGridLayout(threeDGroupBox);
         gridLayout_13->setSpacing(6);
         gridLayout_13->setContentsMargins(11, 11, 11, 11);
         gridLayout_13->setObjectName(QString::fromUtf8("gridLayout_13"));
-			
+
         checkBoxBB = new QCheckBox(threeDGroupBox);
         checkBoxBB->setObjectName(QString::fromUtf8("checkBoxBB"));
 
@@ -548,12 +557,12 @@ public:
 
         sceneGroupBox = new QGroupBox(widgetViewer);
         sceneGroupBox->setObjectName(QString::fromUtf8("sceneGroupBox"));
-			
+
         gridLayout_11 = new QGridLayout(sceneGroupBox);
         gridLayout_11->setSpacing(6);
         gridLayout_11->setContentsMargins(11, 11, 11, 11);
         gridLayout_11->setObjectName(QString::fromUtf8("gridLayout_11"));
-			
+
         checkBoxFloor = new QCheckBox(sceneGroupBox);
         checkBoxFloor->setObjectName(QString::fromUtf8("checkBoxFloor"));
 
@@ -568,10 +577,10 @@ public:
         checkBoxShadows->setObjectName(QString::fromUtf8("checkBoxShadows"));
 
         gridLayout_11->addWidget(checkBoxShadows, 4, 1, 1, 1);
-      
+
         checkBoxEnableShaders = new QCheckBox(sceneGroupBox);
         checkBoxEnableShaders->setObjectName(QString::fromUtf8("checkBoxEnableShaders"));
-      
+
         gridLayout_11->addWidget(checkBoxEnableShaders, 7, 1, 1, 1);
 
 
@@ -637,9 +646,9 @@ public:
 
         gridLayout_43->addWidget(doubleSpinBoxLightY, 1, 0, 1, 1);
 
-				//----------------------------------------------------------------------
-				// Light Sliders
-				//----------------------------------------------------------------------
+        //----------------------------------------------------------------------
+        // Light Sliders
+        //----------------------------------------------------------------------
         label_X = new QLabel(widgetLightSliders);
         label_X->setObjectName(QString::fromUtf8("label_X"));
 
@@ -649,11 +658,11 @@ public:
         label_Y->setObjectName(QString::fromUtf8("label_Y"));
 
         gridLayout_43->addWidget(label_Y, 1, 1, 1, 1);
-			
-				label_Z = new QLabel(widgetLightSliders);
-				label_Z->setObjectName(QString::fromUtf8("label_Z"));
-			
-				gridLayout_43->addWidget(label_Z, 2, 1, 1, 1);
+
+        label_Z = new QLabel(widgetLightSliders);
+        label_Z->setObjectName(QString::fromUtf8("label_Z"));
+
+        gridLayout_43->addWidget(label_Z, 2, 1, 1, 1);
 
         horizontalSliderLightY = new QSlider(widgetLightSliders);
         horizontalSliderLightY->setObjectName(QString::fromUtf8("horizontalSliderLightY"));
@@ -683,7 +692,7 @@ public:
         verticalLayout_22->setSpacing(6);
         verticalLayout_22->setContentsMargins(11, 11, 11, 11);
         verticalLayout_22->setObjectName(QString::fromUtf8("verticalLayout_22"));
-      
+
         pushButtonRestoreLight = new QPushButton(widgetLightButtons);
         pushButtonRestoreLight->setObjectName(QString::fromUtf8("pushButtonRestoreLight"));
         verticalLayout_22->addWidget(pushButtonRestoreLight);
@@ -700,17 +709,17 @@ public:
         verticalLayout_3->addWidget(lightGroupBox);
         groupBox = new QGroupBox(widgetViewer);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
-      
+
         // Traj grid Layout
         gridLayout_41 = new QGridLayout(groupBox);
         gridLayout_41->setSpacing(6);
         gridLayout_41->setContentsMargins(11, 11, 11, 11);
         gridLayout_41->setObjectName(QString::fromUtf8("gridLayout_41"));
-      
+
         checkBoxDrawMultiColoredTraj = new QCheckBox(groupBox);
-      
+
         gridLayout_41->addWidget(checkBoxDrawMultiColoredTraj, 0, 0, 1, 1);
-      
+
         pushButtonAddTraj = new QPushButton(groupBox);
         pushButtonAddTraj->setObjectName(QString::fromUtf8("pushButtonAddTraj"));
 
@@ -740,17 +749,17 @@ public:
 
         verticalSpacer_4 = new QSpacerItem( 0, 15 );
         verticalLayout_3->addItem(verticalSpacer_4);
-      
+
         horizontalLayout_2->addWidget(widgetViewer);
         scrollAreaViewer->setWidget(scrollAreaWidgetContents);
         horizontalLayout->addWidget(scrollAreaViewer);
         mainTabWidget->addTab(tabViewerSettings, QString());
         verticalLayout_6->addWidget(mainTabWidget);
 
-			
-				//----------------------------------------------------------------------
-				// Layouts
-				//----------------------------------------------------------------------
+
+        //----------------------------------------------------------------------
+        // Layouts
+        //----------------------------------------------------------------------
         vSplitter->addWidget(sidePanel);
         verticalLayout = new QWidget(vSplitter);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
@@ -767,337 +776,364 @@ public:
         hSplitter = new QSplitter(verticalLayout);
         hSplitter->setObjectName(QString::fromUtf8("hSplitter"));
         hSplitter->setOrientation(Qt::Vertical);
-			
-				//----------------------------------------------------------------------
-				// OpenGl Widget
-				//----------------------------------------------------------------------
-        OpenGL = new GLWidget(hSplitter);
+
+        //----------------------------------------------------------------------
+        // OpenGl Widget
+        //----------------------------------------------------------------------
+        if( !m_opengl_sidewidget )
+            OpenGL = new GLWidget(hSplitter);
+        else
+            OpenGL = new GLWidget(NULL);
+
         OpenGL->setObjectName(QString::fromUtf8("OpenGL"));
-			
+
         QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Expanding);
         sizePolicy3.setHorizontalStretch(2);
         sizePolicy3.setVerticalStretch(2);
         sizePolicy3.setHeightForWidth(OpenGL->sizePolicy().hasHeightForWidth());
-			
+
         OpenGL->setSizePolicy(sizePolicy3);
-        OpenGL->setMinimumSize(QSize(400, 300));
-			
-        hSplitter->addWidget(OpenGL);
-			
+        OpenGL->setMinimumSize(QSize(200, 200));
+
+        if( !m_opengl_sidewidget )
+            hSplitter->addWidget(OpenGL);
+        else
+            OpenGL->show();
+
         controlWidget = new QWidget(hSplitter);
         controlWidget->setObjectName(QString::fromUtf8("controlWidget"));
         sizePolicy.setHeightForWidth(controlWidget->sizePolicy().hasHeightForWidth());
         controlWidget->setSizePolicy(sizePolicy);
-			
+
         horizontalLayout_3 = new QHBoxLayout(controlWidget);
         horizontalLayout_3->setSpacing(6);
         horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
         horizontalLayout_3->setContentsMargins(-1, -1, -1, 2);
-			
-        //----------------------------------------------------------------------
-        // Run, Reset, Stop Layer
-        //----------------------------------------------------------------------
-        groupBoxRunButtons = new QGroupBox(controlWidget);
-        groupBoxRunButtons->setObjectName(QString::fromUtf8("groupBoxRunButtons"));
-			
-        gridLayout_30 = new QGridLayout(groupBoxRunButtons);
-        gridLayout_30->setSpacing(6);
-        gridLayout_30->setContentsMargins(11, 11, 11, 11);
-        gridLayout_30->setObjectName(QString::fromUtf8("gridLayout_30"));
-      
-        widget_4 = new QWidget(groupBoxRunButtons);
-        widget_4->setObjectName(QString::fromUtf8("widget_4"));
-        QSizePolicy sizePolicy4(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        sizePolicy4.setHorizontalStretch(0);
-        sizePolicy4.setVerticalStretch(0);
-        sizePolicy4.setHeightForWidth(widget_4->sizePolicy().hasHeightForWidth());
-        widget_4->setSizePolicy(sizePolicy4);
-        widget_4->setMinimumSize(QSize(400, 45));
-			
-				//----------------------------------------------------------------------
-				// Button Run
-				//----------------------------------------------------------------------
-        pushButtonRun = new QPushButton(widget_4);
-        pushButtonRun->setObjectName(QString::fromUtf8("pushButtonRun"));
-        pushButtonRun->setGeometry(QRect(0, 0, 40, 40));
-        sizePolicy4.setHeightForWidth(pushButtonRun->sizePolicy().hasHeightForWidth());
-        pushButtonRun->setSizePolicy(sizePolicy4);
-        pushButtonRun->setMinimumSize(QSize(0, 0));
-        pushButtonRun->setMaximumSize(QSize(16777215, 16777215));
-        pushButtonRun->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"border-image:url(images/media-playback-start.svg) 1 1 1 1 ;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"border-image:url(images/media-playback-start.svg) -2 -2 -2 -2 ;\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"border-image:url(images/media-playback-start.svg) -8 -8 -8 -8 ;\n"
-"}\n"
-"\n"
-"QPushButton:disabled {\n"
-"border-image:url(images/media-playback-start-disabled.svg) 1 1 1 1 ;\n"
-"}"));
-        pushButtonRun->setIconSize(QSize(50, 50));
-			
-				//----------------------------------------------------------------------
-				// Button Stop
-				//----------------------------------------------------------------------
-        pushButtonStop = new QPushButton(widget_4);
-        pushButtonStop->setObjectName(QString::fromUtf8("pushButtonStop"));
-        pushButtonStop->setGeometry(QRect(50, 0, 40, 40));
-        sizePolicy4.setHeightForWidth(pushButtonStop->sizePolicy().hasHeightForWidth());
-        pushButtonStop->setSizePolicy(sizePolicy4);
-        pushButtonStop->setMinimumSize(QSize(0, 0));
-        pushButtonStop->setMaximumSize(QSize(16777215, 16777215));
-        pushButtonStop->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-                                                        "border-image:url(images/media-playback-pause.svg) 1 1 1 1 ;\n"
-                                                        "}\n"
-                                                        "\n"
-                                                        "QPushButton:hover {\n"
-                                                        "border-image:url(images/media-playback-pause.svg) -2 -2 -2 -2 ;\n"
-                                                        "}\n"
-                                                        "\n"
-                                                        "QPushButton:pressed {\n"
-                                                        "border-image:url(images/media-playback-pause.svg) -5 -5 -5 -5 ;\n"
-                                                        "}\n"
-                                                        "\n"
-                                                        "QPushButton:disabled {\n"
-                                                        "border-image:url(images/media-playback-pause-disabled.svg) 1 1 1 1 ;\n"
-                                                        "}"));
-        pushButtonStop->setIconSize(QSize(50, 50));
-      
-        labelRunning = new QLabel(widget_4);
-        labelRunning->setObjectName(QString::fromUtf8("labelRunning"));
-        labelRunning->setGeometry(QRect(290, 10, 101, 31));
 
-        gridLayout_30->addWidget(widget_4, 0, 1, 1, 1);
+        if( m_start_buttons )
+        {
+            //----------------------------------------------------------------------
+            // Run, Reset, Stop Layer
+            //----------------------------------------------------------------------
+            groupBoxRunButtons = new QGroupBox(controlWidget);
+            groupBoxRunButtons->setObjectName(QString::fromUtf8("groupBoxRunButtons"));
 
-        horizontalLayoutRunStrategy = new QHBoxLayout();
-        horizontalLayoutRunStrategy->setSpacing(6);
-        horizontalLayoutRunStrategy->setObjectName(QString::fromUtf8("horizontalLayoutRunStrategy"));
-      
-        // Add Radio Diffusion 
-        radioButtonDiff = new QRadioButton(groupBoxRunButtons);
-        radioButtonDiff->setObjectName(QString::fromUtf8("radioButtonDiff"));
-        horizontalLayoutRunStrategy->addWidget(radioButtonDiff);
+            gridLayout_30 = new QGridLayout(groupBoxRunButtons);
+            gridLayout_30->setSpacing(6);
+            gridLayout_30->setContentsMargins(11, 11, 11, 11);
+            gridLayout_30->setObjectName(QString::fromUtf8("gridLayout_30"));
 
-        // Add Radio PRM 
-        radioButtonPRM = new QRadioButton(groupBoxRunButtons);
-        radioButtonPRM->setObjectName(QString::fromUtf8("radioButtonPRM"));
-        horizontalLayoutRunStrategy->addWidget(radioButtonPRM);
+            widget_4 = new QWidget(groupBoxRunButtons);
+            widget_4->setObjectName(QString::fromUtf8("widget_4"));
+            QSizePolicy sizePolicy4(QSizePolicy::Fixed, QSizePolicy::Fixed);
+            sizePolicy4.setHorizontalStretch(0);
+            sizePolicy4.setVerticalStretch(0);
+            sizePolicy4.setHeightForWidth(widget_4->sizePolicy().hasHeightForWidth());
+            widget_4->setSizePolicy(sizePolicy4);
+            widget_4->setMinimumSize(QSize(300, 45));
 
-        // Add checkbox With Smoothing
-        checkBoxWithSmoothing = new QCheckBox(groupBoxRunButtons);
-        checkBoxWithSmoothing->setObjectName(QString::fromUtf8("checkBoxWithSmoothing"));
-        horizontalLayoutRunStrategy->addWidget(checkBoxWithSmoothing);
+            //----------------------------------------------------------------------
+            // Button Run
+            //----------------------------------------------------------------------
+            pushButtonRun = new QPushButton(widget_4);
+            pushButtonRun->setObjectName(QString::fromUtf8("pushButtonRun"));
+            pushButtonRun->setGeometry(QRect(0, 0, 40, 40));
+            sizePolicy4.setHeightForWidth(pushButtonRun->sizePolicy().hasHeightForWidth());
+            pushButtonRun->setSizePolicy(sizePolicy4);
+            pushButtonRun->setMinimumSize(QSize(0, 0));
+            pushButtonRun->setMaximumSize(QSize(16777215, 16777215));
+            pushButtonRun->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+                                                           "border-image:url(images/media-playback-start.svg) 1 1 1 1 ;\n"
+                                                           "}\n"
+                                                           "\n"
+                                                           "QPushButton:hover {\n"
+                                                           "border-image:url(images/media-playback-start.svg) -2 -2 -2 -2 ;\n"
+                                                           "}\n"
+                                                           "\n"
+                                                           "QPushButton:pressed {\n"
+                                                           "border-image:url(images/media-playback-start.svg) -8 -8 -8 -8 ;\n"
+                                                           "}\n"
+                                                           "\n"
+                                                           "QPushButton:disabled {\n"
+                                                           "border-image:url(images/media-playback-start-disabled.svg) 1 1 1 1 ;\n"
+                                                           "}"));
+            pushButtonRun->setIconSize(QSize(50, 50));
 
-        // Add checkbox p3d structures
-//        checkBoxUseP3DStructures = new QCheckBox(groupBoxRunButtons);
-//        checkBoxUseP3DStructures->setObjectName(QString::fromUtf8("checkBoxUseP3DStructures"));
-//        horizontalLayoutRunStrategy->addWidget(checkBoxUseP3DStructures);
-      
-        // Next iter. Button
-        pushButtonNextIteration = new QPushButton(groupBoxRunButtons);
-        pushButtonNextIteration->setObjectName(QString::fromUtf8("pushButtonNextIteration"));
-        horizontalLayoutRunStrategy->addWidget(pushButtonNextIteration);
-      
-        gridLayout_30->addLayout(horizontalLayoutRunStrategy, 1, 1, 1, 1);
-        horizontalLayout_3->addWidget(groupBoxRunButtons);
-      
-        //----------------------------------------------------------------------
-        // Button Reset
-        //----------------------------------------------------------------------
-        pushButtonReset = new QPushButton(widget_4);
-        pushButtonReset->setObjectName(QString::fromUtf8("pushButtonReset"));
-        pushButtonReset->setGeometry(QRect(100, 0, 40, 40));
-        sizePolicy4.setHeightForWidth(pushButtonReset->sizePolicy().hasHeightForWidth());
-        pushButtonReset->setSizePolicy(sizePolicy4);
-        pushButtonReset->setMinimumSize(QSize(0, 0));
-        pushButtonReset->setMaximumSize(QSize(16777215, 16777215));
-        pushButtonReset->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-                                                       "border-image:url(images/media-playback-stop.svg) 1 1 1 1 ;\n"
-                                                       "}\n"
-//                                                       "\n"
-                                                       "QPushButton:hover {\n"
-                                                       "border-image:url(images/media-playback-stop.svg) -2 -2 -2 -2 ;\n"
-                                                       "}\n"
-                                                       "\n"
-                                                       "QPushButton:pressed {\n"
-                                                       "border-image:url(images/media-playback-stop.svg) -5 -5 -5 -5 ;\n"
-                                                       "}\n"
-                                                       "\n"
-                                                       "QPushButton:disabled {\n"
-                                                       "border-image:url(images/media-playback-stop-disabled.svg) 1 1 1 1 ;\n"
-                                                       "}"));
+            //----------------------------------------------------------------------
+            // Button Stop
+            //----------------------------------------------------------------------
+            pushButtonStop = new QPushButton(widget_4);
+            pushButtonStop->setObjectName(QString::fromUtf8("pushButtonStop"));
+            pushButtonStop->setGeometry(QRect(50, 0, 40, 40));
+            sizePolicy4.setHeightForWidth(pushButtonStop->sizePolicy().hasHeightForWidth());
+            pushButtonStop->setSizePolicy(sizePolicy4);
+            pushButtonStop->setMinimumSize(QSize(0, 0));
+            pushButtonStop->setMaximumSize(QSize(16777215, 16777215));
+            pushButtonStop->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+                                                            "border-image:url(images/media-playback-pause.svg) 1 1 1 1 ;\n"
+                                                            "}\n"
+                                                            "\n"
+                                                            "QPushButton:hover {\n"
+                                                            "border-image:url(images/media-playback-pause.svg) -2 -2 -2 -2 ;\n"
+                                                            "}\n"
+                                                            "\n"
+                                                            "QPushButton:pressed {\n"
+                                                            "border-image:url(images/media-playback-pause.svg) -5 -5 -5 -5 ;\n"
+                                                            "}\n"
+                                                            "\n"
+                                                            "QPushButton:disabled {\n"
+                                                            "border-image:url(images/media-playback-pause-disabled.svg) 1 1 1 1 ;\n"
+                                                            "}"));
+            pushButtonStop->setIconSize(QSize(50, 50));
 
-				//----------------------------------------------------------------------
-				// Button Trajectory
-				//----------------------------------------------------------------------
-        groupBoxTrajectory = new QGroupBox(controlWidget);
-        groupBoxTrajectory->setObjectName(QString::fromUtf8("groupBoxTrajectory"));
-        verticalLayout_34 = new QVBoxLayout(groupBoxTrajectory);
-        verticalLayout_34->setSpacing(6);
-        verticalLayout_34->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_34->setObjectName(QString::fromUtf8("verticalLayout_34"));
-        horizontalLayoutShowTraj = new QHBoxLayout();
-        horizontalLayoutShowTraj->setSpacing(6);
-        horizontalLayoutShowTraj->setObjectName(QString::fromUtf8("horizontalLayoutShowTraj"));
-        horizontalSpacerShowTraj1 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+            //----------------------------------------------------------------------
+            // Button Reset
+            //----------------------------------------------------------------------
+            pushButtonReset = new QPushButton(widget_4);
+            pushButtonReset->setObjectName(QString::fromUtf8("pushButtonReset"));
+            pushButtonReset->setGeometry(QRect(100, 0, 40, 40));
+            sizePolicy4.setHeightForWidth(pushButtonReset->sizePolicy().hasHeightForWidth());
+            pushButtonReset->setSizePolicy(sizePolicy4);
+            pushButtonReset->setMinimumSize(QSize(0, 0));
+            pushButtonReset->setMaximumSize(QSize(16777215, 16777215));
+            pushButtonReset->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+                                                             "border-image:url(images/media-playback-stop.svg) 1 1 1 1 ;\n"
+                                                             "}\n"
+                                                             //                                                       "\n"
+                                                             "QPushButton:hover {\n"
+                                                             "border-image:url(images/media-playback-stop.svg) -2 -2 -2 -2 ;\n"
+                                                             "}\n"
+                                                             "\n"
+                                                             "QPushButton:pressed {\n"
+                                                             "border-image:url(images/media-playback-stop.svg) -5 -5 -5 -5 ;\n"
+                                                             "}\n"
+                                                             "\n"
+                                                             "QPushButton:disabled {\n"
+                                                             "border-image:url(images/media-playback-stop-disabled.svg) 1 1 1 1 ;\n"
+                                                             "}"));
+             pushButtonReset->setIconSize(QSize(50, 50));
 
-        horizontalLayoutShowTraj->addItem(horizontalSpacerShowTraj1);
+            //----------------------------------------------------------------------
+            // Label Running
+            //----------------------------------------------------------------------
 
-        pushButtonSaveVideo = new QPushButton(groupBoxTrajectory);
-        pushButtonSaveVideo->setObjectName(QString::fromUtf8("pushButtonSaveVideo"));
+            labelRunning = new QLabel(widget_4);
+            labelRunning->setObjectName(QString::fromUtf8("labelRunning"));
+            labelRunning->setGeometry(QRect(160, 10, 160, 31));
 
-        pushButtonShowTraj = new QPushButton(groupBoxTrajectory);
-        pushButtonShowTraj->setObjectName(QString::fromUtf8("pushButtonShowTraj"));
-      
-        pushButtonShowTrace = new QPushButton(groupBoxTrajectory);
-        pushButtonShowTrace->setObjectName(QString::fromUtf8("pushButtonShowTrace"));
 
-        horizontalLayoutShowTraj->addWidget(pushButtonSaveVideo);
-        horizontalLayoutShowTraj->addWidget(pushButtonShowTraj);
-        horizontalLayoutShowTraj->addWidget(pushButtonShowTrace);
-      
-        horizontalSpacerShowTraj2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-        horizontalLayoutShowTraj->addItem(horizontalSpacerShowTraj2);
-			
-//				trajectoryComboBox = new QComboBox(groupBoxTrajectory);
-//				horizontalLayoutShowTraj->addWidget( trajectoryComboBox );
+            gridLayout_30->addWidget(widget_4, 0, 0 );
 
-        verticalLayout_34->addLayout(horizontalLayoutShowTraj);
+            //----------------------------------------------------------------------
+            horizontalLayoutRunStrategy = new QHBoxLayout();
+            horizontalLayoutRunStrategy->setSpacing(6);
+            horizontalLayoutRunStrategy->setObjectName(QString::fromUtf8("horizontalLayoutRunStrategy"));
 
-        horizontalLayoutTrajSpeed = new QHBoxLayout();
-        horizontalLayoutTrajSpeed->setSpacing(6);
-        horizontalLayoutTrajSpeed->setObjectName(QString::fromUtf8("horizontalLayoutTrajSpeed"));
-        label = new QLabel(groupBoxTrajectory);
-        label->setObjectName(QString::fromUtf8("label"));
-        horizontalLayoutTrajSpeed->addWidget(label);
+            // Add Radio Diffusion
+            radioButtonDiff = new QRadioButton(groupBoxRunButtons);
+            radioButtonDiff->setObjectName(QString::fromUtf8("radioButtonDiff"));
+            horizontalLayoutRunStrategy->addWidget(radioButtonDiff);
 
-        doubleSpinBoxTrajSpeed = new QDoubleSpinBox(groupBoxTrajectory);
-        doubleSpinBoxTrajSpeed->setObjectName(QString::fromUtf8("doubleSpinBoxTrajSpeed"));
-        doubleSpinBoxTrajSpeed->setMinimum(0);
-        doubleSpinBoxTrajSpeed->setMaximum(99);
-        horizontalLayoutTrajSpeed->addWidget(doubleSpinBoxTrajSpeed);
+            // Add Radio PRM
+            radioButtonPRM = new QRadioButton(groupBoxRunButtons);
+            radioButtonPRM->setObjectName(QString::fromUtf8("radioButtonPRM"));
+            horizontalLayoutRunStrategy->addWidget(radioButtonPRM);
 
-        horizontalSliderTrajSpeed = new QSlider(groupBoxTrajectory);
-        horizontalSliderTrajSpeed->setObjectName(QString::fromUtf8("horizontalSliderTrajSpeed"));
-        horizontalSliderTrajSpeed->setMinimum(1);
-        horizontalSliderTrajSpeed->setMaximum(1000);
-        horizontalSliderTrajSpeed->setOrientation(Qt::Horizontal);
+            // Add checkbox With Smoothing
+            checkBoxWithSmoothing = new QCheckBox(groupBoxRunButtons);
+            checkBoxWithSmoothing->setObjectName(QString::fromUtf8("checkBoxWithSmoothing"));
+            horizontalLayoutRunStrategy->addWidget(checkBoxWithSmoothing);
 
-        horizontalLayoutTrajSpeed->addWidget(horizontalSliderTrajSpeed);
-        verticalLayout_34->addLayout(horizontalLayoutTrajSpeed);
-      
-        horizontalLayout_3->addWidget(groupBoxTrajectory);
+            // Add checkbox p3d structures
+            //        checkBoxUseP3DStructures = new QCheckBox(groupBoxRunButtons);
+            //        checkBoxUseP3DStructures->setObjectName(QString::fromUtf8("checkBoxUseP3DStructures"));
+            //        horizontalLayoutRunStrategy->addWidget(checkBoxUseP3DStructures);
 
-        groupBoxTests = new QGroupBox(controlWidget);
-        groupBoxTests->setObjectName(QString::fromUtf8("groupBoxTests"));
-      
-        verticalLayout_4 = new QVBoxLayout(groupBoxTests);
-        verticalLayout_4->setSpacing(6);
-        verticalLayout_4->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
-      
-        pushButtonTest1 = new QPushButton(groupBoxTests);
-        pushButtonTest1->setObjectName(QString::fromUtf8("pushButtonTest1"));
-        verticalLayout_4->addWidget(pushButtonTest1);
-      
-        pushButtonTest2 = new QPushButton(groupBoxTests);
-        pushButtonTest2->setObjectName(QString::fromUtf8("pushButtonTest2"));
-        verticalLayout_4->addWidget(pushButtonTest2);
+            // Next iter. Button
+            //pushButtonNextIteration = new QPushButton(groupBoxRunButtons);
+            //pushButtonNextIteration->setObjectName(QString::fromUtf8("pushButtonNextIteration"));
+            //horizontalLayoutRunStrategy->addWidget(pushButtonNextIteration);
 
-        pushButtonTest3 = new QPushButton(groupBoxTests);
-        pushButtonTest3->setObjectName(QString::fromUtf8("pushButtonTest3"));
-        verticalLayout_4->addWidget(pushButtonTest3);
+            gridLayout_30->addLayout(horizontalLayoutRunStrategy, 1, 0 );
 
-        horizontalLayout_3->addWidget(groupBoxTests);
+            //----------------------------------------------------------------------
+            horizontalLayout_3->addWidget(groupBoxRunButtons);
 
-        hSplitter->addWidget(controlWidget);
+            //----------------------------------------------------------------------
+            // Button Trajectory and Test
+            //----------------------------------------------------------------------
+            if( m_start_traj_and_test_buttons )
+            {
+                groupBoxTrajectory = new QGroupBox(controlWidget);
+                groupBoxTrajectory->setObjectName(QString::fromUtf8("groupBoxTrajectory"));
+                verticalLayout_34 = new QVBoxLayout(groupBoxTrajectory);
+                verticalLayout_34->setSpacing(6);
+                verticalLayout_34->setContentsMargins(11, 11, 11, 11);
+                verticalLayout_34->setObjectName(QString::fromUtf8("verticalLayout_34"));
+                horizontalLayoutShowTraj = new QHBoxLayout();
+                horizontalLayoutShowTraj->setSpacing(6);
+                horizontalLayoutShowTraj->setObjectName(QString::fromUtf8("horizontalLayoutShowTraj"));
+                horizontalSpacerShowTraj1 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+                horizontalLayoutShowTraj->addItem(horizontalSpacerShowTraj1);
+
+                pushButtonSaveVideo = new QPushButton(groupBoxTrajectory);
+                pushButtonSaveVideo->setObjectName(QString::fromUtf8("pushButtonSaveVideo"));
+
+                pushButtonShowTraj = new QPushButton(groupBoxTrajectory);
+                pushButtonShowTraj->setObjectName(QString::fromUtf8("pushButtonShowTraj"));
+
+                pushButtonShowTrace = new QPushButton(groupBoxTrajectory);
+                pushButtonShowTrace->setObjectName(QString::fromUtf8("pushButtonShowTrace"));
+
+                horizontalLayoutShowTraj->addWidget(pushButtonSaveVideo);
+                horizontalLayoutShowTraj->addWidget(pushButtonShowTraj);
+                horizontalLayoutShowTraj->addWidget(pushButtonShowTrace);
+
+                horizontalSpacerShowTraj2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+                horizontalLayoutShowTraj->addItem(horizontalSpacerShowTraj2);
+
+                //				trajectoryComboBox = new QComboBox(groupBoxTrajectory);
+                //				horizontalLayoutShowTraj->addWidget( trajectoryComboBox );
+
+                verticalLayout_34->addLayout(horizontalLayoutShowTraj);
+
+                horizontalLayoutTrajSpeed = new QHBoxLayout();
+                horizontalLayoutTrajSpeed->setSpacing(6);
+                horizontalLayoutTrajSpeed->setObjectName(QString::fromUtf8("horizontalLayoutTrajSpeed"));
+                label = new QLabel(groupBoxTrajectory);
+                label->setObjectName(QString::fromUtf8("label"));
+                horizontalLayoutTrajSpeed->addWidget(label);
+
+                doubleSpinBoxTrajSpeed = new QDoubleSpinBox(groupBoxTrajectory);
+                doubleSpinBoxTrajSpeed->setObjectName(QString::fromUtf8("doubleSpinBoxTrajSpeed"));
+                doubleSpinBoxTrajSpeed->setMinimum(0);
+                doubleSpinBoxTrajSpeed->setMaximum(99);
+                horizontalLayoutTrajSpeed->addWidget(doubleSpinBoxTrajSpeed);
+
+                horizontalSliderTrajSpeed = new QSlider(groupBoxTrajectory);
+                horizontalSliderTrajSpeed->setObjectName(QString::fromUtf8("horizontalSliderTrajSpeed"));
+                horizontalSliderTrajSpeed->setMinimum(1);
+                horizontalSliderTrajSpeed->setMaximum(1000);
+                horizontalSliderTrajSpeed->setOrientation(Qt::Horizontal);
+
+                horizontalLayoutTrajSpeed->addWidget(horizontalSliderTrajSpeed);
+                verticalLayout_34->addLayout(horizontalLayoutTrajSpeed);
+
+                horizontalLayout_3->addWidget(groupBoxTrajectory);
+
+                groupBoxTests = new QGroupBox(controlWidget);
+                groupBoxTests->setObjectName(QString::fromUtf8("groupBoxTests"));
+
+                verticalLayout_4 = new QVBoxLayout(groupBoxTests);
+                verticalLayout_4->setSpacing(6);
+                verticalLayout_4->setContentsMargins(11, 11, 11, 11);
+                verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
+
+
+                pushButtonTest1 = new QPushButton(groupBoxTests);
+                pushButtonTest1->setObjectName(QString::fromUtf8("pushButtonTest1"));
+                verticalLayout_4->addWidget(pushButtonTest1);
+
+                pushButtonTest2 = new QPushButton(groupBoxTests);
+                pushButtonTest2->setObjectName(QString::fromUtf8("pushButtonTest2"));
+                verticalLayout_4->addWidget(pushButtonTest2);
+
+                pushButtonTest3 = new QPushButton(groupBoxTests);
+                pushButtonTest3->setObjectName(QString::fromUtf8("pushButtonTest3"));
+                verticalLayout_4->addWidget(pushButtonTest3);
+
+                horizontalLayout_3->addWidget(groupBoxTests);
+            }
+
+            hSplitter->addWidget(controlWidget);
+            vSplitter->addWidget(verticalLayout);
+        }
+
+        // --------------------------------------------------------
+        // Add main widgets to window
+        // --------------------------------------------------------
+
         verticalLayout_2->addWidget(hSplitter);
-
-        vSplitter->addWidget(verticalLayout);
         verticalLayout_21->addWidget(vSplitter);
 
         MainWindow->setCentralWidget(centralWidget);
-        
-				// --------------------------------------------------------
-				// Menu
-				// --------------------------------------------------------
-				menuBar = new QMenuBar(MainWindow);
+
+        // --------------------------------------------------------
+        // Menu
+        // --------------------------------------------------------
+        menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1440, 22));
+        menuBar->setGeometry(QRect(0, 0, 300, 22));
         
-				menuFile = new QMenu(menuBar);
+        menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QString::fromUtf8("menuFile"));
         
-				menuHelp = new QMenu(menuBar);
+        menuHelp = new QMenu(menuBar);
         menuHelp->setObjectName(QString::fromUtf8("menuHelp"));
-      
-				menuCollisionCheker = new QMenu(menuBar);
+
+        menuCollisionCheker = new QMenu(menuBar);
         menuCollisionCheker->setObjectName(QString::fromUtf8("menuCollisionCheker"));
-			
+
         menuGraph = new QMenu(menuBar);
         menuGraph->setObjectName(QString::fromUtf8("menuGraph"));
-			
+
         menuEnvironement = new QMenu(menuBar);
         menuEnvironement->setObjectName(QString::fromUtf8("menuEnvironement"));
-      
-				menuRobot = new QMenu(menuEnvironement);
+
+        menuRobot = new QMenu(menuEnvironement);
         menuRobot->setObjectName(QString::fromUtf8("menuRobot"));
         
-				MainWindow->setMenuBar(menuBar);
+        MainWindow->setMenuBar(menuBar);
         
-				statusBar = new QStatusBar(MainWindow);
+        statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QString::fromUtf8("statusBar"));
         MainWindow->setStatusBar(statusBar);
 
-				//----------------------------------------------------------------------
-				// Menu Bar
-				//----------------------------------------------------------------------
+        //----------------------------------------------------------------------
+        // Menu Bar
+        //----------------------------------------------------------------------
         menuBar->addAction(menuFile->menuAction());
         menuBar->addAction(menuEnvironement->menuAction());
         menuBar->addAction(menuGraph->menuAction());
         menuBar->addAction(menuCollisionCheker->menuAction());
         menuBar->addAction(menuHelp->menuAction());
-			
+
         menuFile->addAction(actionOpen);
         menuFile->addAction(actionCloseEnvironement);
-      
+
         menuFile->addAction(actionLoadInterfaceParameters);
         menuFile->addAction(actionLoadParametersQuick);
         menuFile->addAction(actionSaveParametersQuick);
         menuFile->addAction(actionSaveInterfaceParameters);
-      
+
         menuFile->addSeparator();
         menuFile->addAction(actionQuit);
-			
+
         menuHelp->addAction(actionAbout);
-			
+
         menuCollisionCheker->addAction(actionKCDPropietes);
         menuCollisionCheker->addAction(actionDrawColl);
-			
+
         menuGraph->addAction(actionLoadGraph);
         menuGraph->addAction(actionSaveGraph_2);
         menuGraph->addAction(actionSaveToDot);
         menuGraph->addSeparator();
         menuGraph->addAction(actionLoadTrajectory);
         menuGraph->addAction(actionSaveTrajectory);
-			
+
         menuEnvironement->addAction(actionOpenScenario);
         menuEnvironement->addAction(actionSaveScenario);
         menuEnvironement->addSeparator();
         menuEnvironement->addAction(menuRobot->menuAction());
-				menuEnvironement->addAction(actionRobotForm);
-//				menuEnvironement->addAction(actionLocalPathGroups);
+        menuEnvironement->addAction(actionRobotForm);
+        //				menuEnvironement->addAction(actionLocalPathGroups);
 
         retranslateUi(MainWindow);
-			
+
         QObject::connect(actionQuit, SIGNAL(triggered()), MainWindow, SLOT(close()));
-				QObject::connect(actionQuit, SIGNAL(triggered()), formRobot, SLOT(close()));
+        QObject::connect(actionQuit, SIGNAL(triggered()), formRobot, SLOT(close()));
 
         mainTabWidget->setCurrentIndex(4);
 
@@ -1115,17 +1151,17 @@ public:
         actionAbout->setText(QApplication::translate("MainWindow", "About", 0, QApplication::UnicodeUTF8));
         actionCloseEnvironement->setText(QApplication::translate("MainWindow", "Close", 0, QApplication::UnicodeUTF8));
         actionRobotForm->setText(QApplication::translate("MainWindow", "Robot Forms", 0, QApplication::UnicodeUTF8));
-//				actionLocalPathGroups->setText(QApplication::translate("MainWindow", "Local Path Groups", 0, QApplication::UnicodeUTF8));
-				actionOpenScenario->setText(QApplication::translate("MainWindow", "Load Scenario", 0, QApplication::UnicodeUTF8));      
+        //				actionLocalPathGroups->setText(QApplication::translate("MainWindow", "Local Path Groups", 0, QApplication::UnicodeUTF8));
+        actionOpenScenario->setText(QApplication::translate("MainWindow", "Load Scenario", 0, QApplication::UnicodeUTF8));
         actionSaveScenario->setText(QApplication::translate("MainWindow", "Save Scenario", 0, QApplication::UnicodeUTF8));
-      
+
         // File menu
         actionOpen->setText(QApplication::translate("MainWindow", "Open", 0, QApplication::UnicodeUTF8));
         actionLoadInterfaceParameters->setText(QApplication::translate("MainWindow", "Load Session...", 0, QApplication::UnicodeUTF8));
         actionLoadParametersQuick->setText(QApplication::translate("MainWindow", "Load Last Saved", 0, QApplication::UnicodeUTF8));
         actionSaveInterfaceParameters->setText(QApplication::translate("MainWindow", "Save As...", 0, QApplication::UnicodeUTF8));
         actionSaveParametersQuick->setText(QApplication::translate("MainWindow", "Save", 0, QApplication::UnicodeUTF8));
-      
+
         actionNameOfEnv->setText(QApplication::translate("MainWindow", "NameOfEnv", 0, QApplication::UnicodeUTF8));
         actionSaveGraph->setText(QApplication::translate("MainWindow", "Save", 0, QApplication::UnicodeUTF8));
         actionLoadGraph->setText(QApplication::translate("MainWindow", "Load Graph", 0, QApplication::UnicodeUTF8));
@@ -1136,12 +1172,12 @@ public:
         actionSave_Graph_To_Dot->setText(QApplication::translate("MainWindow", "Save Graph To Dot", 0, QApplication::UnicodeUTF8));
         actionSaveToDot->setText(QApplication::translate("MainWindow", "Save To Dot", 0, QApplication::UnicodeUTF8));
         
-				mainTabWidget->setTabText(mainTabWidget->indexOf(tabMotionPlanner), QApplication::translate("MainWindow", "Motion Planner", 0, QApplication::UnicodeUTF8));
+        mainTabWidget->setTabText(mainTabWidget->indexOf(tabMotionPlanner), QApplication::translate("MainWindow", "Motion Planner", 0, QApplication::UnicodeUTF8));
         mainTabWidget->setTabText(mainTabWidget->indexOf(tabCost), QApplication::translate("MainWindow", "Cost", 0, QApplication::UnicodeUTF8));
         mainTabWidget->setTabText(mainTabWidget->indexOf(tabRobot), QApplication::translate("MainWindow", "Robot", 0, QApplication::UnicodeUTF8));
         mainTabWidget->setTabText(mainTabWidget->indexOf(tabUtil), QApplication::translate("MainWindow", "Utils", 0, QApplication::UnicodeUTF8));
         
-				groupBoxDrawEnv->setTitle(QApplication::translate("MainWindow", "Draw Env", 0, QApplication::UnicodeUTF8));
+        groupBoxDrawEnv->setTitle(QApplication::translate("MainWindow", "Draw Env", 0, QApplication::UnicodeUTF8));
         checkBoxDrawGraph->setText(QApplication::translate("MainWindow", "Draw Graph", 0, QApplication::UnicodeUTF8));
         checkBoxDrawExploration->setText(QApplication::translate("MainWindow", "Draw Explor.", 0, QApplication::UnicodeUTF8));
         checkBoxDrawTraj->setText(QApplication::translate("MainWindow", "Draw Traj", 0, QApplication::UnicodeUTF8));
@@ -1168,7 +1204,7 @@ public:
         checkBoxWalls->setText(QApplication::translate("MainWindow", "Walls", 0, QApplication::UnicodeUTF8));
         checkBoxContour->setText(QApplication::translate("MainWindow", "Contours", 0, QApplication::UnicodeUTF8));
         checkBoxDrawMultiColoredTraj->setText(QApplication::translate("MainWindow", "Set Multi-Colored Traj", 0, QApplication::UnicodeUTF8));
-      
+
         lightGroupBox->setTitle(QApplication::translate("MainWindow", "Light", 0, QApplication::UnicodeUTF8));
         label_X->setText(QApplication::translate("MainWindow", "X", 0, QApplication::UnicodeUTF8));
         label_Y->setText(QApplication::translate("MainWindow", "Y", 0, QApplication::UnicodeUTF8));
@@ -1180,52 +1216,62 @@ public:
         pushButtonClearTraj->setText(QApplication::translate("MainWindow", "Clear All Traj", 0, QApplication::UnicodeUTF8));
         comboBoxColorTraj->clear();
         comboBoxColorTraj->insertItems(0, QStringList()
-         << QApplication::translate("MainWindow", "Black", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("MainWindow", "Blue", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("MainWindow", "Yellow", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("MainWindow", "Red", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("MainWindow", "Green", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("MainWindow", "White", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("MainWindow", "Grey", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("MainWindow", "Brown", 0, QApplication::UnicodeUTF8)
-        );
+                                       << QApplication::translate("MainWindow", "Black", 0, QApplication::UnicodeUTF8)
+                                       << QApplication::translate("MainWindow", "Blue", 0, QApplication::UnicodeUTF8)
+                                       << QApplication::translate("MainWindow", "Yellow", 0, QApplication::UnicodeUTF8)
+                                       << QApplication::translate("MainWindow", "Red", 0, QApplication::UnicodeUTF8)
+                                       << QApplication::translate("MainWindow", "Green", 0, QApplication::UnicodeUTF8)
+                                       << QApplication::translate("MainWindow", "White", 0, QApplication::UnicodeUTF8)
+                                       << QApplication::translate("MainWindow", "Grey", 0, QApplication::UnicodeUTF8)
+                                       << QApplication::translate("MainWindow", "Brown", 0, QApplication::UnicodeUTF8)
+                                       );
         pushButtonRestoreView->setText(QApplication::translate("MainWindow", "Restore View", 0, QApplication::UnicodeUTF8));
         mainTabWidget->setTabText(mainTabWidget->indexOf(tabViewerSettings), QApplication::translate("MainWindow", "Viewer Settings", 0, QApplication::UnicodeUTF8));
-        groupBoxRunButtons->setTitle(QApplication::translate("MainWindow", "Run Motion Planning", 0, QApplication::UnicodeUTF8));
-        pushButtonReset->setText(QString());
-        pushButtonNextIteration->setText(QApplication::translate("MainWindow", "Next", 0, QApplication::UnicodeUTF8));
+
+
+        if( m_start_buttons )
+        {
+            groupBoxRunButtons->setTitle(QApplication::translate("MainWindow", "Run Motion Planning", 0, QApplication::UnicodeUTF8));
+            pushButtonReset->setText(QString());
+            //pushButtonNextIteration->setText(QApplication::translate("MainWindow", "Next", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        pushButtonRun->setToolTip(QApplication::translate("MainWindow", "Run Motion Planner", 0, QApplication::UnicodeUTF8));
+            pushButtonRun->setToolTip(QApplication::translate("MainWindow", "Run Motion Planner", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
 #ifndef QT_NO_WHATSTHIS
-        pushButtonRun->setWhatsThis(QApplication::translate("MainWindow", "Run planning", 0, QApplication::UnicodeUTF8));
+            pushButtonRun->setWhatsThis(QApplication::translate("MainWindow", "Run planning", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_WHATSTHIS
-        pushButtonRun->setText(QString());
+            pushButtonRun->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        pushButtonStop->setToolTip(QApplication::translate("MainWindow", "Run Motion Planner", 0, QApplication::UnicodeUTF8));
+            pushButtonStop->setToolTip(QApplication::translate("MainWindow", "Run Motion Planner", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
 #ifndef QT_NO_WHATSTHIS
-        pushButtonStop->setWhatsThis(QApplication::translate("MainWindow", "Run planning", 0, QApplication::UnicodeUTF8));
+            pushButtonStop->setWhatsThis(QApplication::translate("MainWindow", "Run planning", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_WHATSTHIS
-        pushButtonStop->setText(QString());
-        labelRunning->setText(QApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt; color:#008d00;\">Not Running</span></p></body></html>", 0, QApplication::UnicodeUTF8));
-        radioButtonDiff->setText(QApplication::translate("MainWindow", "Diffusion", 0, QApplication::UnicodeUTF8));
-        radioButtonPRM->setText(QApplication::translate("MainWindow", "PRM", 0, QApplication::UnicodeUTF8));
-        checkBoxWithSmoothing->setText(QApplication::translate("MainWindow", "Smoothing", 0, QApplication::UnicodeUTF8));
-//        checkBoxUseP3DStructures->setText(QApplication::translate("MainWindow", "p3d Structs", 0, QApplication::UnicodeUTF8));
-        groupBoxTrajectory->setTitle(QApplication::translate("MainWindow", "Trajectory", 0, QApplication::UnicodeUTF8));
-        pushButtonSaveVideo->setText(QApplication::translate("MainWindow", "Save video", 0, QApplication::UnicodeUTF8));
-        pushButtonShowTraj->setText(QApplication::translate("MainWindow", "Show Trajectory", 0, QApplication::UnicodeUTF8));
-        pushButtonShowTrace->setText(QApplication::translate("MainWindow", "Show Trace", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("MainWindow", "Speed", 0, QApplication::UnicodeUTF8));
-        groupBoxTests->setTitle(QApplication::translate("MainWindow", "Tests", 0, QApplication::UnicodeUTF8));
-        pushButtonTest1->setText(QApplication::translate("MainWindow", "Test 1", 0, QApplication::UnicodeUTF8));
-        pushButtonTest2->setText(QApplication::translate("MainWindow", "Test 2", 0, QApplication::UnicodeUTF8));
-        pushButtonTest3->setText(QApplication::translate("MainWindow", "Test 3", 0, QApplication::UnicodeUTF8));
+            pushButtonStop->setText(QString());
+            labelRunning->setText(QApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                                          "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                                          "p, li { white-space: pre-wrap; }\n"
+                                                          "</style></head><body style=\" font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+                                                          "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt; color:#008d00;\">Not Running</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+            radioButtonDiff->setText(QApplication::translate("MainWindow", "Diffusion", 0, QApplication::UnicodeUTF8));
+            radioButtonPRM->setText(QApplication::translate("MainWindow", "PRM", 0, QApplication::UnicodeUTF8));
+            checkBoxWithSmoothing->setText(QApplication::translate("MainWindow", "Smoothing", 0, QApplication::UnicodeUTF8));
+            //        checkBoxUseP3DStructures->setText(QApplication::translate("MainWindow", "p3d Structs", 0, QApplication::UnicodeUTF8));
+
+            if( m_start_traj_and_test_buttons )
+            {
+                groupBoxTrajectory->setTitle(QApplication::translate("MainWindow", "Trajectory", 0, QApplication::UnicodeUTF8));
+                pushButtonSaveVideo->setText(QApplication::translate("MainWindow", "Save video", 0, QApplication::UnicodeUTF8));
+                pushButtonShowTraj->setText(QApplication::translate("MainWindow", "Show Trajectory", 0, QApplication::UnicodeUTF8));
+                pushButtonShowTrace->setText(QApplication::translate("MainWindow", "Show Trace", 0, QApplication::UnicodeUTF8));
+                label->setText(QApplication::translate("MainWindow", "Speed", 0, QApplication::UnicodeUTF8));
+                groupBoxTests->setTitle(QApplication::translate("MainWindow", "Tests", 0, QApplication::UnicodeUTF8));
+                pushButtonTest1->setText(QApplication::translate("MainWindow", "Test 1", 0, QApplication::UnicodeUTF8));
+                pushButtonTest2->setText(QApplication::translate("MainWindow", "Test 2", 0, QApplication::UnicodeUTF8));
+                pushButtonTest3->setText(QApplication::translate("MainWindow", "Test 3", 0, QApplication::UnicodeUTF8));
+            }
+        }
+
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
         menuHelp->setTitle(QApplication::translate("MainWindow", "Help", 0, QApplication::UnicodeUTF8));
         menuCollisionCheker->setTitle(QApplication::translate("MainWindow", "Collision Cheker", 0, QApplication::UnicodeUTF8));
@@ -1237,7 +1283,7 @@ public:
 };
 
 namespace Ui {
-    class MainWindow: public Ui_MainWindow {};
+class MainWindow: public Ui_MainWindow {};
 } // namespace Ui
 
 QT_END_NAMESPACE

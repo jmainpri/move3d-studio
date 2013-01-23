@@ -14,7 +14,7 @@
 #include "HRI_costspace/HRICS_costspace.hpp"
 
 #include "qtMainInterface/mainwindow.hpp"
-#include "qtMainInterface/mainwindowGenerated.hpp"
+//#include "qtMainInterface/mainwindowGenerated.hpp"
 #include "planner_handler.hpp"
 #include "planner/planEnvironment.hpp"
 

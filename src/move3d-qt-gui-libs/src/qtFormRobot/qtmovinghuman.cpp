@@ -2,7 +2,7 @@
 #include "ui_qtmovinghuman.h"
 
 #include "qtMainInterface/mainwindow.hpp"
-#include "qtMainInterface/mainwindowGenerated.hpp"
+//#include "qtMainInterface/mainwindowGenerated.hpp"
 #include "planner_handler.hpp"
 
 #include "API/project.hpp"
