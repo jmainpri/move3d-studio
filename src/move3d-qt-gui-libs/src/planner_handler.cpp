@@ -971,7 +971,8 @@ void qt_load_recorded_motion()
     cout << "Load recorded motion" << endl;
 
     if(!global_motionRecorder) {
-        global_motionRecorder = new RecordMotion( "HERAKLES_HUMAN1" );
+        cout << "recorder not initialized" << endl;
+        return;
     }
 
     global_motionRecorder->loadMotionFromMultipleFiles( "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/motion_saved_" , 37 );

@@ -90,6 +90,8 @@ private slots:
     void setSourceRM();
     void setTargetRM();
     void extractAndSaveRM();
+    void loadFolder();
+    void convertFolderToCSV();
 
 private:
 

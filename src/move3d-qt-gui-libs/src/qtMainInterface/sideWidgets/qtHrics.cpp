@@ -494,6 +494,8 @@ void HricsWidget::computeAStarGrid()
 
 void HricsWidget::initRecordedMotion()
 {
+    global_motionRecorder = new RecordMotion( "HERAKLES_HUMAN1" );
+
     connect(m_ui->pushButtonLoadRecordedMotion,SIGNAL(clicked()),this,SLOT(loadRecordedMotion()));
     connect(m_ui->pushButtonShowRecordedMotion,SIGNAL(clicked()),this,SLOT(showRecordedMotion()));
 
@@ -501,6 +503,9 @@ void HricsWidget::initRecordedMotion()
     connect(m_ui->pushButtonSetBeginRM,SIGNAL(clicked()),this,SLOT(setSourceRM()));
     connect(m_ui->pushButtonSetEndRM,SIGNAL(clicked()),this,SLOT(setTargetRM()));
     connect(m_ui->pushButtonExtarctAndSaveRM,SIGNAL(clicked()),this,SLOT(extractAndSaveRM()));
+    connect(m_ui->pushButtonLoadFolder,SIGNAL(clicked()),this,SLOT(loadFolder()));
+    connect(m_ui->pushButtonSaveToCSV,SIGNAL(clicked()),this,SLOT(convertFolderToCSV()));
+
 
     m_id_source_rm = 0;
     m_id_target_rm = 0;
@@ -562,5 +567,91 @@ void HricsWidget::extractAndSaveRM()
     else {
         cout << "global_motionRecorder is not initilized" << endl;
     }
+}
+
+void HricsWidget::loadFolder()
+{
+    if ( global_motionRecorder == NULL )
+    {
+        cout << "global_motionRecorder is not initilized" << endl;
+        return;
+    }
+
+    string foldername = "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_cut/record_1/";
+    string command = "ls " + foldername;
+    cout << "Load Folder : " << foldername << endl;
+    //system("echo $PATH");
+    FILE *fp;
+    char path[PATH_MAX];
+
+    fp = popen(command.c_str(), "r");
+    if (fp == NULL) {
+        cout << "ERROR in system call" << endl;
+        return;
+    }
+
+    global_motionRecorder->reset();
+
+    int i=0;
+    while ( fgets( path, PATH_MAX, fp) != NULL ) {
+        string filename(path);
+        filename.erase(std::remove(filename.begin(), filename.end(), '\n'), filename.end());
+        cout << "file path is : " << filename << endl; i++;
+        motion_t motion = global_motionRecorder->loadFromXml( foldername + filename );
+        //global_motionRecorder->storeMotion( motion );
+        global_motionRecorder->addToCurrentMotion( motion );
+    }
+
+    pclose(fp);
+
+    cout << "End Load " << i <<  " files in the folder" << endl;
+}
+
+void HricsWidget::convertFolderToCSV()
+{
+    if ( global_motionRecorder == NULL )
+    {
+        cout << "global_motionRecorder is not initilized" << endl;
+        return;
+    }
+
+    string foldername = "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_cut/record_1/";
+    string command = "ls " + foldername;
+    cout << "Load Folder : " << foldername << endl;
+    //system("echo $PATH");
+    FILE *fp;
+    char path[PATH_MAX];
+
+    fp = popen(command.c_str(), "r");
+    if (fp == NULL) {
+        cout << "ERROR in system call" << endl;
+        return;
+    }
+
+    global_motionRecorder->reset();
+
+    int i=0;
+    while ( fgets( path, PATH_MAX, fp) != NULL ) {
+
+        string filename(path);
+        filename.erase( remove(filename.begin(), filename.end(), '\n'), filename.end());
+        if ( filename.find(".xml") == string::npos )
+            continue;
+
+        cout << "file path is : " << filename << endl; i++;
+        motion_t motion = global_motionRecorder->loadFromXml( foldername + filename );
+        global_motionRecorder->storeMotion( motion );
+
+//        filename.erase( filename.end()-4, filename.end());
+//        filename = filename + ".csv" ;
+//        cout << "save file to " << filename << endl;
+//        global_motionRecorder->saveToCSV( foldername + "csv_files/" + filename, motion );
+    }
+
+    pclose(fp);
+
+    cout << "End Load " << i <<  " files in the folder" << endl;
+
+    global_motionRecorder->saveStoredToCSV( foldername + "csv_files/compound.csv" );
 }
 
