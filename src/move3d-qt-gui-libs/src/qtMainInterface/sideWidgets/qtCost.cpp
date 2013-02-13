@@ -50,6 +50,7 @@
 
 using namespace std;
 using namespace tr1;
+using namespace QtShiva;
 
 // import most common Eigen types 
 //USING_PART_OF_NAMESPACE_EIGEN
@@ -161,11 +162,12 @@ void CostWidget::initCost()
   
   connect(m_ui->pushButtonInitCostSpace,SIGNAL(clicked()),this,SLOT(initCostSpace()));
 		
-	new QtShiva::SpinBoxSliderConnector( this, m_ui->doubleSpinBoxInitTemp, m_ui->horizontalSliderInitTemp , Env::initialTemperature );
-	new QtShiva::SpinBoxSliderConnector( this, m_ui->doubleSpinBoxTempRate, m_ui->horizontalSliderTempRate , Env::temperatureRate );
-	new QtShiva::SpinBoxSliderConnector( this, m_ui->doubleSpinBoxLengthWeight, m_ui->horizontalSliderLengthWeight , Env::KlengthWeight );
-  new QtShiva::SpinBoxSliderConnector( this, m_ui->doubleSpinBoxResolution, m_ui->horizontalSliderResolution , PlanParam::costResolution );
-	new QtShiva::SpinBoxSliderConnector( this, m_ui->doubleSpinBoxMinConnectGap, m_ui->horizontalSliderMinConnectGap , Env::minimalFinalExpansionGap );
+	new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxInitTemp, m_ui->horizontalSliderInitTemp , Env::initialTemperature );
+	new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxTempRate, m_ui->horizontalSliderTempRate , Env::temperatureRate );
+	new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxLengthWeight, m_ui->horizontalSliderLengthWeight , Env::KlengthWeight );
+  new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxResolution, m_ui->horizontalSliderResolution , PlanParam::costResolution );
+	new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxMinConnectGap, m_ui->horizontalSliderMinConnectGap , Env::minimalFinalExpansionGap );
+  new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxMaxCost, m_ui->horizontalSliderMaxCost , Env::costMax );
 	
 #ifdef USE_QWT
 	connect(m_ui->pushButtonShowTrajCost,SIGNAL(clicked()),this,SLOT(showTrajCost()));

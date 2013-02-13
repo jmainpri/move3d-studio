@@ -12,6 +12,7 @@
 #include "device.h"
 #include "p3d.h"
 
+void qt_set_otp_cost_recompute();
 void qtSliderFunction(p3d_rob* robotPt, configPt p);
 
 #endif
