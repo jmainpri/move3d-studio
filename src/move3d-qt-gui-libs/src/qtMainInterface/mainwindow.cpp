@@ -51,6 +51,7 @@ extern string global_ActiveRobotName;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), m_ui(new Ui::MainWindow)
 {
+    // Start with buttons bellow the opengl widget
     m_ui->m_opengl_sidewidget = false;
     m_ui->m_start_buttons = true;
     m_ui->m_start_traj_and_test_buttons = true;

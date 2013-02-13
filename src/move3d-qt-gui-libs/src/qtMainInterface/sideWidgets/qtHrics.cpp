@@ -33,9 +33,9 @@
 #include "qtMotionPlanner.hpp"
 
 #include "HRI_costspace/HRICS_costspace.hpp"
+#include "HRI_costspace/Gestures/HRICS_RecordMotion.hpp"
 #include "planner/planEnvironment.hpp"
 #include "utils/ConfGenerator.h"
-#include "utils/RecordMotion.hpp"
 
 using namespace std;
 using namespace tr1;
@@ -491,7 +491,10 @@ void HricsWidget::computeAStarGrid()
 //--------------------------------------------------------------------
 // Recorded motion
 //--------------------------------------------------------------------
-
+// How to :
+// Run spark-genom and record the complete motion in n-xml-files
+// Then load the motion and extract and save each motion in n-xml-files
+// Load the folder and convert to CSV to make one single motion file
 void HricsWidget::initRecordedMotion()
 {
     global_motionRecorder = new RecordMotion( "HERAKLES_HUMAN1" );
@@ -514,7 +517,15 @@ void HricsWidget::initRecordedMotion()
 
 void HricsWidget::loadRecordedMotion()
 {
-    emit(selectedPlanner(QString("LoadRecordedMotion")));
+    cout << "Load recorded motion" << endl;
+
+    if(!global_motionRecorder) {
+        cout << "recorder not initialized" << endl;
+        return;
+    }
+
+    global_motionRecorder->loadMotionFromMultipleFiles( "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/motion_saved_" , 37 );
+    //m_recorder->loadFromXml("/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/motion_saved_00000.xml");
 }
 
 void HricsWidget::showRecordedMotion()
@@ -577,7 +588,7 @@ void HricsWidget::loadFolder()
         return;
     }
 
-    string foldername = "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_cut/record_1/";
+    string foldername = "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/";
     string command = "ls " + foldername;
     cout << "Load Folder : " << foldername << endl;
     //system("echo $PATH");
@@ -596,9 +607,11 @@ void HricsWidget::loadFolder()
     while ( fgets( path, PATH_MAX, fp) != NULL ) {
         string filename(path);
         filename.erase(std::remove(filename.begin(), filename.end(), '\n'), filename.end());
+        if ( filename.find(".xml") == string::npos )
+            continue;
         cout << "file path is : " << filename << endl; i++;
+
         motion_t motion = global_motionRecorder->loadFromXml( foldername + filename );
-        //global_motionRecorder->storeMotion( motion );
         global_motionRecorder->addToCurrentMotion( motion );
     }
 
@@ -615,7 +628,7 @@ void HricsWidget::convertFolderToCSV()
         return;
     }
 
-    string foldername = "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_cut/record_1/";
+    string foldername = "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_cut/record_2/";
     string command = "ls " + foldername;
     cout << "Load Folder : " << foldername << endl;
     //system("echo $PATH");
@@ -640,6 +653,8 @@ void HricsWidget::convertFolderToCSV()
 
         cout << "file path is : " << filename << endl; i++;
         motion_t motion = global_motionRecorder->loadFromXml( foldername + filename );
+
+        global_motionRecorder->addToCurrentMotion( motion );
         global_motionRecorder->storeMotion( motion );
 
 //        filename.erase( filename.end()-4, filename.end());

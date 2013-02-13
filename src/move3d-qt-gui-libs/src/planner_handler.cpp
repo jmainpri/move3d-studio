@@ -45,7 +45,6 @@
 #include "planner/plannerFunctions.hpp"
 
 #include "utils/MultiRun.hpp"
-#include "utils/RecordMotion.hpp"
 
 #include "qtLibrary.hpp"
 #include <QtCore/QMutexLocker>
@@ -60,6 +59,8 @@
 #include "HRI_costspace/HRICS_Workspace.hpp"
 #include "HRI_costspace/HRICS_Miscellaneous.hpp"
 #include "HRI_costspace/HRICS_Navigation.hpp"
+#include "HRI_costspace/Gestures/HRICS_WorkspaceOccupancy.hpp"
+#include "HRI_costspace/Gestures/HRICS_RecordMotion.hpp"
 #if defined( HRI_PLANNER )
 #include "HRI_costspace/HRICS_HAMP.hpp"
 #include "HRI_costspace/HRICS_otpmotionpl.hpp"
@@ -109,29 +110,35 @@ static HRICS::Navigation* m_navigation = NULL;
 
 void qt_test1()
 {
-  Scene* sce = global_Project->getActiveScene();
-  Robot* robot = sce->getRobotByName("PR2_ROBOT");
-  if( robot == NULL ) {
-    cout << "NO robot PR2_ROBOT in the scene" << endl;
-    return;
-  }
+    vector<double> size = global_Project->getActiveScene()->getBounds();
+    workspace_grid = new HRICS::WorkspaceOccupancyGrid(0.05,size);
+
+//  Scene* sce = global_Project->getActiveScene();
+//  Robot* robot = sce->getRobotByName("PR2_ROBOT");
+//  if( robot == NULL ) {
+//    cout << "NO robot PR2_ROBOT in the scene" << endl;
+//    return;
+//  }
   
-  if( m_navigation == NULL ) {
-    m_navigation = new HRICS::Navigation( robot );
-  }
-  else {
-    m_navigation->reset();
-  }
+//  if( m_navigation == NULL ) {
+//    m_navigation = new HRICS::Navigation( robot );
+//  }
+//  else {
+//    m_navigation->reset();
+//  }
   
-  confPtr_t q_init = robot->getInitialPosition();
-  confPtr_t q_goal = robot->getGoTo();
+//  confPtr_t q_init = robot->getInitialPosition();
+//  confPtr_t q_goal = robot->getGoTo();
   
-  API::Trajectory* path_ = m_navigation->computeRobotTrajectory( q_init, q_goal );
+//  API::Trajectory* path_ = m_navigation->computeRobotTrajectory( q_init, q_goal );
   
-  if( path_ )
-    path_->replaceP3dTraj();
+//  if( path_ )
+//    path_->replaceP3dTraj();
 
   
+
+
+
   //HRICS::generateGraspConfigurations();
   //string robotName("PR2_ROBOT");
 //  Node* node = global_w->Ui()->tabMotionPlanner->getIthNodeInBestTraj();
@@ -966,19 +973,6 @@ void qt_load_HRICS_Grid(std::string docname)
 //------------------------------------------------------------------
 //------------------------------------------------------------------
 
-void qt_load_recorded_motion()
-{
-    cout << "Load recorded motion" << endl;
-
-    if(!global_motionRecorder) {
-        cout << "recorder not initialized" << endl;
-        return;
-    }
-
-    global_motionRecorder->loadMotionFromMultipleFiles( "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/motion_saved_" , 37 );
-    //m_recorder->loadFromXml("/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/motion_saved_00000.xml");
-}
-
 void qt_show_recorded_motion()
 {
     cout << "Show recorded motion" << endl;
@@ -989,6 +983,7 @@ void qt_show_recorded_motion()
     }
 
     global_motionRecorder->showRecordedMotion();
+    cout << "End recorded motion" << endl;
 }
 
 //------------------------------------------------------------------
@@ -1187,9 +1182,6 @@ void PlannerHandler::startPlanner(QString plannerName)
       qt_save_agent_grid();
     }
 #endif
-    else if( plannerName == "LoadRecordedMotion"){
-      qt_load_recorded_motion();
-    }
     else if( plannerName == "ShowRecordedMotion"){
       qt_show_recorded_motion();
     }
