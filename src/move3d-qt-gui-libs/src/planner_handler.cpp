@@ -982,7 +982,7 @@ void qt_show_recorded_motion()
         return;
     }
 
-    global_motionRecorder->showRecordedMotion();
+    global_motionRecorder->showStoredMotion();
     cout << "End recorded motion" << endl;
 }
 

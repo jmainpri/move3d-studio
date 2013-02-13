@@ -11,6 +11,7 @@
 #include "ui_qtHrics.h"
 
 #include <iostream>
+#include <fstream>
 #include <tr1/memory>
 #include <boost/bind.hpp>
 #include <sys/time.h>
@@ -580,6 +581,7 @@ void HricsWidget::extractAndSaveRM()
     }
 }
 
+/**
 void HricsWidget::loadFolder()
 {
     if ( global_motionRecorder == NULL )
@@ -611,14 +613,71 @@ void HricsWidget::loadFolder()
             continue;
         cout << "file path is : " << filename << endl; i++;
 
-        motion_t motion = global_motionRecorder->loadFromXml( foldername + filename );
-        global_motionRecorder->addToCurrentMotion( motion );
+        vector<motion_t> motions;
+        motions.push_back( global_motionRecorder->loadFromXml( foldername + filename ) );
+        global_motionRecorder->storeMotion( motions.back() );
     }
 
     pclose(fp);
 
     cout << "End Load " << i <<  " files in the folder" << endl;
 }
+**/
+
+void HricsWidget::loadFolder()
+{
+    if ( global_motionRecorder == NULL )
+    {
+        cout << "global_motionRecorder is not initilized" << endl;
+        return;
+    }
+
+    string foldername = "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/";
+    cout << "Load Folder : " << foldername << endl;
+
+    string command = "ls " + foldername;
+    FILE* fp = popen( command.c_str(), "r");
+    if (fp == NULL) {
+        cout << "ERROR in system call" << endl;
+        return;
+    }
+    char path[PATH_MAX]; int max_number_of_motions=0;
+    while ( fgets( path, PATH_MAX, fp) != NULL ) max_number_of_motions++;
+    pclose(fp);
+
+    if( max_number_of_motions == 0) cout << "no file in folder" << endl;
+
+    int number_of_motions_loaded = 0;
+    const int max_number_of_files = 500;
+
+    for( int i=0; i<max_number_of_motions; i++ )
+    {
+        for( int j=0; j<max_number_of_files; j++ )
+        {
+            ostringstream filename;
+            filename << foldername << "motion_saved_";
+            filename << std::setw( 5 ) << std::setfill( '0' ) << i << "_";
+            filename << std::setw( 5 ) << std::setfill( '0' ) << j << ".xml";
+
+            ifstream file_exists( filename.str().c_str() );
+            if( file_exists )
+            {
+                cout << "Load File : " << filename.str() << endl;
+                motion_t partial_motion = global_motionRecorder->loadFromXml( filename.str() );
+                global_motionRecorder->storeMotion( partial_motion, j == 0 );
+
+                if( j == 0 ) {
+                    number_of_motions_loaded++;
+                }
+            }
+            else {
+                break;
+            }
+        }
+    }
+    cout << "Number of motion loaded : " << number_of_motions_loaded << endl;
+}
+
 
 void HricsWidget::convertFolderToCSV()
 {
