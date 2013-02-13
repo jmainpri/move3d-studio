@@ -152,8 +152,20 @@ public:
 	 * Add Traj
 	 */
 	void addTraj( std::string& name, p3d_traj* trajPt );
+  
+  /**
+	 * Initializes the configurations stored in the robot structure
+	 */
+	void initConfigs();
+  
+  /**
+   * Add configuration from name
+   */
   void addConfig( std::string& name, configPt q );
   
+  /**
+   * Add conf and traj
+   */
   void setConfAndTrajFromManipTest();
 	
 	/**

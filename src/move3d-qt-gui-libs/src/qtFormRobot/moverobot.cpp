@@ -70,7 +70,7 @@ void MoveRobot::initAllForms(GLWidget* ptrOpenGl)
 #if defined( MOVE3D_CORE ) 
 		Robot* ptrRob = envPt->getRobot(i);
 		
-		FormRobot* form = newGridLayoutForRobotStacked(ptrRob);
+		FormRobot* form = newGridLayoutForRobotStacked( ptrRob );
 		
 		form->initSliders();
 		form->resetConstraintedDoFs();
@@ -97,9 +97,9 @@ void MoveRobot::initAllForms(GLWidget* ptrOpenGl)
 
 FormRobot* MoveRobot::getRobotFormByName(string name)
 {
-	for(unsigned int i=0;i<mRobots.size();i++)
+	for( unsigned int i=0; i<mRobots.size(); i++ )
 	{
-		if (mRobots[i]->getRobot()->getName().compare(name) == 0) 
+		if ( mRobots[i]->getRobot()->getName().compare(name) == 0 ) 
 		{
 			return mRobots[i];
 		}
@@ -623,6 +623,11 @@ void FormRobot::saveCurrentConfigToGoal()
 		cout << "Save Config in GoTo" << endl;
 }
 
+void FormRobot::initConfigs()
+{
+  
+}
+
 /*!
  * Saves the current Config into the vector of configuration
  */
@@ -632,8 +637,16 @@ void FormRobot::saveCurrentConfigToVector()
   
   QString name = QString("Config %1").arg( mConfigurations.size() );
   
-  mConfigNames->addItem(name);
+  mConfigNames->addItem( name );
   mConfigNames->setCurrentIndex( mConfigurations.size() - 1 );
+  
+  if( mRobot->getRobotStruct()->conf == NULL ) 
+  {
+    mRobot->getRobotStruct()->conf = new config_namePt;
+  }
+  
+//  mRobot->getRobotStruct()->conf[0]->q = mRobot->getCurrentPos()->copy()->getConfigStruct();
+//  strcpy( mRobot->getRobotStruct()->conf[0]->name, name.toStdStr().c_str() );
   
   cout << "Save Config in Pos: " << mConfigurations.size() << endl;
 }
