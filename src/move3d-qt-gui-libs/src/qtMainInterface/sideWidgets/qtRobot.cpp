@@ -49,7 +49,7 @@
 #endif
 
 using namespace std;
-using namespace tr1;
+MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 extern string global_ActiveRobotName;
 #ifdef MULTILOCALPATH
@@ -1318,7 +1318,7 @@ void RobotWidget::makeNormalTraj()
 
     for(int i=(robot->getRobotStruct()->nconf-1) ; i>0; i--)
     {
-        std::tr1::shared_ptr<Configuration> q(new Configuration(robot,robot->getRobotStruct()->conf[i]->q));
+        MOVE3D_PTR_NAMESPACE::shared_ptr<Configuration> q(new Configuration(robot,robot->getRobotStruct()->conf[i]->q));
         traj.push_back(q);
     }
 

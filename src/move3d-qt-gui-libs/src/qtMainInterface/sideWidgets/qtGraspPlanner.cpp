@@ -31,7 +31,7 @@
 #include "../lightPlanner/proto/Manipulation.h"
 
 using namespace std;
-using namespace tr1;
+MOVE3D_USING_SHARED_PTR_NAMESPACE
 using namespace Eigen;
 using namespace QtShiva;
 

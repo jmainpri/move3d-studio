@@ -83,6 +83,7 @@ private slots:
     void computeOtpConfig();
     void computeAStarGrid();
 
+    // Record Motion
     void initRecordedMotion();
     void loadRecordedMotion();
     void showRecordedMotion();
@@ -92,6 +93,11 @@ private slots:
     void extractAndSaveRM();
     void loadFolder();
     void convertFolderToCSV();
+    void loadFromCSV();
+
+    // Occupancy
+    void initWorkspaceOccupancy();
+    void computeWorkspaceOccupancy();
 
 private:
 

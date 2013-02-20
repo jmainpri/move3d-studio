@@ -39,7 +39,7 @@
 #include "HRI_costspace/HRICS_Navigation.hpp"
 
 using namespace std;
-using namespace tr1;
+MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 MotionPlanner::MotionPlanner(QWidget *parent) :
 QWidget(parent),
@@ -783,7 +783,7 @@ void MotionPlanner::edgeToShowChanged()
     if ( (ith >= 0) && ( ((int)edges.size()) > ith) )
     {
     Robot* rob = API_activeGraph->getRobot();
-    std::tr1::shared_ptr<LocalPath> lp=edges[ith]->getLocalPath();
+    MOVE3D_PTR_NAMESPACE::shared_ptr<LocalPath> lp=edges[ith]->getLocalPath();
     configPt q = lp->getLocalpathStruct()->config_at_distance(rob->getRobotStruct(), lp->getLocalpathStruct(), lp->length()/2);
     Configuration* config=new Configuration(rob);
     config->setConfiguration(q);

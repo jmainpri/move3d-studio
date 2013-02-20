@@ -193,7 +193,7 @@ private:
 	QComboBox*								mPositions;
 	
   QComboBox*                mConfigNames;
-  std::vector< std::tr1::shared_ptr<Configuration> >		mConfigurations;
+  std::vector< MOVE3D_PTR_NAMESPACE::shared_ptr<Configuration> >		mConfigurations;
   
 	QComboBox*								mTrajectoriesNames;
 	std::vector<p3d_traj*>		mTrajectories;

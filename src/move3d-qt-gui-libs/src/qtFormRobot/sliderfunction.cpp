@@ -28,7 +28,7 @@
 #include <sys/time.h>
 
 using namespace std;
-using namespace tr1;
+MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 static bool recompute_cost=true;
 static bool init_generator=false;

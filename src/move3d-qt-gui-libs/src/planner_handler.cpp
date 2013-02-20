@@ -84,7 +84,7 @@ extern ManipulationTestFunctions* global_manipPlanTest;
 const char *qt_fileName = NULL;
 
 using namespace std;
-using namespace tr1;
+MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 /*
  *
@@ -111,7 +111,7 @@ static HRICS::Navigation* m_navigation = NULL;
 void qt_test1()
 {
     vector<double> size = global_Project->getActiveScene()->getBounds();
-    workspace_grid = new HRICS::WorkspaceOccupancyGrid(0.05,size);
+    global_workspaceGrid = new HRICS::WorkspaceOccupancyGrid(0.05,size);
 
 //  Scene* sce = global_Project->getActiveScene();
 //  Robot* robot = sce->getRobotByName("PR2_ROBOT");

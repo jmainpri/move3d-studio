@@ -35,11 +35,13 @@
 
 #include "HRI_costspace/HRICS_costspace.hpp"
 #include "HRI_costspace/Gestures/HRICS_RecordMotion.hpp"
+#include "HRI_costspace/Gestures/HRICS_WorkspaceOccupancy.hpp"
+
 #include "planner/planEnvironment.hpp"
 #include "utils/ConfGenerator.h"
 
 using namespace std;
-using namespace tr1;
+MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 extern Eigen::Vector3d global_DrawnSphere;
 
@@ -168,6 +170,7 @@ void HricsWidget::initHRI()
     initVectorField();
     initDrawOneLineInGrid();
     initRecordedMotion();
+    initWorkspaceOccupancy();
     //  initGrids();
     //  initObjectTransferPoint();
 
@@ -509,6 +512,7 @@ void HricsWidget::initRecordedMotion()
     connect(m_ui->pushButtonExtarctAndSaveRM,SIGNAL(clicked()),this,SLOT(extractAndSaveRM()));
     connect(m_ui->pushButtonLoadFolder,SIGNAL(clicked()),this,SLOT(loadFolder()));
     connect(m_ui->pushButtonSaveToCSV,SIGNAL(clicked()),this,SLOT(convertFolderToCSV()));
+    connect(m_ui->pushButtonLoadFromCSV,SIGNAL(clicked()),this,SLOT(loadFromCSV()));
 
 
     m_id_source_rm = 0;
@@ -624,61 +628,7 @@ void HricsWidget::loadFolder()
 }
 **/
 
-void HricsWidget::loadFolder()
-{
-    if ( global_motionRecorder == NULL )
-    {
-        cout << "global_motionRecorder is not initilized" << endl;
-        return;
-    }
-
-    string foldername = "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/";
-    cout << "Load Folder : " << foldername << endl;
-
-    string command = "ls " + foldername;
-    FILE* fp = popen( command.c_str(), "r");
-    if (fp == NULL) {
-        cout << "ERROR in system call" << endl;
-        return;
-    }
-    char path[PATH_MAX]; int max_number_of_motions=0;
-    while ( fgets( path, PATH_MAX, fp) != NULL ) max_number_of_motions++;
-    pclose(fp);
-
-    if( max_number_of_motions == 0) cout << "no file in folder" << endl;
-
-    int number_of_motions_loaded = 0;
-    const int max_number_of_files = 500;
-
-    for( int i=0; i<max_number_of_motions; i++ )
-    {
-        for( int j=0; j<max_number_of_files; j++ )
-        {
-            ostringstream filename;
-            filename << foldername << "motion_saved_";
-            filename << std::setw( 5 ) << std::setfill( '0' ) << i << "_";
-            filename << std::setw( 5 ) << std::setfill( '0' ) << j << ".xml";
-
-            ifstream file_exists( filename.str().c_str() );
-            if( file_exists )
-            {
-                cout << "Load File : " << filename.str() << endl;
-                motion_t partial_motion = global_motionRecorder->loadFromXml( filename.str() );
-                global_motionRecorder->storeMotion( partial_motion, j == 0 );
-
-                if( j == 0 ) {
-                    number_of_motions_loaded++;
-                }
-            }
-            else {
-                break;
-            }
-        }
-    }
-    cout << "Number of motion loaded : " << number_of_motions_loaded << endl;
-}
-
-
+/**
 void HricsWidget::convertFolderToCSV()
 {
     if ( global_motionRecorder == NULL )
@@ -728,4 +678,109 @@ void HricsWidget::convertFolderToCSV()
 
     global_motionRecorder->saveStoredToCSV( foldername + "csv_files/compound.csv" );
 }
+**/
 
+void HricsWidget::loadFolder()
+{
+    if ( global_motionRecorder == NULL )
+    {
+        cout << "global_motionRecorder is not initilized" << endl;
+        return;
+    }
+
+    string foldername = "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/";
+    cout << "Load Folder : " << foldername << endl;
+
+    string command = "ls " + foldername;
+    FILE* fp = popen( command.c_str(), "r");
+    if (fp == NULL) {
+        cout << "ERROR in system call" << endl;
+        return;
+    }
+    char path[PATH_MAX]; int max_number_of_motions=0;
+    while ( fgets( path, PATH_MAX, fp) != NULL ) max_number_of_motions++;
+    pclose(fp);
+
+    if( max_number_of_motions == 0) cout << "no file in folder" << endl;
+
+    // Set the motion number you want to load
+    int first_motion = 76;
+    max_number_of_motions = 25;
+    int number_of_motions_loaded = 0;
+    const int max_number_of_files = 500;
+
+    for( int i=first_motion; i<(first_motion+max_number_of_motions); i++ )
+    {
+        for( int j=0; j<max_number_of_files; j++ )
+        {
+            ostringstream filename;
+            filename << foldername << "motion_saved_";
+            filename << std::setw( 5 ) << std::setfill( '0' ) << i << "_";
+            filename << std::setw( 5 ) << std::setfill( '0' ) << j << ".xml";
+
+            ifstream file_exists( filename.str().c_str() );
+            if( file_exists )
+            {
+                cout << "Load File : " << filename.str() << endl;
+                motion_t partial_motion = global_motionRecorder->loadFromXml( filename.str() );
+                global_motionRecorder->storeMotion( partial_motion, j == 0 );
+
+                if( j == 0 ) {
+                    number_of_motions_loaded++;
+                }
+            }
+            else {
+                break;
+            }
+        }
+    }
+    cout << "Number of motion loaded : " << number_of_motions_loaded << endl;
+}
+
+void HricsWidget::convertFolderToCSV()
+{
+    if ( global_motionRecorder == NULL )
+    {
+        cout << "global_motionRecorder is not initilized" << endl;
+        return;
+    }
+
+    string foldername = "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/";
+    global_motionRecorder->saveStoredToCSV( foldername + "csv_files/compound.csv" );
+}
+
+void HricsWidget::loadFromCSV()
+{
+    if ( global_motionRecorder == NULL )
+    {
+        cout << "global_motionRecorder is not initilized" << endl;
+        return;
+    }
+
+    global_motionRecorder->loadRegressedFromCSV();
+}
+
+//-------------------------------------------------------------------
+// Workspace Occupancy
+//-------------------------------------------------------------------
+void HricsWidget::initWorkspaceOccupancy()
+{
+//    vector<double> size = global_Project->getActiveScene()->getBounds();
+//    global_workspaceGrid = new HRICS::WorkspaceOccupancyGrid( 0.05, size );
+
+//    connect(m_ui->pushButtonSetMotionsAndComputeOccupancy,SIGNAL(clicked()),this,SLOT(computeWorkspaceOccupancy()));
+}
+
+void HricsWidget::computeWorkspaceOccupancy()
+{
+    if( global_workspaceGrid == NULL || global_motionRecorder == NULL )
+    {
+        cout << "global_workspaceGrid or global_motionRecorder are not initilized" << endl;
+        return;
+    }
+
+    cout << "Loading regressed motion and computing the occupancy" << endl;
+    global_motionRecorder->loadRegressedFromCSV();
+    global_workspaceGrid->setRegressedMotions( global_motionRecorder->getStoredMotions() );
+    global_workspaceGrid->computeOccpancy();
+}

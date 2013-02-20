@@ -35,9 +35,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-508</y>
+        <y>-556</y>
         <width>396</width>
-        <height>1299</height>
+        <height>1347</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -787,20 +787,6 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="pushButtonSetBeginRM">
-            <property name="text">
-             <string>Set Start</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QPushButton" name="pushButtonSetEndRM">
-            <property name="text">
-             <string>Set End</string>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="0">
            <widget class="QSpinBox" name="spinBoxShowConfigurationRecordedMotion">
             <property name="maximum">
@@ -808,24 +794,61 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
+          <item row="2" column="0">
+           <widget class="QPushButton" name="pushButtonSetBeginRM">
+            <property name="text">
+             <string>Set Start</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QPushButton" name="pushButtonSetEndRM">
+            <property name="text">
+             <string>Set End</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
            <widget class="QPushButton" name="pushButtonExtarctAndSaveRM">
             <property name="text">
              <string>Extract and save</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="1">
+          <item row="1" column="1">
            <widget class="QPushButton" name="pushButtonLoadFolder">
             <property name="text">
              <string>Load Folder</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
+          <item row="2" column="1">
            <widget class="QPushButton" name="pushButtonSaveToCSV">
             <property name="text">
              <string>Save To CSV</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QPushButton" name="pushButtonLoadFromCSV">
+            <property name="text">
+             <string>Load From CSV</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>Workspace Occupancy</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_6">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="pushButtonSetMotionsAndComputeOccupancy">
+            <property name="text">
+             <string>Set Motions And Compute  Occupancy</string>
             </property>
            </widget>
           </item>

@@ -27,7 +27,7 @@
 #endif
 
 using namespace std;
-using namespace tr1;
+MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 // import most common Eigen types 
 //USING_PART_OF_NAMESPACE_EIGEN
