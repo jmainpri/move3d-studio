@@ -110,8 +110,8 @@ static HRICS::Navigation* m_navigation = NULL;
 
 void qt_test1()
 {
-    vector<double> size = global_Project->getActiveScene()->getBounds();
-    global_workspaceGrid = new HRICS::WorkspaceOccupancyGrid(0.05,size);
+    delete global_workspaceGrid;
+    global_workspaceGrid = NULL;
 
 //  Scene* sce = global_Project->getActiveScene();
 //  Robot* robot = sce->getRobotByName("PR2_ROBOT");
