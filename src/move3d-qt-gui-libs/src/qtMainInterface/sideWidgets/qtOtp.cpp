@@ -11,7 +11,7 @@
 #include "ui_qtOtp.h"
 
 
-#include "HRI_costspace/HRICS_costspace.hpp"
+#include "hri_costspace/HRICS_costspace.hpp"
 
 #include "qtMainInterface/mainwindow.hpp"
 //#include "qtMainInterface/mainwindowGenerated.hpp"

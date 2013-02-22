@@ -27,7 +27,7 @@
 
 #include "API/Trajectory/trajectory.hpp" 
 
-#include "HRI_costspace/HRICS_Miscellaneous.hpp"
+#include "hri_costspace/HRICS_Miscellaneous.hpp"
 
 #include <QMessageBox>
 #include <QString>

@@ -55,15 +55,15 @@
 #endif
 
 #if defined( HRI_COSTSPACE )
-#include "HRI_costspace/HRICS_costspace.hpp"
-#include "HRI_costspace/HRICS_Workspace.hpp"
-#include "HRI_costspace/HRICS_Miscellaneous.hpp"
-#include "HRI_costspace/HRICS_Navigation.hpp"
-#include "HRI_costspace/Gestures/HRICS_WorkspaceOccupancy.hpp"
-#include "HRI_costspace/Gestures/HRICS_RecordMotion.hpp"
+#include "hri_costspace/HRICS_costspace.hpp"
+#include "hri_costspace/HRICS_Workspace.hpp"
+#include "hri_costspace/HRICS_Miscellaneous.hpp"
+#include "hri_costspace/HRICS_Navigation.hpp"
+#include "hri_costspace/Gestures/HRICS_WorkspaceOccupancy.hpp"
+#include "hri_costspace/Gestures/HRICS_RecordMotion.hpp"
 #if defined( HRI_PLANNER )
-#include "HRI_costspace/HRICS_HAMP.hpp"
-#include "HRI_costspace/HRICS_otpmotionpl.hpp"
+#include "hri_costspace/HRICS_HAMP.hpp"
+#include "hri_costspace/HRICS_otpmotionpl.hpp"
 #endif
 #endif
 
@@ -110,8 +110,8 @@ static HRICS::Navigation* m_navigation = NULL;
 
 void qt_test1()
 {
-    delete global_workspaceGrid;
-    global_workspaceGrid = NULL;
+    delete global_workspaceOccupancy;
+    global_workspaceOccupancy = NULL;
 
 //  Scene* sce = global_Project->getActiveScene();
 //  Robot* robot = sce->getRobotByName("PR2_ROBOT");

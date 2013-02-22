@@ -30,7 +30,7 @@
 
 #include "qtMotionPlanner.hpp"
 
-#include "HRI_costspace/HRICS_costspace.hpp"
+#include "hri_costspace/HRICS_costspace.hpp"
 
 using namespace std;
 MOVE3D_USING_SHARED_PTR_NAMESPACE

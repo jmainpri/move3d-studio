@@ -33,9 +33,9 @@
 
 #include "qtMotionPlanner.hpp"
 
-#include "HRI_costspace/HRICS_costspace.hpp"
-#include "HRI_costspace/Gestures/HRICS_RecordMotion.hpp"
-#include "HRI_costspace/Gestures/HRICS_WorkspaceOccupancy.hpp"
+#include "hri_costspace/HRICS_costspace.hpp"
+#include "hri_costspace/Gestures/HRICS_RecordMotion.hpp"
+#include "hri_costspace/Gestures/HRICS_WorkspaceOccupancy.hpp"
 
 #include "planner/planEnvironment.hpp"
 #include "utils/ConfGenerator.h"
@@ -765,22 +765,22 @@ void HricsWidget::loadFromCSV()
 //-------------------------------------------------------------------
 void HricsWidget::initWorkspaceOccupancy()
 {
-    vector<double> size = global_Project->getActiveScene()->getBounds();
-    global_workspaceGrid = new HRICS::WorkspaceOccupancyGrid( 0.10, size );
+    vector<double> env_size = global_Project->getActiveScene()->getBounds();
+    global_workspaceOccupancy = new HRICS::WorkspaceOccupancyGrid( 0.05, env_size );
 
     connect(m_ui->pushButtonSetMotionsAndComputeOccupancy,SIGNAL(clicked()),this,SLOT(computeWorkspaceOccupancy()));
 }
 
 void HricsWidget::computeWorkspaceOccupancy()
 {
-    if( global_workspaceGrid == NULL || global_motionRecorder == NULL )
+    if( global_workspaceOccupancy == NULL || global_motionRecorder == NULL )
     {
-        cout << "global_workspaceGrid or global_motionRecorder are not initilized" << endl;
+        cout << "global_workspaceOccupancy or global_motionRecorder are not initilized" << endl;
         return;
     }
 
     cout << "Loading regressed motion and computing the occupancy" << endl;
     global_motionRecorder->loadRegressedFromCSV();
-    global_workspaceGrid->setRegressedMotions( global_motionRecorder->getStoredMotions() );
-    global_workspaceGrid->computeOccpancy();
+    global_workspaceOccupancy->setRegressedMotions( global_motionRecorder->getStoredMotions() );
+    global_workspaceOccupancy->computeOccpancy();
 }

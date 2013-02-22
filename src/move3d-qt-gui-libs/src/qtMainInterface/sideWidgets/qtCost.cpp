@@ -24,7 +24,7 @@
 #include "planner/TrajectoryOptim/Stomp/stompOptimizer.hpp"
 
 #if defined(HRI_COSTSPACE)
-#include "HRI_costspace/HRICS_costspace.hpp"
+#include "hri_costspace/HRICS_costspace.hpp"
 #endif
 #include "API/Search/Dijkstra/dijkstra.hpp"
 

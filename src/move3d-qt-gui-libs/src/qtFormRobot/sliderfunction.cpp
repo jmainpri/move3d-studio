@@ -13,8 +13,8 @@
 #include "planner/planEnvironment.hpp"
 
 #ifdef HRI_COSTSPACE
-#include "HRI_costspace/HRICS_costspace.hpp"
-#include "HRI_costspace/HRICS_Miscellaneous.hpp"
+#include "hri_costspace/HRICS_costspace.hpp"
+#include "hri_costspace/HRICS_Miscellaneous.hpp"
 #endif
 
 #include "API/ConfigSpace/configuration.hpp"

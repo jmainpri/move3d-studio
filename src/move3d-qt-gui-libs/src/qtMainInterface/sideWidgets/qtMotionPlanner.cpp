@@ -36,7 +36,7 @@
 #include "SaveContext.hpp"
 #include "MultiRun.hpp"
 
-#include "HRI_costspace/HRICS_Navigation.hpp"
+#include "hri_costspace/HRICS_Navigation.hpp"
 
 using namespace std;
 MOVE3D_USING_SHARED_PTR_NAMESPACE
