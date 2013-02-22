@@ -20,8 +20,9 @@
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
 
 #include "planner/cost_space.hpp"
-#include "planner/Greedy/CollisionSpace.hpp"
 #include "planner/TrajectoryOptim/Stomp/stompOptimizer.hpp"
+
+#include "collision_space/CollisionSpace.hpp"
 
 #if defined(HRI_COSTSPACE)
 #include "hri_costspace/HRICS_costspace.hpp"

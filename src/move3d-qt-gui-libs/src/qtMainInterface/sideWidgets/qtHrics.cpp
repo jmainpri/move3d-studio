@@ -765,8 +765,8 @@ void HricsWidget::loadFromCSV()
 //-------------------------------------------------------------------
 void HricsWidget::initWorkspaceOccupancy()
 {
-    vector<double> env_size = global_Project->getActiveScene()->getBounds();
-    global_workspaceOccupancy = new HRICS::WorkspaceOccupancyGrid( 0.05, env_size );
+    vector<double> size = global_Project->getActiveScene()->getBounds();
+    global_workspaceOccupancy = new HRICS::WorkspaceOccupancyGrid( 0.05, size );
 
     connect(m_ui->pushButtonSetMotionsAndComputeOccupancy,SIGNAL(clicked()),this,SLOT(computeWorkspaceOccupancy()));
 }

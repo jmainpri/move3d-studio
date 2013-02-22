@@ -9,8 +9,9 @@
 #include "sliderfunction.hpp"
 
 #include "planner/cost_space.hpp"
-#include "planner/Greedy/CollisionSpace.hpp"
 #include "planner/planEnvironment.hpp"
+
+#include "collision_space/CollisionSpace.hpp"
 
 #ifdef HRI_COSTSPACE
 #include "hri_costspace/HRICS_costspace.hpp"
