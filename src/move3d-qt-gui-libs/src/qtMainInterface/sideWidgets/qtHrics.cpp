@@ -769,6 +769,7 @@ void HricsWidget::initWorkspaceOccupancy()
     global_workspaceOccupancy = new HRICS::WorkspaceOccupancyGrid( 0.05, size );
 
     connect(m_ui->pushButtonSetMotionsAndComputeOccupancy,SIGNAL(clicked()),this,SLOT(computeWorkspaceOccupancy()));
+    connect(m_ui->spinBoxClassToDraw, SIGNAL(valueChanged(int)),this,SLOT(setClassToDraw(int)));
 }
 
 void HricsWidget::computeWorkspaceOccupancy()
@@ -779,8 +780,12 @@ void HricsWidget::computeWorkspaceOccupancy()
         return;
     }
 
-    cout << "Loading regressed motion and computing the occupancy" << endl;
-    global_motionRecorder->loadRegressedFromCSV();
-    global_workspaceOccupancy->setRegressedMotions( global_motionRecorder->getStoredMotions() );
-    global_workspaceOccupancy->computeOccpancy();
+    emit(selectedPlanner(QString("WorkspaceOccupancy")));
 }
+
+void HricsWidget::setClassToDraw(int id)
+{
+    global_workspaceOccupancy->setClassToDraw(id);
+    m_mainWindow->drawAllWinActive();
+}
+

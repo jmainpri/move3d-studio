@@ -98,6 +98,7 @@ private slots:
     // Occupancy
     void initWorkspaceOccupancy();
     void computeWorkspaceOccupancy();
+    void setClassToDraw(int id);
 
 private:
 

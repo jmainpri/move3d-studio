@@ -505,6 +505,14 @@ void qt_handover()
   //  compute_handOver();
 }
 
+void qt_workspace_occupancy()
+{
+    cout << "Loading regressed motion and computing the occupancy" << endl;
+    global_motionRecorder->loadRegressedFromCSV();
+    global_workspaceOccupancy->setRegressedMotions( global_motionRecorder->getStoredMotions() );
+    global_workspaceOccupancy->computeOccpancy();
+}
+
 HRICS::Navigation* navPlanner = NULL;
 
 void qt_computeAStar()
@@ -1208,6 +1216,10 @@ void PlannerHandler::startPlanner(QString plannerName)
       qt_init_mlp_cntrts_and_fixjoints();
     }
 #endif
+    else if(plannerName == "WorkspaceOccupancy")
+    {
+        qt_workspace_occupancy();
+    }
     else if(plannerName == "test1")
     {
       qt_test1();
