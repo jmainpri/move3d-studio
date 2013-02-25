@@ -116,9 +116,9 @@ SET(LIBS ${LIBS} ${MOVE3D-PLANNERS_LIBRARIES})
 
 #-------------- Eigen ----------------------------------------------------------
 
-FIND_PACKAGE(EIGEN REQUIRED)
-INCLUDE_directories(${Eigen_INCLUDE_DIR})
-SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${Eigen_INCLUDE_DIR})
+#FIND_PACKAGE(EIGEN REQUIRED)
+#INCLUDE_directories(${Eigen_INCLUDE_DIR})
+#SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${Eigen_INCLUDE_DIR})
 
 #-------------- Qt Library -----------------
 IF(QT_LIBRARY)

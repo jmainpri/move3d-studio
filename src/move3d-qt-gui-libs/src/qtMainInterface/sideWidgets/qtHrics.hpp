@@ -99,6 +99,11 @@ private slots:
     void initWorkspaceOccupancy();
     void computeWorkspaceOccupancy();
     void setClassToDraw(int id);
+    void classifyMotion();
+
+    // Gesture Recognition
+    void initGestureRecognition();
+
 
 private:
 

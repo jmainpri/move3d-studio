@@ -36,6 +36,7 @@
 #include "hri_costspace/HRICS_costspace.hpp"
 #include "hri_costspace/Gestures/HRICS_RecordMotion.hpp"
 #include "hri_costspace/Gestures/HRICS_WorkspaceOccupancy.hpp"
+#include "hri_costspace/Gestures/HRICS_ClassifyMotion.hpp"
 
 #include "planner/planEnvironment.hpp"
 #include "utils/ConfGenerator.h"
@@ -171,6 +172,7 @@ void HricsWidget::initHRI()
     initDrawOneLineInGrid();
     initRecordedMotion();
     initWorkspaceOccupancy();
+    initGestureRecognition();
     //  initGrids();
     //  initObjectTransferPoint();
 
@@ -501,7 +503,7 @@ void HricsWidget::computeAStarGrid()
 // Load the folder and convert to CSV to make one single motion file
 void HricsWidget::initRecordedMotion()
 {
-    global_motionRecorder = new RecordMotion( "HERAKLES_HUMAN1" );
+//    global_motionRecorder = new HRICS::RecordMotion( "HERAKLES_HUMAN1" );
 
     connect(m_ui->pushButtonLoadRecordedMotion,SIGNAL(clicked()),this,SLOT(loadRecordedMotion()));
     connect(m_ui->pushButtonShowRecordedMotion,SIGNAL(clicked()),this,SLOT(showRecordedMotion()));
@@ -766,9 +768,10 @@ void HricsWidget::loadFromCSV()
 void HricsWidget::initWorkspaceOccupancy()
 {
     vector<double> size = global_Project->getActiveScene()->getBounds();
-    global_workspaceOccupancy = new HRICS::WorkspaceOccupancyGrid( 0.05, size );
+    global_workspaceOccupancy = new HRICS::WorkspaceOccupancyGrid( "HERAKLES_HUMAN1", 0.05, size );
 
     connect(m_ui->pushButtonSetMotionsAndComputeOccupancy,SIGNAL(clicked()),this,SLOT(computeWorkspaceOccupancy()));
+    connect(m_ui->pushButtonClassifyMotion,SIGNAL(clicked()),this,SLOT(classifyMotion()));
     connect(m_ui->spinBoxClassToDraw, SIGNAL(valueChanged(int)),this,SLOT(setClassToDraw(int)));
 }
 
@@ -785,7 +788,45 @@ void HricsWidget::computeWorkspaceOccupancy()
 
 void HricsWidget::setClassToDraw(int id)
 {
+    if( global_workspaceOccupancy == NULL || global_motionRecorder == NULL )
+    {
+        cout << "global_workspaceOccupancy or global_motionRecorder are not initilized" << endl;
+        return;
+    }
+
     global_workspaceOccupancy->setClassToDraw(id);
     m_mainWindow->drawAllWinActive();
 }
+
+static int id_motion = 0;
+
+void HricsWidget::classifyMotion()
+{
+
+    if( global_workspaceOccupancy == NULL || global_motionRecorder == NULL )
+    {
+        cout << "global_workspaceOccupancy or global_motionRecorder are not initilized" << endl;
+        return;
+    }
+
+    global_workspaceOccupancy->classifyMotion( global_motionRecorder->getStoredMotions()[id_motion++] );
+
+    if( id_motion >= 4 )
+        id_motion = 0;
+}
+
+//-------------------------------------------------------------------
+// Gesture Recognition
+//-------------------------------------------------------------------
+void HricsWidget::initGestureRecognition()
+{
+//    global_classifyMotion = new HRICS::ClassifyMotion();
+
+//    if( global_classifyMotion->load_model() )
+//        cout << "load GMMs successfully!!!!" << endl;
+//    else
+//        cout << "ERROR loading GMMs!!!!" << endl;
+}
+
+
 

@@ -181,9 +181,11 @@ message("libmove3d lib :  ${MOVE3D_LIBRARY_DIRS}")
 
 #-------------- Eigen ----------------------------------------------------------
 
-FIND_PACKAGE(EIGEN REQUIRED)
-INCLUDE_directories(${Eigen_INCLUDE_DIR})
-SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${Eigen_INCLUDE_DIR})
+FIND_PACKAGE(Eigen3 REQUIRED)
+INCLUDE_directories(${EIGEN3_INCLUDE_DIR})
+SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR})
+MESSAGE(Eigen3_INCLUDE_DIR : ${EIGEN3_INCLUDE_DIR})
+
 
 #-------------- QWT technical widget ----------------------------------------------
 IF(USE_QWT)
