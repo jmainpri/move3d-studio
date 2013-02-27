@@ -61,6 +61,7 @@
 #include "hri_costspace/HRICS_Navigation.hpp"
 #include "hri_costspace/Gestures/HRICS_WorkspaceOccupancy.hpp"
 #include "hri_costspace/Gestures/HRICS_RecordMotion.hpp"
+#include "hri_costspace/Gestures/HRICS_HumanPredictionCostSpace.hpp"
 #if defined( HRI_PLANNER )
 #include "hri_costspace/HRICS_HAMP.hpp"
 #include "hri_costspace/HRICS_otpmotionpl.hpp"
@@ -79,8 +80,6 @@ extern ManipulationTestFunctions* global_manipPlanTest;
 #endif
 #endif
 
-
-
 const char *qt_fileName = NULL;
 
 using namespace std;
@@ -97,6 +96,53 @@ MOVE3D_USING_SHARED_PTR_NAMESPACE
  *      Qt window.
  */
 
+extern void* GroundCostObj;
+
+//------------------------------------------------------------------------------
+//  Init Functions
+//------------------------------------------------------------------------------
+
+//! This function initialises the basic costspace
+void qt_init_costspace()
+{
+  GlobalCostSpace::initialize();
+
+  std::string function;
+
+    if( GroundCostObj != NULL )
+    function = "costMap2D";
+    else
+    function = "costDistToObst";
+
+  global_costSpace->setCost( function );
+}
+
+//! This function initialises the software
+//! after the parameter file has been loaded
+void qt_init_after_params()
+{
+  if(ENV.getBool(Env::isCostSpace) || ENV.getBool(Env::useTRRT) )
+  {
+    qt_init_costspace();
+  }
+
+  if ( ENV.getBool(Env::enableHri) )
+  {
+    HRICS_init();
+  }
+
+  if( ENV.getBool(Env::setActiveJointsGroup) )
+  {
+    traj_optim_init_mlp_cntrts_and_fix_joints();
+  }
+
+  if( ENV.getBool(Env::setStompPlanner) )
+  {
+    traj_optim_initStomp();
+  }
+
+  HRICS_initOccupancyPredictionFramework();
+}
 
 //------------------------------------------------------------------------------
 //  Callback functions  
@@ -288,46 +334,6 @@ void qt_test3()
 //  }
 }
 
-extern void* GroundCostObj;
-
-void qt_init_costspace()
-{
-  GlobalCostSpace::initialize();
-  
-  std::string function;
-  
-	if( GroundCostObj != NULL )
-    function = "costMap2D";
-	else
-    function = "costDistToObst";
-
-  if (ENV.getBool(Env::enableHri))
-  {
-    function = "costHumanGrids";
-    HRICS_init();
-  }
-  
-  global_costSpace->setCost( function );
-}
-
-void qt_init_after_params()
-{
-  if(ENV.getBool(Env::isCostSpace) || ENV.getBool(Env::useTRRT) )
-  {
-    qt_init_costspace();
-  }
-  
-  if( ENV.getBool(Env::setActiveJointsGroup) ) 
-  {
-    traj_optim_init_mlp_cntrts_and_fix_joints();
-  }
-  
-  if( ENV.getBool(Env::setStompPlanner) ) 
-  {
-    traj_optim_initStomp();
-  }
-}
-
 void qt_resetGraph()
 {
 	try 
@@ -511,6 +517,18 @@ void qt_workspace_occupancy()
     global_motionRecorder->loadRegressedFromCSV();
     global_workspaceOccupancy->setRegressedMotions( global_motionRecorder->getStoredMotions() );
     global_workspaceOccupancy->computeOccpancy();
+}
+
+void qt_classify_motions()
+{
+    const std::vector<motion_t>& stored_motions = global_motionRecorder->getStoredMotions();
+
+    for(int i=0;i<stored_motions.size();i++)
+    {
+       int id_class = global_workspaceOccupancy->classifyMotion( global_motionRecorder->resample( stored_motions[i], 100 ) );
+       //cout << std::setw( 3 ) << std::setfill( ' ' ) << i << " : " << id_class << endl;
+    }
+    cout << "End!!!" << endl;
 }
 
 HRICS::Navigation* navPlanner = NULL;
@@ -1219,6 +1237,10 @@ void PlannerHandler::startPlanner(QString plannerName)
     else if(plannerName == "WorkspaceOccupancy")
     {
         qt_workspace_occupancy();
+    }
+    else if(plannerName == "ClassifyMotions")
+    {
+        qt_classify_motions();
     }
     else if(plannerName == "test1")
     {

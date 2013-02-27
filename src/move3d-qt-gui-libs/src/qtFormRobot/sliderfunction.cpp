@@ -215,7 +215,8 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
     std::string robotName(robotPt->name);
     
     if( robotName == "HERAKLES_HUMAN1" ) {
-      qt_otp();
+      // Change here for drawing the otp grid (JIM THESIS)
+      //qt_otp();
     }
     
     // Change the cost robot

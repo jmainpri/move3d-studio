@@ -162,10 +162,19 @@ int mainMhp(int argc, char ** argv)
         return 0;
       }
     } 
+    else if (strcmp(argv[i], "-launch") == 0) {
+      ++i;
+      if ((i < argc)) {
+        ++i;
+      } else {
+        use();
+        return 0;
+      }
+    }
     else if (strcmp(argv[i], "-setgui") == 0) {
       ++i;
       move3d_studio_load_settings = true;
-    } 
+    }
     else if (strcmp(argv[i], "-nogui") == 0) {
       ++i;
       // Nothing to do, fix this in main

@@ -37,6 +37,7 @@
 #include "hri_costspace/Gestures/HRICS_RecordMotion.hpp"
 #include "hri_costspace/Gestures/HRICS_WorkspaceOccupancy.hpp"
 #include "hri_costspace/Gestures/HRICS_ClassifyMotion.hpp"
+#include "hri_costspace/Gestures/HRICS_HumanPredictionCostSpace.hpp"
 
 #include "planner/planEnvironment.hpp"
 #include "utils/ConfGenerator.h"
@@ -587,101 +588,6 @@ void HricsWidget::extractAndSaveRM()
     }
 }
 
-/**
-void HricsWidget::loadFolder()
-{
-    if ( global_motionRecorder == NULL )
-    {
-        cout << "global_motionRecorder is not initilized" << endl;
-        return;
-    }
-
-    string foldername = "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/";
-    string command = "ls " + foldername;
-    cout << "Load Folder : " << foldername << endl;
-    //system("echo $PATH");
-    FILE *fp;
-    char path[PATH_MAX];
-
-    fp = popen(command.c_str(), "r");
-    if (fp == NULL) {
-        cout << "ERROR in system call" << endl;
-        return;
-    }
-
-    global_motionRecorder->reset();
-
-    int i=0;
-    while ( fgets( path, PATH_MAX, fp) != NULL ) {
-        string filename(path);
-        filename.erase(std::remove(filename.begin(), filename.end(), '\n'), filename.end());
-        if ( filename.find(".xml") == string::npos )
-            continue;
-        cout << "file path is : " << filename << endl; i++;
-
-        vector<motion_t> motions;
-        motions.push_back( global_motionRecorder->loadFromXml( foldername + filename ) );
-        global_motionRecorder->storeMotion( motions.back() );
-    }
-
-    pclose(fp);
-
-    cout << "End Load " << i <<  " files in the folder" << endl;
-}
-**/
-
-/**
-void HricsWidget::convertFolderToCSV()
-{
-    if ( global_motionRecorder == NULL )
-    {
-        cout << "global_motionRecorder is not initilized" << endl;
-        return;
-    }
-
-    string foldername = "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_cut/record_2/";
-    string command = "ls " + foldername;
-    cout << "Load Folder : " << foldername << endl;
-    //system("echo $PATH");
-    FILE *fp;
-    char path[PATH_MAX];
-
-    fp = popen(command.c_str(), "r");
-    if (fp == NULL) {
-        cout << "ERROR in system call" << endl;
-        return;
-    }
-
-    global_motionRecorder->reset();
-
-    int i=0;
-    while ( fgets( path, PATH_MAX, fp) != NULL ) {
-
-        string filename(path);
-        filename.erase( remove(filename.begin(), filename.end(), '\n'), filename.end());
-        if ( filename.find(".xml") == string::npos )
-            continue;
-
-        cout << "file path is : " << filename << endl; i++;
-        motion_t motion = global_motionRecorder->loadFromXml( foldername + filename );
-
-        global_motionRecorder->addToCurrentMotion( motion );
-        global_motionRecorder->storeMotion( motion );
-
-//        filename.erase( filename.end()-4, filename.end());
-//        filename = filename + ".csv" ;
-//        cout << "save file to " << filename << endl;
-//        global_motionRecorder->saveToCSV( foldername + "csv_files/" + filename, motion );
-    }
-
-    pclose(fp);
-
-    cout << "End Load " << i <<  " files in the folder" << endl;
-
-    global_motionRecorder->saveStoredToCSV( foldername + "csv_files/compound.csv" );
-}
-**/
-
 void HricsWidget::loadFolder()
 {
     if ( global_motionRecorder == NULL )
@@ -706,10 +612,12 @@ void HricsWidget::loadFolder()
     if( max_number_of_motions == 0) cout << "no file in folder" << endl;
 
     // Set the motion number you want to load
-    int first_motion = 76;
-    max_number_of_motions = 25;
+    int first_motion = 0;
+    max_number_of_motions = 101;
     int number_of_motions_loaded = 0;
     const int max_number_of_files = 500;
+
+    global_motionRecorder->reset();
 
     for( int i=first_motion; i<(first_motion+max_number_of_motions); i++ )
     {
@@ -767,9 +675,6 @@ void HricsWidget::loadFromCSV()
 //-------------------------------------------------------------------
 void HricsWidget::initWorkspaceOccupancy()
 {
-    vector<double> size = global_Project->getActiveScene()->getBounds();
-    global_workspaceOccupancy = new HRICS::WorkspaceOccupancyGrid( "HERAKLES_HUMAN1", 0.05, size );
-
     connect(m_ui->pushButtonSetMotionsAndComputeOccupancy,SIGNAL(clicked()),this,SLOT(computeWorkspaceOccupancy()));
     connect(m_ui->pushButtonClassifyMotion,SIGNAL(clicked()),this,SLOT(classifyMotion()));
     connect(m_ui->spinBoxClassToDraw, SIGNAL(valueChanged(int)),this,SLOT(setClassToDraw(int)));
@@ -798,8 +703,6 @@ void HricsWidget::setClassToDraw(int id)
     m_mainWindow->drawAllWinActive();
 }
 
-static int id_motion = 0;
-
 void HricsWidget::classifyMotion()
 {
 
@@ -809,10 +712,7 @@ void HricsWidget::classifyMotion()
         return;
     }
 
-    global_workspaceOccupancy->classifyMotion( global_motionRecorder->getStoredMotions()[id_motion++] );
-
-    if( id_motion >= 4 )
-        id_motion = 0;
+    emit(selectedPlanner(QString("ClassifyMotions")));
 }
 
 //-------------------------------------------------------------------

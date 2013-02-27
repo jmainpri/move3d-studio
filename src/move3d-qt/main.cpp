@@ -182,9 +182,14 @@ int Main_threads::run(int argc, char** argv)
     int argc_tmp;
     char** argv_tmp=NULL;
     int ith_arg=0;
-    bool openFileDialog=true;
+
     bool noGui=false;
+
+    bool openFileDialog=true;
     string dirName;
+
+    bool launch_script=false;
+    string script_id;
 
     // Find if a file is passed as argument and set openFileDialog mode
     // Also check for nogui mode
@@ -208,6 +213,16 @@ int Main_threads::run(int argc, char** argv)
         {
             openFileDialog = false;
             break;
+        }
+        if (string(argv[ith_arg]) == "-launch")
+        {
+            launch_script = true;
+            if ((ith_arg+1) < argc) {
+                script_id = argv[ith_arg+1];
+            }
+            else {
+                return 0;
+            }
         }
 
         ith_arg++;
@@ -276,7 +291,7 @@ int Main_threads::run(int argc, char** argv)
         connect(global_plannerHandler, SIGNAL(plannerIsStopped()), this, SLOT(exit()));
         global_PlanningThread->start();
 
-        QMetaObject::invokeMethod(global_plannerHandler,"init",Qt::BlockingQueuedConnection);
+        QMetaObject::invokeMethod( global_plannerHandler, "init", Qt::BlockingQueuedConnection );
 
         // Creates the wrapper to the project, be carefull to initialize in the right thread
         global_Project = new Project(new Scene(XYZ_ENV));
@@ -286,10 +301,11 @@ int Main_threads::run(int argc, char** argv)
 
         qt_init_after_params();
 
-        //    QString script("Diffusion");
-        QString script("MultiRRT");
+        // QString script("Diffusion");
+        // QString script("MultiRRT");
+        QString script( script_id.c_str() );
         ENV.setBool(Env::drawDisabled,true);
-        QMetaObject::invokeMethod(global_plannerHandler,"startPlanner",Qt::QueuedConnection,Q_ARG(QString, script));
+        QMetaObject::invokeMethod( global_plannerHandler, "startPlanner", Qt::QueuedConnection, Q_ARG(QString, script) );
     }
     else {
         global_PlanningThread->start();
@@ -302,6 +318,12 @@ int Main_threads::run(int argc, char** argv)
         cout << "  ------------------ Init Interface ------------------" << endl;
         cout << "  ----------------------------------------------------" << endl;
         initInterface();
+
+        if( launch_script )
+        {
+            QString script( script_id.c_str() );
+            QMetaObject::invokeMethod(global_plannerHandler,"startPlanner",Qt::QueuedConnection,Q_ARG(QString, script));
+        }
     }
 
     //	while (true) {

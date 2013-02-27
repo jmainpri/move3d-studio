@@ -25,31 +25,31 @@ extern const char *qt_fileName;
 // Planner Handler object
 class PlannerHandler : public QObject
 {
-  Q_OBJECT;
+    Q_OBJECT;
 
 public:
-  enum state { 
-    running, // A planning algorithm instance is running
-	  stopped, // A planning algorithm instance has been created, but is stopped
-	       none }; // There is no instance created
-  
-  PlannerHandler(int argc, char** argv);
+    enum state {
+        running, // A planning algorithm instance is running
+        stopped, // A planning algorithm instance has been created, but is stopped
+        none }; // There is no instance created
+
+    PlannerHandler(int argc, char** argv);
 
 public slots:
-  void init();
-  void startPlanner(QString plannerName);
-  void stopPlanner();
-  void resetPlanner();
+    void init();
+    void startPlanner(QString plannerName);
+    void stopPlanner();
+    void resetPlanner();
 
 signals:
-  void initIsDone();
-  void plannerIsStopped();
-  void plannerIsReset();
+    void initIsDone();
+    void plannerIsStopped();
+    void plannerIsReset();
 
 protected:
-  state mState;
-  int mArgc;
-  char** mArgv;
+    state mState;
+    int mArgc;
+    char** mArgv;
 };
 
 extern PlannerHandler* global_plannerHandler;
