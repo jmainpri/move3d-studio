@@ -74,7 +74,7 @@ void DistFieldWidget::createDistanceField()
     
     Scene* sce = global_Project->getActiveScene();
     
-    global_collisionSpace = new CollisionSpace( sce->getActiveRobot(), 0.10, sce->getBounds() );
+    global_collisionSpace = new CollisionSpace( sce->getActiveRobot(), double(ENV.getInt(Env::nbCells))/100, sce->getBounds() );
     
     cout << "You can now add static to the distance field!!!" << endl;
 }

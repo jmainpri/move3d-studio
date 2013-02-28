@@ -62,6 +62,7 @@
 #include "hri_costspace/Gestures/HRICS_WorkspaceOccupancy.hpp"
 #include "hri_costspace/Gestures/HRICS_RecordMotion.hpp"
 #include "hri_costspace/Gestures/HRICS_HumanPredictionCostSpace.hpp"
+#include "hri_costspace/Gestures/HRICS_HumanPredictionSimulator.hpp"
 #if defined( HRI_PLANNER )
 #include "hri_costspace/HRICS_HAMP.hpp"
 #include "hri_costspace/HRICS_otpmotionpl.hpp"
@@ -511,6 +512,8 @@ void qt_handover()
   //  compute_handOver();
 }
 
+//----------------------------------------------------------
+//----------------------------------------------------------
 void qt_workspace_occupancy()
 {
     cout << "Loading regressed motion and computing the occupancy" << endl;
@@ -531,6 +534,14 @@ void qt_classify_motions()
     cout << "End!!!" << endl;
 }
 
+void qt_runHumanPredictionSimulator()
+{
+    cout << "Starting Simulator" << endl;
+    global_humanPredictionSimulator->run();
+}
+
+//----------------------------------------------------------
+//----------------------------------------------------------
 HRICS::Navigation* navPlanner = NULL;
 
 void qt_computeAStar()
