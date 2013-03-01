@@ -534,9 +534,14 @@ void qt_classify_motions()
     cout << "End!!!" << endl;
 }
 
-void qt_runHumanPredictionSimulator()
+void qt_human_prediction_simulation()
 {
     cout << "Starting Simulator" << endl;
+    if( global_humanPredictionSimulator == NULL )
+    {
+        cout << "global_humanPredictionSimulator == NULL" << endl;
+        return;
+    }
     global_humanPredictionSimulator->run();
 }
 
@@ -1252,6 +1257,10 @@ void PlannerHandler::startPlanner(QString plannerName)
     else if(plannerName == "ClassifyMotions")
     {
         qt_classify_motions();
+    }
+    else if(plannerName == "PredictionSimulation")
+    {
+        qt_human_prediction_simulation();
     }
     else if(plannerName == "test1")
     {

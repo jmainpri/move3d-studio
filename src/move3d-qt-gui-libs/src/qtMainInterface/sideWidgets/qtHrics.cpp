@@ -596,55 +596,7 @@ void HricsWidget::loadFolder()
         return;
     }
 
-    string foldername = "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/";
-    cout << "Load Folder : " << foldername << endl;
-
-    string command = "ls " + foldername;
-    FILE* fp = popen( command.c_str(), "r");
-    if (fp == NULL) {
-        cout << "ERROR in system call" << endl;
-        return;
-    }
-    char path[PATH_MAX]; int max_number_of_motions=0;
-    while ( fgets( path, PATH_MAX, fp) != NULL ) max_number_of_motions++;
-    pclose(fp);
-
-    if( max_number_of_motions == 0) cout << "no file in folder" << endl;
-
-    // Set the motion number you want to load
-    int first_motion = 0;
-    max_number_of_motions = 101;
-    int number_of_motions_loaded = 0;
-    const int max_number_of_files = 500;
-
-    global_motionRecorder->reset();
-
-    for( int i=first_motion; i<(first_motion+max_number_of_motions); i++ )
-    {
-        for( int j=0; j<max_number_of_files; j++ )
-        {
-            ostringstream filename;
-            filename << foldername << "motion_saved_";
-            filename << std::setw( 5 ) << std::setfill( '0' ) << i << "_";
-            filename << std::setw( 5 ) << std::setfill( '0' ) << j << ".xml";
-
-            ifstream file_exists( filename.str().c_str() );
-            if( file_exists )
-            {
-                cout << "Load File : " << filename.str() << endl;
-                motion_t partial_motion = global_motionRecorder->loadFromXml( filename.str() );
-                global_motionRecorder->storeMotion( partial_motion, j == 0 );
-
-                if( j == 0 ) {
-                    number_of_motions_loaded++;
-                }
-            }
-            else {
-                break;
-            }
-        }
-    }
-    cout << "Number of motion loaded : " << number_of_motions_loaded << endl;
+    global_motionRecorder->loadFolder();
 }
 
 void HricsWidget::convertFolderToCSV()
