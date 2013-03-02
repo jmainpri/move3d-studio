@@ -20,7 +20,7 @@ class GLWidget;
 class FormRobot;
 
 namespace Ui {
-	class MoveRobot;
+class MoveRobot;
 }
 
 /**--------------------------------------------------------------
@@ -29,61 +29,61 @@ namespace Ui {
  */
 class DofSlider : public QObject
 {
-	Q_OBJECT
-	
+    Q_OBJECT
+
 public:
-	DofSlider() {}
-	
-	DofSlider(Robot* R, GLWidget* Gl, FormRobot* FR) : 
-	mRobot(R),
-	mOpenGl(Gl),
-	mFormRobot(FR)
-	{}
-	
-	~DofSlider() {}
-  
-  /**
+    DofSlider() {}
+
+    DofSlider(Robot* R, GLWidget* Gl, FormRobot* FR) :
+        mRobot(R),
+        mOpenGl(Gl),
+        mFormRobot(FR)
+    {}
+
+    ~DofSlider() {}
+
+    /**
    * Get the DoF id in configuration
    */
-  int getDofIdInConf() { return mDofNum; } 
-	
-	/**
-	 * Creates a slider with a spinbox and a label
-	 */
-	void makeSlider(QGridLayout* gridLayout, Joint *jntPt, int DofNumOnJnt);
-	
-	void setValue(double value) { mConnector->setValue(value); }
-	
-	QDoubleSpinBox* getDoubleSpinBox() { return mDoubleSpinBox;}
-	QSlider* getHorizontalSlider() { return mHorizontalSlider; }
-	
-	QtShiva::SpinBoxSliderConnector* getConnector() {return mConnector;}
-	
-	
+    int getDofIdInConf() { return mDofNum; }
+
+    /**
+     * Creates a slider with a spinbox and a label
+     */
+    void makeSlider(QGridLayout* gridLayout, Joint *jntPt, int DofNumOnJnt);
+
+    void setValue(double value) { mConnector->setValue(value); }
+
+    QDoubleSpinBox* getDoubleSpinBox() { return mDoubleSpinBox;}
+    QSlider* getHorizontalSlider() { return mHorizontalSlider; }
+
+    QtShiva::SpinBoxSliderConnector* getConnector() {return mConnector;}
+
+
 #if defined( MOVE3D_CORE ) 
-	Robot* getRobot() { return mRobot; }
+    Robot* getRobot() { return mRobot; }
 #endif
-	
-	public slots:
-	void dofValueChanged(double value);
-  void showDofConstraints();
-	
+
+public slots:
+    void dofValueChanged(double value);
+    void showDofConstraints();
+
 private:
 #if defined( MOVE3D_CORE ) 
-	Robot*  mRobot;
+    Robot*  mRobot;
 #endif
-	
-	int								mDofNum;
-	GLWidget*					mOpenGl;
-	
-	FormRobot*				mFormRobot;
-	
-	QLabel*						mLabel;
-  QPushButton*			mConstraints;
-	QDoubleSpinBox*		mDoubleSpinBox;
-	QSlider*					mHorizontalSlider;
-	
-	QtShiva::SpinBoxSliderConnector* mConnector;
+
+    int								mDofNum;
+    GLWidget*					mOpenGl;
+
+    FormRobot*				mFormRobot;
+
+    QLabel*						mLabel;
+    QPushButton*			mConstraints;
+    QDoubleSpinBox*		mDoubleSpinBox;
+    QSlider*					mHorizontalSlider;
+
+    QtShiva::SpinBoxSliderConnector* mConnector;
 };
 
 /**--------------------------------------------------------------
@@ -91,114 +91,105 @@ private:
  * @brief Creates the sliders structure, Contains a vector of DofSlider
  */
 class FormRobot : public QObject {
-	
-	Q_OBJECT
-	
-public:
-	FormRobot() { mTrajectories.clear(); }
-	
-	FormRobot(Robot* R, QGridLayout* GL, QComboBox* pos, QComboBox* configs, QComboBox* trajs, GLWidget* openGl) :
-	mRobot(R),
-	mGridLayout(GL),
-	mPositions(pos),
-  mConfigNames(configs),
-	mTrajectoriesNames(trajs),
-	mOpenGl(openGl)
-	{}
-	
-	~FormRobot() {};
-	
-	/**
-	 * Initializes the sliders associated to the Dofs of ptrRob
-	 */
-	void initSliders();
-	
-	/**
-	 * Sets the associated sliders to the values int ptrConf
-	 */
-	void setSliders(Configuration& ptrConf);
 
-	
-	/**
-	 * Returns the robot structure
-	 */
-	Robot* getRobot() { return mRobot; }
-	
-	/**
-	 *
-	 */
-	QComboBox* getComboBox() { return mPositions; }
-	
-	public slots:
-  /**
-	 * Resets the constrained DoFs
-	 */
-	void resetConstraintedDoFs();
-  
-	/**
-	 * Sets the current Configuration to Init or Goto
-	 */
-	void setCurrentPosition(int position);
-  void setCurrentConfig(int index);
-	
-	/**
-	 * Save current configuration
-	 */
-  void saveCurrentConfigToInit();
-	void saveCurrentConfigToGoal();
-  void saveCurrentConfigToVector();
-	
-	/**
-	 * Add Traj
-	 */
-	void addTraj( std::string& name, p3d_traj* trajPt );
-  
-  /**
-	 * Initializes the configurations stored in the robot structure
-	 */
-	void initConfigs();
-  
-  /**
+    Q_OBJECT
+
+public:
+    FormRobot(Robot* R, QGridLayout* GL, QComboBox* pos, QComboBox* configs, QComboBox* trajs, GLWidget* openGl);
+
+    ~FormRobot() {}
+
+    /**
+     * Initializes the sliders associated to the Dofs of ptrRob
+     */
+    void initSliders();
+
+    /**
+     * Sets the associated sliders to the values int ptrConf
+     */
+    void setSliders(Configuration& ptrConf);
+
+
+    /**
+     * Returns the robot structure
+     */
+    Robot* getRobot() { return mRobot; }
+
+    /**
+     *
+     */
+    QComboBox* getComboBox() { return mPositions; }
+
+public slots:
+    /**
+     * Resets the constrained DoFs
+     */
+    void resetConstraintedDoFs();
+
+    /**
+     * Sets the current Configuration to Init or Goto
+     */
+    void setCurrentPosition(int position);
+    void setCurrentConfig(int index);
+
+    /**
+     * Save current configuration
+     */
+    void saveCurrentConfigToInit();
+    void saveCurrentConfigToGoal();
+    void saveCurrentConfigToVector();
+
+    /**
+     * Add Traj
+     */
+    void addTraj( std::string& name, p3d_traj* trajPt );
+
+    /**
+     * Initializes the configurations stored in the robot structure
+     */
+    void initConfigs();
+
+    /**
    * Add configuration from name
    */
-  void addConfig( std::string& name, configPt q );
-  
-  /**
+    void addConfig( const std::string& name, configPt q );
+
+    /**
    * Add conf and traj
    */
-  void setConfAndTrajFromManipTest();
-	
-	/**
-	 * Function called to set the current trajectory
-	 */
-	void setCurrentTraj(int id);
-  
-  /**
+    void setConfAndTrajFromManipTest();
+
+    /**
+     * Function called to set the current trajectory
+     */
+    void setCurrentTraj(int id);
+
+    /**
    * Shows the current constraints and multi-localpath
    */
-  void showConstraints();
+    void showConstraints();
 #ifdef MULTILOCALPATH
-  void showMultiLocalpath();
+    void showMultiLocalpath();
 #endif
-	
+
 private:
-	
-	int calc_real_dof(void);
-	
-	Robot*										mRobot;
-	
-	std::vector<DofSlider*>		mSliders;
-	QGridLayout*							mGridLayout;
-	
-	QComboBox*								mPositions;
-	
-  QComboBox*                mConfigNames;
-  std::vector< MOVE3D_PTR_NAMESPACE::shared_ptr<Configuration> >		mConfigurations;
-  
-	QComboBox*								mTrajectoriesNames;
-	std::vector<p3d_traj*>		mTrajectories;
-	
-	GLWidget*									mOpenGl;
+
+    int calc_real_dof(void);
+
+    Robot*                      mRobot;
+
+    std::vector<DofSlider*>		mSliders;
+    QGridLayout*				mGridLayout;
+
+    QComboBox*					mPositions;
+
+    QComboBox*                  mConfigNames;
+    std::vector< MOVE3D_PTR_NAMESPACE::shared_ptr<Configuration> >	mConfigurations;
+
+    QComboBox*					mTrajectoriesNames;
+    std::vector<p3d_traj*>		mTrajectories;
+
+    GLWidget*					mOpenGl;
 };
 
 
@@ -208,65 +199,65 @@ private:
  */
 class MoveRobot : public QWidget 
 {
-	Q_OBJECT
-	
+    Q_OBJECT
+
 public:
-	MoveRobot(QWidget *parent = 0);
-	~MoveRobot();
-	
-	/**
-	 * Initilizes all forms
-	 */
-	void initAllForms(GLWidget* ptrOpenGl);
-	
-	/**
-	 * Updates all robot pos
-	 */
-	void updateAllRobotInitPos();
-	
-	/**
-	 * Get the robot form by names
-	 */
-	FormRobot* getRobotFormByName(std::string name);
-	
-	/**
-	 * Sets the constraints
-	 */
-	void setRobotConstraintedDof(Robot* ptrRob);
-  
-  /**
+    MoveRobot(QWidget *parent = 0);
+    ~MoveRobot();
+
+    /**
+     * Initilizes all forms
+     */
+    void initAllForms(GLWidget* ptrOpenGl);
+
+    /**
+     * Updates all robot pos
+     */
+    void updateAllRobotInitPos();
+
+    /**
+     * Get the robot form by names
+     */
+    FormRobot* getRobotFormByName(std::string name);
+
+    /**
+     * Sets the constraints
+     */
+    void setRobotConstraintedDof(Robot* ptrRob);
+
+    /**
    * Refresh all constrainted DoFs
    */
-  void refreshConstraintedDoFs();
-	
+    void refreshConstraintedDoFs();
+
 protected:
-	void changeEvent(QEvent *e);
-	
+    void changeEvent(QEvent *e);
+
 private:
-	Ui::MoveRobot *m_ui;
-	
+    Ui::MoveRobot *m_ui;
+
 #if defined( MOVE3D_CORE ) 
-	/**
-	 * Creates a new gridLayout inside a tabWidget
-	 */
-	//FormRobot* newGridLayoutForRobot(Robot* ptrRob);
-	FormRobot* newGridLayoutForRobotStacked(Robot* ptrRob);
-	
+    /**
+     * Creates a new gridLayout inside a tabWidget
+     */
+    //FormRobot* newGridLayoutForRobot(Robot* ptrRob);
+    FormRobot* newGridLayoutForRobotStacked(Robot* ptrRob);
+
 #endif
-	
-	/**
-	 * Members
-	 */
-	std::vector<FormRobot*>			mRobots;
-	
-	// Tab Widget
-	QTabWidget*                 mTabWidget;
-	
-	// Stacked Widgets
-	QStackedLayout*							m_StackedLayout;
-	QComboBox*									m_pageComboBox;
-	
-	GLWidget*										mOpenGl;
+
+    /**
+     * Members
+     */
+    std::vector<FormRobot*>			mRobots;
+
+    // Tab Widget
+    QTabWidget*                 mTabWidget;
+
+    // Stacked Widgets
+    QStackedLayout*							m_StackedLayout;
+    QComboBox*									m_pageComboBox;
+
+    GLWidget*										mOpenGl;
 };
 
 #endif // MOVEROBOT_HPP
