@@ -524,11 +524,13 @@ void qt_workspace_occupancy()
 
 void qt_classify_motions()
 {
+    global_motionRecorder->loadFolder();
+
     const std::vector<motion_t>& stored_motions = global_motionRecorder->getStoredMotions();
 
     for(int i=0;i<stored_motions.size();i++)
     {
-        int id_class = global_workspaceOccupancy->classifyMotion( global_motionRecorder->resample( stored_motions[i], 100 ) );
+        int id_class = global_humanPredictionSimulator->classifyMotion( global_motionRecorder->resample( stored_motions[i], 100 ) );
         //cout << std::setw( 3 ) << std::setfill( ' ' ) << i << " : " << id_class << endl;
     }
     cout << "End!!!" << endl;

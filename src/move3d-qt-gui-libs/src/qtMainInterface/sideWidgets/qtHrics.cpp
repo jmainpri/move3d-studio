@@ -624,7 +624,15 @@ void HricsWidget::loadFromCSV()
     if ( global_motionRecorder == NULL )
     {
         cout << "global_motionRecorder is not initilized" << endl;
-        return;
+
+        Robot* human = global_Project->getActiveScene()->getRobotByName( "HERAKLES_HUMAN1" );
+        if( human == NULL )
+        {
+            cout << "human or robot not defined" << endl;
+            return;
+        }
+
+        global_motionRecorder =  new HRICS::RecordMotion( human );
     }
 
     global_motionRecorder->loadRegressedFromCSV();
