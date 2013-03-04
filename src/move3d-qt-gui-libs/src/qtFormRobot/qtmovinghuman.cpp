@@ -52,13 +52,13 @@ void MovingHuman::init(double x, double y, double z, double rz)
     ui->doubleSpinBoxZ->setMinimum(bounds[4]);
     ui->doubleSpinBoxZ->setMaximum(bounds[5]);
 
-    m_k_x  = new QtShiva::SpinBoxSliderConnector(this, ui->doubleSpinBoxX,      ui->horizontalSliderX,    PlanParam::env_futurX);
+    m_k_x  = new QtShiva::SpinBoxSliderConnector(this, ui->doubleSpinBoxX, ui->horizontalSliderX, PlanEnv->getObject(PlanParam::env_futurX));
     m_k_x->setValue(x);
-    m_k_y  = new QtShiva::SpinBoxSliderConnector(this, ui->doubleSpinBoxY,      ui->horizontalSliderY,    PlanParam::env_futurY);
+    m_k_y  = new QtShiva::SpinBoxSliderConnector(this, ui->doubleSpinBoxY, ui->horizontalSliderY, PlanEnv->getObject(PlanParam::env_futurY));
     m_k_y->setValue(y);
-    m_k_z  = new QtShiva::SpinBoxSliderConnector(this, ui->doubleSpinBoxZ,      ui->horizontalSliderZ,    PlanParam::env_futurZ);
+    m_k_z  = new QtShiva::SpinBoxSliderConnector(this, ui->doubleSpinBoxZ, ui->horizontalSliderZ, PlanEnv->getObject(PlanParam::env_futurZ));
     m_k_z->setValue(z);
-    m_k_rz = new QtShiva::SpinBoxSliderConnector(this, ui->doubleSpinBoxRZ,     ui->horizontalSliderRZ,   PlanParam::env_futurRZ);
+    m_k_rz = new QtShiva::SpinBoxSliderConnector(this, ui->doubleSpinBoxRZ, ui->horizontalSliderRZ, PlanEnv->getObject(PlanParam::env_futurRZ));
     m_k_rz->setValue(rz);
 
     connect(m_k_x,SIGNAL(valueChanged(double)),this,SLOT(updateMainWindow(double)));

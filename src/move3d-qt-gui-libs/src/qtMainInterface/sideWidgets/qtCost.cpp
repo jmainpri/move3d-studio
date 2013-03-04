@@ -152,30 +152,30 @@ void CostWidget::initCost()
         this->initCostFunctions();
     }
 
-    m_mainWindow->connectCheckBoxToEnv(m_ui->isCostSpaceCopy,			Env::isCostSpace);
+    new connectCheckBoxToEnv(m_ui->isCostSpaceCopy,			ENV.getObject(Env::isCostSpace));
     connect(m_ui->isCostSpaceCopy, SIGNAL(toggled( bool )), SLOT(envIsCostSpaceValueChanged( bool ) ) );
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxUseTRRT,             Env::useTRRT);
+    new connectCheckBoxToEnv(m_ui->checkBoxUseTRRT,             ENV.getObject(Env::useTRRT));
     connect(m_ui->checkBoxUseTRRT, SIGNAL(toggled( bool )), SLOT(envUseTRRTValueChanged( bool ) ) );
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxCostBefore,		Env::costBeforeColl);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxCostExpandToGoal,	Env::costExpandToGoal);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxCostWithGradient,	Env::tRrtComputeGradient);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxPrintAndComputeCostAfterPlannif,	PlanParam::trajComputeCostAfterPlannif);
+    new connectCheckBoxToEnv(m_ui->checkBoxCostBefore,		ENV.getObject(Env::costBeforeColl));
+    new connectCheckBoxToEnv(m_ui->checkBoxCostExpandToGoal,	ENV.getObject(Env::costExpandToGoal));
+    new connectCheckBoxToEnv(m_ui->checkBoxCostWithGradient,	ENV.getObject(Env::tRrtComputeGradient));
+    new connectCheckBoxToEnv(m_ui->checkBoxPrintAndComputeCostAfterPlannif,	PlanEnv->getObject(PlanParam::trajComputeCostAfterPlannif));
 
     connect(m_ui->pushButtonInitCostSpace,SIGNAL(clicked()),this,SLOT(initCostSpace()));
 
-    new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxInitTemp, m_ui->horizontalSliderInitTemp , Env::initialTemperature );
-    new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxTempRate, m_ui->horizontalSliderTempRate , Env::temperatureRate );
-    new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxLengthWeight, m_ui->horizontalSliderLengthWeight , Env::KlengthWeight );
-    new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxResolution, m_ui->horizontalSliderResolution , PlanParam::costResolution );
-    new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxMinConnectGap, m_ui->horizontalSliderMinConnectGap , Env::minimalFinalExpansionGap );
-    new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxMaxCost, m_ui->horizontalSliderMaxCost , Env::costMax );
+    new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxInitTemp, m_ui->horizontalSliderInitTemp , ENV.getObject(Env::initialTemperature) );
+    new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxTempRate, m_ui->horizontalSliderTempRate , ENV.getObject(Env::temperatureRate) );
+    new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxLengthWeight, m_ui->horizontalSliderLengthWeight , ENV.getObject(Env::KlengthWeight) );
+    new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxResolution, m_ui->horizontalSliderResolution , PlanEnv->getObject(PlanParam::costResolution) );
+    new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxMinConnectGap, m_ui->horizontalSliderMinConnectGap , ENV.getObject(Env::minimalFinalExpansionGap) );
+    new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxMaxCost, m_ui->horizontalSliderMaxCost , ENV.getObject(Env::costMax) );
 
 #ifdef USE_QWT
     connect(m_ui->pushButtonShowTrajCost,SIGNAL(clicked()),this,SLOT(showTrajCost()));
     connect(m_ui->pushButtonShowCostProfile,SIGNAL(clicked()),this,SLOT(showCostProfile()));
     connect(m_ui->pushButtonShowHRITrajCost,SIGNAL(clicked()),this,SLOT(showHRITrajCost()));
     connect(m_ui->pushButtonShowTemp,SIGNAL(clicked()),this,SLOT(showTemperature()));
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxRescale, Env::initPlot);
+    new connectCheckBoxToEnv(m_ui->checkBoxRescale, ENV.getObject(Env::initPlot));
 
     m_plot = new BasicPlotWindow();
 #endif

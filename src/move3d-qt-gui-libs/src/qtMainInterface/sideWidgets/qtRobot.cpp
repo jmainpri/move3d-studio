@@ -49,6 +49,7 @@
 #endif
 
 using namespace std;
+using namespace QtShiva;
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 extern string global_ActiveRobotName;
@@ -132,7 +133,7 @@ void RobotWidget::initModel()
   
   connect(m_ui->pushButtonAttMat,SIGNAL(clicked()),this,SLOT(setAttMatrix()));
   
-  new QtShiva::SpinBoxConnector( this, m_ui->spinBoxArmId, Env::currentArmId );
+  new QtShiva::SpinBoxConnector( this, m_ui->spinBoxArmId,ENV.getObject( Env::currentArmId) );
   
   QString RobotObjectToCarry("No Object");
   
@@ -157,13 +158,13 @@ void RobotWidget::initModel()
     m_ui->comboBoxGrabObject->setCurrentIndex(0);
     connect(m_ui->comboBoxGrabObject, SIGNAL(currentIndexChanged(int)),this, SLOT(currentObjectChange(int))/*, Qt::DirectConnection*/);
 
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxIsWeightedRot,	Env::isWeightedRotation);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxFKSampling,		Env::FKShoot);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxFKDistance,		Env::FKDistance);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawBox,				Env::drawBox);
+    new connectCheckBoxToEnv(m_ui->checkBoxIsWeightedRot,	ENV.getObject(Env::isWeightedRotation));
+    new connectCheckBoxToEnv(m_ui->checkBoxFKSampling,	ENV.getObject(Env::FKShoot));
+    new connectCheckBoxToEnv(m_ui->checkBoxFKDistance,    ENV.getObject(Env::FKDistance));
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawBox,		ENV.getObject(Env::drawBox));
 
     new QtShiva::SpinBoxSliderConnector(
-                this, m_ui->doubleSpinBoxWeightedRot, m_ui->horizontalSliderWeightedRot , Env::RotationWeight );
+                this, m_ui->doubleSpinBoxWeightedRot, m_ui->horizontalSliderWeightedRot ,ENV.getObject( Env::RotationWeight) );
 
     connect(m_ui->pushButtonVirtualJointBounds,SIGNAL(clicked()),	this,SLOT(SetBounds()));
   
@@ -498,7 +499,7 @@ void RobotWidget::printPQPColPair()
 }
 /*void RobotWidget::initVoxelCollisionChecker()
  {
- m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawVoxelGrid,				Env::drawGrid);
+ new connectCheckBoxToEnv(m_ui->checkBoxDrawVoxelGrid,				Env::drawGrid);
  
  connect(m_ui->pushButtonCreateVoxelCollisionChecker,SIGNAL(clicked()),this,SLOT(createVoxelCC()));
  connect(m_ui->pushButtonDeleteVoxelCollisionChecker,SIGNAL(clicked()),this,SLOT(deleteVoxelCC()));

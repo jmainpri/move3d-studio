@@ -25,6 +25,7 @@
 #include <QProcess>
 
 using namespace std;
+using namespace QtShiva;
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 
@@ -46,59 +47,59 @@ void OtpWidget::initOTP()
 {
         connect(this, SIGNAL(selectedPlanner(QString)),global_plannerHandler, SLOT(startPlanner(QString)));
 
-        m_k_distance     = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxDistance,	m_ui->horizontalSliderDistance,		Env::Kdistance);
-        m_k_visbility    = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxVisibility,	m_ui->horizontalSliderVisibility,	Env::Kvisibility );
-        m_k_naturality   = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxNatural,	m_ui->horizontalSliderNatural ,		Env::Knatural );
-        m_k_reachability = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxReachable,	m_ui->horizontalSliderReachable ,	Env::Kreachable );
+        m_k_distance     = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxDistance,	m_ui->horizontalSliderDistance,		ENV.getObject(Env::Kdistance));
+        m_k_visbility    = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxVisibility,	m_ui->horizontalSliderVisibility,	ENV.getObject(Env::Kvisibility) );
+        m_k_naturality   = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxNatural,	m_ui->horizontalSliderNatural ,		ENV.getObject(Env::Knatural) );
+        m_k_reachability = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxReachable,	m_ui->horizontalSliderReachable ,	ENV.getObject(Env::Kreachable) );
 
-        m_k_Obj =  new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxObj, m_ui->horizontalSliderObj, PlanParam::env_objectNessecity);
+        m_k_Obj =  new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxObj, m_ui->horizontalSliderObj, PlanEnv->getObject(PlanParam::env_objectNessecity));
 //        m_k_Obj->setValue(0.9);
 
-        m_k_MaxIter           = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxMaxIter,		    m_ui->horizontalSliderMaxIter,      PlanParam::env_maxIter);
-        m_k_TotMaxIter        = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxTotMaxIter,		m_ui->horizontalSliderTotMaxIter,	PlanParam::env_totMaxIter);
-        m_k_NbRandomRotOnly   = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxNbRandomRot,       m_ui->horizontalSliderNbRandomRot,	PlanParam::env_nbRandomRotOnly);
+        m_k_MaxIter           = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxMaxIter,		    m_ui->horizontalSliderMaxIter,      PlanEnv->getObject(PlanParam::env_maxIter));
+        m_k_TotMaxIter        = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxTotMaxIter,		m_ui->horizontalSliderTotMaxIter,	PlanEnv->getObject(PlanParam::env_totMaxIter));
+        m_k_NbRandomRotOnly   = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxNbRandomRot,       m_ui->horizontalSliderNbRandomRot,	PlanEnv->getObject(PlanParam::env_nbRandomRotOnly));
         m_k_NbSittingRotation = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxNbSittingRotation, m_ui->horizontalSliderNbSittingRotation,
-                                                                    PlanParam::env_nbSittingRotation);
+                                                                    PlanEnv->getObject(PlanParam::env_nbSittingRotation));
 
-        m_k_XMin = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxXMin,	m_ui->horizontalSliderXMin,		PlanParam::env_randomXMinLimit);
-        m_k_XMax = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxXMax,	m_ui->horizontalSliderXMax,		PlanParam::env_randomXMaxLimit);
-        m_k_YMin = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxYMin,	m_ui->horizontalSliderYMin,		PlanParam::env_randomYMinLimit);
-        m_k_YMax = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxYMax,	m_ui->horizontalSliderYMax,		PlanParam::env_randomYMaxLimit);
+        m_k_XMin = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxXMin,	m_ui->horizontalSliderXMin,		PlanEnv->getObject(PlanParam::env_randomXMinLimit));
+        m_k_XMax = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxXMax,	m_ui->horizontalSliderXMax,		PlanEnv->getObject(PlanParam::env_randomXMaxLimit));
+        m_k_YMin = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxYMin,	m_ui->horizontalSliderYMin,		PlanEnv->getObject(PlanParam::env_randomYMinLimit));
+        m_k_YMax = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxYMax,	m_ui->horizontalSliderYMax,		PlanEnv->getObject(PlanParam::env_randomYMaxLimit));
 
-        m_k_RobotSpeed = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxRobotSpeed,m_ui->horizontalSliderRobotSpeed,	PlanParam::env_robotSpeed);
-        m_k_HumanSpeed = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxHumanSpeed,m_ui->horizontalSliderHumanSpeed,	PlanParam::env_humanSpeed);
-        m_k_TimeStamp = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxTimeStamp,	m_ui->horizontalSliderTimeStamp,	PlanParam::env_timeStamp);
+        m_k_RobotSpeed = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxRobotSpeed,m_ui->horizontalSliderRobotSpeed,	PlanEnv->getObject(PlanParam::env_robotSpeed));
+        m_k_HumanSpeed = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxHumanSpeed,m_ui->horizontalSliderHumanSpeed,	PlanEnv->getObject(PlanParam::env_humanSpeed));
+        m_k_TimeStamp = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxTimeStamp,	m_ui->horizontalSliderTimeStamp,	PlanEnv->getObject(PlanParam::env_timeStamp));
 
-        m_k_Psi = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxPsi,		m_ui->horizontalSliderPsi,		PlanParam::env_psi);
-        m_k_delta = new QtShiva::SpinBoxSliderConnector(this,m_ui->doubleSpinBoxDelta,	        m_ui->horizontalSliderDelta,            PlanParam::env_delta);
-        m_k_ksi = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxKsi,		m_ui->horizontalSliderKsi,		PlanParam::env_ksi);
-        m_k_rho = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxRho,		m_ui->horizontalSliderRho,		PlanParam::env_rho);
+        m_k_Psi = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxPsi,		m_ui->horizontalSliderPsi,		PlanEnv->getObject(PlanParam::env_psi));
+        m_k_delta = new QtShiva::SpinBoxSliderConnector(this,m_ui->doubleSpinBoxDelta,	        m_ui->horizontalSliderDelta,            PlanEnv->getObject(PlanParam::env_delta));
+        m_k_ksi = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxKsi,		m_ui->horizontalSliderKsi,		PlanEnv->getObject(PlanParam::env_ksi));
+        m_k_rho = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxRho,		m_ui->horizontalSliderRho,		PlanEnv->getObject(PlanParam::env_rho));
 
-        m_k_sittingOffset = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxSittingOffset,	m_ui->horizontalSliderSittingOffset,PlanParam::env_sittingOffset);
-        m_k_nbComputeOTP  = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxMOTP,          m_ui->horizontalSliderMOTP,         PlanParam::env_MOTP);
-        m_k_cellSize  =     new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxCellsize,      m_ui->horizontalSliderCellsize,     PlanParam::env_Cellsize);
+        m_k_sittingOffset = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxSittingOffset,	m_ui->horizontalSliderSittingOffset,PlanEnv->getObject(PlanParam::env_sittingOffset));
+        m_k_nbComputeOTP  = new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxMOTP,          m_ui->horizontalSliderMOTP,         PlanEnv->getObject(PlanParam::env_MOTP));
+        m_k_cellSize  =     new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxCellsize,      m_ui->horizontalSliderCellsize,     PlanEnv->getObject(PlanParam::env_Cellsize));
 
-        m_k_sleep = new QtShiva::SpinBoxSliderConnector(this,         m_ui->doubleSpinBoxSleep,         m_ui->horizontalSliderSleep,        PlanParam::env_timeShow);
-        m_k_timeLimit = new QtShiva::SpinBoxSliderConnector(this,     m_ui->doubleSpinBoxTimeLimit,     m_ui->horizontalSliderTimeLimit,    PlanParam::env_timeLimitation);
-        m_k_timeLimitSit = new QtShiva::SpinBoxSliderConnector(this,  m_ui->doubleSpinBoxTimeLimitSit,  m_ui->horizontalSliderTimeLimitSit, PlanParam::env_sitTimeLimitation);
-        m_k_pow = new QtShiva::SpinBoxSliderConnector(this,           m_ui->doubleSpinBoxPow,           m_ui->horizontalSliderPow,          PlanParam::env_pow);
-        m_k_pow_rot = new QtShiva::SpinBoxSliderConnector(this,       m_ui->doubleSpinBoxPowRot,        m_ui->horizontalSliderPowRot,       PlanParam::env_anglePow);
-        m_k_time_dump = new QtShiva::SpinBoxSliderConnector(this,     m_ui->doubleSpinBoxTimeToDump,    m_ui->horizontalSliderTimeToDump,   PlanParam::env_timeToDump);
-
-
-        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxReach,Env::drawGrid);
-        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxCreateTrajs,PlanParam::env_createTrajs);
-        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxrandomLimits,PlanParam::drawRandomMap);
-        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawSlice,PlanParam::env_drawSlice);
-        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawPoint,PlanParam::env_drawRandomPoint);
-        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxHumanTraj,PlanParam::env_showHumanTraj);
+        m_k_sleep = new QtShiva::SpinBoxSliderConnector(this,         m_ui->doubleSpinBoxSleep,         m_ui->horizontalSliderSleep,        PlanEnv->getObject(PlanParam::env_timeShow));
+        m_k_timeLimit = new QtShiva::SpinBoxSliderConnector(this,     m_ui->doubleSpinBoxTimeLimit,     m_ui->horizontalSliderTimeLimit,    PlanEnv->getObject(PlanParam::env_timeLimitation));
+        m_k_timeLimitSit = new QtShiva::SpinBoxSliderConnector(this,  m_ui->doubleSpinBoxTimeLimitSit,  m_ui->horizontalSliderTimeLimitSit, PlanEnv->getObject(PlanParam::env_sitTimeLimitation));
+        m_k_pow = new QtShiva::SpinBoxSliderConnector(this,           m_ui->doubleSpinBoxPow,           m_ui->horizontalSliderPow,          PlanEnv->getObject(PlanParam::env_pow));
+        m_k_pow_rot = new QtShiva::SpinBoxSliderConnector(this,       m_ui->doubleSpinBoxPowRot,        m_ui->horizontalSliderPowRot,       PlanEnv->getObject(PlanParam::env_anglePow));
+        m_k_time_dump = new QtShiva::SpinBoxSliderConnector(this,     m_ui->doubleSpinBoxTimeToDump,    m_ui->horizontalSliderTimeToDump,   PlanEnv->getObject(PlanParam::env_timeToDump));
 
 
-        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawOnlyBest,PlanParam::env_drawOnlyBest);
-        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxIsStanding,PlanParam::env_isStanding);
-        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxOldCriteria,PlanParam::env_oldCriteria);
-        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxNoRepetition,PlanParam::env_noRepetition);
-        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxCreateHumanTraj,PlanParam::env_computeTrajForHuman);
+        new connectCheckBoxToEnv(m_ui->checkBoxReach,ENV.getObject(Env::drawGrid));
+        new connectCheckBoxToEnv(m_ui->checkBoxCreateTrajs,PlanEnv->getObject(PlanParam::env_createTrajs));
+        new connectCheckBoxToEnv(m_ui->checkBoxrandomLimits,PlanEnv->getObject(PlanParam::drawRandomMap));
+        new connectCheckBoxToEnv(m_ui->checkBoxDrawSlice,PlanEnv->getObject(PlanParam::env_drawSlice));
+        new connectCheckBoxToEnv(m_ui->checkBoxDrawPoint,PlanEnv->getObject(PlanParam::env_drawRandomPoint));
+        new connectCheckBoxToEnv(m_ui->checkBoxHumanTraj,PlanEnv->getObject(PlanParam::env_showHumanTraj));
+
+
+        new connectCheckBoxToEnv(m_ui->checkBoxDrawOnlyBest,PlanEnv->getObject(PlanParam::env_drawOnlyBest));
+        new connectCheckBoxToEnv(m_ui->checkBoxIsStanding,PlanEnv->getObject(PlanParam::env_isStanding));
+        new connectCheckBoxToEnv(m_ui->checkBoxOldCriteria,PlanEnv->getObject(PlanParam::env_oldCriteria));
+        new connectCheckBoxToEnv(m_ui->checkBoxNoRepetition,PlanEnv->getObject(PlanParam::env_noRepetition));
+        new connectCheckBoxToEnv(m_ui->checkBoxCreateHumanTraj,PlanEnv->getObject(PlanParam::env_computeTrajForHuman));
 
 //        m_ui->groupBoxTraj->hide();
 

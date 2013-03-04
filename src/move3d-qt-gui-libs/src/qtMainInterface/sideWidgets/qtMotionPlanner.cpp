@@ -39,6 +39,7 @@
 #include "hri_costspace/HRICS_Navigation.hpp"
 
 using namespace std;
+using namespace QtShiva;
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 MotionPlanner::MotionPlanner(QWidget *parent) :
@@ -80,10 +81,10 @@ void MotionPlanner::initGeneral()
 	//	connect(PlanEnv->getObject(PlanParam::eleven), SIGNAL(valueChanged(double)),this,SLOT(testParam(double)));
 
 #ifdef MULTILOCALPATH
-        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxGnuplot,Env::plotSoftMotionCurve);
+        new connectCheckBoxToEnv(m_ui->checkBoxGnuplot,ENV.getObject(Env::plotSoftMotionCurve));
         // WARNING REVERT XAVIER
-        //m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxTrajAsArray,Env::exportSoftMotionTrajAsArrayOfConf);
-        m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxExportFiles,Env::writeSoftMotionFiles);
+        //new connectCheckBoxToEnv(m_ui->checkBoxTrajAsArray,ENV.getObject(Env::exportSoftMotionTrajAsArrayOfConf));
+        new connectCheckBoxToEnv(m_ui->checkBoxExportFiles,ENV.getObject(Env::writeSoftMotionFiles));
 #endif
 }
 
@@ -183,24 +184,24 @@ void MotionPlanner::envPRMTypeChanged(int type )
 //---------------------------------------------------------------------
 void MotionPlanner::initDiffusion()
 {
-    m_mainWindow->connectCheckBoxToEnv(m_ui->isWithGoal,              Env::expandToGoal);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->isBidir,                 Env::biDir);
+    new connectCheckBoxToEnv(m_ui->isWithGoal,              ENV.getObject(Env::expandToGoal));
+    new connectCheckBoxToEnv(m_ui->isBidir,                 ENV.getObject(Env::biDir));
 
     connect(m_ui->isWithGoal, SIGNAL(toggled( bool )), SLOT(envIsWithGoalValueChanged( bool ) ) );
     connect(m_ui->isBidir, SIGNAL(toggled( bool )), SLOT(envBiDirValueChanged( bool ) ) );
 
-	m_mainWindow->connectCheckBoxToEnv(m_ui->isManhattan,             Env::isManhattan);
+    new connectCheckBoxToEnv(m_ui->isManhattan,             ENV.getObject(Env::isManhattan));
     #ifndef BIO
         m_ui->isManhattan->setDisabled(true);
     #endif
 
-    m_mainWindow->connectCheckBoxToEnv(m_ui->isEST,                   Env::treePlannerIsEST);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->isBalanced,              Env::expandBalanced);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->isRefinementControl,     Env::refinementControl);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->isDiscardingNodes,       Env::discardNodes);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxIsGoalBias,      Env::isGoalBiased);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxRandomInCompCo,  Env::randomConnectionToGoal);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxClosestInCompCo, Env::tryClosest);
+    new connectCheckBoxToEnv(m_ui->isEST,                   ENV.getObject(Env::treePlannerIsEST));
+    new connectCheckBoxToEnv(m_ui->isBalanced,              ENV.getObject(Env::expandBalanced));
+    new connectCheckBoxToEnv(m_ui->isRefinementControl,     ENV.getObject(Env::refinementControl));
+    new connectCheckBoxToEnv(m_ui->isDiscardingNodes,       ENV.getObject(Env::discardNodes));
+    new connectCheckBoxToEnv(m_ui->checkBoxIsGoalBias,      ENV.getObject(Env::isGoalBiased));
+    new connectCheckBoxToEnv(m_ui->checkBoxRandomInCompCo,  ENV.getObject(Env::randomConnectionToGoal));
+    new connectCheckBoxToEnv(m_ui->checkBoxClosestInCompCo, ENV.getObject(Env::tryClosest));
 
     connect(m_ui->checkBoxRandomInCompCo, SIGNAL(toggled( bool )), SLOT(envRandomConnectionToGoalValueChanged( bool ) ) );
     connect(m_ui->checkBoxClosestInCompCo, SIGNAL(toggled( bool )), SLOT(envTryClosestValueChanged( bool ) ) );
@@ -221,15 +222,15 @@ void MotionPlanner::initDiffusion()
 	connect(m_ui->spinBoxNbTry, SIGNAL(valueChanged( int )), ENV.getObject(Env::NbTry), SLOT(set(int)));
 	connect(ENV.getObject(Env::NbTry), SIGNAL(valueChanged( int )), m_ui->spinBoxNbTry, SLOT(setValue(int)));
 	
-	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxExtentionStep, m_ui->horizontalSliderExtentionStep, Env::extensionStep );
-	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxBias, m_ui->horizontalSliderBias, Env::Bias );
+    new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxExtentionStep, m_ui->horizontalSliderExtentionStep, ENV.getObject(Env::extensionStep) );
+    new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxBias, m_ui->horizontalSliderBias, ENV.getObject(Env::Bias) );
 	
 	initMultiRRT();
 }
 
 void MotionPlanner::initMultiRRT()
 {
-	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxMultiRRT,         Env::isMultiRRT);
+    new connectCheckBoxToEnv(m_ui->checkBoxMultiRRT,         ENV.getObject(Env::isMultiRRT));
     connect(m_ui->checkBoxMultiRRT, SIGNAL(toggled( bool )), SLOT(envMultiRRTValueChanged( bool ) ) );
 	connect(m_ui->spinBoxNumberOfSeeds,SIGNAL(valueChanged(int)),ENV.getObject(Env::nbOfSeeds),SLOT(set(int)));
 	connect(ENV.getObject(Env::nbOfSeeds),SIGNAL(valueChanged(int)),m_ui->spinBoxNumberOfSeeds,SLOT(setValue(int)));	
@@ -248,8 +249,8 @@ void MotionPlanner::initMultiRRT()
 //---------------------------------------------------------------------
 void MotionPlanner::initPRM()
 {
-	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxUseDistance,Env::useDist);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBox_9,PlanParam::orientedGraph);
+    new connectCheckBoxToEnv(m_ui->checkBoxUseDistance,ENV.getObject(Env::useDist));
+    new connectCheckBoxToEnv(m_ui->checkBox_9,PlanEnv->getObject(PlanParam::orientedGraph));
 	// PRMType
 	connect(m_ui->comboBoxPRMType, SIGNAL(currentIndexChanged(int)),ENV.getObject(Env::PRMType),SLOT(set(int)));
 	connect( ENV.getObject(Env::PRMType), SIGNAL(valueChanged(int)),m_ui->comboBoxPRMType, SLOT(setCurrentIndex(int)));
@@ -273,31 +274,31 @@ void MotionPlanner::initPRM()
 //---------------------------------------------------------------------
 void MotionPlanner::initOptim()
 {	
-	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxCostSpace2,				Env::isCostSpace );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxUseCostSmooth,    PlanParam::trajUseCost );
-	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxDebug2,						Env::debugCostOptim );
+    new connectCheckBoxToEnv( m_ui->checkBoxCostSpace2,				ENV.getObject(Env::isCostSpace) );
+  new connectCheckBoxToEnv( m_ui->checkBoxUseCostSmooth,          PlanEnv->getObject(PlanParam::trajUseCost));
+    new connectCheckBoxToEnv( m_ui->checkBoxDebug2,						ENV.getObject(Env::debugCostOptim ));
   
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxExtractCurrentTraj,	PlanParam::rrtExtractShortestPath );
+  new connectCheckBoxToEnv( m_ui->checkBoxExtractCurrentTraj,	PlanEnv->getObject(PlanParam::rrtExtractShortestPath) );
 
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxSaveTrajCost,			PlanParam::trajSaveCost );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxPartialShortcut,	PlanParam::trajPartialShortcut );
-	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxRecomputeCost,		PlanParam::trajCostRecompute );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxCheckCollision,	  PlanParam::trajComputeCollision );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxNPoints,          PlanParam::trajNPoints );
+  new connectCheckBoxToEnv( m_ui->checkBoxSaveTrajCost,			PlanEnv->getObject(PlanParam::trajSaveCost) );
+  new connectCheckBoxToEnv( m_ui->checkBoxPartialShortcut,	PlanEnv->getObject(PlanParam::trajPartialShortcut) );
+    new connectCheckBoxToEnv( m_ui->checkBoxRecomputeCost,		PlanEnv->getObject(PlanParam::trajCostRecompute) );
+  new connectCheckBoxToEnv( m_ui->checkBoxCheckCollision,	  PlanEnv->getObject(PlanParam::trajComputeCollision) );
+  new connectCheckBoxToEnv( m_ui->checkBoxNPoints,          PlanEnv->getObject(PlanParam::trajNPoints) );
   
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithTimeLimitSmoothing,		PlanParam::trajWithTimeLimit );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithTimeLimitPlanning,		PlanParam::planWithTimeLimit );
+  new connectCheckBoxToEnv( m_ui->checkBoxWithTimeLimitSmoothing,		PlanEnv->getObject(PlanParam::trajWithTimeLimit) );
+  new connectCheckBoxToEnv( m_ui->checkBoxWithTimeLimitPlanning,		PlanEnv->getObject(PlanParam::planWithTimeLimit) );
   
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithDescent,			PlanParam::withDescent );
-	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithDeform,				PlanParam::withDeformation );
-	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithShortCut,			PlanParam::withShortCut );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithStomp,        PlanParam::withStomp );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxStompWithTimeLimit, PlanParam::trajStompWithTimeLimit );
-	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithGainLimit,		PlanParam::withGainLimit );
-	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithIterLimit,		PlanParam::withMaxIteration );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxShowExploration,	PlanParam::showExploration );
+  new connectCheckBoxToEnv( m_ui->checkBoxWithDescent,			PlanEnv->getObject(PlanParam::withDescent) );
+    new connectCheckBoxToEnv( m_ui->checkBoxWithDeform,				PlanEnv->getObject(PlanParam::withDeformation) );
+    new connectCheckBoxToEnv( m_ui->checkBoxWithShortCut,			PlanEnv->getObject(PlanParam::withShortCut) );
+  new connectCheckBoxToEnv( m_ui->checkBoxWithStomp,        PlanEnv->getObject(PlanParam::withStomp) );
+  new connectCheckBoxToEnv( m_ui->checkBoxStompWithTimeLimit, PlanEnv->getObject(PlanParam::trajStompWithTimeLimit) );
+    new connectCheckBoxToEnv( m_ui->checkBoxWithGainLimit,		PlanEnv->getObject(PlanParam::withGainLimit) );
+    new connectCheckBoxToEnv( m_ui->checkBoxWithIterLimit,		PlanEnv->getObject(PlanParam::withMaxIteration) );
+  new connectCheckBoxToEnv( m_ui->checkBoxShowExploration,	PlanEnv->getObject(PlanParam::showExploration) );
 	
-	m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxPartialShortcut,	PlanParam::trajPartialShortcut );
+    new connectCheckBoxToEnv( m_ui->checkBoxPartialShortcut,	PlanEnv->getObject(PlanParam::trajPartialShortcut) );
   
   // Main functions for shortcut and optimization
   connect(this,                                   SIGNAL(selectedPlanner(QString)),global_plannerHandler, SLOT(startPlanner(QString)));
@@ -316,11 +317,11 @@ void MotionPlanner::initOptim()
 	m_ui->comboBoxTrajCostExtimation->setCurrentIndex( /*MECHANICAL_WORK*/ INTEGRAL );
 	setCostCriterium(MECHANICAL_WORK);
 	
-  	new QtShiva::SpinBoxSliderConnector( this, m_ui->doubleSpinBoxNbRounds, m_ui->horizontalSliderNbRounds , PlanParam::smoothMaxIterations );
+    new QtShiva::SpinBoxSliderConnector( this, m_ui->doubleSpinBoxNbRounds, m_ui->horizontalSliderNbRounds , PlanEnv->getObject(PlanParam::smoothMaxIterations) );
 //	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxNbRounds, m_ui->horizontalSliderNbRounds , Env::nbCostOptimize );	
   
-	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxTimeLimitSmoothing, m_ui->horizontalSliderTimeLimitSmoothing , PlanParam::timeLimitSmoothing );
-  new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxTimeLimitPlanning, m_ui->horizontalSliderTimeLimitPlanning , PlanParam::timeLimitPlanning );
+    new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxTimeLimitSmoothing, m_ui->horizontalSliderTimeLimitSmoothing , PlanEnv->getObject( PlanParam::timeLimitSmoothing) );
+    new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxTimeLimitPlanning, m_ui->horizontalSliderTimeLimitPlanning , PlanEnv->getObject( PlanParam::timeLimitPlanning) );
 	
 	connect(m_ui->pushButtonRunMultiSmooth,SIGNAL(clicked()),this,SLOT(runMultiSmooth()));
   connect(m_ui->pushButtonSimpleMultiRRT,SIGNAL(clicked()),this,SLOT(runAllRRT()));
@@ -328,12 +329,12 @@ void MotionPlanner::initOptim()
 	// ------------------------------------------------------------
 	// ------------------------------------------------------------
 	
-	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxMaxDeformStep, m_ui->horizontalSliderMaxDeformStep , PlanParam::MaxFactor );
+    new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxMaxDeformStep, m_ui->horizontalSliderMaxDeformStep , PlanEnv->getObject(PlanParam::MaxFactor) );
   
   connect(m_ui->spinBoxIthNodeInTraj, SIGNAL(valueChanged(int)), this, SLOT(getIthNodeInBestTraj()), Qt::QueuedConnection);
 
-  QtShiva::SpinBoxConnector(this,m_ui->doubleSpinBoxStompTimeLimit,PlanParam::trajStompTimeLimit);
-  QtShiva::SpinBoxConnector(this,m_ui->spinBoxNbMultiSmooth,Env::nbMultiSmooth);
+  QtShiva::SpinBoxConnector(this, m_ui->doubleSpinBoxStompTimeLimit, PlanEnv->getObject(PlanParam::trajStompTimeLimit));
+  QtShiva::SpinBoxConnector(this, m_ui->spinBoxNbMultiSmooth, ENV.getObject(Env::nbMultiSmooth));
 	
 	//connect(connector,SIGNAL(valueChanged(double)),PlanEnv->getObject(PlanParam::timeLimitSmoothing),SLOT(set(double)));
 	//connect(PlanEnv->getObject(PlanParam::timeLimitSmoothing),SIGNAL(valueChanged(double)),this,SLOT(test(double)));
@@ -556,7 +557,7 @@ void MotionPlanner::initMultiRun()
 	connect(m_ui->pushButtonRunAllGreedy, SIGNAL(clicked()),this,SLOT(runAllGreedy()));
 	connect(m_ui->pushButtonShowHisto, SIGNAL(clicked()),this, SLOT(showHistoWindow()));
 	
-	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxStopMultiRun,Env::StopMultiRun);
+    new connectCheckBoxToEnv(m_ui->checkBoxStopMultiRun, ENV.getObject(Env::StopMultiRun));
 }
 
 void MotionPlanner::saveContext()

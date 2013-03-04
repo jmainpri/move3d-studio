@@ -524,6 +524,12 @@ void qt_workspace_occupancy()
 
 void qt_classify_motions()
 {
+    if( global_humanPredictionSimulator == NULL || global_motionRecorder == NULL )
+    {
+        cout << "global_humanPredictionSimulator or global_motionRecorder are not initilized" << endl;
+        return;
+    }
+
     global_motionRecorder->loadFolder();
 
     const std::vector<motion_t>& stored_motions = global_motionRecorder->getStoredMotions();

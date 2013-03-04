@@ -38,11 +38,13 @@
 #include "hri_costspace/Gestures/HRICS_WorkspaceOccupancy.hpp"
 #include "hri_costspace/Gestures/HRICS_ClassifyMotion.hpp"
 #include "hri_costspace/Gestures/HRICS_HumanPredictionCostSpace.hpp"
+#include "hri_costspace/Gestures/HRICS_GestParameters.hpp"
 
 #include "planner/planEnvironment.hpp"
 #include "utils/ConfGenerator.h"
 
 using namespace std;
+using namespace QtShiva;
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 extern Eigen::Vector3d global_DrawnSphere;
@@ -72,27 +74,27 @@ void HricsWidget::initHRI()
 {	  
     connect(this, SIGNAL(selectedPlanner(QString)), global_plannerHandler, SLOT(startPlanner(QString)));
 
-    m_mainWindow->connectCheckBoxToEnv(m_ui->enableHri_2,										Env::enableHri);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawGrid,							Env::drawGrid);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxEntireGrid,						Env::drawEntireGrid);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawDistance,					Env::drawDistance);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawRandPoints,				Env::drawPoints);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawGaze,							Env::drawGaze);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawVectorField,				Env::drawVectorField);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawOnlyOneLine,				Env::drawOnlyOneLine);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawBox,               Env::drawBox);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawReachable,         PlanParam::drawReachableGrid);
+    new connectCheckBoxToEnv(m_ui->enableHri_2,                 ENV.getObject(Env::enableHri));
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawGrid,			ENV.getObject(Env::drawGrid));
+    new connectCheckBoxToEnv(m_ui->checkBoxEntireGrid,			ENV.getObject(Env::drawEntireGrid));
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawDistance,		ENV.getObject(Env::drawDistance));
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawRandPoints,		ENV.getObject(Env::drawPoints));
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawGaze,			ENV.getObject(Env::drawGaze));
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawVectorField,		ENV.getObject(Env::drawVectorField));
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawOnlyOneLine,		ENV.getObject(Env::drawOnlyOneLine));
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawBox,             ENV.getObject(Env::drawBox));
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawReachable,         PlanEnv->getObject(PlanParam::drawReachableGrid));
 
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDrawHumanColorFromConf,PlanParam::hriSetColorFromConfig);
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawHumanColorFromConf, PlanEnv->getObject(PlanParam::hriSetColorFromConfig));
 
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxHRICS_MOPL,						Env::HRIPlannerWS);
-    //	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxBBDist,								Env::useBoxDist);
-    //	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxBallDist,							Env::useBallDist);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxHriPlannerTRRT,				Env::HRIPlannerTRRT);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxHriPathDistance,				Env::HRIPathDistance);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxCameraBehindHuman,			Env::HRIcameraBehindHuman);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxHRINoRobot,						Env::HRINoRobot);
-    m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxAutoLoadGrid,					Env::HRIAutoLoadGrid);
+    new connectCheckBoxToEnv(m_ui->checkBoxHRICS_MOPL,			ENV.getObject(Env::HRIPlannerWS));
+    //	new connectCheckBoxToEnv(m_ui->checkBoxBBDist,			Env::useBoxDist);
+    //	new connectCheckBoxToEnv(m_ui->checkBoxBallDist,		Env::useBallDist);
+    new connectCheckBoxToEnv(m_ui->checkBoxHriPlannerTRRT,		ENV.getObject(Env::HRIPlannerTRRT));
+    new connectCheckBoxToEnv(m_ui->checkBoxHriPathDistance,		ENV.getObject(Env::HRIPathDistance));
+    new connectCheckBoxToEnv(m_ui->checkBoxCameraBehindHuman,	ENV.getObject(Env::HRIcameraBehindHuman));
+    new connectCheckBoxToEnv(m_ui->checkBoxHRINoRobot,			ENV.getObject(Env::HRINoRobot));
+    new connectCheckBoxToEnv(m_ui->checkBoxAutoLoadGrid,		ENV.getObject(Env::HRIAutoLoadGrid));
 
     connect(m_ui->checkBoxDrawGrid,SIGNAL(clicked()),m_mainWindow,SLOT(drawAllWinActive()));
     connect(m_ui->checkBoxEntireGrid,SIGNAL(clicked()),m_mainWindow,SLOT(drawAllWinActive()));
@@ -119,24 +121,24 @@ void HricsWidget::initHRI()
     m_k_distance = new QtShiva::SpinBoxSliderConnector(this,
                                                        m_ui->doubleSpinBoxDistance,
                                                        m_ui->horizontalSliderDistance,
-                                                       Env::Kdistance);
+                                                       ENV.getObject(Env::Kdistance));
 
 
     m_k_visbility = new QtShiva::SpinBoxSliderConnector(this,
                                                         m_ui->doubleSpinBoxVisibility,
                                                         m_ui->horizontalSliderVisibility,
-                                                        Env::Kvisibility );
+                                                        ENV.getObject(Env::Kvisibility));
 
 
     m_k_naturality = new QtShiva::SpinBoxSliderConnector(this,
                                                          m_ui->doubleSpinBoxNatural,
                                                          m_ui->horizontalSliderNatural,
-                                                         Env::Knatural );
+                                                         ENV.getObject(Env::Knatural));
 
     m_k_reachability = new QtShiva::SpinBoxSliderConnector(this,
                                                            m_ui->doubleSpinBoxReachable,
                                                            m_ui->horizontalSliderReachable,
-                                                           Env::Kreachable );
+                                                           ENV.getObject(Env::Kreachable));
 
     //	connect(m_k_distance,SIGNAL(valueChanged(double)),this,SLOT(KDistance(double)));
     //	connect(m_k_visbility,SIGNAL(valueChanged(double)),this,SLOT(KVisibility(double)));
@@ -147,17 +149,17 @@ void HricsWidget::initHRI()
     new QtShiva::SpinBoxSliderConnector(this,
                                         m_ui->doubleSpinBoxCellSize,
                                         m_ui->horizontalSliderCellSize,
-                                        Env::CellSize);
+                                        ENV.getObject(Env::CellSize));
 
     new QtShiva::SpinBoxSliderConnector(this,
                                         m_ui->doubleSpinBoxColor1,
                                         m_ui->horizontalSliderColor1,
-                                        Env::colorThreshold1);
+                                        ENV.getObject(Env::colorThreshold1));
 
     new QtShiva::SpinBoxSliderConnector(this,
                                         m_ui->doubleSpinBoxColor2,
                                         m_ui->horizontalSliderColor2,
-                                        Env::colorThreshold2);
+                                        ENV.getObject(Env::colorThreshold2));
 
     // -------------------------------
     // Wich Test
@@ -280,7 +282,7 @@ void HricsWidget::initDrawOneLineInGrid()
     connect(m_ui->radioButtonZline, SIGNAL(toggled(bool)), this, SLOT(set_Z_line(bool)));
 
     QtShiva::SpinBoxSliderConnector* connector =  new QtShiva::SpinBoxSliderConnector(
-                this, m_ui->doubleSpinBoxWhichGridLine, m_ui->horizontalSliderWhichGridLine , Env::hriShownGridLine );
+                this, m_ui->doubleSpinBoxWhichGridLine, m_ui->horizontalSliderWhichGridLine , ENV.getObject(Env::hriShownGridLine) );
 
     connect(connector,SIGNAL(valueChanged(double)),m_mainWindow,SLOT(drawAllWinActive()));
 
@@ -646,6 +648,13 @@ void HricsWidget::initWorkspaceOccupancy()
     connect(m_ui->pushButtonSetMotionsAndComputeOccupancy,SIGNAL(clicked()),this,SLOT(computeWorkspaceOccupancy()));
     connect(m_ui->pushButtonClassifyMotion,SIGNAL(clicked()),this,SLOT(classifyMotion()));
     connect(m_ui->spinBoxClassToDraw, SIGNAL(valueChanged(int)),this,SLOT(setClassToDraw(int)));
+
+    new connectCheckBoxToEnv( m_ui->checkBoxDrawHumanSampledPoints,  GestEnv->getObject(GestParam::draw_human_sampled_points) );
+    new connectCheckBoxToEnv( m_ui->checkBoxDrawRobotSampledPoints,  GestEnv->getObject(GestParam::draw_robot_sampled_points) );
+    new connectCheckBoxToEnv( m_ui->checkBoxDrawVoxelOccupancy,      GestEnv->getObject(GestParam::draw_ws_occupancy) );
+    new connectCheckBoxToEnv( m_ui->checkBoxDrawOneClassOnly,        GestEnv->getObject(GestParam::draw_single_class) );
+
+    connect( m_ui->pushButtonStartGestureSimulation, SIGNAL(clicked()), this, SLOT(startGestureSimulation()));
 }
 
 void HricsWidget::computeWorkspaceOccupancy()
@@ -673,14 +682,13 @@ void HricsWidget::setClassToDraw(int id)
 
 void HricsWidget::classifyMotion()
 {
-
-    if( global_workspaceOccupancy == NULL || global_motionRecorder == NULL )
-    {
-        cout << "global_workspaceOccupancy or global_motionRecorder are not initilized" << endl;
-        return;
-    }
-
     emit(selectedPlanner(QString("ClassifyMotions")));
+}
+
+
+void HricsWidget::startGestureSimulation()
+{
+    emit(selectedPlanner(QString("PredictionSimulation")));
 }
 
 //-------------------------------------------------------------------

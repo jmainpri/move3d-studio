@@ -33,6 +33,7 @@
 #include "hri_costspace/HRICS_costspace.hpp"
 
 using namespace std;
+using namespace QtShiva;
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 extern Eigen::Vector3d global_DrawnSphere;
@@ -56,12 +57,12 @@ NaturalWidget::~NaturalWidget()
 
 void NaturalWidget::initNatural()
 {
-//  m_mainWindow->connectCheckBoxToEnv(m_ui->enableHriTS,										Env::HRIPlannerTS);
-//  m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxHRIGoalBiased,					Env::isGoalBiased);
-//  m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxInverseKinematics,			Env::isInverseKinematics);
-//  m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxComputeOTP,						Env::HRIComputeOTP);
-  m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxHriLeftArmVsRightArm,	Env::HRIleftArmVsRightArm);
-//  m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxEnableHRIConfigSpace,  Env::HRIPlannerCS);
+//  new connectCheckBoxToEnv(m_ui->enableHriTS,										ENV.getObject(Env::HRIPlannerTS)));
+//  new connectCheckBoxToEnv(m_ui->checkBoxHRIGoalBiased,					ENV.getObject(Env::isGoalBiased));
+//  new connectCheckBoxToEnv(m_ui->checkBoxInverseKinematics,			ENV.getObject(Env::isInverseKinematics));
+//  new connectCheckBoxToEnv(m_ui->checkBoxComputeOTP,						ENV.getObject(Env::HRIComputeOTP));
+  new connectCheckBoxToEnv(m_ui->checkBoxHriLeftArmVsRightArm,	ENV.getObject(Env::HRIleftArmVsRightArm));
+//  new connectCheckBoxToEnv(m_ui->checkBoxEnableHRIConfigSpace,  ENV.getObject(Env::HRIPlannerCS));
   
 //  connect(m_ui->pushButtonHRITS,SIGNAL(clicked()),this,SLOT(enableHriSpace()));
   
@@ -201,13 +202,13 @@ void NaturalWidget::initNaturalSpace()
 	connect(m_ui->pushButtonComputeReachability,SIGNAL(clicked()),this,SLOT(computeReachability()));
 	connect(m_ui->pushButtonGetSortedCells,SIGNAL(clicked()),this,SLOT(getSortedReachableWSPoint()));
 	
-	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxNeutralDist, m_ui->horizontalSliderNeutralDist , Env::coeffJoint );
+    new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxNeutralDist, m_ui->horizontalSliderNeutralDist , ENV.getObject(Env::coeffJoint) );
 	
-	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxEnergy, m_ui->horizontalSliderEnergy , Env::coeffEnerg );
+    new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxEnergy, m_ui->horizontalSliderEnergy , ENV.getObject(Env::coeffEnerg) );
 	
-	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxDiscomfort, m_ui->horizontalSliderDiscomfort , Env::coeffConfo );
+    new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxDiscomfort, m_ui->horizontalSliderDiscomfort , ENV.getObject(Env::coeffConfo) );
   
-	new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxArmPref, m_ui->horizontalSliderArmPref , Env::coeffArmPr );
+    new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxArmPref, m_ui->horizontalSliderArmPref , ENV.getObject(Env::coeffArmPr) );
   
 	ENV.setDouble(Env::coeffJoint,0.5);
 	ENV.setDouble(Env::coeffEnerg,1.0);

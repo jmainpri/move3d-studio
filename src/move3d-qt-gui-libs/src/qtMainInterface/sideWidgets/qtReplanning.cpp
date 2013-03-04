@@ -93,43 +93,43 @@ void ReplanningWidget::init()
   connect(m_ui->pushButtonFixJoints, SIGNAL(clicked()), this, SLOT(setMlpCntrtsAndFixJoints()));
   
   // Smooth And Obstacle Weigth
-  SpinBoxConnector(this,m_ui->doubleSpinBoxSmoothWeight,PlanParam::trajOptimSmoothWeight);
-  SpinBoxConnector(this,m_ui->doubleSpinBoxObstacWeight,PlanParam::trajOptimObstacWeight);
+  new SpinBoxConnector(this,m_ui->doubleSpinBoxSmoothWeight, PlanEnv->getObject(PlanParam::trajOptimSmoothWeight));
+  new SpinBoxConnector(this,m_ui->doubleSpinBoxObstacWeight, PlanEnv->getObject(PlanParam::trajOptimObstacWeight));
   
   //---------------------------------------
   // Test the multi gaussian
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxActiveJointsSetAtStart, Env::setActiveJointsGroup );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxInitStomp,              Env::setStompPlanner );
+  new connectCheckBoxToEnv( m_ui->checkBoxActiveJointsSetAtStart, ENV.getObject(Env::setActiveJointsGroup) );
+  new connectCheckBoxToEnv( m_ui->checkBoxInitStomp,              ENV.getObject(Env::setStompPlanner) );
   
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxTestMultiGauss, PlanParam::trajOptimTestMultiGauss );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxDrawTraj, Env::drawTraj );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxOptimizeCurrentTraj, PlanParam::withCurrentTraj );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxDoReplanning, PlanParam::doReplanning );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxMoveHuman, PlanParam::trajMoveHuman );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxRecomputeOtp, PlanParam::trajUseOtp );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxSelectedDuration, PlanParam::useSelectedDuration );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxTimeLimit, PlanParam::trajStompWithTimeLimit );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxMMatrix, PlanParam::trajStompMultiplyM );
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithRRT, PlanParam::trajStompWithRRT );
+  new connectCheckBoxToEnv( m_ui->checkBoxTestMultiGauss, PlanEnv->getObject(PlanParam::trajOptimTestMultiGauss) );
+  new connectCheckBoxToEnv( m_ui->checkBoxDrawTraj, ENV.getObject(Env::drawTraj) );
+  new connectCheckBoxToEnv( m_ui->checkBoxOptimizeCurrentTraj, PlanEnv->getObject(PlanParam::withCurrentTraj) );
+  new connectCheckBoxToEnv( m_ui->checkBoxDoReplanning, PlanEnv->getObject(PlanParam::doReplanning) );
+  new connectCheckBoxToEnv( m_ui->checkBoxMoveHuman, PlanEnv->getObject(PlanParam::trajMoveHuman) );
+  new connectCheckBoxToEnv( m_ui->checkBoxRecomputeOtp, PlanEnv->getObject(PlanParam::trajUseOtp) );
+  new connectCheckBoxToEnv( m_ui->checkBoxSelectedDuration, PlanEnv->getObject(PlanParam::useSelectedDuration) );
+  new connectCheckBoxToEnv( m_ui->checkBoxTimeLimit, PlanEnv->getObject(PlanParam::trajStompWithTimeLimit) );
+  new connectCheckBoxToEnv( m_ui->checkBoxMMatrix, PlanEnv->getObject(PlanParam::trajStompMultiplyM) );
+  new connectCheckBoxToEnv( m_ui->checkBoxWithRRT, PlanEnv->getObject(PlanParam::trajStompWithRRT) );
   
   // Stomp draw iteration
-  SpinBoxConnector(this,m_ui->spinBoxStompDrawIteration,PlanParam::stompDrawIteration);
+  new SpinBoxConnector(this,m_ui->spinBoxStompDrawIteration,PlanEnv->getObject(PlanParam::stompDrawIteration));
   
   // Time Limit
-  SpinBoxConnector(this,m_ui->doubleSpinBoxTimeLimit,PlanParam::trajStompTimeLimit);
+  new SpinBoxConnector(this,m_ui->doubleSpinBoxTimeLimit,PlanEnv->getObject(PlanParam::trajStompTimeLimit));
   
   // Set the number of point to be optimized
-  SpinBoxConnector(this,m_ui->spinBoxNbPoints,PlanParam::nb_pointsOnTraj);
+  new SpinBoxConnector(this,m_ui->spinBoxNbPoints,PlanEnv->getObject(PlanParam::nb_pointsOnTraj));
   
   // Set the duration of the optimized trajectory
-  SpinBoxConnector(this,m_ui->doubleSpinBoxDuration,PlanParam::trajDuration);
+  new SpinBoxConnector(this,m_ui->doubleSpinBoxDuration,PlanEnv->getObject(PlanParam::trajDuration));
   
   // Set the standard deviation of the perturbations
-  SpinBoxConnector(this,m_ui->doubleSpinBoxStdDev,PlanParam::trajOptimStdDev);
+  new SpinBoxConnector(this,m_ui->doubleSpinBoxStdDev,PlanEnv->getObject(PlanParam::trajOptimStdDev));
   
   // The replanning window 
-  SpinBoxSliderConnector( this, m_ui->doubleSpinBoxReplanningWindow, m_ui->horizontalSliderReplanningWindow , PlanParam::trajReplanningWindow );
-  SpinBoxSliderConnector( this, m_ui->doubleSpinBoxTotalTrajDuration, m_ui->horizontalSliderTotalTrajDuration , PlanParam::trajReplanningTotalTime );
+  new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxReplanningWindow, m_ui->horizontalSliderReplanningWindow , PlanEnv->getObject(PlanParam::trajReplanningWindow ));
+  new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxTotalTrajDuration, m_ui->horizontalSliderTotalTrajDuration , PlanEnv->getObject(PlanParam::trajReplanningTotalTime ));
 }
 
 //---------------------------------------------------------

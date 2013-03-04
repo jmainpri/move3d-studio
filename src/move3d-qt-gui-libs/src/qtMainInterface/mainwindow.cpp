@@ -44,6 +44,7 @@
 #include "ui_qtMotionPlanner.h"
 
 using namespace std;
+using namespace QtShiva;
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 extern string global_ActiveRobotName;
@@ -99,8 +100,7 @@ MainWindow::MainWindow(QWidget *parent)
             connect(m_ui->pushButtonShowTrace,SIGNAL(clicked(bool)),this,SLOT(showTrace()));
             connect(m_ui->pushButtonShowTraj,SIGNAL(clicked(bool)),this,SLOT(showTraj()),Qt::DirectConnection);
             connect(m_ui->pushButtonSaveVideo,SIGNAL(clicked(bool)),this,SLOT(saveVideo()));
-            new QtShiva::SpinBoxSliderConnector(
-                        this, m_ui->doubleSpinBoxTrajSpeed, m_ui->horizontalSliderTrajSpeed , Env::showTrajFPS );
+            new QtShiva::SpinBoxSliderConnector( this, m_ui->doubleSpinBoxTrajSpeed, m_ui->horizontalSliderTrajSpeed , ENV.getObject(Env::showTrajFPS) );
         }
     }
 
@@ -449,25 +449,11 @@ void MainWindow::saveParametersQuick()
     }
 }
 
-void MainWindow::connectCheckBoxToEnv(QCheckBox* box, Env::boolParameter p)
-{
-    connect(ENV.getObject(p), SIGNAL(valueChanged(bool)), box, SLOT(setChecked(bool)), Qt::DirectConnection);
-    connect(box, SIGNAL(toggled(bool)), ENV.getObject(p), SLOT(set(bool)), Qt::DirectConnection);
-    box->setChecked(ENV.getBool(p));
-}
-
-void MainWindow::connectCheckBoxToEnv(QCheckBox* box, PlanParam::boolParameter p)
-{
-    connect(PlanEnv->getObject(p), SIGNAL(valueChanged(bool)), box, SLOT(setChecked(bool)), Qt::DirectConnection);
-    connect(box, SIGNAL(toggled(bool)), PlanEnv->getObject(p), SLOT(set(bool)), Qt::DirectConnection);
-    box->setChecked(PlanEnv->getBool(p));
-}
-
 // Light sliders ------------------------------------------------
 // --------------------------------------------------------------
 void MainWindow::initLightSource()
 {
-    connectCheckBoxToEnv(m_ui->checkBoxDrawLightSource,      Env::drawLightSource);
+    connectCheckBoxToEnv(m_ui->checkBoxDrawLightSource, ENV.getObject(Env::drawLightSource));
 
     vector<double>  envSize(6);
     envSize[0] = XYZ_ENV->box.x1; envSize[1] = XYZ_ENV->box.x2;
@@ -552,18 +538,18 @@ void MainWindow::initViewerButtons()
 
     connect( ENV.getObject(Env::drawGraph), SIGNAL(valueChanged(bool)), this, SLOT(test()) );
 
-    connectCheckBoxToEnv(m_ui->checkBoxDisableDraw,Env::drawDisabled);
-    connectCheckBoxToEnv(m_ui->checkBoxDrawGraph,Env::drawGraph);
-    connectCheckBoxToEnv(m_ui->checkBoxDrawExploration,Env::drawExploration);
-    connectCheckBoxToEnv(m_ui->checkBoxDrawTraj,Env::drawTraj);
-    connectCheckBoxToEnv(m_ui->checkBoxDrawTrajVector,Env::drawTrajVector);
-    connectCheckBoxToEnv(m_ui->checkBoxDrawDebug,Env::debugCostOptim);
-    connectCheckBoxToEnv(m_ui->checkBoxDrawMultiColoredTraj, Env::drawMultiColorLocalpath );
+    connectCheckBoxToEnv(m_ui->checkBoxDisableDraw, ENV.getObject(Env::drawDisabled));
+    connectCheckBoxToEnv(m_ui->checkBoxDrawGraph, ENV.getObject(Env::drawGraph));
+    connectCheckBoxToEnv(m_ui->checkBoxDrawExploration, ENV.getObject(Env::drawExploration));
+    connectCheckBoxToEnv(m_ui->checkBoxDrawTraj, ENV.getObject(Env::drawTraj));
+    connectCheckBoxToEnv(m_ui->checkBoxDrawTrajVector, ENV.getObject(Env::drawTrajVector));
+    connectCheckBoxToEnv(m_ui->checkBoxDrawDebug, ENV.getObject(Env::debugCostOptim));
+    connectCheckBoxToEnv(m_ui->checkBoxDrawMultiColoredTraj, ENV.getObject(Env::drawMultiColorLocalpath));
     
     m_ui->checkBoxDrawGraph->setCheckState(Qt::Checked);
 
     // Joint to Draw
-    new QtShiva::SpinBoxConnector(this, m_ui->spinBoxJointToDraw,Env::jntToDraw);
+    new QtShiva::SpinBoxConnector(this, m_ui->spinBoxJointToDraw, ENV.getObject(Env::jntToDraw));
     connect(m_ui->spinBoxJointToDraw,SIGNAL(valueChanged(int)),this,SLOT(setJointToDraw(int)));
     m_ui->spinBoxJointToDraw->setValue(XYZ_ROBOT->o[XYZ_ROBOT->no-1]->jnt->num);
     setJointToDraw( m_ui->spinBoxJointToDraw->value() );
@@ -670,7 +656,7 @@ void MainWindow::connectCheckBoxes()
     connect(m_ui->checkBoxFlatFloor, SIGNAL(toggled(bool)), this , SLOT(setBoolFlatBox(bool)), Qt::DirectConnection);
     connect(m_ui->checkBoxFlatFloor, SIGNAL(toggled(bool)), m_ui->OpenGL , SLOT(updateGL()));
 
-    connectCheckBoxToEnv(m_ui->checkBoxAxis, Env::drawFrame);
+    connectCheckBoxToEnv(m_ui->checkBoxAxis,ENV.getObject( Env::drawFrame ));
     connect(m_ui->checkBoxAxis, SIGNAL(toggled(bool)), m_ui->OpenGL , SLOT(updateGL()));
 }
 
@@ -785,12 +771,9 @@ void MainWindow::colorTrajChange(int color)
 
 void MainWindow::initRunButtons()
 {
-    connect(m_ui->pushButtonRun,SIGNAL(clicked(bool)),
-            this, SIGNAL(runClicked()));
-    connect(m_ui->pushButtonStop,SIGNAL(clicked(bool)),
-            this, SIGNAL(stopClicked()));
-    connect(m_ui->pushButtonReset,SIGNAL(clicked(bool)),
-            this, SIGNAL(resetClicked()));
+    connect(m_ui->pushButtonRun,SIGNAL(clicked(bool)), this, SIGNAL(runClicked()));
+    connect(m_ui->pushButtonStop,SIGNAL(clicked(bool)), this, SIGNAL(stopClicked()));
+    connect(m_ui->pushButtonReset,SIGNAL(clicked(bool)), this, SIGNAL(resetClicked()));
 
     m_ui->pushButtonRun->setDisabled(false);
     m_ui->pushButtonStop->setDisabled(true);
@@ -801,9 +784,9 @@ void MainWindow::initRunButtons()
     connect(m_ui->radioButtonPRM, SIGNAL(toggled(bool)), SLOT(envSelectedPlannerTypeChanged(bool)), Qt::DirectConnection);
     m_ui->radioButtonDiff->setChecked(!ENV.getBool(Env::isPRMvsDiffusion));
     envSelectedPlannerTypeChanged(ENV.getBool(Env::isPRMvsDiffusion));
-    connectCheckBoxToEnv(m_ui->checkBoxWithSmoothing,					PlanParam::withSmoothing);
-    //	connectCheckBoxToEnv(m_ui->checkBoxUseP3DStructures,      Env::use_p3d_structures);
-    
+    connectCheckBoxToEnv(m_ui->checkBoxWithSmoothing,					PlanEnv->getObject(PlanParam::withSmoothing));
+    //	connectCheckBoxToEnv(m_ui->checkBoxUseP3DStructures,      ENV.getObject(Env::use_p3d_structures));
+
 
     connect( ENV.getObject(Env::isRunning), SIGNAL(valueChanged(bool)), this, SLOT(planningFinished(void)) , Qt::QueuedConnection );
 
@@ -812,11 +795,8 @@ void MainWindow::initRunButtons()
 
 void MainWindow::envSelectedPlannerTypeChanged(bool isPRMvsDiffusion)
 {
-
     m_ui->tabMotionPlanner->getMui()->tabPRM->setEnabled(isPRMvsDiffusion);
-
     m_ui->tabMotionPlanner->getMui()->tabDiffu->setEnabled(!isPRMvsDiffusion);
-
 }
 
 //------------------------------------------------------------------------------

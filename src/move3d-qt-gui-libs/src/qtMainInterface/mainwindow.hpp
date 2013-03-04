@@ -65,12 +65,6 @@ public:
 	MainWindow(QWidget *parent = 0);
 	~MainWindow();
 	
-	/**
-	 * Function tro create sliders and checkboxes TODO move somwhere else
-	 */
-	void connectCheckBoxToEnv(QCheckBox* box, Env::boolParameter p);
-	void connectCheckBoxToEnv(QCheckBox* box, PlanParam::boolParameter p);
-	
 	LabeledSlider* createSlider(QString s, Env::intParameter p,int lower, int upper);
 	LabeledDoubleSlider* createDoubleSlider(QString s,Env::doubleParameter p, double lower, double upper);
 

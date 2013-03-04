@@ -37,90 +37,73 @@ class QSlider;
   */
 namespace QtShiva
 {
-    class SpinBoxSliderConnector : public QObject
-    {
-        Q_OBJECT
-    public:
-        SpinBoxSliderConnector( QObject* _parent,
-                                QDoubleSpinBox* _spinBox,
-                                QSlider* _slider);
 
-        SpinBoxSliderConnector( QObject* _parent,
-                                QDoubleSpinBox* _spinBox,
-                                QSlider* _slider,
-                                Env::doubleParameter p);
+class connectCheckBoxToEnv : public QObject
+{
+    Q_OBJECT
+public:
+    connectCheckBoxToEnv( QCheckBox* box, QObject* o );
 
-        SpinBoxSliderConnector( QObject* _parent,
-                                QDoubleSpinBox* _spinBox,
-                                QSlider* _slider,
-                                Env::intParameter p);
+};
 
-        SpinBoxSliderConnector( QObject* _parent,
-                                QDoubleSpinBox* _spinBox,
-                                QSlider* _slider,
-                                PlanParam::doubleParameter p);
-
-        SpinBoxSliderConnector( QObject* _parent,
-                                QDoubleSpinBox* _spinBox,
-                                QSlider* _slider,
-                                PlanParam::intParameter p);
+class SpinBoxSliderConnector : public QObject
+{
+    Q_OBJECT
+public:
+    SpinBoxSliderConnector( QObject* _parent, QDoubleSpinBox* _spinBox, QSlider* _slider);
+    SpinBoxSliderConnector( QObject* _parent, QDoubleSpinBox* _spinBox, QSlider* _slider, QObject* o );
 
 
-        ~SpinBoxSliderConnector();
+    ~SpinBoxSliderConnector();
 
-        /**
+    /**
           @brief gets the value of the Connector object
           */
-        double value() const;
+    double value() const;
 
-        /**
+    /**
           @brief sets the value of the Connector object
           **/
-        void setValue( double _value );
+    void setValue( double _value );
 
-    private slots:
-        void spinBoxValueChanged( double _value );
-        void spinBoxValueChanged( int _value);
-        void sliderValueChanged( int _value );
+private slots:
+    void spinBoxValueChanged( double _value );
+    void spinBoxValueChanged( int _value);
+    void sliderValueChanged( int _value );
 
-    signals:
-        void valueChanged( double _value );
-        void valueChanged( int _valueInt );
+signals:
+    void valueChanged( double _value );
+    void valueChanged( int _valueInt );
 
-    private:
-        QDoubleSpinBox* m_spinBox;
-        QSlider* m_slider;
+private:
+    QDoubleSpinBox* m_spinBox;
+    QSlider* m_slider;
 
-        void computeScaling();
-        bool _init;
-        double _a,_b,_c,_d;
-        double _Coeff, _Offset;
-    };
-  
-  /**
+    void computeScaling();
+    bool _init;
+    double _a,_b,_c,_d;
+    double _Coeff, _Offset;
+};
+
+/**
    * @ingroup qtMainWindow
    * @brief Connects a SpinBox to Env Parameters
    */
-  class SpinBoxConnector : public QObject
-  {
+class SpinBoxConnector : public QObject
+{
     Q_OBJECT
-  public:
+public:
     
-    SpinBoxConnector( QObject* _parent, QDoubleSpinBox* _spinBox, Env::doubleParameter p);
-    SpinBoxConnector( QObject* _parent, QDoubleSpinBox* _spinBox, Env::intParameter p);
-    SpinBoxConnector( QObject* _parent, QDoubleSpinBox* _spinBox, PlanParam::doubleParameter p);
-    SpinBoxConnector( QObject* _parent, QDoubleSpinBox* _spinBox, PlanParam::intParameter p);
-    
-    SpinBoxConnector( QObject* _parent, QSpinBox* _spinBox, Env::intParameter p);
-    SpinBoxConnector( QObject* _parent, QSpinBox* _spinBox, PlanParam::intParameter p);
+    SpinBoxConnector( QObject* _parent, QDoubleSpinBox* _spinBox, QObject* o );
+    SpinBoxConnector( QObject* _parent, QSpinBox* _spinBox, QObject* o);
     
     ~SpinBoxConnector() { }
     
-  private:
+private:
     QSpinBox*           m_spinBox;
     QDoubleSpinBox*     m_doubleSpinBox;
     bool _init;
-  };
+};
 }
 
 #endif

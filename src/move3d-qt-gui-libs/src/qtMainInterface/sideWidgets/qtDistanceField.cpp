@@ -51,18 +51,18 @@ void DistFieldWidget::initDistField()
     connect(m_ui->pushButtonAddAllPoints,        SIGNAL(clicked()), this, SLOT(addAllPointsToField()));
     connect(m_ui->pushButtonGenerateRobotBoundingVolumes, SIGNAL(clicked()), this, SLOT(generateRobotBoundingVolumes()));
     
-    m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxDrawOccupVoxels,    PlanParam::drawOccupVoxels );
-    m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxDrawSampledPoints,  PlanParam::drawSampledPoints );
-    m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxDrawStaticCells,    PlanParam::drawStaticVoxels );
-    m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxDrawBoundingVolumes,PlanParam::drawBoundingVolumes );
+    new connectCheckBoxToEnv( m_ui->checkBoxDrawOccupVoxels,     PlanEnv->getObject(PlanParam::drawOccupVoxels ));
+    new connectCheckBoxToEnv( m_ui->checkBoxDrawSampledPoints,   PlanEnv->getObject(PlanParam::drawSampledPoints ));
+    new connectCheckBoxToEnv( m_ui->checkBoxDrawStaticCells,     PlanEnv->getObject(PlanParam::drawStaticVoxels ));
+    new connectCheckBoxToEnv( m_ui->checkBoxDrawBoundingVolumes, PlanEnv->getObject(PlanParam::drawBoundingVolumes ));
     
     // Set the number of cells in the grid
-    SpinBoxConnector(this,m_ui->spinBoxNbMaxCells,Env::nbCells);
+    SpinBoxConnector(this,m_ui->spinBoxNbMaxCells, ENV.getObject(Env::nbCells));
     //  connect(m_ui->spinBoxNbMaxCells,SIGNAL(valueChanged(int)),ENV.getObject(Env::nbCells),SLOT(set(int)));
     //	m_ui->spinBoxNbMaxCells->setValue(ENV.getInt(Env::nbCells));
     
     // Set the distance at which to draw the voxels
-    SpinBoxConnector(this,m_ui->doubleSpinBoxDrawingDistance,PlanParam::distMinToDraw);
+    SpinBoxConnector(this,m_ui->doubleSpinBoxDrawingDistance, PlanEnv->getObject(PlanParam::distMinToDraw));
     //  connect(m_ui->doubleSpinBoxDrawingDistance,SIGNAL(valueChanged(double)),PlanEnv->getObject(PlanParam::distMinToDraw),SLOT(set(double)));
     //	m_ui->doubleSpinBoxDrawingDistance->setValue(PlanEnv->getDouble(PlanParam::distMinToDraw));
 }

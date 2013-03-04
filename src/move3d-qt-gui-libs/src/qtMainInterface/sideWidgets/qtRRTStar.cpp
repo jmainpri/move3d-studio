@@ -31,12 +31,12 @@ RRTStarWidget::~RRTStarWidget()
 
 void RRTStarWidget::init()
 {
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxRRTstar,	PlanParam::starRRT);
-  m_mainWindow->connectCheckBoxToEnv( m_ui->checkBoxWithRewire,	PlanParam::starRewire );
+  new connectCheckBoxToEnv( m_ui->checkBoxRRTstar,	PlanEnv->getObject(PlanParam::starRRT));
+  new connectCheckBoxToEnv( m_ui->checkBoxWithRewire,	PlanEnv->getObject(PlanParam::starRewire));
   
   // Radius
-  new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxRadius, m_ui->horizontalSliderRadius, PlanParam::starRadius );
-  new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxGoal, m_ui->horizontalSliderGoal, PlanParam::starFinish );
+  new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxRadius, m_ui->horizontalSliderRadius, PlanEnv->getObject(PlanParam::starRadius));
+  new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxGoal, m_ui->horizontalSliderGoal, PlanEnv->getObject(PlanParam::starFinish));
 }
 
 //---------------------------------------------------------------------
@@ -44,5 +44,5 @@ void RRTStarWidget::init()
 //---------------------------------------------------------------------
 //void UtilWidget::initRRTstar()
 //{
-//	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxRRTstar,	Env::costStarRRT);
+//	new connectCheckBoxToEnv(m_ui->checkBoxRRTstar,	Env::costStarRRT);
 //}

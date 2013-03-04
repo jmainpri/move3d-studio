@@ -18,6 +18,7 @@
 #include "P3d-pkg.h"
 
 using namespace std;
+using namespace QtShiva;
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 UtilWidget::UtilWidget(QWidget *parent) :
@@ -51,9 +52,9 @@ void UtilWidget::initGreedy()
 	greedy = new QPushButton("Greedy Planner");
 	connect(greedy, SIGNAL(clicked()),this, SLOT(greedyPlan()),Qt::DirectConnection);
 	
-	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxDebug,               Env::debugCostOptim);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxRecomputeTrajCost,   PlanParam::trajCostRecompute);
-	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxUseTRRT,             Env::useTRRT);
+    new connectCheckBoxToEnv(m_ui->checkBoxDebug,               ENV.getObject(Env::debugCostOptim));
+    new connectCheckBoxToEnv(m_ui->checkBoxRecomputeTrajCost,   PlanEnv->getObject(PlanParam::trajCostRecompute));
+    new connectCheckBoxToEnv(m_ui->checkBoxUseTRRT,             ENV.getObject(Env::useTRRT));
 	
 	LabeledSlider* nbGreedyTraj = m_mainWindow->createSlider(tr("Number of trajectories"), Env::nbGreedyTraj, 1, 10 );
 	LabeledSlider* hight = m_mainWindow->createSlider(tr("Height Factor"), Env::heightFactor, 1, 10 );
@@ -133,11 +134,8 @@ void TestPlannerthread::run()
 //---------------------------------------------------------------------
 void UtilWidget::initRRTthreshold()
 {
-	m_mainWindow->connectCheckBoxToEnv(m_ui->checkBoxIsCostThreshold,	Env::costThresholdRRT);
-	
-	new QtShiva::SpinBoxSliderConnector(
-																			this, m_ui->doubleSpinBoxCostThresh, m_ui->horizontalSliderCostThresh , Env::costThreshold );
-	
+    new connectCheckBoxToEnv(m_ui->checkBoxIsCostThreshold, ENV.getObject(Env::costThresholdRRT));
+    new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxCostThresh, m_ui->horizontalSliderCostThresh , ENV.getObject(Env::costThreshold) );
 	connect(m_ui->pushButtonThresholdPlanner,SIGNAL(clicked()),this,SLOT(runThresholdPlanner()));
 }
 

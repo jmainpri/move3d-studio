@@ -28,10 +28,15 @@
 using namespace QtShiva;
 using namespace std;
 
-SpinBoxSliderConnector::SpinBoxSliderConnector( QObject* _parent,
-                                               QDoubleSpinBox* _spinBox,
-                                               QSlider* _slider) :
-QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
+connectCheckBoxToEnv::connectCheckBoxToEnv( QCheckBox* box, QObject* o )
+{
+    connect( o, SIGNAL(valueChanged(bool)), box, SLOT(setChecked(bool)), Qt::DirectConnection);
+    connect( box, SIGNAL(toggled(bool)), o, SLOT(set(bool)), Qt::DirectConnection);
+    box->setChecked( dynamic_cast<boolContainer*>(o)->get());
+}
+
+SpinBoxSliderConnector::SpinBoxSliderConnector( QObject* _parent, QDoubleSpinBox* _spinBox, QSlider* _slider) :
+    QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
 {
     connect( m_spinBox, SIGNAL(valueChanged( double )), SLOT(spinBoxValueChanged( double ) ) );
     connect( m_slider, SIGNAL(valueChanged( int )), SLOT(sliderValueChanged( int ) ) );
@@ -42,42 +47,45 @@ QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
 }
 
 
-SpinBoxSliderConnector::SpinBoxSliderConnector( QObject* _parent,
-                                               QDoubleSpinBox* _spinBox,
-                                               QSlider* _slider,
-                                               Env::doubleParameter p) :
-QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
+SpinBoxSliderConnector::SpinBoxSliderConnector( QObject* _parent, QDoubleSpinBox* _spinBox, QSlider* _slider, QObject* o ) :
+    QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
 {
     m_spinBox->setValue(numeric_limits<double>::max());
     
     connect( m_spinBox, SIGNAL(valueChanged( double )), SLOT(spinBoxValueChanged( double ) ) );
     connect( m_slider, SIGNAL(valueChanged( int )), SLOT(sliderValueChanged( int ) ) );
-    connect(this, SIGNAL(valueChanged( double )), ENV.getObject(p),SLOT(set(double)));
-    connect(ENV.getObject(p), SIGNAL(valueChanged(double)),m_spinBox, SLOT(setValue(double)));
-    
-    m_spinBox->setValue(ENV.getDouble(p));
+
+    if( dynamic_cast<intContainer*>(o) != NULL )
+    {
+        connect( this, SIGNAL(valueChanged( int )), o, SLOT(set(int)));
+        connect( o, SIGNAL(valueChanged(int)), this, SLOT(spinBoxValueChanged(int)));
+        m_spinBox->setValue(dynamic_cast<intContainer*>(o)->get());
+    }
+    else
+    {
+        connect( this, SIGNAL(valueChanged( double )), o,SLOT(set(double)));
+        connect( o, SIGNAL(valueChanged(double)),m_spinBox, SLOT(setValue(double)));
+        m_spinBox->setValue(dynamic_cast<doubleContainer*>(o)->get());
+    }
     
     _init = false;
 }
 
 
-
-SpinBoxSliderConnector::SpinBoxSliderConnector( QObject* _parent,
-                                               QDoubleSpinBox* _spinBox,
-                                               QSlider* _slider,
-                                               PlanParam::doubleParameter p) :
+/*
+SpinBoxSliderConnector::SpinBoxSliderConnector( QObject* _parent, QDoubleSpinBox* _spinBox, QSlider* _slider, PlanParam::doubleParameter p) :
 QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
 {
-	m_spinBox->setValue(numeric_limits<double>::max());
-	
-	connect( m_spinBox, SIGNAL(valueChanged(double)), SLOT(spinBoxValueChanged(double)) );
-	connect( m_slider, SIGNAL(valueChanged(int)), SLOT(sliderValueChanged(int)) );
-	connect(this,SIGNAL(valueChanged(double)),PlanEnv->getObject(p),SLOT(set(double)));
-	connect(PlanEnv->getObject(p),SIGNAL(valueChanged(double)),m_spinBox, SLOT(setValue(double)));
-	
-	m_spinBox->setValue(PlanEnv->getDouble(p));
-	
-	_init = false;
+    m_spinBox->setValue(numeric_limits<double>::max());
+
+    connect( m_spinBox, SIGNAL(valueChanged(double)), SLOT(spinBoxValueChanged(double)) );
+    connect( m_slider, SIGNAL(valueChanged(int)), SLOT(sliderValueChanged(int)) );
+    connect( this,SIGNAL(valueChanged(double)),PlanEnv->getObject(p),SLOT(set(double)));
+    connect( PlanEnv->getObject(p),SIGNAL(valueChanged(double)),m_spinBox, SLOT(setValue(double)));
+
+    m_spinBox->setValue(PlanEnv->getDouble(p));
+
+    _init = false;
 }
 
 SpinBoxSliderConnector::SpinBoxSliderConnector( QObject* _parent,
@@ -90,8 +98,8 @@ QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
 
     connect( m_spinBox, SIGNAL(valueChanged( double )), SLOT(spinBoxValueChanged( double ) ) );
     connect( m_slider, SIGNAL(valueChanged( int )), SLOT(sliderValueChanged( int ) ) );
-    connect(this, SIGNAL(valueChanged( int )), ENV.getObject(p), SLOT(set(int)));
-    connect(ENV.getObject(p), SIGNAL(valueChanged(int)), this, SLOT(spinBoxValueChanged(int)));
+    connect( this, SIGNAL(valueChanged( int )), ENV.getObject(p), SLOT(set(int)));
+    connect( ENV.getObject(p), SIGNAL(valueChanged(int)), this, SLOT(spinBoxValueChanged(int)));
 
     m_spinBox->setValue(ENV.getInt(p));
 
@@ -104,17 +112,18 @@ SpinBoxSliderConnector::SpinBoxSliderConnector( QObject* _parent,
                                                PlanParam::intParameter p) :
 QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
 {
-	m_spinBox->setValue(numeric_limits<double>::max());
-	
-	connect( m_spinBox, SIGNAL(valueChanged( double )), SLOT(spinBoxValueChanged( double ) ) );
-	connect( m_slider, SIGNAL(valueChanged( int )), SLOT(sliderValueChanged( int ) ) );
-        connect( this, SIGNAL(valueChanged( int )), PlanEnv->getObject(p), SLOT(set(int)));
-        connect(PlanEnv->getObject(p), SIGNAL(valueChanged(int)), this, SLOT(spinBoxValueChanged(int)));
+    m_spinBox->setValue(numeric_limits<double>::max());
 
-	m_spinBox->setValue(PlanEnv->getInt(p));
-	
-	_init = false;
+    connect( m_spinBox, SIGNAL(valueChanged( double )), SLOT(spinBoxValueChanged( double ) ) );
+    connect( m_slider, SIGNAL(valueChanged( int )), SLOT(sliderValueChanged( int ) ) );
+    connect( this, SIGNAL(valueChanged( int )), PlanEnv->getObject(p), SLOT(set(int)));
+    connect( PlanEnv->getObject(p), SIGNAL(valueChanged(int)), this, SLOT(spinBoxValueChanged(int)));
+
+    m_spinBox->setValue(PlanEnv->getInt(p));
+
+    _init = false;
 }
+*/
 
 SpinBoxSliderConnector::~SpinBoxSliderConnector()
 {
@@ -129,7 +138,7 @@ void SpinBoxSliderConnector::computeScaling()
     
     //cout << "a : " << _a << " , b : " << _b << " , c : " << _c << " , d : " << _d << endl;
     //cout << "_Coeff : " << _Coeff << " , _Offset : " << _Offset << endl;
-  
+
     _Coeff = ( _a - _b )/( _c - _d );
     _Offset = (_a + _b)/2 - (_a - _b)*(_c + _d)/(2*(_c - _d));
 }
@@ -152,7 +161,7 @@ void SpinBoxSliderConnector::spinBoxValueChanged( int _value )
 
     emit( valueChanged( m_spinBox->value() ) );
     emit( valueChanged( (int)(m_spinBox->value()) ) );
-//    m_slider->setValue(_value);
+    //    m_slider->setValue(_value);
 }
 
 void SpinBoxSliderConnector::spinBoxValueChanged( double _value )
@@ -187,7 +196,7 @@ void SpinBoxSliderConnector::sliderValueChanged( int _value )
     
     m_spinBox->setValue( newValue );
     m_spinBox->blockSignals(false);
-	
+
     //cout << "vauleChanged : " << m_spinBox->value() << endl;
     emit( this->valueChanged( m_spinBox->value() ) );
     emit( this->valueChanged( (int)(m_spinBox->value()) ));
@@ -199,45 +208,43 @@ void SpinBoxSliderConnector::sliderValueChanged( int _value )
 //----------------------------------------------------------------
 // Env connector
 //----------------------------------------------------------------
-SpinBoxConnector::SpinBoxConnector( QObject* _parent,
-                                    QDoubleSpinBox* _spinBox,
-                                    Env::doubleParameter p) :
-QObject( _parent ), m_doubleSpinBox( _spinBox )
+SpinBoxConnector::SpinBoxConnector( QObject* _parent, QDoubleSpinBox* _spinBox, QObject* o) :
+    QObject( _parent ), m_doubleSpinBox( _spinBox )
 {
-  m_doubleSpinBox->setValue(numeric_limits<double>::max());
-  
-  connect(m_doubleSpinBox,SIGNAL(valueChanged(double)), ENV.getObject(p),SLOT(set(double)));
-  connect(ENV.getObject(p),SIGNAL(valueChanged(double)),m_doubleSpinBox,SLOT(setValue(double)));
-  
-  m_doubleSpinBox->setValue(ENV.getDouble(p));
+    m_doubleSpinBox->setValue(numeric_limits<double>::max());
+
+    if( dynamic_cast<intContainer*>(o) != NULL )
+    {
+        connect(m_doubleSpinBox,SIGNAL(valueChanged(int)),o,SLOT(set(int)));
+        connect(o,SIGNAL(valueChanged(int)),m_doubleSpinBox, SLOT(setValue(int)));
+        m_doubleSpinBox->setValue(dynamic_cast<intContainer*>(o)->get());
+    }
+    else
+    {
+        connect(m_doubleSpinBox,SIGNAL(valueChanged(double)), o,SLOT(set(double)));
+        connect(o,SIGNAL(valueChanged(double)),m_doubleSpinBox,SLOT(setValue(double)));
+        m_doubleSpinBox->setValue(dynamic_cast<doubleContainer*>(o)->get());
+    }
 }
 
-SpinBoxConnector::SpinBoxConnector( QObject* _parent,
-                                    QDoubleSpinBox* _spinBox,
-                                    Env::intParameter p) :
-QObject( _parent ), m_doubleSpinBox( _spinBox )
+SpinBoxConnector::SpinBoxConnector( QObject* _parent, QSpinBox* _spinBox, QObject* o ) :
+    QObject( _parent ), m_spinBox( _spinBox )
 {
-  m_doubleSpinBox->setValue(numeric_limits<double>::max());
-  
-  connect(m_doubleSpinBox,SIGNAL(valueChanged(int)),ENV.getObject(p),SLOT(set(int)));
-  connect(ENV.getObject(p),SIGNAL(valueChanged(int)),m_doubleSpinBox, SLOT(setValue(int)));
-  
-  m_doubleSpinBox->setValue(ENV.getInt(p));
+    if( dynamic_cast<intContainer*>(o) == NULL )
+    {
+        cout << "Error connecting spin box!!!" << endl;
+        return;
+    }
+
+    m_spinBox->setValue(numeric_limits<int>::max());
+
+    connect( m_spinBox, SIGNAL(valueChanged(int)), o, SLOT(set(int)) );
+    connect( o, SIGNAL(valueChanged(int)), m_spinBox, SLOT(setValue(int)) );
+
+    m_spinBox->setValue(dynamic_cast<intContainer*>(o)->get());
 }
 
-SpinBoxConnector::SpinBoxConnector( QObject* _parent,
-                                    QSpinBox* _spinBox,
-                                    Env::intParameter p) :
-QObject( _parent ), m_spinBox( _spinBox )
-{
-  m_spinBox->setValue(numeric_limits<int>::max());
-  
-  connect(m_spinBox, SIGNAL(valueChanged(int)), ENV.getObject(p),SLOT(set(int)));
-  connect(ENV.getObject(p),SIGNAL(valueChanged(int)),m_spinBox,SLOT(setValue(int)));
-  
-  m_spinBox->setValue(ENV.getInt(p));
-}
-
+/*
 //----------------------------------------------------------------
 // PlanParam connector
 //----------------------------------------------------------------
@@ -246,12 +253,12 @@ SpinBoxConnector::SpinBoxConnector( QObject* _parent,
                                     PlanParam::doubleParameter p) :
 QObject( _parent ), m_doubleSpinBox( _spinBox )
 {
-	m_doubleSpinBox->setValue(numeric_limits<double>::max());
-	
-	connect(m_doubleSpinBox,SIGNAL(valueChanged(double)),PlanEnv->getObject(p),SLOT(set(double)));
-	connect(PlanEnv->getObject(p),SIGNAL(valueChanged(double)),m_doubleSpinBox,SLOT(setValue(double)));
-	
-	m_doubleSpinBox->setValue(PlanEnv->getDouble(p));
+    m_doubleSpinBox->setValue(numeric_limits<double>::max());
+
+    connect(m_doubleSpinBox,SIGNAL(valueChanged(double)),PlanEnv->getObject(p),SLOT(set(double)));
+    connect(PlanEnv->getObject(p),SIGNAL(valueChanged(double)),m_doubleSpinBox,SLOT(setValue(double)));
+
+    m_doubleSpinBox->setValue(PlanEnv->getDouble(p));
 }
 
 SpinBoxConnector::SpinBoxConnector( QObject* _parent,
@@ -259,12 +266,12 @@ SpinBoxConnector::SpinBoxConnector( QObject* _parent,
                                     PlanParam::intParameter p) :
 QObject( _parent ), m_doubleSpinBox( _spinBox )
 {
-	m_doubleSpinBox->setValue(numeric_limits<double>::max());
-	
-	connect(m_doubleSpinBox, SIGNAL(valueChanged(int)), PlanEnv->getObject(p),SLOT(set(int)));
-	connect(PlanEnv->getObject(p),SIGNAL(valueChanged(int)),m_doubleSpinBox,SLOT(setValue(int)));
-	
-	m_doubleSpinBox->setValue(PlanEnv->getInt(p));
+    m_doubleSpinBox->setValue(numeric_limits<double>::max());
+
+    connect(m_doubleSpinBox, SIGNAL(valueChanged(int)), PlanEnv->getObject(p),SLOT(set(int)));
+    connect(PlanEnv->getObject(p),SIGNAL(valueChanged(int)),m_doubleSpinBox,SLOT(setValue(int)));
+
+    m_doubleSpinBox->setValue(PlanEnv->getInt(p));
 }
 
 SpinBoxConnector::SpinBoxConnector( QObject* _parent,
@@ -272,11 +279,11 @@ SpinBoxConnector::SpinBoxConnector( QObject* _parent,
                                     PlanParam::intParameter p) :
 QObject( _parent ), m_spinBox( _spinBox )
 {
-	m_spinBox->setValue(numeric_limits<int>::max());
-	
-	connect(m_spinBox, SIGNAL(valueChanged(int)), PlanEnv->getObject(p),SLOT(set(int)));
-	connect(PlanEnv->getObject(p),SIGNAL(valueChanged(int)),m_spinBox,SLOT(setValue(int)));
-	
-	m_spinBox->setValue(PlanEnv->getInt(p));
-}
+    m_spinBox->setValue(numeric_limits<int>::max());
 
+    connect(m_spinBox, SIGNAL(valueChanged(int)), PlanEnv->getObject(p),SLOT(set(int)));
+    connect(PlanEnv->getObject(p),SIGNAL(valueChanged(int)),m_spinBox,SLOT(setValue(int)));
+
+    m_spinBox->setValue(PlanEnv->getInt(p));
+}
+*/
