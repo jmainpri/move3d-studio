@@ -17,6 +17,7 @@
 #include "API/Device/robot.hpp"
 #include "API/project.hpp"
 #include "planner/planEnvironment.hpp"
+#include "hri_costspace/Gestures/HRICS_GestParameters.hpp"
 
 //#include "env.hpp"
 
@@ -333,7 +334,78 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
     }
   }
   settings.endGroup();
+
+  // ------------------------------------------------------------------
+  // GestParam
+  // ------------------------------------------------------------------
+  settings.beginGroup("GestParam");
+
+  metaObject = EnumGestureParameterObject->metaObject();
+
+  metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "boolParameter" ) );
+  settings.beginGroup("boolParameter");
+  for( int i=0;i<metaEnum.keyCount();i++)
+  {
+    GestEnv->setBool(GestParam::boolParameter(i),settings.value(QString(metaEnum.key(i)),false).toBool());
+
+    if(print)
+    {
+      cout << "Key : " << metaEnum.key(i);
+      cout << " , Value : " << GestEnv->getBool(GestParam::boolParameter(i)) << endl;
+    }
+  }
+  settings.endGroup();
+
+  metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "intParameter" ) );
+  settings.beginGroup("intParameter");
+  if(print)
+    cout << "---------------------------" << endl;
+  for( int i=0;i<metaEnum.keyCount();i++)
+  {
+    GestEnv->setInt(GestParam::intParameter(i),settings.value(QString(metaEnum.key(i)),0).toInt());
+
+    if(print)
+    {
+      cout << "Key : " << metaEnum.key(i);
+      cout << " , Value : " << GestEnv->getInt(GestParam::intParameter(i)) << endl;
+    }
+  }
+  settings.endGroup();
+
+  metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "doubleParameter" ) );
+  settings.beginGroup("doubleParameter");
+  if(print)
+    cout << "---------------------------" << endl;
+  for( int i=0;i<metaEnum.keyCount();i++)
+  {
+    GestEnv->setDouble(GestParam::doubleParameter(i),settings.value(QString(metaEnum.key(i)),0.0).toFloat());
+
+    if(print)
+    {
+      cout << "Key : " << metaEnum.key(i);
+      cout << " , Value : " << GestEnv->getDouble(GestParam::doubleParameter(i)) << endl;
+    }
+  }
+  settings.endGroup();
+
+  metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "stringParameter" ) );
+  settings.beginGroup("stringParameter");
+  if(print)
+    cout << "---------------------------" << endl;
+  for( int i=0;i<metaEnum.keyCount();i++)
+  {
+    GestEnv->setString(GestParam::stringParameter(i),settings.value(QString(metaEnum.key(i)),"").toString());
+
+    if(print)
+    {
+      cout << "Key : " << metaEnum.key(i);
+      cout << " , Value : " << GestEnv->getString(GestParam::stringParameter(i)).toStdString() << endl;
+    }
+  }
+  settings.endGroup();
   
+  // ------------------------------------------------------------------
+
   settings.endGroup();
   
   // ------------------------------------------------------------------
@@ -459,6 +531,56 @@ void qt_saveInterfaceParameters(bool print, std::string fileName)
     cout << "Key : " << metaEnum.key(i);
     cout << " , Value : " << PlanEnv->getString(PlanParam::stringParameter(i)).toStdString() << endl;
     settings.setValue( QString(metaEnum.key(i)), PlanEnv->getString(PlanParam::stringParameter(i)));
+  }
+  settings.endGroup();
+
+  // ------------------------------------------------------------------
+  // PlanParam
+  // ------------------------------------------------------------------
+  settings.beginGroup("GestParam");
+
+  metaObject = EnumGestureParameterObject->metaObject();
+
+  metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "boolParameter" ) );
+  settings.beginGroup("boolParameter");
+  for( int i=0;i<metaEnum.keyCount();i++)
+  {
+    cout << "Key : " << metaEnum.key(i);
+    cout << " , Value : " << GestEnv->getBool(GestParam::boolParameter(i)) << endl;
+    settings.setValue( QString(metaEnum.key(i)), GestEnv->getBool(GestParam::boolParameter(i)));
+  }
+  settings.endGroup();
+
+  metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "intParameter" ) );
+  settings.beginGroup("intParameter");
+  cout << "---------------------------" << endl;
+  for( int i=0;i<metaEnum.keyCount();i++)
+  {
+    cout << "Key : " << metaEnum.key(i);
+    cout << " , Value : " << GestEnv->getInt(GestParam::intParameter(i)) << endl;
+    settings.setValue(QString(metaEnum.key(i)), GestEnv->getInt(GestParam::intParameter(i)));
+  }
+  settings.endGroup();
+
+  metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "doubleParameter" ) );
+  settings.beginGroup("doubleParameter");
+  cout << "---------------------------" << endl;
+  for( int i=0;i<metaEnum.keyCount();i++)
+  {
+    cout << "Key : " << metaEnum.key(i);
+    cout << " , Value : " << GestEnv->getDouble(GestParam::doubleParameter(i)) << endl;
+    settings.setValue( QString(metaEnum.key(i)), GestEnv->getDouble(GestParam::doubleParameter(i)));
+  }
+  settings.endGroup();
+
+  metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "stringParameter" ) );
+  settings.beginGroup("stringParameter");
+  cout << "---------------------------" << endl;
+  for( int i=0;i<metaEnum.keyCount();i++)
+  {
+    cout << "Key : " << metaEnum.key(i);
+    cout << " , Value : " << GestEnv->getString(GestParam::stringParameter(i)).toStdString() << endl;
+    settings.setValue( QString(metaEnum.key(i)), GestEnv->getString(GestParam::stringParameter(i)));
   }
   settings.endGroup();
   
