@@ -549,6 +549,7 @@ void HricsWidget::getIthConfigurationInMotion()
 
     if ( global_motionRecorder ) {
         global_motionRecorder->setConfiguration( ith );
+        global_motionRecorder->setShowMotion( ith );
     }
     else {
         cout << "global_motionRecorder is not initilized" << endl;

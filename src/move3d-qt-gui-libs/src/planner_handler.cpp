@@ -514,6 +514,20 @@ void qt_handover()
 
 //----------------------------------------------------------
 //----------------------------------------------------------
+
+void qt_show_recorded_motion()
+{
+    cout << "Show recorded motion" << endl;
+
+    if(!global_motionRecorder) {
+        cout << "recorder not initialized" << endl;
+        return;
+    }
+
+    global_motionRecorder->showStoredMotion();
+    cout << "End recorded motion" << endl;
+}
+
 void qt_workspace_occupancy()
 {
     cout << "Loading regressed motion and computing the occupancy" << endl;
@@ -1034,22 +1048,6 @@ void qt_load_HRICS_Grid(std::string docname)
 //------------------------------------------------------------------
 //------------------------------------------------------------------
 
-void qt_show_recorded_motion()
-{
-    cout << "Show recorded motion" << endl;
-
-    if(!global_motionRecorder) {
-        cout << "recorder not initialized" << endl;
-        return;
-    }
-
-    global_motionRecorder->showStoredMotion();
-    cout << "End recorded motion" << endl;
-}
-
-//------------------------------------------------------------------
-//------------------------------------------------------------------
-
 // Add a trajectory to the interface
 void qt_add_traj(char* name,int id,p3d_rob* rob,p3d_traj* traj)
 {
@@ -1243,9 +1241,6 @@ void PlannerHandler::startPlanner(QString plannerName)
             qt_save_agent_grid();
         }
 #endif
-        else if( plannerName == "ShowRecordedMotion"){
-            qt_show_recorded_motion();
-        }
 #ifdef GRASP_PLANNING
         else if( plannerName == "makeTrajFromViaPoints"){
             qt_makeTrajFromViaPoints();
@@ -1269,6 +1264,9 @@ void PlannerHandler::startPlanner(QString plannerName)
             qt_init_mlp_cntrts_and_fixjoints();
         }
 #endif
+        else if( plannerName == "ShowRecordedMotion"){
+            qt_show_recorded_motion();
+        }
         else if(plannerName == "WorkspaceOccupancy")
         {
             qt_workspace_occupancy();
