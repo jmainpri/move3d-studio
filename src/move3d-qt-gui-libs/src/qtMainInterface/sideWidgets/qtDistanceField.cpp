@@ -83,8 +83,10 @@ void DistFieldWidget::addAllPointsToField()
 {
     if (global_collisionSpace) 
     {
+        global_collisionSpace->resetPoints();
+
         // Add all the static (moveable objects also)
-        global_collisionSpace->addAllPointsToField();
+        global_collisionSpace->addEnvPoints();
         
         // Add all the humans
         Scene* sc = global_Project->getActiveScene();
@@ -98,6 +100,8 @@ void DistFieldWidget::addAllPointsToField()
                 global_collisionSpace->addRobot( rob );
             }
         }
+
+        global_collisionSpace->propagateDistance();
     }
 }
 

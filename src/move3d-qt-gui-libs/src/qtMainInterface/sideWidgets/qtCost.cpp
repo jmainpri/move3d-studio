@@ -152,11 +152,11 @@ void CostWidget::initCost()
         this->initCostFunctions();
     }
 
-    new connectCheckBoxToEnv(m_ui->isCostSpaceCopy,			ENV.getObject(Env::isCostSpace));
+    new connectCheckBoxToEnv(m_ui->isCostSpaceCopy,			    ENV.getObject(Env::isCostSpace));
     connect(m_ui->isCostSpaceCopy, SIGNAL(toggled( bool )), SLOT(envIsCostSpaceValueChanged( bool ) ) );
     new connectCheckBoxToEnv(m_ui->checkBoxUseTRRT,             ENV.getObject(Env::useTRRT));
     connect(m_ui->checkBoxUseTRRT, SIGNAL(toggled( bool )), SLOT(envUseTRRTValueChanged( bool ) ) );
-    new connectCheckBoxToEnv(m_ui->checkBoxCostBefore,		ENV.getObject(Env::costBeforeColl));
+    new connectCheckBoxToEnv(m_ui->checkBoxCostBefore,		    ENV.getObject(Env::costBeforeColl));
     new connectCheckBoxToEnv(m_ui->checkBoxCostExpandToGoal,	ENV.getObject(Env::costExpandToGoal));
     new connectCheckBoxToEnv(m_ui->checkBoxCostWithGradient,	ENV.getObject(Env::tRrtComputeGradient));
     new connectCheckBoxToEnv(m_ui->checkBoxPrintAndComputeCostAfterPlannif,	PlanEnv->getObject(PlanParam::trajComputeCostAfterPlannif));
@@ -174,6 +174,7 @@ void CostWidget::initCost()
     connect(m_ui->pushButtonShowTrajCost,SIGNAL(clicked()),this,SLOT(showTrajCost()));
     connect(m_ui->pushButtonShowCostProfile,SIGNAL(clicked()),this,SLOT(showCostProfile()));
     connect(m_ui->pushButtonShowHRITrajCost,SIGNAL(clicked()),this,SLOT(showHRITrajCost()));
+    connect(m_ui->pushButtonShowSTOMPCost,SIGNAL(clicked()),this,SLOT(showSTOMPTrajCost()));
     connect(m_ui->pushButtonShowTemp,SIGNAL(clicked()),this,SLOT(showTemperature()));
     new connectCheckBoxToEnv(m_ui->checkBoxRescale, ENV.getObject(Env::initPlot));
 
@@ -670,6 +671,71 @@ void CostWidget::showHRITrajCost()
     m_plot->setPlot(myPlot);
     m_plot->show();
 #endif
+}
+
+
+void CostWidget::showSTOMPTrajCost()
+{
+//#ifdef USE_QWT
+    cout << "showSTOMPTrajCost" << endl;
+
+    std::vector<double> smoothness_cost;
+    std::vector<double> collision_cost;
+    std::vector<double> general_cost;
+
+    if ( optimizer ) {
+        API::Trajectory traj( global_Project->getActiveScene()->getActiveRobot() );
+        optimizer->getCostProfiles( smoothness_cost, collision_cost, general_cost );
+        optimizer->setGroupTrajectoryToApiTraj( traj );
+        traj.replaceP3dTraj();
+    }
+    else {
+        return;
+    }
+
+    MultiPlot* myPlot = new MultiPlot( m_plot );
+    myPlot->setGeometry( m_plot->getPlot()->geometry() );
+
+    int nb_sample = myPlot->getPlotSize();
+
+    std::vector<double> smoothness_cost_curve;
+    std::vector<double> collision_cost_curve;
+    std::vector<double> general_cost_curve;
+
+    double inc = double(smoothness_cost.size())/double(nb_sample);
+    double k =0;
+
+    for (int j=0; j<nb_sample; j++)
+    {
+        smoothness_cost_curve.push_back(smoothness_cost[floor(k)]);
+        collision_cost_curve.push_back(collision_cost[floor(k)]);
+        general_cost_curve.push_back(general_cost[floor(k)]);
+
+        k += inc;
+    }
+
+    for( int i=0;i<collision_cost.size();i++)
+    {
+        cout << "collision_cost[" << i << "] = " << collision_cost[i] << endl;
+    }
+
+    std::vector< std::vector<double> > curves;
+    curves.push_back( smoothness_cost_curve );
+    curves.push_back( collision_cost_curve );
+    curves.push_back( general_cost_curve );
+
+    std::vector< std::string > plotNames;
+    plotNames.push_back( "Smoothness" );
+    plotNames.push_back( "Obstacle" );
+    //plotNames.push_back( "Reachability" );
+    plotNames.push_back( "General" );
+
+    myPlot->setData( plotNames , curves );
+
+    delete m_plot->getPlot();
+    m_plot->setPlot(myPlot);
+    m_plot->show();
+//#endif
 }
 
 void CostWidget::setPlotedVector(vector<double> v)

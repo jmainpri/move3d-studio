@@ -68,7 +68,7 @@ void MoveRobot::initAllForms(GLWidget* ptrOpenGl)
             connect(m_pageComboBox, SIGNAL(activated(int)), m_StackedLayout, SLOT(setCurrentIndex(int)));
         }
 
-#if defined( MOVE3D_CORE ) 
+//#if defined( MOVE3D_CORE )
         Robot* ptrRob = envPt->getRobot(i);
 
         FormRobot* form = newGridLayoutForRobotStacked( ptrRob );
@@ -82,7 +82,7 @@ void MoveRobot::initAllForms(GLWidget* ptrOpenGl)
         form->setSliders( *ptrConf );
         mRobots.push_back( form );
         //cout << "MoveRobot::ptrRob->getRobotStruct()->getNumberOfJoints() = "  << ptrRob->getNumberOfJoints() << endl;
-#endif
+//#endif
 #ifdef WITH_XFORMS
         std::string str = "g3d_draw_allwin_active";
         write(qt_fl_pipe[1],str.c_str(),str.length()+1);
@@ -183,8 +183,7 @@ void MoveRobot::updateAllRobotInitPos()
     for(unsigned int i=0;i<mRobots.size();i++)
     {
         Robot* robot = mRobots[i]->getRobot();
-        robot->setAndUpdate( *robot->getInitialPosition() );
-        mRobots[i]->setSliders( *robot->getCurrentPos() );
+        mRobots[i]->setSliders( *robot->getInitialPosition() );
         mRobots[i]->getComboBox()->setCurrentIndex(0);
         cout << "Set Robot " << robot->getName() << " to its initial position" << endl;
     }
@@ -443,12 +442,14 @@ void FormRobot::initSliders()
         {
             jntPt = mRobot->getJoint(i);
 
+            if( jntPt->getName() == "J0" )
+                continue;
+
             for(unsigned int j=0; j<jntPt->getNumberOfDof(); j++)
             {
                 k = jntPt->getIndexOfFirstDof() + j;
 
-                if((p3d_jnt_get_dof_is_user(jntPt->getJointStruct(),j)) ||
-                        (robotPt->cntrt_manager->in_cntrt[k] == 1))
+                if(/*(p3d_jnt_get_dof_is_user(jntPt->getJointStruct(),j)) || (robotPt->cntrt_manager->in_cntrt[k] == 1)*/ true )
                 {
                     DofSlider* oneSlider = new DofSlider(mRobot,mOpenGl,this);
                     oneSlider->makeSlider( mGridLayout, jntPt, j );
@@ -500,13 +501,14 @@ void FormRobot::resetConstraintedDoFs()
  */
 void FormRobot::setSliders(Configuration& ptrConfRad)
 {
+    if( mSliders.empty() )
+    {
+        return;
+    }
+
     string RobotName = ptrConfRad.getRobot()->getName();
 
-    shared_ptr<Configuration> ptrConfDeg = ptrConfRad.getConfigInDegree();
-
-    //    cout << "--------" << endl;
-    //    cout << RobotName  << endl;
-    //    cout << "--------" << endl;
+    confPtr_t ptrConfDeg = ptrConfRad.getConfigInDegree();
 
     if( mRobot->getName().compare( RobotName ) == 0 )
     {
@@ -519,28 +521,33 @@ void FormRobot::setSliders(Configuration& ptrConfRad)
             {
                 p3d_jnt* jntPt = robotPt->joints[i];
 
+                if( string(jntPt->name) == "J0" )
+                    continue;
+
                 for(int j=0; j<jntPt->dof_equiv_nbr; j++)
                 {
                     int k = jntPt->index_dof + j;
 
-                    if((p3d_jnt_get_dof_is_user(jntPt,j)) || (robotPt->cntrt_manager->in_cntrt[k] == 1))
+                    if(/*(p3d_jnt_get_dof_is_user(jntPt,j)) || (robotPt->cntrt_manager->in_cntrt[k] == 1)*/ true)
                     {
-                        //                            cout << ptrConfDeg->getConfigStruct() << endl;
-                        disconnect(mSliders[numDof]->getConnector(),SIGNAL(valueChanged(double)),
-                                   mSliders[numDof],SLOT(dofValueChanged(double)));
+                            // cout << ptrConfDeg->getConfigStruct() << endl;
+                            disconnect(mSliders[numDof]->getConnector(),SIGNAL(valueChanged(double)),
+                                       mSliders[numDof],SLOT(dofValueChanged(double)));
 
-                        mSliders[numDof]->getConnector()->setValue( ptrConfDeg->at(k) );
+                            // mSliders[numDof]->setValue( ptrConfDeg->at(k) );
 
-                        connect(mSliders[numDof]->getConnector(),SIGNAL(valueChanged(double)),
-                                mSliders[numDof],SLOT(dofValueChanged(double)));
+                            mSliders[numDof]->getConnector()->setValue( ptrConfDeg->at(k) );
 
-                        numDof++;
+                            connect(mSliders[numDof]->getConnector(),SIGNAL(valueChanged(double)),
+                                    mSliders[numDof],SLOT(dofValueChanged(double)));
 
-                        if (robotPt->cntrt_manager->in_cntrt[k] == 2)
-                        {
-                            //                                mSliders.back().back()->doubleSpinBox->setDisabled(true);
-                            //                                mSliders.back().back()->horizontalSlider->setDisabled(true);
-                        }
+                            numDof++;
+
+                            if (robotPt->cntrt_manager->in_cntrt[k] == 2)
+                            {
+                                // mSliders.back().back()->doubleSpinBox->setDisabled(true);
+                                // mSliders.back().back()->horizontalSlider->setDisabled(true);
+                            }
                     }
                 }
             }
@@ -560,6 +567,7 @@ void FormRobot::setCurrentConfig(int index)
     }
 
     mRobot->setAndUpdate( *mConfigurations[index] );
+    setSliders( *mRobot->getCurrentPos() );
 
     if(!ENV.getBool(Env::isRunning))
     {
@@ -581,16 +589,16 @@ void FormRobot::setCurrentPosition(int position)
         cout << "Robot " << mRobot->getName() << " to Initial Pos" << endl;
 
         ptrConf = mRobot->getInitialPosition();
-        setSliders(*ptrConf);
         mRobot->setAndUpdate(*ptrConf);
+        setSliders( *mRobot->getCurrentPos() );
     }
 
     if (position == 1)
     {
         cout << "Robot " << mRobot->getName() << " to Goto Pos" << endl;
         ptrConf = mRobot->getGoTo();
-        setSliders(*ptrConf);
         mRobot->setAndUpdate(*ptrConf);
+        setSliders( *mRobot->getCurrentPos() );
     }
 
 #ifdef WITH_XFORMS

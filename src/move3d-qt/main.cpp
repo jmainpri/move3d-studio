@@ -11,6 +11,7 @@
 #include "API/project.hpp"
 
 #include <iostream>
+#include <string>
 #include <QDesktopWidget>
 #include <QFileDialog>
 
@@ -28,6 +29,7 @@ GLWidget* openGlWidget;
 
 extern int mainMhp(int argc, char** argv);
 extern bool move3d_studio_load_settings;
+extern std::string move3d_studio_settings_file;
 
 using namespace std;
 
@@ -114,11 +116,11 @@ void Main_threads::loadSettings()
         return;
     }
 
-    string home(home_path);
-    string fileName("/.save_interface_params");
+    std::string home(home_path);
+    std::string fileName = home + "/" + move3d_studio_settings_file;
     if (!home.empty()) {
-        qt_loadInterfaceParameters( false, home+fileName, false ); // OpenGL -> false
-        cout << "Loading parameters at : " << home+fileName << endl;
+        qt_loadInterfaceParameters( false, fileName, false ); // OpenGL -> false
+        cout << "Loading parameters at : " << fileName << endl;
         cout << "quick load succeded" << endl;
     }
     else {

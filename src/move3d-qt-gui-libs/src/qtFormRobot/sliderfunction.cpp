@@ -185,6 +185,10 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
 {  
   if (ENV.getBool(Env::isCostSpace))
   {
+      // No cost is computed for the other robots
+      if( XYZ_ENV->active_robot != robotPt )
+          return;
+
 #ifdef P3D_PLANNER
     p3d_rob* costRobot = robotPt;
     configPt cost_q = p;
@@ -277,10 +281,11 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
   if( global_collisionSpace )
   {
     double distance = numeric_limits<double>::max();
+    double potential = numeric_limits<double>::max();
+
+    ncol = global_collisionSpace->isRobotColliding( distance, potential );
     
-    ncol = global_collisionSpace->isRobotColliding( distance );
-    
-    cout << "Distance Potential To Nearest Obstacle = " << distance << endl;
+    cout << "Distance to nearest obstacle = " << distance << " and potential = " << potential << endl;
     
     if( ncol )
     {

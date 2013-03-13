@@ -77,6 +77,7 @@ private slots:
     void showTrajCost();
     void showCostProfile();
     void showHRITrajCost();
+    void showSTOMPTrajCost();
     void showTemperature();
     void setPlotedVector(std::vector<double> v);
     void putGridInGraph();

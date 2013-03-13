@@ -47,7 +47,8 @@ using namespace std;
 using namespace QtShiva;
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
-extern string global_ActiveRobotName;
+extern std::string global_ActiveRobotName;
+extern std::string move3d_studio_settings_file;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), m_ui(new Ui::MainWindow)
@@ -81,6 +82,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_ui->tabRobot->setMainWindow(this);
     m_ui->tabRobot->initRobot();
+    m_ui->tabRobot->getMoveRobot()->updateAllRobotInitPos();
 
     // m_ui->OpenGL->setWinSize(G3D_WIN->size);
     m_ui->OpenGL->setWinSize(600);
@@ -403,13 +405,13 @@ void MainWindow::loadParametersQuick()
         return;
     }
 
-    string home(home_path);
-    string fileName("/.save_interface_params");
+    std::string home(home_path);
 
     if (!home.empty())
     {
-        qt_loadInterfaceParameters( false, home+fileName );
-        cout << "Loading parameters at : " << home+fileName << endl;
+        std::string filename = home + "/" + move3d_studio_settings_file;
+        qt_loadInterfaceParameters( false, filename );
+        cout << "Loading parameters at : " << filename << endl;
         cout << "quick load succeded" << endl;
         this->drawAllWinActive();
     }
@@ -430,17 +432,18 @@ void MainWindow::saveParametersQuick()
     }
 
     string home(home_path);
-    string fileName("/.save_interface_params");
 
     if (!home.empty())
     {
-        if( remove( (home+fileName).c_str() ) != 0 )
+        std::string filename = home + "/" + move3d_studio_settings_file;
+
+        if( remove( filename.c_str() ) != 0 )
         {
             cout << "Not deleting file!!!" << endl;
         }
 
-        qt_saveInterfaceParameters( true, home+fileName );
-        cout << "Saving parameters at : " << home+fileName << endl;
+        qt_saveInterfaceParameters( true, filename );
+        cout << "Saving parameters at : " << filename << endl;
         this->drawAllWinActive();
     }
     else

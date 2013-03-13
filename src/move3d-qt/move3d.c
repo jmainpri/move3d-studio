@@ -54,10 +54,13 @@
 #endif
 
 #include <iostream>
+#include <string>
+
 using namespace std;
 
 // External varialbe handled when compiled with move3d studio
 bool move3d_studio_load_settings = false;
+std::string move3d_studio_settings_file = ".save_interface_params";
 
 static int FILTER_TO_BE_SET_ACTIVE = FALSE;
 //extern void g3d_create_main_form(void);
@@ -175,6 +178,16 @@ int mainMhp(int argc, char ** argv)
       ++i;
       move3d_studio_load_settings = true;
     }
+    else if (strcmp(argv[i], "-params") == 0) {
+          ++i;
+          if ((i < argc)) {
+            move3d_studio_settings_file = argv[i];
+            ++i;
+          } else {
+            use();
+            return 0;
+          }
+        }
     else if (strcmp(argv[i], "-nogui") == 0) {
       ++i;
       // Nothing to do, fix this in main

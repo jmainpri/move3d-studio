@@ -38,6 +38,8 @@ connectCheckBoxToEnv::connectCheckBoxToEnv( QCheckBox* box, QObject* o )
 SpinBoxSliderConnector::SpinBoxSliderConnector( QObject* _parent, QDoubleSpinBox* _spinBox, QSlider* _slider) :
     QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
 {
+    m_spinBox->setValue(numeric_limits<double>::max());
+
     connect( m_spinBox, SIGNAL(valueChanged( double )), SLOT(spinBoxValueChanged( double ) ) );
     connect( m_slider, SIGNAL(valueChanged( int )), SLOT(sliderValueChanged( int ) ) );
 
