@@ -40,6 +40,7 @@
 #include "planner/Diffusion/Variants/Star-RRT.hpp"
 #include "planner/TrajectoryOptim/Classic/smoothing.hpp"
 #include "planner/TrajectoryOptim/Classic/costOptimization.hpp"
+#include "planner/TrajectoryOptim/Stomp/run_parallel_stomp.hpp"
 #include "planner/TrajectoryOptim/trajectoryOptim.hpp"
 #include "planner/planEnvironment.hpp"
 #include "planner/plannerFunctions.hpp"
@@ -59,6 +60,7 @@
 #include "hri_costspace/HRICS_Workspace.hpp"
 #include "hri_costspace/HRICS_Miscellaneous.hpp"
 #include "hri_costspace/HRICS_Navigation.hpp"
+#include "hri_costspace/Gestures/HRICS_GestParameters.hpp"
 #include "hri_costspace/Gestures/HRICS_WorkspaceOccupancy.hpp"
 #include "hri_costspace/Gestures/HRICS_RecordMotion.hpp"
 #include "hri_costspace/Gestures/HRICS_HumanPredictionCostSpace.hpp"
@@ -142,7 +144,10 @@ void qt_init_after_params()
         traj_optim_initStomp();
     }
 
-    HRICS_initOccupancyPredictionFramework();
+    if( GestEnv->getBool(GestParam::init_module_at_start) )
+    {
+        HRICS_initOccupancyPredictionFramework();
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -548,10 +553,15 @@ void qt_classify_motions()
 
     const std::vector<motion_t>& stored_motions = global_motionRecorder->getStoredMotions();
 
-    for(int i=0;i<stored_motions.size();i++)
+    for(int i=0;i<8;i++)
     {
-        int id_class = global_humanPredictionSimulator->classifyMotion( global_motionRecorder->resample( stored_motions[i], 100 ) );
-        //cout << std::setw( 3 ) << std::setfill( ' ' ) << i << " : " << id_class << endl;
+        for(int j=0;j<5;j++)
+        {
+            int index = i*25+j;
+            cout << std::setw( 3 ) << std::setfill( '0' ) << index  << " : " ;
+            int id_class = global_humanPredictionSimulator->classifyMotion( global_motionRecorder->resample( stored_motions[index], 100 ) );
+            //cout << std::setw( 3 ) << std::setfill( ' ' ) << i << " : " << id_class << endl;
+        }
     }
     cout << "End!!!" << endl;
 }
@@ -680,6 +690,11 @@ void qt_simpleNav()
 
 }
 #endif
+
+void qt_runParallelStomp()
+{
+    srompRun_parallel();
+}
 
 #ifdef MULTILOCALPATH
 void qt_runStomp()
@@ -1246,6 +1261,9 @@ void PlannerHandler::startPlanner(QString plannerName)
             qt_makeTrajFromViaPoints();
         }
 #endif
+        else if( plannerName == "runParallelStomp" ){
+            qt_runParallelStomp();
+        }
 #ifdef MULTILOCALPATH
         else if( plannerName == "runStomp"){
             qt_runStomp();

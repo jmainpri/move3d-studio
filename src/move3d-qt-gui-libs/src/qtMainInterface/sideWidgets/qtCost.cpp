@@ -492,9 +492,9 @@ void CostWidget::showTrajCost()
         }
         myPlot->setTitle("Cost Space along trajectory");
     }
-    else if (optimizer)
+    else if (global_optimizer)
     {
-        optimizer->getTrajectoryCost(cost,step);
+        global_optimizer->getTrajectoryCost(cost,step);
         myPlot->setTitle("STOMP/CHOMP traj cost profile");
     }
 
@@ -683,10 +683,10 @@ void CostWidget::showSTOMPTrajCost()
     std::vector<double> collision_cost;
     std::vector<double> general_cost;
 
-    if ( optimizer ) {
+    if ( global_optimizer ) {
         API::Trajectory traj( global_Project->getActiveScene()->getActiveRobot() );
-        optimizer->getCostProfiles( smoothness_cost, collision_cost, general_cost );
-        optimizer->setGroupTrajectoryToApiTraj( traj );
+        global_optimizer->getCostProfiles( smoothness_cost, collision_cost, general_cost );
+        global_optimizer->setGroupTrajectoryToApiTraj( traj );
         traj.replaceP3dTraj();
     }
     else {
