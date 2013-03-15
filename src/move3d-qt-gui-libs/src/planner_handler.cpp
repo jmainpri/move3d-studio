@@ -693,7 +693,8 @@ void qt_simpleNav()
 
 void qt_runParallelStomp()
 {
-    srompRun_parallel();
+//    srompRun_MultipleParallel();
+    srompRun_OneParallel();
 }
 
 #ifdef MULTILOCALPATH
