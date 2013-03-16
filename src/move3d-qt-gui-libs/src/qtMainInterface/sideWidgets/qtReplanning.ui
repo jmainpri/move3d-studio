@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>503</width>
-    <height>706</height>
+    <width>532</width>
+    <height>971</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,9 +26,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-186</y>
-        <width>485</width>
-        <height>890</height>
+        <y>0</y>
+        <width>530</width>
+        <height>969</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -303,20 +303,17 @@
           <property name="bottomMargin">
            <number>0</number>
           </property>
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="checkBoxTimeLimit">
+          <item row="6" column="1">
+           <widget class="QCheckBox" name="checkBoxInitStomp">
             <property name="text">
-             <string>Use Time Limit</string>
+             <string>Init Stomp</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
            <widget class="QDoubleSpinBox" name="doubleSpinBoxTimeLimit"/>
           </item>
-          <item row="3" column="1">
-           <widget class="QSpinBox" name="spinBoxStompDrawIteration"/>
-          </item>
-          <item row="3" column="0">
+          <item row="4" column="0">
            <widget class="QLabel" name="label_9">
             <property name="text">
              <string>Draw Every n Iteration</string>
@@ -324,16 +321,43 @@
            </widget>
           </item>
           <item row="1" column="0">
+           <widget class="QCheckBox" name="checkBoxStompMaxIteration">
+            <property name="text">
+             <string>Use Iteration Limit</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="spinBoxStompMaxIteration">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>100000</number>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
            <widget class="QCheckBox" name="checkBoxWithRRT">
             <property name="text">
              <string>With RRT</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QCheckBox" name="checkBoxInitStomp">
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="checkBoxTimeLimit">
             <property name="text">
-             <string>Init Stomp</string>
+             <string>Use Time Limit</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QSpinBox" name="spinBoxStompDrawIteration"/>
+          </item>
+          <item row="5" column="0">
+           <widget class="QCheckBox" name="checkBoxDrawParallel">
+            <property name="text">
+             <string>Draw Parallel</string>
             </property>
            </widget>
           </item>
