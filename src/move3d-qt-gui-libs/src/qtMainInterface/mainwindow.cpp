@@ -920,8 +920,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent *e)
 // Basic function -----------------------------------------------
 // --------------------------------------------------------------
 
-LabeledSlider* MainWindow::createSlider(QString s, Env::intParameter p,
-                                        int lower, int upper)
+LabeledSlider* MainWindow::createSlider(QString s, Env::intParameter p, int lower, int upper)
 {
     LabeledSlider* slider = new LabeledSlider(lower, upper, lower, s);
     connect(ENV.getObject(p), SIGNAL(valueChanged(int)), slider,
@@ -932,8 +931,7 @@ LabeledSlider* MainWindow::createSlider(QString s, Env::intParameter p,
     return (slider);
 }
 
-LabeledDoubleSlider* MainWindow::createDoubleSlider(QString s,
-                                                    Env::doubleParameter p, double lower, double upper)
+LabeledDoubleSlider* MainWindow::createDoubleSlider(QString s, Env::doubleParameter p, double lower, double upper)
 {
     LabeledDoubleSlider* slider = new LabeledDoubleSlider(lower, upper, lower,s);
     connect(ENV.getObject(p), SIGNAL(valueChanged(double)), slider,

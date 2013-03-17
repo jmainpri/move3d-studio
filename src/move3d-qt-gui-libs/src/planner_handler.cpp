@@ -585,7 +585,48 @@ void qt_human_prediction_simulation()
         cout << "global_humanPredictionSimulator == NULL" << endl;
         return;
     }
-    global_humanPredictionSimulator->run();
+
+    int nb_motions = 1;
+    int nb_runs = 1;
+    std::vector<int> human_motion_id( nb_motions );
+    std::vector< std::vector<double> > costs( nb_motions );
+
+    human_motion_id[0] = 77;
+
+    // (25,26,27,28,29)
+//    human_motion_id[0] = 25;
+//    human_motion_id[1] = 26;
+//    human_motion_id[2] = 27;
+//    human_motion_id[3] = 28;
+//    human_motion_id[4] = 29;
+
+    for(int i=0;i<nb_motions;i++)
+    {
+        GestEnv->setInt( GestParam::human_traj_id, human_motion_id[i] );
+
+        costs[i].resize(nb_runs);
+
+        for(int j=0;j<nb_runs;j++)
+        {
+            cout << "----------------------------------------" << endl;
+            cout << " TEST ("<< i << " , " << j << " )"<< endl;
+            cout << "----------------------------------------" << endl;
+
+            costs[i][j] = global_humanPredictionSimulator->run();
+        }
+    }
+
+    for(int i=0;i<nb_motions;i++)
+    {
+        cout << "-------------------" << endl;
+        cout << " Human motion " << i << endl;
+        cout << "-------------------" << endl;
+        for(int j=0;j<nb_runs;j++)
+        {
+            // Matlab
+            cout << "costs_" << i << "(" << j+1 << ") = " << costs[i][j] << endl;
+        }
+    }
 }
 
 //----------------------------------------------------------
