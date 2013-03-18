@@ -26,29 +26,29 @@ class MainWindowTestFunctions;
 
 namespace Ui
 {
-	class MainWindow;
+class MainWindow;
 }
 
 class VideoRecorder : public QThread
 {
-  Q_OBJECT
-  
+    Q_OBJECT
+
 public:
-  //VideoRecorder(QObject* parent = 0);
-  VideoRecorder(double msec, GLWidget* display) { 
-    m_msec = msec; 
-    m_display = display;
-  }
-	~VideoRecorder() { } 
-  
+    //VideoRecorder(QObject* parent = 0);
+    VideoRecorder(double msec, GLWidget* display) {
+        m_msec = msec;
+        m_display = display;
+    }
+    ~VideoRecorder() { }
+
 signals:
-  void timeout();
-  
+    void timeout();
+
 protected:
-	void run();
-  
-  double m_msec;
-  GLWidget* m_display;
+    void run();
+
+    double m_msec;
+    GLWidget* m_display;
 };
 
 /**
@@ -59,124 +59,122 @@ protected:
  */
 class MainWindow : public QMainWindow
 {
-	Q_OBJECT
-	
+    Q_OBJECT
+
 public:
-	MainWindow(QWidget *parent = 0);
-	~MainWindow();
-	
-	LabeledSlider* createSlider(QString s, Env::intParameter p,int lower, int upper);
-	LabeledDoubleSlider* createDoubleSlider(QString s,Env::doubleParameter p, double lower, double upper);
+    MainWindow(QWidget *parent = 0);
+    ~MainWindow();
 
-  /* returns the Ui auto genrated structure */
-	Ui::MainWindow* Ui() { return m_ui; }
-	
-	GLWidget*		getOpenGL();
-	MoveRobot*	getMoveRobot();
-	
+    LabeledSlider* createSlider(QString s, Env::intParameter p,int lower, int upper);
+    LabeledDoubleSlider* createDoubleSlider(QString s,Env::doubleParameter p, double lower, double upper);
+
+    /* returns the Ui auto genrated structure */
+    Ui::MainWindow* Ui() { return m_ui; }
+
+    GLWidget*		getOpenGL();
+    MoveRobot*	getMoveRobot();
+
 public slots:
-	void drawAllWinActive();
-	void isPlanning();
-	void planningFinished();
-	
-	void setBoolGhost(bool value);
-	void setBoolBb(bool value);
-	void setBoolFloor(bool value);
-	void setBoolTiles(bool value);
-	void setBoolWalls(bool value);
-	void setBoolSmooth(bool value);
-	void setBoolShadows(bool value);
-	void setBoolFilaire(bool value);
-	void setBoolJoints(bool value);
-	void setBoolContour(bool value);
-	void setBoolEnableLight(bool value);
-        void setBoolEnableShaders(bool value);
-        void setBoolFlatBox(bool value);
-	
-	void setJointToDraw(int joint);
-	
-	void setCurrentTraj(p3d_traj* traj);
-  void refreshConstraintedDoFs();
+    void drawAllWinActive();
+    void isPlanning();
+    void planningFinished();
+
+    void setBoolGhost(bool value);
+    void setBoolBb(bool value);
+    void setBoolFloor(bool value);
+    void setBoolTiles(bool value);
+    void setBoolWalls(bool value);
+    void setBoolSmooth(bool value);
+    void setBoolShadows(bool value);
+    void setBoolFilaire(bool value);
+    void setBoolJoints(bool value);
+    void setBoolContour(bool value);
+    void setBoolEnableLight(bool value);
+    void setBoolEnableShaders(bool value);
+    void setBoolFlatBox(bool value);
+
+    void setCurrentTraj(p3d_traj* traj);
+    void refreshConstraintedDoFs();
 
 signals:
-  void runClicked();
-  void stopClicked();
-  void resetClicked();
-	
+    void runClicked();
+    void stopClicked();
+    void resetClicked();
+
 protected:
-	void keyPressEvent(QKeyEvent *e);
-	void keyReleaseEvent(QKeyEvent *e);
-	
+    void keyPressEvent(QKeyEvent *e);
+    void keyReleaseEvent(QKeyEvent *e);
+
 public slots:
-  void loadParametersQuick();
-	
+    void loadParametersQuick();
+
 private slots:
-  void saveInterfaceParameters();
-  void loadInterfaceParameters();
-  void saveParametersQuick();
-	
-	void initRobotsMenu();
-	void setRobotAsCurrent();
-	
-	void openScenario();
-	void saveScenario();
-  
-  void setDrawColl();
-	
-	void loadGraph();
-	void saveGraph();
-	void saveXYZGraphToDot();
-	
-	void loadTraj();
-	void saveTraj();
-	
-	void changeLightPosX();
-	void changeLightPosY();
-	void changeLightPosZ();
-	void addTrajToDraw();
-	void clearTrajToDraw();
-	void colorTrajChange(int color);
-        void enableRunAndResetButtons();
-        void enableStopButton();
-        void enableRunButton();
-	void showTraj();
-        void showTrace();
-	void restoreView();
-	void mobileCamera();
-        void changeCamera();
-	
-	void test();
-        void saveVideo();
-        void saveVideoTimer();
-	
-	// Global
-	//    void setLineEditWithNumber(Env::intParameter p , int val );
-	void changeEvent(QEvent *e);
+    void saveInterfaceParameters();
+    void loadInterfaceParameters();
+    void saveParametersQuick();
+
+    void initRobotsMenu();
+    void setRobotAsCurrent();
+
+    void openScenario();
+    void saveScenario();
+
+    void setDrawColl();
+
+    void loadGraph();
+    void saveGraph();
+    void saveXYZGraphToDot();
+
+    void loadTraj();
+    void saveTraj();
+
+    void changeLightPosX();
+    void changeLightPosY();
+    void changeLightPosZ();
+    void addTrajToDraw();
+    void clearTrajToDraw();
+    void colorTrajChange(int color);
+    void enableRunAndResetButtons();
+    void enableStopButton();
+    void enableRunButton();
+    void showTraj();
+    void showTrace();
+    void restoreView();
+    void mobileCamera();
+    void changeCamera();
+
+    void test();
+    void saveVideo();
+    void saveVideoTimer();
+
+    // Global
+    //    void setLineEditWithNumber(Env::intParameter p , int val );
+    void changeEvent(QEvent *e);
     void envSelectedPlannerTypeChanged(bool isPRMvsDiffusion);
-  
+
 signals:
-  void selectedPlanner(QString);
-	
+    void selectedPlanner(QString);
+
 private:
-	
-	Ui::MainWindow*							m_ui;
-	
-	KCDpropertiesWindow*				mKCDpropertiesWindow;
-	
-	MainWindowTestFunctions*		m_testFunctions;
-	
-	std::vector<QAction*>				m_RobotsInMenu;
-	
-	void connectCheckBoxes();
 
-	void initRunButtons();
-	void initViewerButtons();
-	void initLightSource();
+    Ui::MainWindow*							m_ui;
 
-	p3d_traj* m_currentTraj;
+    KCDpropertiesWindow*				mKCDpropertiesWindow;
 
-        QTimer *timer;
-        bool isRecording;
+    MainWindowTestFunctions*		m_testFunctions;
+
+    std::vector<QAction*>				m_RobotsInMenu;
+
+    void connectCheckBoxes();
+
+    void initRunButtons();
+    void initViewerButtons();
+    void initLightSource();
+
+    p3d_traj* m_currentTraj;
+
+    QTimer *timer;
+    bool isRecording;
 };
 
 // Global MainWindow Pointer 

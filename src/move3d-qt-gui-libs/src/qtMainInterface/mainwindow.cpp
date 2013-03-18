@@ -552,10 +552,9 @@ void MainWindow::initViewerButtons()
     m_ui->checkBoxDrawGraph->setCheckState(Qt::Checked);
 
     // Joint to Draw
-    new QtShiva::SpinBoxConnector(this, m_ui->spinBoxJointToDraw, ENV.getObject(Env::jntToDraw));
-    connect(m_ui->spinBoxJointToDraw,SIGNAL(valueChanged(int)),this,SLOT(setJointToDraw(int)));
-    m_ui->spinBoxJointToDraw->setValue(XYZ_ROBOT->o[XYZ_ROBOT->no-1]->jnt->num);
-    setJointToDraw( m_ui->spinBoxJointToDraw->value() );
+    new QtShiva::SpinBoxConnector( this, m_ui->spinBoxJointToDraw, ENV.getObject(Env::jntToDraw) );
+    connect(m_ui->spinBoxJointToDraw,SIGNAL(valueChanged(int)),this,SLOT(drawAllWinActive()));
+    ENV.setInt( Env::jntToDraw, XYZ_ROBOT->o[XYZ_ROBOT->no-1]->jnt->num );
 
     connect(m_ui->pushButtonRestoreView,SIGNAL(clicked(bool)),this,SLOT(restoreView()),Qt::DirectConnection);
     //	connect(m_ui->pushButtonResetGraph,SIGNAL(clicked()),this,SLOT(ResetGraph()));
@@ -571,12 +570,6 @@ void MainWindow::initViewerButtons()
 void MainWindow::test()
 {
 
-}
-
-void MainWindow::setJointToDraw(int joint)
-{
-    p3d_set_user_drawnjnt(joint);
-    this->drawAllWinActive();
 }
 
 void MainWindow::mobileCamera()

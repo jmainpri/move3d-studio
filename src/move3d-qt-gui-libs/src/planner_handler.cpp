@@ -124,6 +124,9 @@ void qt_init_costspace()
 //! after the parameter file has been loaded
 void qt_init_after_params()
 {
+    cout << "p3d_set_user_drawnjnt : " << ENV.getInt(Env::jntToDraw) << endl;
+    p3d_set_user_drawnjnt( ENV.getInt(Env::jntToDraw) );
+
     if(ENV.getBool(Env::isCostSpace) || ENV.getBool(Env::useTRRT) )
     {
         qt_init_costspace();

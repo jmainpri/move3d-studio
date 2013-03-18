@@ -198,7 +198,7 @@ int Main_threads::run(int argc, char** argv)
     bool launch_script=false;
     string script_id;
 
-    mtrace();
+    //mtrace();
 
     // Find if a file is passed as argument and set openFileDialog mode
     // Also check for nogui mode
