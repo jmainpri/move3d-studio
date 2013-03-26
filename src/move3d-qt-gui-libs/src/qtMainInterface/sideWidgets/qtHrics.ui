@@ -35,9 +35,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-608</y>
+        <y>-602</y>
         <width>551</width>
-        <height>1597</height>
+        <height>1591</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -920,6 +920,13 @@
            <widget class="QCheckBox" name="checkBoxDrawHumanTrajectory">
             <property name="text">
              <string>Draw Human Trajectory</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QCheckBox" name="checkBoxDrawCurrentOccupancy">
+            <property name="text">
+             <string>Draw current occupancy</string>
             </property>
            </widget>
           </item>

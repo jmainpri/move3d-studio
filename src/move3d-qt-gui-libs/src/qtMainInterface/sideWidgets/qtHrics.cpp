@@ -655,6 +655,7 @@ void HricsWidget::initWorkspaceOccupancy()
     new connectCheckBoxToEnv( m_ui->checkBoxDrawVoxelOccupancy,      GestEnv->getObject(GestParam::draw_ws_occupancy) );
     new connectCheckBoxToEnv( m_ui->checkBoxDrawOneClassOnly,        GestEnv->getObject(GestParam::draw_single_class) );
     new connectCheckBoxToEnv( m_ui->checkBoxDrawHumanTrajectory,     GestEnv->getObject(GestParam::draw_recorded_motion) );
+    new connectCheckBoxToEnv( m_ui->checkBoxDrawCurrentOccupancy,    GestEnv->getObject(GestParam::draw_current_occupancy) );
 
     new connectCheckBoxToEnv( m_ui->checkBoxMultipleStomps,          GestEnv->getObject(GestParam::with_multiple_stomps) );
     new connectCheckBoxToEnv( m_ui->checkBoxParallelize,             GestEnv->getObject(GestParam::parallelize_stomp) );
