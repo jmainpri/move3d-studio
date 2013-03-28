@@ -843,21 +843,36 @@ public:
             pushButtonRun->setSizePolicy(sizePolicy4);
             pushButtonRun->setMinimumSize(QSize(0, 0));
             pushButtonRun->setMaximumSize(QSize(16777215, 16777215));
-            pushButtonRun->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-                                                           "border-image:url(images/media-playback-start.svg) 1 1 1 1 ;\n"
-                                                           "}\n"
-                                                           "\n"
-                                                           "QPushButton:hover {\n"
-                                                           "border-image:url(images/media-playback-start.svg) -2 -2 -2 -2 ;\n"
-                                                           "}\n"
-                                                           "\n"
-                                                           "QPushButton:pressed {\n"
-                                                           "border-image:url(images/media-playback-start.svg) -8 -8 -8 -8 ;\n"
-                                                           "}\n"
-                                                           "\n"
-                                                           "QPushButton:disabled {\n"
-                                                           "border-image:url(images/media-playback-start-disabled.svg) 1 1 1 1 ;\n"
-                                                           "}"));
+
+            std::string home_move3d = "";
+
+            char* home_path = getenv("HOME_MOVE3D");
+
+            if( home_path == NULL)
+                std::cout << "HOME_MOVE3D is not defined" << std::endl;
+            else
+                home_move3d = std::string(home_path) + "/";
+
+            std::cout << "home_move3d : " << home_move3d << std::endl;
+
+            std::string button =
+                    "QPushButton {\n"
+                    "border-image:url(" + home_move3d + "images/media-playback-start.svg) 1 1 1 1 ;\n"
+                    "}\n"
+                    "\n"
+                    "QPushButton:hover {\n"
+                    "border-image:url(" + home_move3d + "images/media-playback-start.svg) -2 -2 -2 -2 ;\n"
+                    "}\n"
+                    "\n"
+                    "QPushButton:pressed {\n"
+                    "border-image:url(" + home_move3d + "images/media-playback-start.svg) -8 -8 -8 -8 ;\n"
+                    "}\n"
+                    "\n"
+                    "QPushButton:disabled {\n"
+                    "border-image:url(" + home_move3d + "images/media-playback-start-disabled.svg) 1 1 1 1 ;\n"
+                    "}";
+
+            pushButtonRun->setStyleSheet(QString::fromUtf8(button.c_str()));
             pushButtonRun->setIconSize(QSize(50, 50));
 
             //----------------------------------------------------------------------
@@ -870,21 +885,25 @@ public:
             pushButtonStop->setSizePolicy(sizePolicy4);
             pushButtonStop->setMinimumSize(QSize(0, 0));
             pushButtonStop->setMaximumSize(QSize(16777215, 16777215));
-            pushButtonStop->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-                                                            "border-image:url(images/media-playback-pause.svg) 1 1 1 1 ;\n"
-                                                            "}\n"
-                                                            "\n"
-                                                            "QPushButton:hover {\n"
-                                                            "border-image:url(images/media-playback-pause.svg) -2 -2 -2 -2 ;\n"
-                                                            "}\n"
-                                                            "\n"
-                                                            "QPushButton:pressed {\n"
-                                                            "border-image:url(images/media-playback-pause.svg) -5 -5 -5 -5 ;\n"
-                                                            "}\n"
-                                                            "\n"
-                                                            "QPushButton:disabled {\n"
-                                                            "border-image:url(images/media-playback-pause-disabled.svg) 1 1 1 1 ;\n"
-                                                            "}"));
+
+            button =
+                    "QPushButton {\n"
+                    "border-image:url(" + home_move3d + "images/media-playback-pause.svg) 1 1 1 1 ;\n"
+                    "}\n"
+                    "\n"
+                    "QPushButton:hover {\n"
+                    "border-image:url(" + home_move3d + "images/media-playback-pause.svg) -2 -2 -2 -2 ;\n"
+                    "}\n"
+                    "\n"
+                    "QPushButton:pressed {\n"
+                    "border-image:url(" + home_move3d + "images/media-playback-pause.svg) -8 -8 -8 -8 ;\n"
+                    "}\n"
+                    "\n"
+                    "QPushButton:disabled {\n"
+                    "border-image:url(" + home_move3d + "images/media-playback-pause-disabled.svg) 1 1 1 1 ;\n"
+                    "}";
+
+            pushButtonStop->setStyleSheet(QString::fromUtf8(button.c_str()));
             pushButtonStop->setIconSize(QSize(50, 50));
 
             //----------------------------------------------------------------------
@@ -897,22 +916,26 @@ public:
             pushButtonReset->setSizePolicy(sizePolicy4);
             pushButtonReset->setMinimumSize(QSize(0, 0));
             pushButtonReset->setMaximumSize(QSize(16777215, 16777215));
-            pushButtonReset->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-                                                             "border-image:url(images/media-playback-stop.svg) 1 1 1 1 ;\n"
-                                                             "}\n"
-                                                             //                                                       "\n"
-                                                             "QPushButton:hover {\n"
-                                                             "border-image:url(images/media-playback-stop.svg) -2 -2 -2 -2 ;\n"
-                                                             "}\n"
-                                                             "\n"
-                                                             "QPushButton:pressed {\n"
-                                                             "border-image:url(images/media-playback-stop.svg) -5 -5 -5 -5 ;\n"
-                                                             "}\n"
-                                                             "\n"
-                                                             "QPushButton:disabled {\n"
-                                                             "border-image:url(images/media-playback-stop-disabled.svg) 1 1 1 1 ;\n"
-                                                             "}"));
-             pushButtonReset->setIconSize(QSize(50, 50));
+
+            button =
+                    "QPushButton {\n"
+                    "border-image:url(" + home_move3d + "images/media-playback-stop.svg) 1 1 1 1 ;\n"
+                    "}\n"
+                    "\n"
+                    "QPushButton:hover {\n"
+                    "border-image:url(" + home_move3d + "images/media-playback-stop.svg) -2 -2 -2 -2 ;\n"
+                    "}\n"
+                    "\n"
+                    "QPushButton:pressed {\n"
+                    "border-image:url(" + home_move3d + "images/media-playback-stop.svg) -8 -8 -8 -8 ;\n"
+                    "}\n"
+                    "\n"
+                    "QPushButton:disabled {\n"
+                    "border-image:url(" + home_move3d + "images/media-playback-stop-disabled.svg) 1 1 1 1 ;\n"
+                    "}";
+
+            pushButtonReset->setStyleSheet(QString::fromUtf8(button.c_str()));
+            pushButtonReset->setIconSize(QSize(50, 50));
 
             //----------------------------------------------------------------------
             // Label Running
@@ -1143,7 +1166,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "Move3D-Studio", 0, QApplication::UnicodeUTF8));
         actionQuit->setText(QApplication::translate("MainWindow", "Quit", 0, QApplication::UnicodeUTF8));
         action3DViewer->setText(QApplication::translate("MainWindow", "3D-Viewer", 0, QApplication::UnicodeUTF8));
         actionKCDPropietes->setText(QApplication::translate("MainWindow", "KCD Propietes", 0, QApplication::UnicodeUTF8));

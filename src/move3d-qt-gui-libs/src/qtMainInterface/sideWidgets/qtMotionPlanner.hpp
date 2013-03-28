@@ -28,7 +28,7 @@ class Node;
 
 namespace Ui
 {
-	class MotionPlanner;
+class MotionPlanner;
 }
 
 /**
@@ -37,106 +37,106 @@ namespace Ui
  */
 class MotionPlanner : public QWidget
 {
-	Q_OBJECT
-	
+    Q_OBJECT
+
 public:
-	MotionPlanner(QWidget *parent = 0);
-	~MotionPlanner();
-	
-	void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
-  
-  Node* getIthNodeInActiveGraph();
+    MotionPlanner(QWidget *parent = 0);
+    ~MotionPlanner();
+
+    void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
+
+    Node* getIthNodeInActiveGraph();
     Ui::MotionPlanner* getMui(){return m_ui;}
-  
+
 public slots:
-	Node* getIthNodeInBestTraj();
-  
+    Node* getIthNodeInBestTraj();
+
 private slots:
-  
-	// Optim -----------------------------
-        void on_checkBoxSmooth_toggled(bool checked);
-        void on_pushButtonComputeNavigation_clicked();
-        void on_pushButtonSetGoal_toggled(bool checked);
- void test(double value);
-	void computeGrid();
-	void runMultiSmooth();
-	void optimizeCost();
-	void shortCutCost();
-	void removeRedundant();
-	void extractBestTraj();
-	void setCostCriterium(int choise);
-	void eraseDebugTraj();
-	void cutTrajInSmallLP();
-  void cutTrajAndOptimizeSM();
-	
-	// Multi-Run -------------------------
-	void saveContext();
-	void printContext();
-	void deleteSelected();
-	void printAllContext();
-	void resetContext();
-	void setToSelected();
-  void runMultiRRT();
-	void runAllRRT();
-	void runAllGreedy();
-	void showHistoWindow();
-	
-	// General ---------------------------
-	void checkAllEdges();
-	void envDmaxSpinBoxValueChanged( double dmax );
+
+    // Optim -----------------------------
+    void on_checkBoxSmooth_toggled(bool checked);
+    void on_pushButtonComputeNavigation_clicked();
+    void on_pushButtonSetGoal_toggled(bool checked);
+    void test(double value);
+    void computeGrid();
+    void runMultiSmooth();
+    void optimizeCost();
+    void shortCutCost();
+    void removeRedundant();
+    void extractBestTraj();
+    void setCostCriterium(int choise);
+    void eraseDebugTraj();
+    void cutTrajInSmallLP();
+    void cutTrajAndOptimizeSM();
+
+    // Multi-Run -------------------------
+    void saveContext();
+    void printContext();
+    void deleteSelected();
+    void printAllContext();
+    void resetContext();
+    void setToSelected();
+    void runMultiRRT();
+    void runAllRRT();
+    void runAllGreedy();
+    void showHistoWindow();
+
+    // General ---------------------------
+    void checkAllEdges();
+    void envDmaxSpinBoxValueChanged( double dmax );
     void envIsWithGoalValueChanged( bool state );
     void envBiDirValueChanged( bool state );
     void envRandomConnectionToGoalValueChanged( bool state );
     void envTryClosestValueChanged( bool state );
     void envMultiRRTValueChanged( bool state );
     void envPRMTypeChanged(int type );
-	void testParam(double param);
-	
-	// Show ------------------------------
-	void nodeToShowChanged();
+    void testParam(double param);
+
+    // Show ------------------------------
+    void nodeToShowChanged();
     void edgeToShowChanged();
     void removeNode();
-  
+
 signals:
-  void selectedPlanner(QString);
-	
+    void selectedPlanner(QString);
+
 private:
     Ui::MotionPlanner *m_ui;
-	
-	MainWindow *m_mainWindow;
-	
-	QListWidget* contextList;
-	std::vector<QListWidgetItem*> itemList;
-	
+
+    MainWindow *m_mainWindow;
+
+    QListWidget* contextList;
+    std::vector<QListWidgetItem*> itemList;
+
 #ifdef USE_QWT
-	BasicPlotWindow *plot;
-	HistoWindow* histoWin;
+    BasicPlotWindow *plot;
+    HistoWindow* histoWin;
 #endif
-	
-	void initDiffusion();
-	void initMultiRRT();
-	void initPRM();
-	void initMultiRun();
-	void initOptim();
-	void initGeneral();
-	void initShowGraph();
-        MovingHuman* m_mh;
+
+    void initDiffusion();
+    void initMultiRRT();
+    void initPRM();
+    void initMultiRun();
+    void initOptim();
+    void initGeneral();
+    void initShowGraph();
+    MovingHuman* m_mh;
 };
 
 /**
  * @ingroup qtWindow
- * @brief Multi Planner thread class 
+ * @brief Multi Planner thread class
  */
 class MultiThread: public QThread
 {
-	Q_OBJECT
-	
+    Q_OBJECT
+
 public:
-	MultiThread(bool isRRT,QObject* parent = 0);
-	
+    MultiThread(bool isRRT,QObject* parent = 0);
+
 protected:
-	void run();
-	bool m_isRRT;
+    void run();
+    bool m_isRRT;
 };
 
 #endif

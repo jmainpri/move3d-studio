@@ -431,6 +431,13 @@
                </property>
               </widget>
              </item>
+             <item row="5" column="0">
+              <widget class="QCheckBox" name="checkBoxCovAdaptation">
+               <property name="text">
+                <string>Cov Adaptation</string>
+               </property>
+              </widget>
+             </item>
             </layout>
            </widget>
           </item>

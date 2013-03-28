@@ -111,9 +111,10 @@ void ReplanningWidget::init()
   new connectCheckBoxToEnv( m_ui->checkBoxTimeLimit, PlanEnv->getObject(PlanParam::trajStompWithTimeLimit) );
   new connectCheckBoxToEnv( m_ui->checkBoxMMatrix, PlanEnv->getObject(PlanParam::trajStompMultiplyM) );
   new connectCheckBoxToEnv( m_ui->checkBoxWithRRT, PlanEnv->getObject(PlanParam::trajStompWithRRT) );
+  new connectCheckBoxToEnv( m_ui->checkBoxCovAdaptation, PlanEnv->getObject(PlanParam::trajStompMatrixAdaptation) );
   new connectCheckBoxToEnv( m_ui->checkBoxStompMaxIteration, PlanEnv->getObject(PlanParam::trajStompWithIterLimit) );
   new connectCheckBoxToEnv( m_ui->checkBoxDrawParallel, PlanEnv->getObject(PlanParam::drawParallelTraj) );
-  
+
   // Stomp max iteration
   new SpinBoxConnector(this,m_ui->spinBoxStompMaxIteration,PlanEnv->getObject(PlanParam::stompMaxIteration));
 

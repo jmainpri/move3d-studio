@@ -147,6 +147,11 @@ void qt_init_after_params()
         traj_optim_initStomp();
     }
 
+    if( PlanEnv->getBool(PlanParam::setRobotIK))
+    {
+        traj_optim_switch_cartesian_mode( true );
+    }
+
     if( GestEnv->getBool(GestParam::init_module_at_start) )
     {
         HRICS_initOccupancyPredictionFramework();
@@ -580,7 +585,7 @@ void qt_voxel_occupancy_simulation()
     global_humanPredictionSimulator->runVoxelOccupancy();
 }
 
-void qt_human_prediction_simulation()
+void qt_human_prediction_simulation_tests()
 {
     cout << "Starting Simulator" << endl;
     if( global_humanPredictionSimulator == NULL )
@@ -630,6 +635,20 @@ void qt_human_prediction_simulation()
             cout << "costs_" << i << "(" << j+1 << ") = " << costs[i][j] << endl;
         }
     }
+}
+
+void qt_human_prediction_simulation()
+{
+    cout << "Starting Simulator" << endl;
+    if( global_humanPredictionSimulator == NULL )
+    {
+        cout << "global_humanPredictionSimulator == NULL" << endl;
+        return;
+    }
+
+    double cost = global_humanPredictionSimulator->run();
+
+    cout << "cost of trajectory : " << cost << endl;
 }
 
 //----------------------------------------------------------
@@ -737,8 +756,8 @@ void qt_simpleNav()
 
 void qt_runParallelStomp()
 {
-    srompRun_MultipleParallel();
-//    srompRun_OneParallel();
+//    srompRun_MultipleParallel();
+    srompRun_OneParallel();
 }
 
 #ifdef MULTILOCALPATH

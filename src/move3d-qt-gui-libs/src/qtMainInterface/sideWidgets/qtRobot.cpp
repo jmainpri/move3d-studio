@@ -72,13 +72,13 @@ RobotWidget::RobotWidget(QWidget *parent) :
     initManipulation();
     //initVoxelCollisionChecker();
     initTrajectoryFromConfig();
-  
+
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
-  cout << "Set grasp tab" << endl;
-  // Initialize the grasp planner tab
-  m_tabGrasp = new GraspPlannerWidget(m_ui->GraspPlanner);
-  m_tabGrasp->setObjectName(QString::fromUtf8("tabGraspPlanner"));
-  m_ui->graspplannerLayout->addWidget(m_tabGrasp);
+    cout << "Set grasp tab" << endl;
+    // Initialize the grasp planner tab
+    m_tabGrasp = new GraspPlannerWidget(m_ui->GraspPlanner);
+    m_tabGrasp->setObjectName(QString::fromUtf8("tabGraspPlanner"));
+    m_ui->graspplannerLayout->addWidget(m_tabGrasp);
 #endif
 }
 
@@ -89,9 +89,9 @@ RobotWidget::~RobotWidget()
 
 void RobotWidget::setMainWindow(MainWindow *ptrMW) 
 { 
-  m_mainWindow = ptrMW; 
+    m_mainWindow = ptrMW;
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
-  m_tabGrasp->setMainWindow( m_mainWindow );
+    m_tabGrasp->setMainWindow( m_mainWindow );
 #endif
 }
 
@@ -113,47 +113,47 @@ MoveRobot*  RobotWidget::getMoveRobot()
 //---------------------------------------------------------------------
 void RobotWidget::initModel()
 {
-  connect(m_ui->pushButtonCollision,SIGNAL(clicked()),this,SLOT(collisionsTest()));
-  connect(m_ui->pushButtonLocalPath,SIGNAL(clicked()),this,SLOT(localpathsTest()));
-  connect(m_ui->pushButtonCost,SIGNAL(clicked()),this,SLOT(costTest()));
-  connect(m_ui->pushButtonTestAll,SIGNAL(clicked()),this,SLOT(allTests()));
-  //connect(m_ui->pushButtonSetObjectToCarry,SIGNAL(clicked()),this,SLOT(SetObjectToCarry()));
-  
-  //Traj from via point
-  connect(m_ui->pushButtonLaunchSoft,SIGNAL(clicked()),this,SLOT(makeSoftmotionTraj()));
-  connect(m_ui->pushButtonLaunchNormal,SIGNAL(clicked()),this,SLOT(makeNormalTraj()));
-  connect(m_ui->pushButtonSaveConf,SIGNAL(clicked()),this,SLOT(saveConfig()));
-  connect(m_ui->pushButtonClearTraj,SIGNAL(clicked()),this,SLOT(clearConfigs()));
-  connect(m_ui->pushButtonDeleteConf,SIGNAL(clicked()),this,SLOT(deleteConfig()));
-  // end Traj from via point
-  
-  connect(ENV.getObject(Env::numberOfCollisionPerSec),SIGNAL(valueChanged(QString)),m_ui->labelCollision,SLOT(setText(QString)));
-  connect(ENV.getObject(Env::numberOfLocalPathPerSec),SIGNAL(valueChanged(QString)),m_ui->labelLocalPath,SLOT(setText(QString)));
-  connect(ENV.getObject(Env::numberOfCostPerSec),SIGNAL(valueChanged(QString)),m_ui->labelTimeCost,SLOT(setText(QString)));
-  
-  connect(m_ui->pushButtonAttMat,SIGNAL(clicked()),this,SLOT(setAttMatrix()));
-  
-  new QtShiva::SpinBoxConnector( this, m_ui->spinBoxArmId,ENV.getObject( Env::currentArmId) );
-  
-  QString RobotObjectToCarry("No Object");
-  
-  ENV.setString(Env::ObjectToCarry,RobotObjectToCarry);
-  
-  // List all robots with only one 
-  // Freeflyer joint
-  for(int i =0;i<XYZ_ENV->nr;i++)
-  {
-    if( XYZ_ENV->robot[i]->njoints == 1 )
+    connect(m_ui->pushButtonCollision,SIGNAL(clicked()),this,SLOT(collisionsTest()));
+    connect(m_ui->pushButtonLocalPath,SIGNAL(clicked()),this,SLOT(localpathsTest()));
+    connect(m_ui->pushButtonCost,SIGNAL(clicked()),this,SLOT(costTest()));
+    connect(m_ui->pushButtonTestAll,SIGNAL(clicked()),this,SLOT(allTests()));
+    //connect(m_ui->pushButtonSetObjectToCarry,SIGNAL(clicked()),this,SLOT(SetObjectToCarry()));
+
+    //Traj from via point
+    connect(m_ui->pushButtonLaunchSoft,SIGNAL(clicked()),this,SLOT(makeSoftmotionTraj()));
+    connect(m_ui->pushButtonLaunchNormal,SIGNAL(clicked()),this,SLOT(makeNormalTraj()));
+    connect(m_ui->pushButtonSaveConf,SIGNAL(clicked()),this,SLOT(saveConfig()));
+    connect(m_ui->pushButtonClearTraj,SIGNAL(clicked()),this,SLOT(clearConfigs()));
+    connect(m_ui->pushButtonDeleteConf,SIGNAL(clicked()),this,SLOT(deleteConfig()));
+    // end Traj from via point
+
+    connect(ENV.getObject(Env::numberOfCollisionPerSec),SIGNAL(valueChanged(QString)),m_ui->labelCollision,SLOT(setText(QString)));
+    connect(ENV.getObject(Env::numberOfLocalPathPerSec),SIGNAL(valueChanged(QString)),m_ui->labelLocalPath,SLOT(setText(QString)));
+    connect(ENV.getObject(Env::numberOfCostPerSec),SIGNAL(valueChanged(QString)),m_ui->labelTimeCost,SLOT(setText(QString)));
+
+    connect(m_ui->pushButtonAttMat,SIGNAL(clicked()),this,SLOT(setAttMatrix()));
+
+    new QtShiva::SpinBoxConnector( this, m_ui->spinBoxArmId,ENV.getObject( Env::currentArmId) );
+
+    QString RobotObjectToCarry("No Object");
+
+    ENV.setString(Env::ObjectToCarry,RobotObjectToCarry);
+
+    // List all robots with only one
+    // Freeflyer joint
+    for(int i =0;i<XYZ_ENV->nr;i++)
     {
-      if(XYZ_ENV->robot[i]->joints[1]->type == P3D_FREEFLYER )
-      {
-        QString FFname(XYZ_ENV->robot[i]->name);
-        m_ui->comboBoxGrabObject->addItem(FFname);
-        m_FreeFlyers.push_back(FFname);
-        //                cout<< " FreeFlyer = "  << XYZ_ENV->robot[i]->name << endl;
-      }
+        if( XYZ_ENV->robot[i]->njoints == 1 )
+        {
+            if(XYZ_ENV->robot[i]->joints[1]->type == P3D_FREEFLYER )
+            {
+                QString FFname(XYZ_ENV->robot[i]->name);
+                m_ui->comboBoxGrabObject->addItem(FFname);
+                m_FreeFlyers.push_back(FFname);
+                //                cout<< " FreeFlyer = "  << XYZ_ENV->robot[i]->name << endl;
+            }
+        }
     }
-  }
 
     m_ui->comboBoxGrabObject->setCurrentIndex(0);
     connect(m_ui->comboBoxGrabObject, SIGNAL(currentIndexChanged(int)),this, SLOT(currentObjectChange(int))/*, Qt::DirectConnection*/);
@@ -167,7 +167,7 @@ void RobotWidget::initModel()
                 this, m_ui->doubleSpinBoxWeightedRot, m_ui->horizontalSliderWeightedRot ,ENV.getObject( Env::RotationWeight) );
 
     connect(m_ui->pushButtonVirtualJointBounds,SIGNAL(clicked()),	this,SLOT(SetBounds()));
-  
+
     connect(m_ui->pushButtonGrabObject,SIGNAL(clicked()),					this,SLOT(GrabObject()));
     connect(m_ui->pushButtonReleaseObject,SIGNAL(clicked()),			this,SLOT(ReleaseObject()));
 
@@ -186,23 +186,23 @@ void RobotWidget::initModel()
 
     connect(m_ui->pushButtonPrintPQPColPair,SIGNAL(clicked()),		this,SLOT(printPQPColPair()));
 
-//    void	setMaximum ( int max );
-//    void	setMinimum ( int min );
+    //    void	setMaximum ( int max );
+    //    void	setMinimum ( int min );
 }
 
 void RobotWidget::printAbsPos()
 {
-  Robot* r = global_Project->getActiveScene()->getActiveRobot();
-  
-  unsigned int joint = m_ui->spinBoxPrintAbsPos->value();
-  
-  if( joint <= r->getNumberOfJoints() ) {
-    cout << "Print Matrix of joint (" << r->getJoint(joint)->getName() ;
-    cout << ") for robot " << r->getName() << endl;
-    cout << r->getJoint(joint)->getMatrixPos().matrix() << endl;
-  }
-  else
-    cout << "Cannont print for this robot" << endl;
+    Robot* r = global_Project->getActiveScene()->getActiveRobot();
+
+    unsigned int joint = m_ui->spinBoxPrintAbsPos->value();
+
+    if( joint <= r->getNumberOfJoints() ) {
+        cout << "Print Matrix of joint (" << r->getJoint(joint)->getName() ;
+        cout << ") for robot " << r->getName() << endl;
+        cout << r->getJoint(joint)->getMatrixPos().matrix() << endl;
+    }
+    else
+        cout << "Cannont print for this robot" << endl;
 
 }
 
@@ -387,92 +387,92 @@ void RobotWidget::currentObjectChange(int i)
 
 void RobotWidget::GrabObject()
 {
-  if( GLOBAL_AGENTS == NULL ) 
-  {
-    GLOBAL_AGENTS = hri_create_agents();
-  }
-  
-  Robot* robot = global_Project->getActiveScene()->getRobotByNameContaining("_ROBOT");
-  
-  int armId = ENV.getInt( Env::currentArmId );
-  string robot_name = robot->getName();
-  string object_name = ENV.getString(Env::ObjectToCarry).toStdString();
-  cout << "Robot " << robot_name << " grasp object " << object_name;
-  cout << " with arm " << armId << endl;
-  
-  HRI_AGENT* agent = hri_get_agent_by_name( GLOBAL_AGENTS, robot_name.c_str() );
-  
-  if( agent ) {
-    hri_agent_is_grasping_obj( agent, true , object_name.c_str() , armId );
-  }
-  else {
-    cout << "Agent not found!!!" << endl;
-  }
+    if( GLOBAL_AGENTS == NULL )
+    {
+        GLOBAL_AGENTS = hri_create_agents();
+    }
+
+    Robot* robot = global_Project->getActiveScene()->getRobotByNameContaining("_ROBOT");
+
+    int armId = ENV.getInt( Env::currentArmId );
+    string robot_name = robot->getName();
+    string object_name = ENV.getString(Env::ObjectToCarry).toStdString();
+    cout << "Robot " << robot_name << " grasp object " << object_name;
+    cout << " with arm " << armId << endl;
+
+    HRI_AGENT* agent = hri_get_agent_by_name( GLOBAL_AGENTS, robot_name.c_str() );
+
+    if( agent ) {
+        hri_agent_is_grasping_obj( agent, true , object_name.c_str() , armId );
+    }
+    else {
+        cout << "Agent not found!!!" << endl;
+    }
 }
 
 void RobotWidget::ReleaseObject()
 {
-  if( GLOBAL_AGENTS == NULL ) 
-  {
-    GLOBAL_AGENTS = hri_create_agents();
-  }
-  
-  Robot* robot = global_Project->getActiveScene()->getRobotByNameContaining("_ROBOT");
-  
-  int armId = ENV.getInt( Env::currentArmId );
-  string robot_name = robot->getName();
-  cout << "Robot " << robot_name << " release object with arm " << armId << endl;
-  
-  HRI_AGENT* agent = hri_get_agent_by_name( GLOBAL_AGENTS, robot_name.c_str() );
-  
-  if( agent ) {
-    hri_agent_is_grasping_obj( agent, false, NULL, armId );
-  }
-  else {
-    cout << "Agent not found!!!" << endl;
-  }
+    if( GLOBAL_AGENTS == NULL )
+    {
+        GLOBAL_AGENTS = hri_create_agents();
+    }
+
+    Robot* robot = global_Project->getActiveScene()->getRobotByNameContaining("_ROBOT");
+
+    int armId = ENV.getInt( Env::currentArmId );
+    string robot_name = robot->getName();
+    cout << "Robot " << robot_name << " release object with arm " << armId << endl;
+
+    HRI_AGENT* agent = hri_get_agent_by_name( GLOBAL_AGENTS, robot_name.c_str() );
+
+    if( agent ) {
+        hri_agent_is_grasping_obj( agent, false, NULL, armId );
+    }
+    else {
+        cout << "Agent not found!!!" << endl;
+    }
 }
 
 void RobotWidget::SetBounds()
 {
-  Robot* robot = global_Project->getActiveScene()->getRobotByNameContaining("_ROBOT");
-  
-  confPtr_t q = robot->getCurrentPos();
-  
-  double dist = 2.3; // 4.5 metres 
-  
-  double limits[6];
-  
-  limits[0] = (*q)[6] - dist;
-  limits[1] = (*q)[6] + dist;
-  limits[2] = (*q)[7] - dist;
-  limits[3] = (*q)[7] + dist;
-  limits[4] = 0;
-  limits[5] = 2.0;
+    Robot* robot = global_Project->getActiveScene()->getRobotByNameContaining("_ROBOT");
+
+    confPtr_t q = robot->getCurrentPos();
+
+    double dist = 2.3; // 4.5 metres
+
+    double limits[6];
+
+    limits[0] = (*q)[6] - dist;
+    limits[1] = (*q)[6] + dist;
+    limits[2] = (*q)[7] - dist;
+    limits[3] = (*q)[7] + dist;
+    limits[4] = 0;
+    limits[5] = 2.0;
     
-  for ( int j=2; j<int(robot->getNumberOfJoints()); j++ )
-  {
-    if( robot->getJoint(j)->getJointStruct()->type == P3D_FREEFLYER )
+    for ( int j=2; j<int(robot->getNumberOfJoints()); j++ )
     {
-      cout << "set joint : " << robot->getJoint(j)->getName() << " bounds" << endl;
-      
-      for ( int k=0; k<3; k++ )
-      {
-        p3d_jnt_set_dof_bounds_deg (      robot->getRobotStruct()->joints[j], k, limits[2*k], limits[2*k+1] );
-        p3d_jnt_set_dof_rand_bounds_deg ( robot->getRobotStruct()->joints[j], k, limits[2*k], limits[2*k+1] );
-      }
-      
-      robot->getRobotStruct()->joints[j]->dist = 0.10;
+        if( robot->getJoint(j)->getJointStruct()->type == P3D_FREEFLYER )
+        {
+            cout << "set joint : " << robot->getJoint(j)->getName() << " bounds" << endl;
+
+            for ( int k=0; k<3; k++ )
+            {
+                p3d_jnt_set_dof_bounds_deg (      robot->getRobotStruct()->joints[j], k, limits[2*k], limits[2*k+1] );
+                p3d_jnt_set_dof_rand_bounds_deg ( robot->getRobotStruct()->joints[j], k, limits[2*k], limits[2*k+1] );
+            }
+
+            robot->getRobotStruct()->joints[j]->dist = 0.10;
+        }
     }
-  }
 }
 
 void RobotWidget::printCurrentPos()
 {
-  Robot* currRobot = global_Project->getActiveScene()->getActiveRobot();
-  currRobot->getCurrentPos()->print(true);
-  
-  HRICS::printPr2Config();
+    Robot* currRobot = global_Project->getActiveScene()->getActiveRobot();
+    currRobot->getCurrentPos()->print(true);
+
+    HRICS::printPr2Config();
 }
 
 #ifdef LIGHT_PLANNER
@@ -480,8 +480,8 @@ static bool switch_cart_mode=false;
 
 void RobotWidget::switchFKIK()
 {
-  traj_optim_switch_cartesian_mode( switch_cart_mode );
-  switch_cart_mode = !switch_cart_mode;
+    traj_optim_switch_cartesian_mode( switch_cart_mode );
+    switch_cart_mode = !switch_cart_mode;
 }
 #endif
 
@@ -578,95 +578,95 @@ void runCurrentTest()
 //! which type of method will be used (it is called from the planner thread)
 void runManipulation()
 {
-  if(Manip::isCartesianMode)
-  {
-    //for(unsigned int i=0; i < rob->armManipulationData->size(); i++)
-    global_manipPlanTest->getManipulationPlanner()->setArmCartesian(0, true);
-  }
-  else
-  {
-    //for(unsigned int i=0; i < rob->armManipulationData->size(); i++)
-    global_manipPlanTest->getManipulationPlanner()->setArmCartesian(0, false);
-  }
-  
-  switch (Phase)
-  {
+    if(Manip::isCartesianMode)
+    {
+        //for(unsigned int i=0; i < rob->armManipulationData->size(); i++)
+        global_manipPlanTest->getManipulationPlanner()->setArmCartesian(0, true);
+    }
+    else
+    {
+        //for(unsigned int i=0; i < rob->armManipulationData->size(); i++)
+        global_manipPlanTest->getManipulationPlanner()->setArmCartesian(0, false);
+    }
+
+    switch (Phase)
+    {
     case ARM_FREE :
     {
-      cout << "ARM_FREE" << endl;
-      global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
-      global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
-      
-      global_manipPlanTest->runTest(1);
+        cout << "ARM_FREE" << endl;
+        global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
+        global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
+
+        global_manipPlanTest->runTest(1);
     }
-      break;
-      
+        break;
+
     case ARM_PICK_GOTO :
     {
-      cout << "ARM_PICK_GOTO" << endl;
-      global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
-      global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
-      
-      global_manipPlanTest->runTest(2);
+        cout << "ARM_PICK_GOTO" << endl;
+        global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
+        global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
+
+        global_manipPlanTest->runTest(2);
     }
-      break;
-      
+        break;
+
     case ARM_TAKE_TO_FREE :
     {
-      cout << "ARM_TAKE_TO_FREE" << endl;
-      global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
-      global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
-      
-      global_manipPlanTest->runTest(3);
+        cout << "ARM_TAKE_TO_FREE" << endl;
+        global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
+        global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
+
+        global_manipPlanTest->runTest(3);
     }
-      break;
-      
+        break;
+
     case ARM_TAKE_TO_PLACE :
     {
-      cout << "ARM_TAKE_TO_PLACE" << endl;
-      global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
-      global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
-      
-      global_manipPlanTest->runTest(4);
+        cout << "ARM_TAKE_TO_PLACE" << endl;
+        global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
+        global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
+
+        global_manipPlanTest->runTest(4);
     }
-      break;
-      
+        break;
+
     case ARM_ESCAPE_OBJECT :
     {
-      cout << "ARM_ESCAPE_OBJECT" << endl;
-      global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
-      global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
-      
-      global_manipPlanTest->runTest(7);
+        cout << "ARM_ESCAPE_OBJECT" << endl;
+        global_manipPlanTest->setInitConfiguration(qInit->getConfigStructCopy());
+        global_manipPlanTest->setGoalConfiguration(qGoal->getConfigStructCopy());
+
+        global_manipPlanTest->runTest(7);
     }
-      break;
-      
-      //      case Manip::rePlanning :
-      //      {
-      //        p3d_vector3 otp;
-      //        otp[0] = 4.250;
-      //        otp[1] = -2.60;
-      //        otp[2] = 1.000;
-      //
-      //        SM_TRAJ traj;
-      //
-      //        int id_localpath;
-      //        const double t_rep = 0.0; // in second
-      //        const double tau = 0.0;
-      //        p3d_getQSwitchIDFromMidCVS(tau, t_rep, &id_localpath);
-      //
-      //        global_manipPlanTest->getManipulationPlanner()->armReplan(otp,id_localpath,traj);
-      //      }
-      //        break;
-      
+        break;
+
+        //      case Manip::rePlanning :
+        //      {
+        //        p3d_vector3 otp;
+        //        otp[0] = 4.250;
+        //        otp[1] = -2.60;
+        //        otp[2] = 1.000;
+        //
+        //        SM_TRAJ traj;
+        //
+        //        int id_localpath;
+        //        const double t_rep = 0.0; // in second
+        //        const double tau = 0.0;
+        //        p3d_getQSwitchIDFromMidCVS(tau, t_rep, &id_localpath);
+        //
+        //        global_manipPlanTest->getManipulationPlanner()->armReplan(otp,id_localpath,traj);
+        //      }
+        //        break;
+
     default:
-      cout << "Manip::Test not implemented" << endl;
-      break;
-  }
-  
-  g3d_draw_allwin_active();
-  ENV.setBool(Env::isRunning,false);
-  cout << "Ends Manipulation Thread" << endl;
+        cout << "Manip::Test not implemented" << endl;
+        break;
+    }
+
+    g3d_draw_allwin_active();
+    ENV.setBool(Env::isRunning,false);
+    cout << "Ends Manipulation Thread" << endl;
 }
 
 
@@ -749,7 +749,7 @@ void RobotWidget::initManipulation()
     connect(m_ui->checkBoxIsDebugManip, SIGNAL(toggled(bool)),              this,SLOT(isDebugManip(bool)));
     connect(m_ui->checkBoxIsCartesianMode, SIGNAL(toggled(bool)),           this,SLOT(isCartesianMode(bool)));
     connect(m_ui->checkBoxOnlySampleRZ, SIGNAL(toggled(bool)),              this,SLOT(isOnlySamplingRZ(bool)));
-  
+
 
     connect(m_ui->pushButtonSetStart, SIGNAL(clicked()),                    this,SLOT(setRobotAtInitConfig()));
     connect(m_ui->pushButtonSetGoal, SIGNAL(clicked()),                     this,SLOT(setRobotAtGoalConfig()));
@@ -779,48 +779,48 @@ void RobotWidget::initManipulation()
 
     QString text("<FONT COLOR=Red>Unitizialized</Font>");
     m_ui->labelManipRobotName->setText(text);
-  
-  
-  // X,Y,Z Place!!!
-  vector<double> envSize = global_Project->getActiveScene()->getBounds();
-	
-	m_ui->doubleSpinBoxXPlace->setMinimum(envSize[0]);
-	m_ui->doubleSpinBoxXPlace->setMaximum(envSize[1]);
-	
-  m_ui->doubleSpinBoxYPlace->setMinimum(envSize[2]);
-	m_ui->doubleSpinBoxYPlace->setMaximum(envSize[3]);
-  
-	m_ui->doubleSpinBoxZPlace->setMinimum(envSize[4]);
-	m_ui->doubleSpinBoxZPlace->setMaximum(envSize[5]);
-  
-  // To free point sliders sliders
-  new QtShiva::SpinBoxSliderConnector(
-  this, m_ui->doubleSpinBoxXPlace, m_ui->horizontalSliderXPlace );
-  new QtShiva::SpinBoxSliderConnector(
-  this, m_ui->doubleSpinBoxYPlace, m_ui->horizontalSliderYPlace );
-  new QtShiva::SpinBoxSliderConnector(
-  this, m_ui->doubleSpinBoxZPlace, m_ui->horizontalSliderZPlace );
-  
-  m_ui->doubleSpinBoxXPlace->setValue((envSize[1]+envSize[0])/2);
-	m_ui->doubleSpinBoxYPlace->setValue((envSize[3]+envSize[2])/2);
-	m_ui->doubleSpinBoxZPlace->setValue((envSize[5]+envSize[4])/2);
-  
-  connect(m_ui->checkBoxToFreePoint, SIGNAL(toggled(bool)), this,SLOT(isToFreePoint(bool)));
-  
-  // Get Visball Position
-  connect(m_ui->pushButtonGetVisballPos, SIGNAL(clicked()), this,SLOT(getVisballPos()));
-  
-  connect(m_ui->checkBoxIsUsingMobileBase, SIGNAL(toggled(bool)), this,SLOT(isUsingMobileBase(bool)));
-  
-  setGroupBoxDisabled(true);
+
+
+    // X,Y,Z Place!!!
+    vector<double> envSize = global_Project->getActiveScene()->getBounds();
+
+    m_ui->doubleSpinBoxXPlace->setMinimum(envSize[0]);
+    m_ui->doubleSpinBoxXPlace->setMaximum(envSize[1]);
+
+    m_ui->doubleSpinBoxYPlace->setMinimum(envSize[2]);
+    m_ui->doubleSpinBoxYPlace->setMaximum(envSize[3]);
+
+    m_ui->doubleSpinBoxZPlace->setMinimum(envSize[4]);
+    m_ui->doubleSpinBoxZPlace->setMaximum(envSize[5]);
+
+    // To free point sliders sliders
+    new QtShiva::SpinBoxSliderConnector(
+                this, m_ui->doubleSpinBoxXPlace, m_ui->horizontalSliderXPlace );
+    new QtShiva::SpinBoxSliderConnector(
+                this, m_ui->doubleSpinBoxYPlace, m_ui->horizontalSliderYPlace );
+    new QtShiva::SpinBoxSliderConnector(
+                this, m_ui->doubleSpinBoxZPlace, m_ui->horizontalSliderZPlace );
+
+    m_ui->doubleSpinBoxXPlace->setValue((envSize[1]+envSize[0])/2);
+    m_ui->doubleSpinBoxYPlace->setValue((envSize[3]+envSize[2])/2);
+    m_ui->doubleSpinBoxZPlace->setValue((envSize[5]+envSize[4])/2);
+
+    connect(m_ui->checkBoxToFreePoint, SIGNAL(toggled(bool)), this,SLOT(isToFreePoint(bool)));
+
+    // Get Visball Position
+    connect(m_ui->pushButtonGetVisballPos, SIGNAL(clicked()), this,SLOT(getVisballPos()));
+
+    connect(m_ui->checkBoxIsUsingMobileBase, SIGNAL(toggled(bool)), this,SLOT(isUsingMobileBase(bool)));
+
+    setGroupBoxDisabled(true);
 }
 
 void RobotWidget::setGroupBoxDisabled(bool disable)
 {
-  m_ui->groupBoxTest->setDisabled( disable );
-  m_ui->groupBoxArmPlanTask->setDisabled( disable );
-  m_ui->groupBoxSettingRobotConf->setDisabled( disable );
-  m_ui->groupBoxStoringRobotConf->setDisabled( disable );
+    m_ui->groupBoxTest->setDisabled( disable );
+    m_ui->groupBoxArmPlanTask->setDisabled( disable );
+    m_ui->groupBoxSettingRobotConf->setDisabled( disable );
+    m_ui->groupBoxStoringRobotConf->setDisabled( disable );
 }
 
 void RobotWidget::initObjectSupportAndPlacementCombo()
@@ -1019,133 +1019,133 @@ void RobotWidget::isDebugManip(bool value)
 
 void RobotWidget::isUsingMobileBase(bool value)
 {
-  if(global_manipPlanTest)
-  {
-    global_manipPlanTest->getManipPlanner()->setUseBaseMotion(value);
-  }
-  else {
-    cout << "Manip test is NULL" << endl;
-  }
+    if(global_manipPlanTest)
+    {
+        global_manipPlanTest->getManipPlanner()->setUseBaseMotion(value);
+    }
+    else {
+        cout << "Manip test is NULL" << endl;
+    }
 }
 
 // ---------------------------------------------------------------------
 // ---------------------------------------------------------------------
 void RobotWidget::isOnlySamplingRZ(bool value)
 {
-  if(global_manipPlanTest)
-  {
-    global_manipPlanTest->getManipPlanner()->setUseBaseMotion(value);
-  }
-  else {
-    cout << "Manip test is NULL" << endl;
-  }
+    if(global_manipPlanTest)
+    {
+        global_manipPlanTest->getManipPlanner()->setUseBaseMotion(value);
+    }
+    else {
+        cout << "Manip test is NULL" << endl;
+    }
 }
 
 void RobotWidget::isToFreePoint(bool value)
 {
-  if( global_manipPlanTest != NULL )
-  {
-    if( value )
+    if( global_manipPlanTest != NULL )
     {
-      vector<double> point(6,P3D_HUGE);
-      point[0] = m_ui->doubleSpinBoxXPlace->value();
-      point[1] = m_ui->doubleSpinBoxYPlace->value();
-      point[2] = m_ui->doubleSpinBoxZPlace->value();
-      
-      global_manipPlanTest->setToPoint( point );
+        if( value )
+        {
+            vector<double> point(6,P3D_HUGE);
+            point[0] = m_ui->doubleSpinBoxXPlace->value();
+            point[1] = m_ui->doubleSpinBoxYPlace->value();
+            point[2] = m_ui->doubleSpinBoxZPlace->value();
+
+            global_manipPlanTest->setToPoint( point );
+        }
+        else
+            global_manipPlanTest->resetToPoint();
     }
-    else
-      global_manipPlanTest->resetToPoint();
-  }
-  else {
-    cout << "Manip test is NULL" << endl;
-  }
+    else {
+        cout << "Manip test is NULL" << endl;
+    }
 }
 
 void RobotWidget::getVisballPos()
 {
-  if( global_manipPlanTest != NULL )
-  {
-    Robot* rob = global_Project->getActiveScene()->getRobotByName("VISBALL_INTERNAL");
-    
-    if( rob != NULL )
+    if( global_manipPlanTest != NULL )
     {
-      cout << "getVisballPos" << endl;
-      
-      Eigen::Vector3d pos = rob->getJoint(1)->getVectorPos();
-      
-      m_ui->doubleSpinBoxXPlace->setValue( pos[0] );
-      m_ui->doubleSpinBoxYPlace->setValue( pos[1] );
-      m_ui->doubleSpinBoxZPlace->setValue( pos[2] );
-      
-      m_ui->checkBoxToFreePoint->toggle();
-      
-      vector<double> point(6,P3D_HUGE);
-      point[0] = pos[0];
-      point[1] = pos[1];
-      point[2] = pos[2];
-      
-      global_manipPlanTest->setToPoint( point );
+        Robot* rob = global_Project->getActiveScene()->getRobotByName("VISBALL_INTERNAL");
+
+        if( rob != NULL )
+        {
+            cout << "getVisballPos" << endl;
+
+            Eigen::Vector3d pos = rob->getJoint(1)->getVectorPos();
+
+            m_ui->doubleSpinBoxXPlace->setValue( pos[0] );
+            m_ui->doubleSpinBoxYPlace->setValue( pos[1] );
+            m_ui->doubleSpinBoxZPlace->setValue( pos[2] );
+
+            m_ui->checkBoxToFreePoint->toggle();
+
+            vector<double> point(6,P3D_HUGE);
+            point[0] = pos[0];
+            point[1] = pos[1];
+            point[2] = pos[2];
+
+            global_manipPlanTest->setToPoint( point );
+        }
+        else {
+            cout << "No robot is named VISBALL_INTERNAL" << endl;
+        }
     }
     else {
-      cout << "No robot is named VISBALL_INTERNAL" << endl;
+        cout << "Manip test is NULL" << endl;
     }
-  }
-  else {
-    cout << "Manip test is NULL" << endl;
-  }
 }
 
 // ---------------------------------------------------------------------
 // ---------------------------------------------------------------------
 void RobotWidget::resetManipulationData()
 {
-  cout << "-----------------------------------------------------" << endl;
-  cout << " RobotWidget::resetManipulationData -----------------" << endl;
-  
-  if (!global_manipPlanTest)
-  {
-    global_manipPlanTest = new ManipulationTestFunctions( global_ActiveRobotName  );
-    
-    global_manipPlanTest->resetObject();
-    global_manipPlanTest->resetPlacement();
-    global_manipPlanTest->resetSupport();
-    global_manipPlanTest->resetToPoint();
-  }
-  
-  Robot* rob = global_Project->getActiveScene()->getRobotByNameContaining( global_ActiveRobotName );
-  //  Robot* rob = global_Project->getActiveScene()->getRobotByName(rob1->name);
-  
-  qInit = rob->getInitialPosition();
-  qGoal = rob->getGoTo();
-  qOpen = shared_ptr<Configuration>( new Configuration( rob, rob->getRobotStruct()->openChainConf ));
-  
-  rob->setAndUpdate(*qInit);
-  
-  cout << "global_manipPlanTest->getManipPlanner()->setPlanningMethod" << endl;
-  // Set Planning functions
-  
-  global_manipPlanTest->initManipulationGenom ();
-  
-  global_manipPlanTest->setInitConfiguration (qInit->getConfigStructCopy());
-  global_manipPlanTest->setGoalConfiguration (qGoal->getConfigStructCopy());
-  
-  global_manipPlanTest->getManipPlanner()->setPlanningMethod( p3d_planner_function );
-  global_manipPlanTest->getManipPlanner()->setSmoothingMethod( p3d_smoothing_function );
-  global_manipPlanTest->getManipPlanner()->setCleanningRoadmaps( false );
-  //global_manipPlanTest->getManipPlanner()->setReplanningMethod( replanning_Function );
-  
-  global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
-  
-  m_mainWindow->drawAllWinActive();
-  
-  std::string t1 = "<FONT COLOR=Green>";
-  std::string t2 = "</FONT>";
-  t1 = t1 + rob->getName() + t2;
-  
-  m_ui->labelManipRobotName->setText(QString(t1.c_str()));
-  
-  setGroupBoxDisabled(false);
+    cout << "-----------------------------------------------------" << endl;
+    cout << " RobotWidget::resetManipulationData -----------------" << endl;
+
+    if (!global_manipPlanTest)
+    {
+        global_manipPlanTest = new ManipulationTestFunctions( global_ActiveRobotName  );
+
+        global_manipPlanTest->resetObject();
+        global_manipPlanTest->resetPlacement();
+        global_manipPlanTest->resetSupport();
+        global_manipPlanTest->resetToPoint();
+    }
+
+    Robot* rob = global_Project->getActiveScene()->getRobotByNameContaining( global_ActiveRobotName );
+    //  Robot* rob = global_Project->getActiveScene()->getRobotByName(rob1->name);
+
+    qInit = rob->getInitialPosition();
+    qGoal = rob->getGoTo();
+    qOpen = shared_ptr<Configuration>( new Configuration( rob, rob->getRobotStruct()->openChainConf ));
+
+    rob->setAndUpdate(*qInit);
+
+    cout << "global_manipPlanTest->getManipPlanner()->setPlanningMethod" << endl;
+    // Set Planning functions
+
+    global_manipPlanTest->initManipulationGenom ();
+
+    global_manipPlanTest->setInitConfiguration (qInit->getConfigStructCopy());
+    global_manipPlanTest->setGoalConfiguration (qGoal->getConfigStructCopy());
+
+    global_manipPlanTest->getManipPlanner()->setPlanningMethod( p3d_planner_function );
+    global_manipPlanTest->getManipPlanner()->setSmoothingMethod( p3d_smoothing_function );
+    global_manipPlanTest->getManipPlanner()->setCleanningRoadmaps( false );
+    //global_manipPlanTest->getManipPlanner()->setReplanningMethod( replanning_Function );
+
+    global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
+
+    m_mainWindow->drawAllWinActive();
+
+    std::string t1 = "<FONT COLOR=Green>";
+    std::string t2 = "</FONT>";
+    t1 = t1 + rob->getName() + t2;
+
+    m_ui->labelManipRobotName->setText(QString(t1.c_str()));
+
+    setGroupBoxDisabled(false);
 }
 
 void RobotWidget::optimizeRedundantCost()
@@ -1172,34 +1172,34 @@ void RobotWidget::callToManipulationPlanner()
     }
 
     m_mainWindow->isPlanning();
-  global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
-  emit(selectedPlanner(QString("Manipulation")));
+    global_manipPlanTest->setDebugMode( m_ui->checkBoxIsDebugManip->isChecked() );
+    emit(selectedPlanner(QString("Manipulation")));
 }
 
 void RobotWidget::armFree()
 {
-  cout << "Manipulation : free" << endl;
-  
-  double center[2];
+    cout << "Manipulation : free" << endl;
 
-  center[0] = ((*qInit)[6] + (*qGoal)[6]) / 2;
-  center[1] = ((*qInit)[7] + (*qGoal)[7]) / 2;
-  
-  double dist = sqrt( pow( (*qInit)[6]-(*qGoal)[6] ,2)  + pow( (*qInit)[7]-(*qGoal)[7], 2 ));
-  
-  double limits[6];
-  
-  limits[0] = center[0] - 2*dist;
-  limits[1] = center[0] + 2*dist;
-  limits[2] = center[1] - 2*dist;
-  limits[3] = center[1] + 2*dist;
-  limits[4] = 0;
-  limits[5] = 0;
-  
-  p3d_change_ff_translation_bounds( qInit->getRobot()->getRobotStruct(), limits );
-  
-  Manip::Phase = ARM_FREE;
-  callToManipulationPlanner();
+    double center[2];
+
+    center[0] = ((*qInit)[6] + (*qGoal)[6]) / 2;
+    center[1] = ((*qInit)[7] + (*qGoal)[7]) / 2;
+
+    double dist = sqrt( pow( (*qInit)[6]-(*qGoal)[6] ,2)  + pow( (*qInit)[7]-(*qGoal)[7], 2 ));
+
+    double limits[6];
+
+    limits[0] = center[0] - 2*dist;
+    limits[1] = center[0] + 2*dist;
+    limits[2] = center[1] - 2*dist;
+    limits[3] = center[1] + 2*dist;
+    limits[4] = 0;
+    limits[5] = 0;
+
+    p3d_change_ff_translation_bounds( qInit->getRobot()->getRobotStruct(), limits );
+
+    Manip::Phase = ARM_FREE;
+    callToManipulationPlanner();
 }
 
 void RobotWidget::armPickGoto()
@@ -1400,7 +1400,7 @@ void RobotWidget::on_pushButtonrefrech_clicked()
 
 void RobotWidget::on_pushButtonPlanNavigation_clicked()
 {
-        cout << "Navigation softmotion" << endl;
+    cout << "Navigation softmotion" << endl;
 
     if (!global_manipPlanTest)
     {
