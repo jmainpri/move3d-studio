@@ -757,7 +757,7 @@ void MotionPlanner::nodeToShowChanged()
 	}
 	else 
 	{
-        shared_ptr<Configuration> q_init = API_activeGraph->getRobot()->getInitialPosition();
+        shared_ptr<Configuration> q_init = API_activeGraph->getRobot()->getInitPos();
         API_activeGraph->getRobot()->setAndUpdate(*q_init);
 		cout << "Exede the number of nodes" << endl;
 	}
@@ -795,7 +795,7 @@ void MotionPlanner::edgeToShowChanged()
     }
     else
     {
-        shared_ptr<Configuration> q_init = API_activeGraph->getRobot()->getInitialPosition();
+        shared_ptr<Configuration> q_init = API_activeGraph->getRobot()->getInitPos();
         API_activeGraph->getRobot()->setAndUpdate(*q_init);
         cout << "Exede the number of edges" << endl;
     }
@@ -848,7 +848,7 @@ void MotionPlanner::removeNode()
 		}
 		else 
 		{
-			shared_ptr<Configuration> q_init = API_activeGraph->getRobot()->getInitialPosition();
+			shared_ptr<Configuration> q_init = API_activeGraph->getRobot()->getInitPos();
 			API_activeGraph->getRobot()->setAndUpdate(*q_init);
 			cout << "Exede the number of nodes" << endl;
 		}

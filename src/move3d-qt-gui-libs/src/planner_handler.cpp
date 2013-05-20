@@ -65,6 +65,9 @@
 #include "hri_costspace/Gestures/HRICS_RecordMotion.hpp"
 #include "hri_costspace/Gestures/HRICS_HumanPredictionCostSpace.hpp"
 #include "hri_costspace/Gestures/HRICS_HumanPredictionSimulator.hpp"
+
+#include "hri_costspace/HumanTrajectories/HRICS_IOCSimulator.hpp"
+
 #if defined( HRI_PLANNER )
 #include "hri_costspace/HRICS_HAMP.hpp"
 #include "hri_costspace/HRICS_otpmotionpl.hpp"
@@ -187,8 +190,8 @@ void qt_test1()
     //    m_navigation->reset();
     //  }
 
-    //  confPtr_t q_init = robot->getInitialPosition();
-    //  confPtr_t q_goal = robot->getGoTo();
+    //  confPtr_t q_init = robot->getInitPos();
+    //  confPtr_t q_goal = robot->getGoalPos();
 
     //  API::Trajectory* path_ = m_navigation->computeRobotTrajectory( q_init, q_goal );
 
@@ -526,6 +529,7 @@ void qt_handover()
 }
 
 //----------------------------------------------------------
+// Gesture Functions
 //----------------------------------------------------------
 
 void qt_show_recorded_motion()
@@ -652,6 +656,16 @@ void qt_human_prediction_simulation()
 }
 
 //----------------------------------------------------------
+// Inverse Optimal Control Functions
+//----------------------------------------------------------
+void qt_runHumanIOC()
+{
+    HRICS::IOCSimulator sim;
+    sim.run();
+}
+
+//----------------------------------------------------------
+// Navigation Functions
 //----------------------------------------------------------
 HRICS::Navigation* navPlanner = NULL;
 
@@ -670,8 +684,8 @@ void qt_computeAStar()
         rob = navPlanner->getRobot();
     }
 
-    confPtr_t q_init = rob->getInitialPosition();
-    confPtr_t q_goal = rob->getGoTo();
+    confPtr_t q_init = rob->getInitPos();
+    confPtr_t q_goal = rob->getGoalPos();
 
     navPlanner->computeRobotTrajectory( q_init, q_goal );
 }
@@ -1364,6 +1378,10 @@ void PlannerHandler::startPlanner(QString plannerName)
         else if(plannerName == "PredictionSimulation")
         {
             qt_human_prediction_simulation();
+        }
+        else if( plannerName == "HumanIOC" )
+        {
+            qt_runHumanIOC();
         }
         else if(plannerName == "test1")
         {

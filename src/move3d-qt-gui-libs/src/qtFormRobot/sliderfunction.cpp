@@ -39,7 +39,7 @@ static ConfGenerator* generatorPtr=NULL;
 void qt_set_arm_along_body( Robot* robot )
 {  
   confPtr_t q_curr = robot->getCurrentPos();
-  confPtr_t q_init = robot->getInitialPosition();
+  confPtr_t q_init = robot->getInitPos();
   (*q_init)[6] = (*q_curr)[6];
   (*q_init)[7] = (*q_curr)[7];
   (*q_init)[8] = (*q_curr)[8];

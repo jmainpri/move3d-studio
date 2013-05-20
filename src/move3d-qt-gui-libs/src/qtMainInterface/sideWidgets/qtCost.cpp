@@ -354,7 +354,7 @@ void CostWidget::extractBestPath()
     Graph* myGraph = new Graph(XYZ_GRAPH);
     Robot* myRobot = myGraph->getRobot();
 
-    myGraph->extractBestTraj(myRobot->getInitialPosition(),myRobot->getGoTo());
+    myGraph->extractBestTraj(myRobot->getInitPos(),myRobot->getGoalPos());
 
     m_mainWindow->drawAllWinActive();
 }
@@ -412,8 +412,8 @@ void CostWidget::graphSearchTest()
 
     Graph* ptrGraph = new Graph(XYZ_GRAPH);
 
-    shared_ptr<Configuration> Init = ptrGraph->getRobot()->getInitialPosition();
-    shared_ptr<Configuration> Goal = ptrGraph->getRobot()->getGoTo();
+    shared_ptr<Configuration> Init = ptrGraph->getRobot()->getInitPos();
+    shared_ptr<Configuration> Goal = ptrGraph->getRobot()->getGoalPos();
 
     cout << "Dijkstra graph search on graph" << endl;
     Dijkstra graphSearch(ptrGraph);
@@ -777,7 +777,7 @@ void CostWidget::computeAStar()
 #ifdef CXX_PLANNNER
         GraphState* InitialState = new GraphState(XYZ_GRAPH->nodes->N);
 
-        //        N = new Node(ptrGraph,rob->getGoTo());
+        //        N = new Node(ptrGraph,rob->getGoalPos());
         //        ptrGraph->insertNode(N);
         //        ptrGraph->linkNode(N);
 

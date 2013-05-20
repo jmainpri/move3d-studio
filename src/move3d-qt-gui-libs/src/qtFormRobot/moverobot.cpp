@@ -76,7 +76,7 @@ void MoveRobot::initAllForms(GLWidget* ptrOpenGl)
         form->initSliders();
         form->resetConstraintedDoFs();
 
-        shared_ptr<Configuration> ptrConf = ptrRob->getInitialPosition();
+        shared_ptr<Configuration> ptrConf = ptrRob->getInitPos();
 
         ptrRob->setAndUpdate( *ptrConf );
         form->setSliders( *ptrConf );
@@ -183,7 +183,7 @@ void MoveRobot::updateAllRobotInitPos()
     for(unsigned int i=0;i<mRobots.size();i++)
     {
         Robot* robot = mRobots[i]->getRobot();
-        mRobots[i]->setSliders( *robot->getInitialPosition() );
+        mRobots[i]->setSliders( *robot->getInitPos() );
         mRobots[i]->getComboBox()->setCurrentIndex(0);
         cout << "Set Robot " << robot->getName() << " to its initial position" << endl;
     }
@@ -588,7 +588,7 @@ void FormRobot::setCurrentPosition(int position)
     {
         cout << "Robot " << mRobot->getName() << " to Initial Pos" << endl;
 
-        ptrConf = mRobot->getInitialPosition();
+        ptrConf = mRobot->getInitPos();
         mRobot->setAndUpdate(*ptrConf);
         setSliders( *mRobot->getCurrentPos() );
     }
@@ -596,7 +596,7 @@ void FormRobot::setCurrentPosition(int position)
     if (position == 1)
     {
         cout << "Robot " << mRobot->getName() << " to Goto Pos" << endl;
-        ptrConf = mRobot->getGoTo();
+        ptrConf = mRobot->getGoalPos();
         mRobot->setAndUpdate(*ptrConf);
         setSliders( *mRobot->getCurrentPos() );
     }
@@ -637,7 +637,7 @@ void FormRobot::setCurrentPosition(int position)
  */
 void FormRobot::saveCurrentConfigToInit()
 {	
-    mRobot->setInitialPosition( *mRobot->getCurrentPos() );
+    mRobot->setInitPos( *mRobot->getCurrentPos() );
     cout << "Save Config in Robot Init" << endl;
 }
 
@@ -646,7 +646,7 @@ void FormRobot::saveCurrentConfigToInit()
  */
 void FormRobot::saveCurrentConfigToGoal()
 {	
-    mRobot->setGoTo( *mRobot->getCurrentPos() );
+    mRobot->setGoalPos( *mRobot->getCurrentPos() );
     cout << "Save Config in GoTo" << endl;
 }
 

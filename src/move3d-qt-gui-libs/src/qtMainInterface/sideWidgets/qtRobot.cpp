@@ -1116,8 +1116,8 @@ void RobotWidget::resetManipulationData()
     Robot* rob = global_Project->getActiveScene()->getRobotByNameContaining( global_ActiveRobotName );
     //  Robot* rob = global_Project->getActiveScene()->getRobotByName(rob1->name);
 
-    qInit = rob->getInitialPosition();
-    qGoal = rob->getGoTo();
+    qInit = rob->getInitPos();
+    qGoal = rob->getGoalPos();
     qOpen = shared_ptr<Configuration>( new Configuration( rob, rob->getRobotStruct()->openChainConf ));
 
     rob->setAndUpdate(*qInit);
