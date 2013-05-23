@@ -83,28 +83,6 @@ private slots:
     void computeOtpConfig();
     void computeAStarGrid();
 
-    // Record Motion
-    void initRecordedMotion();
-    void loadRecordedMotion();
-    void showRecordedMotion();
-    void getIthConfigurationInMotion();
-    void setSourceRM();
-    void setTargetRM();
-    void extractAndSaveRM();
-    void loadFolder();
-    void convertFolderToCSV();
-    void loadFromCSV();
-
-    // Occupancy
-    void initWorkspaceOccupancy();
-    void computeWorkspaceOccupancy();
-    void setClassToDraw(int id);
-    void classifyMotion();
-    void startGestureSimulation();
-
-    // Gesture Recognition
-    void initGestureRecognition();
-
 
 private:
 

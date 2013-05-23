@@ -66,7 +66,7 @@
 #include "hri_costspace/Gestures/HRICS_HumanPredictionCostSpace.hpp"
 #include "hri_costspace/Gestures/HRICS_HumanPredictionSimulator.hpp"
 
-#include "hri_costspace/HumanTrajectories/HRICS_IOCSimulator.hpp"
+#include "hri_costspace/HumanTrajectories/HRICS_IOCUpper.hpp"
 
 #if defined( HRI_PLANNER )
 #include "hri_costspace/HRICS_HAMP.hpp"
@@ -158,6 +158,11 @@ void qt_init_after_params()
     if( GestEnv->getBool(GestParam::init_module_at_start) )
     {
         HRICS_initOccupancyPredictionFramework();
+    }
+
+    if( GestEnv->getBool(GestParam::init_module_ioc) )
+    {
+        HRICS_initIverseOptimalControlFramework();
     }
 }
 
@@ -581,6 +586,7 @@ void qt_classify_motions()
 void qt_voxel_occupancy_simulation()
 {
     cout << "Starting Simulator" << endl;
+
     if( global_humanPredictionSimulator == NULL )
     {
         cout << "global_humanPredictionSimulator == NULL" << endl;
@@ -592,6 +598,7 @@ void qt_voxel_occupancy_simulation()
 void qt_human_prediction_simulation_tests()
 {
     cout << "Starting Simulator" << endl;
+
     if( global_humanPredictionSimulator == NULL )
     {
         cout << "global_humanPredictionSimulator == NULL" << endl;
@@ -660,8 +667,13 @@ void qt_human_prediction_simulation()
 //----------------------------------------------------------
 void qt_runHumanIOC()
 {
-    HRICS::IOCSimulator sim;
-    sim.run();
+    if( global_IOCUpper == NULL )
+    {
+        cout << "global_IOCUpper == NULL" << endl;
+        return;
+    }
+
+    global_IOCUpper->run();
 }
 
 //----------------------------------------------------------

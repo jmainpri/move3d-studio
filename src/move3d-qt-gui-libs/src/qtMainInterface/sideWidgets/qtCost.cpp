@@ -42,6 +42,7 @@
 #include "qtHrics.hpp"
 #include "ui_qtHrics.h"
 #include "qtNatural.hpp"
+#include "qtHriGesture.hpp"
 #endif
 
 #include "qtMotionPlanner.hpp"
@@ -87,6 +88,10 @@ CostWidget::CostWidget(QWidget *parent) :
     NaturalWidget* tabNatural = new NaturalWidget(m_ui->Natural);
     tabNatural->setObjectName(QString::fromUtf8("tabNatural"));
     m_ui->naturalLayout->addWidget(tabNatural);
+
+    HriGestureWidget* tabGesture = new HriGestureWidget(m_ui->Gesture);
+    tabGesture->setObjectName(QString::fromUtf8("tabGesture"));
+    m_ui->gestureLayout->addWidget(tabGesture);
 #endif
 
     m_tabRRTStar = new RRTStarWidget(m_ui->RRTStar);

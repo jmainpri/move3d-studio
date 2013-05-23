@@ -56,16 +56,19 @@ BM3D_QT_GENERATE_MOC(
 qtHrics.hpp
 qtOtp.hpp
 qtNatural.hpp
+qtHriGesture.hpp
 )
 BM3D_QT_GENERATE_UI_HEADERS(
 qtHrics.ui
 qtOtp.ui
 qtNatural.ui
+qtHriGesture.ui
 )
 BM3D_SRC_SUBDIR_PROCESS(
 qtHrics.cpp
 qtOtp.cpp
 qtNatural.cpp
+qtHriGesture.cpp
 )
 ENDIF(HRI_COSTSPACE)
 

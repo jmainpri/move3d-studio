@@ -456,7 +456,7 @@ void MainWindow::saveParametersQuick()
 // --------------------------------------------------------------
 void MainWindow::initLightSource()
 {
-    connectCheckBoxToEnv(m_ui->checkBoxDrawLightSource, ENV.getObject(Env::drawLightSource));
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawLightSource, ENV.getObject(Env::drawLightSource));
 
     vector<double>  envSize(6);
     envSize[0] = XYZ_ENV->box.x1; envSize[1] = XYZ_ENV->box.x2;
@@ -541,13 +541,13 @@ void MainWindow::initViewerButtons()
 
     connect( ENV.getObject(Env::drawGraph), SIGNAL(valueChanged(bool)), this, SLOT(test()) );
 
-    connectCheckBoxToEnv(m_ui->checkBoxDisableDraw, ENV.getObject(Env::drawDisabled));
-    connectCheckBoxToEnv(m_ui->checkBoxDrawGraph, ENV.getObject(Env::drawGraph));
-    connectCheckBoxToEnv(m_ui->checkBoxDrawExploration, ENV.getObject(Env::drawExploration));
-    connectCheckBoxToEnv(m_ui->checkBoxDrawTraj, ENV.getObject(Env::drawTraj));
-    connectCheckBoxToEnv(m_ui->checkBoxDrawTrajVector, ENV.getObject(Env::drawTrajVector));
-    connectCheckBoxToEnv(m_ui->checkBoxDrawDebug, ENV.getObject(Env::debugCostOptim));
-    connectCheckBoxToEnv(m_ui->checkBoxDrawMultiColoredTraj, ENV.getObject(Env::drawMultiColorLocalpath));
+    new connectCheckBoxToEnv(m_ui->checkBoxDisableDraw, ENV.getObject(Env::drawDisabled));
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawGraph, ENV.getObject(Env::drawGraph));
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawExploration, ENV.getObject(Env::drawExploration));
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawTraj, ENV.getObject(Env::drawTraj));
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawTrajVector, ENV.getObject(Env::drawTrajVector));
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawDebug, ENV.getObject(Env::debugCostOptim));
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawMultiColoredTraj, ENV.getObject(Env::drawMultiColorLocalpath));
     
     m_ui->checkBoxDrawGraph->setCheckState(Qt::Checked);
 
@@ -652,7 +652,7 @@ void MainWindow::connectCheckBoxes()
     connect(m_ui->checkBoxFlatFloor, SIGNAL(toggled(bool)), this , SLOT(setBoolFlatBox(bool)), Qt::DirectConnection);
     connect(m_ui->checkBoxFlatFloor, SIGNAL(toggled(bool)), m_ui->OpenGL , SLOT(updateGL()));
 
-    connectCheckBoxToEnv(m_ui->checkBoxAxis,ENV.getObject( Env::drawFrame ));
+    new connectCheckBoxToEnv(m_ui->checkBoxAxis,ENV.getObject( Env::drawFrame ));
     connect(m_ui->checkBoxAxis, SIGNAL(toggled(bool)), m_ui->OpenGL , SLOT(updateGL()));
 }
 
@@ -780,7 +780,7 @@ void MainWindow::initRunButtons()
     connect(m_ui->radioButtonPRM, SIGNAL(toggled(bool)), SLOT(envSelectedPlannerTypeChanged(bool)), Qt::DirectConnection);
     m_ui->radioButtonDiff->setChecked(!ENV.getBool(Env::isPRMvsDiffusion));
     envSelectedPlannerTypeChanged(ENV.getBool(Env::isPRMvsDiffusion));
-    connectCheckBoxToEnv(m_ui->checkBoxWithSmoothing,					PlanEnv->getObject(PlanParam::withSmoothing));
+    new connectCheckBoxToEnv(m_ui->checkBoxWithSmoothing,					PlanEnv->getObject(PlanParam::withSmoothing));
     //	connectCheckBoxToEnv(m_ui->checkBoxUseP3DStructures,      ENV.getObject(Env::use_p3d_structures));
 
 

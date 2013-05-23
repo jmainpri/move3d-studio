@@ -460,13 +460,13 @@ public:
 
         checkBoxDrawGraph = new QCheckBox(groupBoxDrawEnv);
         checkBoxDrawGraph->setObjectName(QString::fromUtf8("checkBoxDrawGraph"));
-        checkBoxDrawGraph->setChecked(false);
+        //checkBoxDrawGraph->setChecked(false);
 
         gridLayout_12->addWidget(checkBoxDrawGraph, 1, 0, 1, 1);
 
         checkBoxDrawExploration = new QCheckBox(groupBoxDrawEnv);
         checkBoxDrawExploration->setObjectName(QString::fromUtf8("checkBoxDrawExploration"));
-        checkBoxDrawExploration->setChecked(false);
+        //checkBoxDrawExploration->setChecked(false);
 
         gridLayout_12->addWidget(checkBoxDrawExploration, 2, 0, 1, 1);
 

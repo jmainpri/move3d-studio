@@ -251,3 +251,6 @@
 /home/jmainpri/workspace/move3d/move3d-studio/src/move3d-xforms/user_appli.cpp
 /home/jmainpri/workspace/move3d/move3d-studio/src/CMakeLists.txt
 /home/jmainpri/workspace/move3d/move3d-studio/CMakeLists.txt
+src/move3d-qt-gui-libs/src/qtMainInterface/sideWidgets/qtHriGesture.hpp
+src/move3d-qt-gui-libs/src/qtMainInterface/sideWidgets/qtHriGesture.cpp
+src/move3d-qt-gui-libs/src/qtMainInterface/sideWidgets/qtHriGesture.ui

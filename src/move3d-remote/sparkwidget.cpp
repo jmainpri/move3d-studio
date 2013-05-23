@@ -117,7 +117,7 @@ void sparkWidget::connectCheckBoxes()
     //        connect(m_ui->checkBoxEnableShaders, SIGNAL(toggled(bool)), this , SLOT(setBoolEnableShaders(bool)), Qt::DirectConnection);
     //        connect(m_ui->checkBoxEnableShaders, SIGNAL(toggled(bool)), m_ui->OpenGL , SLOT(updateGL()));
 
-    connectCheckBoxToEnv(m_ui_p->checkBoxAxis, Env::drawFrame);
+    new connectCheckBoxToEnv(m_ui_p->checkBoxAxis, Env::drawFrame);
     connect(m_ui_p->checkBoxAxis, SIGNAL(toggled(bool)), m_ui->OpenGL , SLOT(updateGL()));
 
 
@@ -216,7 +216,7 @@ void sparkWidget::restoreView()
 // --------------------------------------------------------------
 void sparkWidget::initLightSource()
 {
-    connectCheckBoxToEnv(m_ui_p->checkBoxDrawLightSource,      Env::drawLightSource);
+    new connectCheckBoxToEnv(m_ui_p->checkBoxDrawLightSource,      Env::drawLightSource);
     connect(m_ui_p->checkBoxDrawLightSource, SIGNAL(clicked()), m_ui->OpenGL , SLOT(updateGL()));
 
     std::vector<double>  envSize(6);
