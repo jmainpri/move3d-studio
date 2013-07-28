@@ -85,13 +85,13 @@ CostWidget::CostWidget(QWidget *parent) :
     m_ui->MightLayout->addWidget(m_tabMightabiliby);
 #endif
 
-    NaturalWidget* tabNatural = new NaturalWidget(m_ui->Natural);
-    tabNatural->setObjectName(QString::fromUtf8("tabNatural"));
-    m_ui->naturalLayout->addWidget(tabNatural);
+    m_tabNatural = new NaturalWidget(m_ui->Natural);
+    m_tabNatural->setObjectName(QString::fromUtf8("tabNatural"));
+    m_ui->naturalLayout->addWidget(m_tabNatural);
 
-    HriGestureWidget* tabGesture = new HriGestureWidget(m_ui->Gesture);
-    tabGesture->setObjectName(QString::fromUtf8("tabGesture"));
-    m_ui->gestureLayout->addWidget(tabGesture);
+    m_tabGesture = new HriGestureWidget(m_ui->Gesture);
+    m_tabGesture->setObjectName(QString::fromUtf8("tabGesture"));
+    m_ui->gestureLayout->addWidget(m_tabGesture);
 #endif
 
     m_tabRRTStar = new RRTStarWidget(m_ui->RRTStar);
@@ -105,6 +105,24 @@ CostWidget::~CostWidget()
     //#ifdef USE_QWT
     //    delete this->plot;
     //#endif
+}
+
+void CostWidget::setMainWindow(MainWindow *ptrMW)
+{
+    m_mainWindow = ptrMW;
+
+#if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
+    m_tabReplan->setMainWindow( m_mainWindow );
+#endif
+#ifdef HRI_PLANNER
+    m_tabHri->setMainWindow( m_mainWindow );
+#ifdef MIGHTABILITY_MAPS
+    m_tabMightabiliby->setMainWindow( m_mainWindow );
+#endif
+    m_tabNatural->setMainWindow( m_mainWindow );
+    m_tabGesture->setMainWindow( m_mainWindow );
+#endif
+    m_tabRRTStar->setMainWindow( m_mainWindow );
 }
 
 #ifdef HRI_COSTSPACE
@@ -681,7 +699,7 @@ void CostWidget::showHRITrajCost()
 
 void CostWidget::showSTOMPTrajCost()
 {
-//#ifdef USE_QWT
+#ifdef USE_QWT
     cout << "showSTOMPTrajCost" << endl;
 
     std::vector<double> smoothness_cost;
@@ -740,7 +758,7 @@ void CostWidget::showSTOMPTrajCost()
     delete m_plot->getPlot();
     m_plot->setPlot(myPlot);
     m_plot->show();
-//#endif
+#endif
 }
 
 void CostWidget::setPlotedVector(vector<double> v)

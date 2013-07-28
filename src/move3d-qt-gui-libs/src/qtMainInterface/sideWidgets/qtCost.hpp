@@ -34,6 +34,9 @@ namespace Ui
 class CostWidget;
 };
 
+class NaturalWidget;
+class HriGestureWidget;
+
 /**
  * @ingroup qtMainWindow
  * @brief Qt Motion Planner
@@ -51,7 +54,7 @@ public:
     void resetCostFunctions();
     void initThreshold();
 
-    void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
+    void setMainWindow(MainWindow *ptrMW);
     void setMotionWidget(MotionPlanner* ptrMLPW) { m_motionWidget = ptrMLPW; }
 
 #ifdef HRI_COSTSPACE
@@ -102,6 +105,8 @@ private:
 #ifdef HRI_COSTSPACE
     HricsWidget* m_tabHri;
     OtpWidget* m_tabOtp;
+    NaturalWidget* m_tabNatural;
+    HriGestureWidget* m_tabGesture;
 #endif
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
     ReplanningWidget* m_tabReplan;

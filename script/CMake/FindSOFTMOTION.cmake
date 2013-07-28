@@ -13,14 +13,14 @@ find_package(PkgConfig)
 pkg_check_modules(PC_SOFTMOTION QUIET softMotion-libs)
 
 find_path (SOFTMOTION_INCLUDE_DIR softMotion/softMotion.h
-  PATHS ${SOFTMOTION_INC} /usr/local/include /usr/include /sw/include /opt/local/include ${CMAKE_CURRENT_SOURCE_DIR}/other_libraries/softMotion-libs/build/install/include $ENV{ROBOTPKG_BASE}/include ${PC_SOFTMOTION_INCLUDEDIR} ${PC_SOFTMOTION_INCLUDE_DIRS}
+  PATHS ${SOFTMOTION_INC} /usr/local/include /usr/include /sw/include /opt/local/include ${CMAKE_CURRENT_SOURCE_DIR}/../../../dependencies/install/include $ENV{ROBOTPKG_BASE}/include
   )
 
 ## -----------------------------------------------------------------------------
 ## Check for the library
 
 find_library (SOFTMOTION_LIBRARIES softMotion
-  PATHS ${SOFTMOTION_LIB} /usr/local/lib /usr/lib /lib /sw/lib /opt/local/lib ${CMAKE_CURRENT_SOURCE_DIR}/other_libraries/softMotion-libs/build/install/lib  $ENV{ROBOTPKG_BASE}/lib ${PC_SOFTMOTION_LIBRARY_DIRS}
+  PATHS ${SOFTMOTION_LIB} /usr/local/lib /usr/lib /lib /sw/lib /opt/local/lib ${CMAKE_CURRENT_SOURCE_DIR}/../../../dependencies/install/lib  $ENV{ROBOTPKG_BASE}/lib
   )
 
 ## -----------------------------------------------------------------------------

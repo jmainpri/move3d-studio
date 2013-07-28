@@ -83,6 +83,7 @@ HriGestureWidget::~HriGestureWidget()
 void HriGestureWidget::initRecordedMotion()
 {
 //    global_motionRecorder = new HRICS::RecordMotion( "HERAKLES_HUMAN1" );
+    connect(this, SIGNAL(selectedPlanner(QString)), global_plannerHandler, SLOT(startPlanner(QString)));
 
     new connectCheckBoxToEnv( m_ui->checkBoxInitGestureModule,  GestEnv->getObject(GestParam::init_module_at_start) );
 
@@ -117,6 +118,7 @@ void HriGestureWidget::loadRecordedMotion()
 
 void HriGestureWidget::showRecordedMotion()
 {
+    cout << "HriGestureWidget::showRecordedMotion" << endl;
     emit(selectedPlanner(QString("ShowRecordedMotion")));
 }
 
@@ -168,6 +170,8 @@ void HriGestureWidget::extractAndSaveRM()
     }
 }
 
+std::string foldername = "/home/jmainpri/workspace/move3d/data/Library_Untouched/Sorted/8";
+
 void HriGestureWidget::loadFolder()
 {
     if ( global_motionRecorder == NULL )
@@ -184,7 +188,8 @@ void HriGestureWidget::loadFolder()
         global_motionRecorder =  new HRICS::RecordMotion( human );
     }
 
-    global_motionRecorder->loadFolder();
+//    global_motionRecorder->loadXMLFolder();
+    global_motionRecorder->loadCSVFolder( foldername );
 }
 
 void HriGestureWidget::convertFolderToCSV()
@@ -195,8 +200,7 @@ void HriGestureWidget::convertFolderToCSV()
         return;
     }
 
-    string foldername = "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/";
-    global_motionRecorder->saveStoredToCSV( foldername + "csv_files/compound.csv" );
+    global_motionRecorder->saveStoredToCSV( foldername + "/compound.csv" );
 }
 
 void HriGestureWidget::loadFromCSV()

@@ -34,9 +34,7 @@ public:
 
     HriGestureWidget(QWidget *parent = 0);
     ~HriGestureWidget();
-
     void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
-
     void drawAllWinActive();
 
 signals:
