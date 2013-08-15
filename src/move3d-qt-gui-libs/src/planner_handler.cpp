@@ -66,8 +66,6 @@
 #include "hri_costspace/Gestures/HRICS_HumanPredictionCostSpace.hpp"
 #include "hri_costspace/Gestures/HRICS_HumanPredictionSimulator.hpp"
 
-#include "hri_costspace/HumanTrajectories/HRICS_IOCUpper.hpp"
-
 #if defined( HRI_PLANNER )
 #include "hri_costspace/HRICS_HAMP.hpp"
 #include "hri_costspace/HRICS_otpmotionpl.hpp"
@@ -176,12 +174,12 @@ void qt_init_after_params()
         HRICS_initOccupancyPredictionFramework();
     }
 
-    if( GestEnv->getBool(GestParam::init_module_ioc) )
-    {
-        HRICS_initIverseOptimalControlFramework();
-    }
+//    if( GestEnv->getBool(GestParam::init_module_ioc) )
+//    {
+//        HRICS_initIverseOptimalControlFramework();
+//    }
 
-    printJointMapping( global_Project->getActiveScene()->getRobotByName("HERAKLES_HUMAN1") );
+//    printJointMapping( global_Project->getActiveScene()->getRobotByName("HERAKLES_HUMAN1") );
 }
 
 //------------------------------------------------------------------------------
@@ -686,13 +684,13 @@ void qt_human_prediction_simulation()
 //----------------------------------------------------------
 void qt_runHumanIOC()
 {
-    if( global_IOCUpper == NULL )
-    {
-        cout << "global_IOCUpper == NULL" << endl;
-        return;
-    }
+//    if( global_IOCUpper == NULL )
+//    {
+//        cout << "global_IOCUpper == NULL" << endl;
+//        return;
+//    }
 
-    global_IOCUpper->run();
+    //global_IOCUpper->run();
 }
 
 //----------------------------------------------------------
@@ -1131,7 +1129,9 @@ void qt_load_HRICS_Grid(std::string docname)
 #ifdef HRI_COSTSPACE
     ENV.setBool(Env::drawGrid,false);
 
-    HRICS_activeNatu  = new HRICS::Natural;
+    Robot* human = global_Project->getActiveScene()->getRobotByNameContaining("HUMAN");
+
+    HRICS_activeNatu  = new HRICS::Natural( human );
 
     //	string docname(qt_fileName);
 

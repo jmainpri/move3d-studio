@@ -64,7 +64,7 @@ Move3D_flag(GRASP_PLANNING "Compilation with module Gasp Planner" ON)
 Move3D_flag(MULTILOCALPATH "Compilation with module Multi-local Planner" ON)
 Move3D_flag(MULTIGRAPH "Compilation with module Multi-Graph" ON)
 
-Move3D_flag(USE_GBM "Compilation with module GBM for IK computation" ON)
+Move3D_flag(USE_GBM "Compilation with module GBM for IK computation" OFF)
 Move3D_flag(USE_GLUT "Glut" OFF)
 
 Move3D_flag(MOVE3D_CORE "Compiles the planning API and planners" ON)
@@ -263,23 +263,21 @@ SET(INCLUDE_DIRS ${INCLUDE_DIRS} /opt/local/include/ ${BOOST_INCLUDE_DIRS})
 #  SET(LIBS ${LIBS} ${GTS_LIBRARIES})
 #ENDIF(GRASP_PLANNING)
 
-#-------------- MULTILOCALPATH -------------------------------------------------
-#-------------------------------------------------------------------------------
 IF(MULTILOCALPATH)
-  FIND_PACKAGE(SOFTMOTION REQUIRED)
-  INCLUDE_directories(${SOFTMOTION_INCLUDE_DIR})
-  SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${SOFTMOTION_INCLUDE_DIR})
-  SET(LIBS ${LIBS} ${SOFTMOTION_LIBRARIES})
-ENDIF(MULTILOCALPATH)
 
 #-------------- GBM ------------------------------------------------------------
-#-------------------------------------------------------------------------------
-IF(USE_GBM)
   FIND_PACKAGE(GBM REQUIRED)
   INCLUDE_directories(${GBM_INCLUDE_DIR})
   SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${GBM_INCLUDE_DIR})
   SET(LIBS ${LIBS} ${GBM_LIBRARIES})
-ENDIF(USE_GBM)
+
+#-------------- SOFTMOTION -----------------------------------------------------
+  FIND_PACKAGE(SOFTMOTION REQUIRED)
+  INCLUDE_directories(${SOFTMOTION_INCLUDE_DIR})
+  SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${SOFTMOTION_INCLUDE_DIR})
+  SET(LIBS ${LIBS} ${SOFTMOTION_LIBRARIES})
+
+ENDIF(MULTILOCALPATH)
 
 # -------------------------------------------------------------
 # --- Compilation ---------------------------------------------

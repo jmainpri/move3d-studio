@@ -91,7 +91,7 @@ Move3D_flag(MOVE3D_CORE "Compiles the planning API and planners" ON)
 
 Move3D_flag(HRI_PLANNER "Human Robot Interaction planner module" ON USE_GSL PQP)
 
-Move3D_flag(USE_GBM "Compilation with module Multilocalpath" ON)
+Move3D_flag(USE_GBM "Compilation with module Multilocalpath" OFF)
 Move3D_flag(USE_GLUT "Compilation with a glut window" OFF)
 Move3D_flag(USE_GSL "Mathematic Library" OFF)
 Move3D_flag(USE_QWT "Compilation with technical widget" ON)
@@ -214,20 +214,21 @@ FIND_PACKAGE(Boost REQUIRED)
 INCLUDE_directories(/opt/local/include/)        
 SET(INCLUDE_DIRS ${INCLUDE_DIRS} /opt/local/include/ ${BOOST_INCLUDE_DIRS})
 
-#-------------- GBM ------------------------------------------------------------
+
 IF(MULTILOCALPATH)
-FIND_PACKAGE(GBM REQUIRED)
-INCLUDE_directories(${GBM_INCLUDE_DIR})
+
+#-------------- GBM ------------------------------------------------------------
+  FIND_PACKAGE(GBM REQUIRED)
+  INCLUDE_directories(${GBM_INCLUDE_DIR})
   SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${GBM_INCLUDE_DIR})
-SET(LIBS ${LIBS} ${GBM_LIBRARIES})
-ENDIF(MULTILOCALPATH)
+  SET(LIBS ${LIBS} ${GBM_LIBRARIES})
 
 #-------------- SOFTMOTION -----------------------------------------------------
-IF(MULTILOCALPATH)
   FIND_PACKAGE(SOFTMOTION REQUIRED)
   INCLUDE_directories(${SOFTMOTION_INCLUDE_DIR})
   SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${SOFTMOTION_INCLUDE_DIR})
   SET(LIBS ${LIBS} ${SOFTMOTION_LIBRARIES})
+
 ENDIF(MULTILOCALPATH)
 
 #-------------------------------------------------------------------------------

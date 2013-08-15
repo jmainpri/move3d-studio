@@ -40,10 +40,10 @@ void qt_set_arm_along_body( Robot* robot )
 {  
     confPtr_t q_curr = robot->getCurrentPos();
     confPtr_t q_init = robot->getInitPos();
-    (*q_init)[6] = (*q_curr)[6];
-    (*q_init)[7] = (*q_curr)[7];
-    (*q_init)[8] = (*q_curr)[8];
-    (*q_init)[9] = (*q_curr)[9];
+    (*q_init)[6] =  (*q_curr)[6];
+    (*q_init)[7] =  (*q_curr)[7];
+    (*q_init)[8] =  (*q_curr)[8];
+    (*q_init)[9] =  (*q_curr)[9];
     (*q_init)[10] = (*q_curr)[10];
     (*q_init)[11] = (*q_curr)[11];
     robot->setAndUpdate( *q_init );
@@ -183,12 +183,9 @@ void qt_otp()
 //! on the robot actual configuration
 void qtSliderFunction(p3d_rob* robotPt, configPt p)
 {  
-    if (ENV.getBool(Env::isCostSpace))
+    // No cost is computed for the other robots
+    if (ENV.getBool(Env::isCostSpace) && (XYZ_ENV->active_robot == robotPt ) )
     {
-        // No cost is computed for the other robots
-        if( XYZ_ENV->active_robot != robotPt )
-            return;
-
 #ifdef P3D_PLANNER
         p3d_rob* costRobot = robotPt;
         configPt cost_q = p;
@@ -267,13 +264,16 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
             std::cout << "Cost = " << global_costSpace->cost(costConfig) << std::endl;
         }
 
-        if ( PlanEnv->getBool(PlanParam::hriSetColorFromConfig) && (costR->getName().find("HUMAN") != string::npos) && HRICS_activeNatu )
-        {
-            cout << "reachSpace->setRobotColorFromConfiguration(true)" << endl;;
-            HRICS_activeNatu->setRobotColorFromConfiguration(true);
-        }
-#endif
     }
+
+    Robot* robot(global_Project->getActiveScene()->getRobotByName(robotPt->name));
+    if ( PlanEnv->getBool(PlanParam::drawNaturalColor) && (robot->getName().find("HUMAN") != string::npos) && HRICS_activeNatu )
+    {
+        HRICS_activeNatu->setRobotColorFromConfiguration(true);
+    }
+
+#endif
+
 
 #ifdef P3D_COLLISION_CHECKING
     int ncol = false;

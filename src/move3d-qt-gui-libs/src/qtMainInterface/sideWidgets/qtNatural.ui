@@ -24,8 +24,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>470</width>
-        <height>1143</height>
+        <width>491</width>
+        <height>1123</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -45,6 +45,13 @@
           <item>
            <widget class="QWidget" name="widget_2" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QCheckBox" name="checkBoxDrawNaturalColor">
+               <property name="text">
+                <string>Draw Color</string>
+               </property>
+              </widget>
+             </item>
              <item>
               <widget class="QPushButton" name="pushButtonDeleteNaturalCostSpace">
                <property name="text">

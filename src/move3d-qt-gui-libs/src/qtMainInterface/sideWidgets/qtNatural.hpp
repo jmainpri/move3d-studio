@@ -15,7 +15,7 @@
 
 namespace Ui
 {
-	class NaturalWidget;
+class NaturalWidget;
 };
 
 /**
@@ -24,56 +24,53 @@ namespace Ui
  */
 class NaturalWidget : public QWidget
 {
-	Q_OBJECT
-	
+    Q_OBJECT
+
 public:
-	NaturalWidget(QWidget *parent = 0);
-	~NaturalWidget();
+    NaturalWidget(QWidget *parent = 0);
+    ~NaturalWidget();
 
-	//void initCost();
-        void initNatural();
-        void initNaturalSpace();
-	void initHumanLike();
-        void initGrids();
-	void drawAllWinActive();
+    //void initCost();
+    void initNatural();
+    void initNaturalSpace();
+    void initHumanLike();
+    void initGrids();
+    void drawAllWinActive();
 
-	void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
-	//void setMotionWidget(MotionPlanner* ptrMLPW) { m_motionWidget = ptrMLPW; }
-	
-	Ui::NaturalWidget* Ui() { return m_ui; }
-	
-  
+    void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
+    Ui::NaturalWidget* Ui() { return m_ui; }
+
+
 private slots:
-	void saveActiveGridToFile();
-	void loadActiveGridFromFile();
-  
-	// Natural
-	void newNaturalCostSpace();
-	void deleteNaturalCostSpace();
-	void recomputeReachability();
-	void computeAllCellNaturalCost();
-	void computeReachability();
-	void getSortedReachableWSPoint();
-	
-	void on_pushButton_NaturalParam_toggled(bool checked);
-	void on_pushButton_gridProperties_toggled(bool checked);
-	void on_pushButtonInitBaseGrid_clicked();
-  
-	void on_horizontalSlider_zmax_sliderMoved(int position);
-	void on_horizontalSlider_ymax_sliderMoved(int position);
-	void on_horizontalSlider_xmax_sliderMoved(int position);
-	void on_horizontalSlider_zmin_sliderMoved(int position);
-	void on_horizontalSlider_ymin_sliderMoved(int position);
-	void on_horizontalSlider_xmin_sliderMoved(int position);
+    void saveActiveGridToFile();
+    void loadActiveGridFromFile();
 
-	void setActiveGrid(int grid);
-	void mergeGrids();
-	void cellToShowChanged();
-	
+    // Natural
+    void newNaturalCostSpace();
+    void deleteNaturalCostSpace();
+    void recomputeReachability();
+    void computeAllCellNaturalCost();
+    void computeReachability();
+    void getSortedReachableWSPoint();
+
+    void on_pushButton_NaturalParam_toggled(bool checked);
+    void on_pushButton_gridProperties_toggled(bool checked);
+    void on_pushButtonInitBaseGrid_clicked();
+
+    void on_horizontalSlider_zmax_sliderMoved(int position);
+    void on_horizontalSlider_ymax_sliderMoved(int position);
+    void on_horizontalSlider_xmax_sliderMoved(int position);
+    void on_horizontalSlider_zmin_sliderMoved(int position);
+    void on_horizontalSlider_ymin_sliderMoved(int position);
+    void on_horizontalSlider_xmin_sliderMoved(int position);
+
+    void setActiveGrid(int grid);
+    void mergeGrids();
+    void cellToShowChanged();
+
 private:
-	Ui::NaturalWidget*					m_ui;
-	//MotionPlanner*						m_motionWidget;
-	MainWindow*               m_mainWindow;
+    Ui::NaturalWidget*		m_ui;
+    MainWindow*             m_mainWindow;
 };
 
 #endif
