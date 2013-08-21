@@ -62,6 +62,7 @@ HriGestureWidget::HriGestureWidget(QWidget *parent) :
     initWorkspaceOccupancy();
     initGestureRecognition();
     initHriIOC();
+    initLegibleCost();
 }
 
 HriGestureWidget::~HriGestureWidget()
@@ -304,6 +305,14 @@ void HriGestureWidget::initHriIOC()
 //        cout << "load GMMs successfully!!!!" << endl;
 //    else
 //        cout << "ERROR loading GMMs!!!!" << endl;
+}
+
+//-------------------------------------------------------------------
+// Legible Costs
+//-------------------------------------------------------------------
+void HriGestureWidget::initLegibleCost()
+{
+    new connectCheckBoxToEnv( m_ui->checkBoxUseLegibleCost,  PlanEnv->getObject(PlanParam::useLegibleCost) );
 }
 
 

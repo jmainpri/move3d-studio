@@ -309,6 +309,8 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
     }
 #endif
 
+//    cout << "ncol : " << ncol << endl;
+
     //HRICS::setThePlacemateInIkeaShelf();
     g3d_set_draw_coll( ncol );
 }

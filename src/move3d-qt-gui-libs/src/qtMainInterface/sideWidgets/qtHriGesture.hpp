@@ -68,6 +68,9 @@ private slots:
     // IOC
     void initHriIOC();
 
+    // Legible
+    void initLegibleCost();
+
 private:
 
     int m_id_source_rm;

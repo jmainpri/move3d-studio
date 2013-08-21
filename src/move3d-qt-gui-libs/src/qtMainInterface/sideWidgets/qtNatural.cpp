@@ -288,11 +288,6 @@ void NaturalWidget::getSortedReachableWSPoint()
 //-------------------------------------------------------------
 Ui::NaturalWidget* static_ui;
 
-void add_grid_to_ui( API::BaseGrid* grid)
-{
-    static_ui->activeGridsBox->addItem( grid->getName().c_str() );
-}
-
 void NaturalWidget::initGrids()
 {
     connect(m_ui->activeGridsBox, SIGNAL(currentIndexChanged(int)),this, SLOT(setActiveGrid(int)), Qt::DirectConnection);
@@ -304,14 +299,13 @@ void NaturalWidget::initGrids()
     connect(m_ui->spinBoxCellToShow, SIGNAL(valueChanged(int)),this,SLOT(cellToShowChanged()), Qt::QueuedConnection);
 
     static_ui = m_ui;
-    ext_add_grid_to_ui = add_grid_to_ui;
 }
 
 void NaturalWidget::setActiveGrid(int ith_grid)
 {
     cout << "Change grid to :" << ith_grid << endl;
 
-    if (ith_grid == 0)
+    if( ith_grid == 0 )
     {
         ENV.setBool(Env::drawGrid,false);
         API_activeGrid = NULL;
@@ -319,8 +313,8 @@ void NaturalWidget::setActiveGrid(int ith_grid)
     else
     {
         ENV.setBool(Env::drawGrid,true);
-        vector<API::BaseGrid*> API_allGrids = api_get_all_grids();
-        API_activeGrid = API_allGrids[ith_grid-1];
+        //vector<API::BaseGrid*> API_allGrids = api_get_all_grids();
+        //API_activeGrid = API_allGrids[ith_grid-1];
     }
 
     m_mainWindow->drawAllWinActive();
@@ -328,19 +322,20 @@ void NaturalWidget::setActiveGrid(int ith_grid)
 
 void NaturalWidget::mergeGrids()
 {
-    vector<API::BaseGrid*> API_allGrids = api_get_all_grids();
+    cout << "Broken, fix!!" << endl;
+    //vector<API::BaseGrid*> API_allGrids = api_get_all_grids();
 
-    HRICS::NaturalGrid* first = dynamic_cast<HRICS::NaturalGrid*>(API_allGrids[0]);
-    HRICS::NaturalGrid* secon = dynamic_cast<HRICS::NaturalGrid*>(API_allGrids[1]);
+//    HRICS::NaturalGrid* first = dynamic_cast<HRICS::NaturalGrid*>(API_allGrids[0]);
+//    HRICS::NaturalGrid* secon = dynamic_cast<HRICS::NaturalGrid*>(API_allGrids[1]);
 
-    HRICS::NaturalGrid* third = first->mergeWith(secon);
+//    HRICS::NaturalGrid* third = first->mergeWith(secon);
 
-    m_ui->activeGridsBox->addItem(third->getName().c_str());
-    API_allGrids.push_back(third);
+//    m_ui->activeGridsBox->addItem(third->getName().c_str());
+//    API_allGrids.push_back(third);
 
-    API_activeGrid = third;
+//    API_activeGrid = third;
 
-    m_mainWindow->drawAllWinActive();
+//    m_mainWindow->drawAllWinActive();
 }
 
 void NaturalWidget::saveActiveGridToFile()
@@ -385,7 +380,7 @@ void NaturalWidget::loadActiveGridFromFile()
         qt_load_HRICS_Grid(fileName.toStdString());
 
         //		m_ui->activeGridsBox->addItem( API_activeGrid->getName().c_str() );
-        api_store_new_grid( dynamic_cast<HRICS::NaturalGrid*>(API_activeGrid) );
+        //api_store_new_grid( dynamic_cast<HRICS::NaturalGrid*>(API_activeGrid) );
         HRICS_activeNatu->setGrid( dynamic_cast<HRICS::NaturalGrid*>(API_activeGrid) );
         ENV.setBool(Env::drawGrid,true);
         m_mainWindow->drawAllWinActive();
@@ -407,7 +402,6 @@ void NaturalWidget::on_pushButtonInitBaseGrid_clicked()
 void NaturalWidget::on_horizontalSlider_xmin_sliderMoved(int position)
 {
     m_ui->label_xmin->setText(QString::number(-position/10.0) );
-
 }
 
 void NaturalWidget::on_horizontalSlider_ymin_sliderMoved(int position)
