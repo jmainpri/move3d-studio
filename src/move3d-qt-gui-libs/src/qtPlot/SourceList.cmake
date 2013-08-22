@@ -19,10 +19,7 @@ BM3D_QT_GENERATE_MOC(
 basicPlot.hpp
 basicPlotWindow.hpp 
 multiPlot.hpp
-dataPlot.hpp 
-tempWin.hpp 
-histoWin.hpp
-histogramItem.hpp
+dataPlot.hpp
 replottingVectors.hpp
 )
 

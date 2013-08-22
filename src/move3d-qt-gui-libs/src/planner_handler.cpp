@@ -190,7 +190,7 @@ void qt_drawAllWinActive()
     g3d_draw_allwin_active();
 }
 
-static HRICS::Navigation* m_navigation = NULL;
+//static HRICS::Navigation* m_navigation = NULL;
 
 void qt_test1()
 {
@@ -264,10 +264,10 @@ void qt_test2()
         global_rePlanningEnv->resetTrajectoriesToDraw();
 }
 
-static bool recompute_cost=false;
-static bool init_generator=false;
-static bool use_list_generator=false;
-static ConfGenerator* generatorPtr=NULL;
+//static bool recompute_cost=false;
+//static bool init_generator=false;
+//static bool use_list_generator=false;
+//static ConfGenerator* generatorPtr=NULL;
 
 void qt_test3()
 {
@@ -421,15 +421,14 @@ void qt_runDiffusion()
         gettimeofday(&tim, NULL);
         double t_init = tim.tv_sec+(tim.tv_usec/1000000.0);
 
-        int res;
         cout << "ENV.getBool(Env::Env::treePlannerIsEST) = " << ENV.getBool(Env::treePlannerIsEST) << endl;
         if (ENV.getBool(Env::treePlannerIsEST))
         {
-            res = p3d_run_est(robot->getRobotStruct());
+            p3d_run_est(robot->getRobotStruct());
         }
         else
         {
-            res = p3d_run_rrt(robot->getRobotStruct());
+            p3d_run_rrt(robot->getRobotStruct());
         }
 
         gettimeofday(&tim, NULL);
@@ -466,24 +465,21 @@ void qt_runPRM()
 #ifdef P3D_PLANNER
         p3d_SetStopValue(FALSE);
 #endif
-
-        int res;
-
         ChronoOn();
 
         switch(ENV.getInt(Env::PRMType))
         {
         case 0:
-            res = p3d_run_prm(robot->getRobotStruct());
+            p3d_run_prm(robot->getRobotStruct());
             break;
         case 1:
-            res = p3d_run_vis_prm(robot->getRobotStruct());
+            p3d_run_vis_prm(robot->getRobotStruct());
             break;
         case 2:
-            res = p3d_run_acr(robot->getRobotStruct());
+            p3d_run_acr(robot->getRobotStruct());
             break;
         case 3:
-            res = p3d_run_perturb_prm(robot->getRobotStruct());
+            p3d_run_perturb_prm(robot->getRobotStruct());
             break;
         default:
             cout << "Error No Other PRM"  << endl;
@@ -593,7 +589,7 @@ void qt_classify_motions()
         {
             int index = i*25+j;
             cout << std::setw( 3 ) << std::setfill( '0' ) << index  << " : " ;
-            int id_class = global_humanPredictionSimulator->classifyMotion( global_motionRecorder->resample( stored_motions[index], 100 ) );
+            /*int id_class =*/ global_humanPredictionSimulator->classifyMotion( global_motionRecorder->resample( stored_motions[index], 100 ) );
             //cout << std::setw( 3 ) << std::setfill( ' ' ) << i << " : " << id_class << endl;
         }
     }
@@ -1050,7 +1046,7 @@ void qt_saveScenario()
 void qt_readTraj()
 {
     p3d_rob *robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
-    int ir;
+    //int ir;
     configPt qi, qf;
     pp3d_traj trajPt;
 
@@ -1059,7 +1055,7 @@ void qt_readTraj()
         if (p3d_read_traj(qt_fileName))
         {
             trajPt = (p3d_traj *) p3d_get_desc_curid(P3D_TRAJ);
-            ir = p3d_get_desc_curnum(P3D_ROBOT);
+            // ir = p3d_get_desc_curnum(P3D_ROBOT);
             // g3d_add_traj(p3d_get_desc_curname(P3D_TRAJ),
             // p3d_get_desc_number(P3D_TRAJ));
             qi = p3d_alloc_config(robotPt);

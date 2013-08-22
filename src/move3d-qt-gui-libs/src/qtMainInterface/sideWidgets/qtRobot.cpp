@@ -1332,7 +1332,7 @@ void RobotWidget::makeNormalTraj()
 
 void RobotWidget::saveConfig()
 {
-    config_namePt config;
+    config_namePt config=NULL;
 
     string name( "Config_" );
     string num;
@@ -1346,7 +1346,7 @@ void RobotWidget::saveConfig()
     p3d_rob* robot = p3d_get_robot_by_name(global_ActiveRobotName.c_str());
     configPt q = p3d_get_robot_config( robot );
 
-    p3d_set_new_robot_config(robot, name.c_str() , q, NULL, config);
+    p3d_set_new_robot_config( robot, name.c_str() , q, NULL, config );
     m_ui->spinBoxNavigate->setMaximum(robot->nconf - 1);
 }
 

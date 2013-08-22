@@ -737,7 +737,7 @@ void CostWidget::showSTOMPTrajCost()
         k += inc;
     }
 
-    for( int i=0;i<collision_cost.size();i++)
+    for( int i=0;i<int(collision_cost.size());i++)
     {
         cout << "collision_cost[" << i << "] = " << collision_cost[i] << endl;
     }

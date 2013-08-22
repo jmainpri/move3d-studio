@@ -13,8 +13,6 @@ BM3D_QT_GENERATE_MOC(
 moverobot.hpp
 qtmovinghuman.hpp
 qtConstraints.hpp
-sliderfunction.hpp
-ui_moverobot.hpp
 )
 
 IF(MULTILOCALPATH)

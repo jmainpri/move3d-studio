@@ -605,7 +605,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QWidget" name="widget_11" native="true">
+            <widget class="QWidget" name="widget_111" native="true">
              <layout class="QHBoxLayout" name="horizontalLayout_10">
               <property name="margin">
                <number>0</number>
@@ -672,8 +672,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>566</width>
-            <height>1049</height>
+            <width>371</width>
+            <height>895</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">

@@ -168,7 +168,7 @@ void SpinBoxSliderConnector::spinBoxValueChanged( int _value )
 
 void SpinBoxSliderConnector::spinBoxValueChanged( double _value )
 {
-    bool v = m_slider->blockSignals(true);
+    /*bool v =*/ m_slider->blockSignals(true);
     
     //    if(!_init)
     //    {
@@ -186,7 +186,7 @@ void SpinBoxSliderConnector::spinBoxValueChanged( double _value )
 
 void SpinBoxSliderConnector::sliderValueChanged( int _value )
 {   
-    bool v = m_spinBox->blockSignals(true);
+    /*bool v =*/ m_spinBox->blockSignals(true);
     
     //    if(!_init)
     //    {

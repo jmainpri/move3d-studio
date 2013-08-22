@@ -46,7 +46,7 @@ void MultiRun::saveVectorToFile(int Context)
 
     cout << "Opening save file : " << oss.str() << endl;
 
-    for (char i = 0; i < mNames.size(); i++)
+    for (int i=0;i<int(mNames.size()); i++)
     {
         s << mNames.at(i) << ";";
     }

@@ -427,14 +427,14 @@ void FormRobot::initSliders()
 {
     //    int       i, j, k, ir, ord;
     int k;
-    int /*njnt,*/ nb_dof;
+    //int /*njnt,*/ nb_dof;
     //configPt robot_pos_deg;
-    p3d_rob *robotPt;
+    //p3d_rob *robotPt;
     Joint * jntPt;
 
-    nb_dof =    mRobot->getRobotStruct()->nb_dof; //p3d_get_robot_ndof();
-    //    ir =        ptrRob->getRobotStruct()->num; //p3d_get_desc_curnum(P3D_ROBOT);
-    robotPt =   mRobot->getRobotStruct(); //(p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
+    //nb_dof =    mRobot->getRobotStruct()->nb_dof; //p3d_get_robot_ndof();
+    //ir =        ptrRob->getRobotStruct()->num; //p3d_get_desc_curnum(P3D_ROBOT);
+    //robotPt =   mRobot->getRobotStruct(); //(p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
 
     if(calc_real_dof() > 0)
     {
@@ -871,7 +871,9 @@ void DofSlider::dofValueChanged(double value)
     //    CB_position_obj(NULL,value);
 
     configPt p=NULL, p_deg=NULL;
-    int nb_dof,ir,i_dof;
+    //int nb_dof;
+    //int ir;
+    int i_dof;
     p3d_rob *robotPt;
     p3d_jnt *jntPt;
     //int ncol=0;
@@ -886,8 +888,8 @@ void DofSlider::dofValueChanged(double value)
     //    robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
     //    nb_dof = p3d_get_robot_ndof();
 
-    nb_dof =    mRobot->getRobotStruct()->nb_dof; //p3d_get_robot_ndof();
-    ir =        mRobot->getRobotStruct()->num; //p3d_get_desc_curnum(P3D_ROBOT);
+    //nb_dof =    mRobot->getRobotStruct()->nb_dof; //p3d_get_robot_ndof();
+    /*ir =*/        mRobot->getRobotStruct()->num; //p3d_get_desc_curnum(P3D_ROBOT);
     robotPt =   mRobot->getRobotStruct(); //(p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
 
     //  cout << "robotPt = " << robotPt << endl;
