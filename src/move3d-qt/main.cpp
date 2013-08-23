@@ -39,7 +39,6 @@ using namespace std;
  * @ingroup qtWindow
  * @brief Logo
  */
-
 static char* molecule_xpm[] = {
     (char*) "32 32 147 2",
     (char*) "  	g #FFFFFF",
@@ -349,11 +348,11 @@ void Main_threads::initInterface()
     g_window.setWidth( 1800 );
     g_window.setHeight( 1024 );
 
-//    g_window.setWidth( 1500 );
-//    g_window.setHeight( 700 );
+    //    g_window.setWidth( 1500 );
+    //    g_window.setHeight( 700 );
 
-//    g_window.setWidth( 1024 );
-//    g_window.setHeight( 720 );
+    //    g_window.setWidth( 1024 );
+    //    g_window.setHeight( 720 );
 
     if( move3d_studio_load_settings )
     {

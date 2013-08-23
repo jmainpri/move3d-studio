@@ -6,6 +6,8 @@
 #include "qtOpenGL/glwidget.hpp"
 #include "qtOpenGL/qtMobileCamera.h"
 
+#include <QShortcut>
+
 #include "mainwindowTestFunctions.hpp"
 #include "planner_handler.hpp" 
 
@@ -138,7 +140,7 @@ MainWindow::MainWindow(QWidget *parent)
     initViewerButtons();
     initLightSource();
     initRobotsMenu();
-
+    initShortcuts();
 
     //timer for recording
     timer = new QTimer(this);
@@ -168,6 +170,12 @@ void MainWindow::refreshConstraintedDoFs()
 MoveRobot* MainWindow::getMoveRobot()
 {
     return m_ui->tabRobot->getMoveRobot();
+}
+
+void MainWindow::initShortcuts()
+{
+    QShortcut *save = new QShortcut(QKeySequence("Ctrl+S"), this );
+    connect( save, SIGNAL(activated()), this, SLOT(saveParametersQuick()));
 }
 
 void MainWindow::initRobotsMenu()
@@ -399,7 +407,7 @@ void MainWindow::loadParametersQuick()
 {
     char* home_path = getenv("HOME_MOVE3D");
 
-    if( home_path == NULL)
+    if( home_path == NULL )
     {
         cout << "HOME_MOVE3D is not defined" << endl;
         return;
@@ -431,7 +439,7 @@ void MainWindow::saveParametersQuick()
         return;
     }
 
-    string home(home_path);
+    string home( home_path );
 
     if (!home.empty())
     {

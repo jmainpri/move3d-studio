@@ -63,6 +63,7 @@ public:
 	
 	private slots :
 };
+
 #endif
 
 #endif // MAIN_HPP

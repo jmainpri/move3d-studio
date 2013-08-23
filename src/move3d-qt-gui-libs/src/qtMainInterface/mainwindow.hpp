@@ -113,6 +113,8 @@ private slots:
     void loadInterfaceParameters();
     void saveParametersQuick();
 
+    void initShortcuts();
+
     void initRobotsMenu();
     void setRobotAsCurrent();
 
