@@ -57,13 +57,13 @@ public:
     ~SpinBoxSliderConnector();
 
     /**
-          @brief gets the value of the Connector object
-          */
+     @brief gets the value of the Connector object
+     */
     double value() const;
 
     /**
-          @brief sets the value of the Connector object
-          **/
+      @brief sets the value of the Connector object
+     */
     void setValue( double _value );
 
 private slots:

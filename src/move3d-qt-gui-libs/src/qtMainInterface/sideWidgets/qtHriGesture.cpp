@@ -39,6 +39,7 @@
 #include "hri_costspace/Gestures/HRICS_ClassifyMotion.hpp"
 #include "hri_costspace/Gestures/HRICS_HumanPredictionCostSpace.hpp"
 #include "hri_costspace/Gestures/HRICS_GestParameters.hpp"
+#include "hri_costspace/HRICS_parameters.hpp"
 
 #include "planner/planEnvironment.hpp"
 #include "utils/ConfGenerator.h"
@@ -298,6 +299,7 @@ void HriGestureWidget::initGestureRecognition()
 void HriGestureWidget::initHriIOC()
 {
     new connectCheckBoxToEnv( m_ui->checkBoxInitHriIOC,  GestEnv->getObject(GestParam::init_module_ioc) );
+    new connectCheckBoxToEnv( m_ui->checkBoxInitSphereCost,  HriEnv->getObject(HricsParam::init_spheres_cost) );
 
 //    global_classifyMotion = new HRICS::ClassifyMotion();
 

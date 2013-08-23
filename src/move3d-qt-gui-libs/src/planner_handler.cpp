@@ -55,6 +55,9 @@
 #include "bio/BioEnergy/include/Energy-pkg.h"
 #endif
 
+#include "hri_costspace/HRICS_parameters.hpp"
+#include "hri_costspace/HumanTrajectories/HRICS_spheres.hpp"
+
 #if defined( HRI_COSTSPACE )
 #include "hri_costspace/HRICS_costspace.hpp"
 #include "hri_costspace/HRICS_Workspace.hpp"
@@ -174,12 +177,23 @@ void qt_init_after_params()
         HRICS_initOccupancyPredictionFramework();
     }
 
-//    if( GestEnv->getBool(GestParam::init_module_ioc) )
-//    {
-//        HRICS_initIverseOptimalControlFramework();
-//    }
+    if( HriEnv->getBool(HricsParam::init_spheres_cost) )
+    {
+        if( !ENV.getBool(Env::isCostSpace) )
+        {
+            ENV.setBool( Env::isCostSpace, true );
+            qt_init_costspace();
 
-//    printJointMapping( global_Project->getActiveScene()->getRobotByName("HERAKLES_HUMAN1") );
+        }
+        HRICS_init_sphere_cost();
+    }
+
+    //    if( GestEnv->getBool(GestParam::init_module_ioc) )
+    //    {
+    //        HRICS_initIverseOptimalControlFramework();
+    //    }
+
+    //    printJointMapping( global_Project->getActiveScene()->getRobotByName("HERAKLES_HUMAN1") );
 }
 
 //------------------------------------------------------------------------------
@@ -626,11 +640,11 @@ void qt_human_prediction_simulation_tests()
     human_motion_id[0] = 77;
 
     // (25,26,27,28,29)
-//    human_motion_id[0] = 25;
-//    human_motion_id[1] = 26;
-//    human_motion_id[2] = 27;
-//    human_motion_id[3] = 28;
-//    human_motion_id[4] = 29;
+    //    human_motion_id[0] = 25;
+    //    human_motion_id[1] = 26;
+    //    human_motion_id[2] = 27;
+    //    human_motion_id[3] = 28;
+    //    human_motion_id[4] = 29;
 
     for(int i=0;i<nb_motions;i++)
     {
@@ -680,11 +694,11 @@ void qt_human_prediction_simulation()
 //----------------------------------------------------------
 void qt_runHumanIOC()
 {
-//    if( global_IOCUpper == NULL )
-//    {
-//        cout << "global_IOCUpper == NULL" << endl;
-//        return;
-//    }
+    //    if( global_IOCUpper == NULL )
+    //    {
+    //        cout << "global_IOCUpper == NULL" << endl;
+    //        return;
+    //    }
 
     //global_IOCUpper->run();
 }
@@ -795,7 +809,7 @@ void qt_simpleNav()
 
 void qt_runParallelStomp()
 {
-//    srompRun_MultipleParallel();
+    //    srompRun_MultipleParallel();
     srompRun_OneParallel();
 }
 
