@@ -40,6 +40,7 @@
 #include "hri_costspace/Gestures/HRICS_HumanPredictionCostSpace.hpp"
 #include "hri_costspace/Gestures/HRICS_GestParameters.hpp"
 #include "hri_costspace/HRICS_parameters.hpp"
+#include "hri_costspace/HumanTrajectories/HRICS_ioc.hpp"
 
 #include "planner/planEnvironment.hpp"
 #include "utils/ConfGenerator.h"
@@ -301,12 +302,50 @@ void HriGestureWidget::initHriIOC()
     new connectCheckBoxToEnv( m_ui->checkBoxInitHriIOC,  GestEnv->getObject(GestParam::init_module_ioc) );
     new connectCheckBoxToEnv( m_ui->checkBoxInitSphereCost,  HriEnv->getObject(HricsParam::init_spheres_cost) );
 
+    connect( m_ui->pushButtonGenerateSamples, SIGNAL(clicked()), this, SLOT(samplemap()) );
+
 //    global_classifyMotion = new HRICS::ClassifyMotion();
 
 //    if( global_classifyMotion->load_model() )
 //        cout << "load GMMs successfully!!!!" << endl;
 //    else
 //        cout << "ERROR loading GMMs!!!!" << endl;
+}
+
+void HriGestureWidget::samplemap()
+{
+    Robot* rob = global_Project->getActiveScene()->getActiveRobot();
+    if (!rob) {
+        cout << "robot not initialized in file "
+             << __FILE__ << " ,  " << __func__ << endl;
+        return;
+    }
+
+    confPtr_t q_init( rob->getInitPos() );
+    confPtr_t q_goal( rob->getGoalPos() );
+    if( *q_init == *q_goal )
+    {
+        cout << "init equal q_goal in file "
+             << __FILE__ << " ,  " << __func__ << endl;
+        return;
+    }
+
+    std::vector<int> planner_joints(1);
+    planner_joints[0] = 1;
+    ChompPlanningGroup* plangroup = new ChompPlanningGroup( rob, planner_joints );
+
+    vector<confPtr_t> confs(2);
+    confs[0] = q_init;
+    confs[1] = q_goal;
+    API::Trajectory T( confs );
+    T.cutTrajInSmallLP( 20 );
+    Eigen::MatrixXd mat = T.getEigenMatrix(6,7);
+
+    cout << "mat : " << mat << endl;
+
+    HRICS::Ioc ioc( 20, plangroup );
+    ioc.addDemonstration( mat );
+    ioc.generateSamples( 10 );
 }
 
 //-------------------------------------------------------------------

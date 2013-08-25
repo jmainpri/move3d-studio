@@ -294,6 +294,13 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QPushButton" name="pushButtonGenerateSamples">
+            <property name="text">
+             <string>Generate Samples</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>

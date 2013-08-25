@@ -67,6 +67,7 @@ private slots:
 
     // IOC
     void initHriIOC();
+    void samplemap();
 
     // Legible
     void initLegibleCost();
