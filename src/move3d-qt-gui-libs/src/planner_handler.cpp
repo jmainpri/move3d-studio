@@ -695,39 +695,7 @@ void qt_human_prediction_simulation()
 //----------------------------------------------------------
 void qt_runHumanIOC()
 {
-    Robot* rob = global_Project->getActiveScene()->getActiveRobot();
-    if (!rob) {
-        cout << "robot not initialized in file "
-             << __FILE__ << " ,  " << __func__ << endl;
-        return;
-    }
-
-    confPtr_t q_init( rob->getInitPos() );
-    confPtr_t q_goal( rob->getGoalPos() );
-    if( *q_init == *q_goal )
-    {
-        cout << "init equal q_goal in file "
-             << __FILE__ << " ,  " << __func__ << endl;
-        return;
-    }
-
-    std::vector<int> planner_joints(1);
-    planner_joints[0] = 1;
-    ChompPlanningGroup* plangroup = new ChompPlanningGroup( rob, planner_joints );
-
-    vector<confPtr_t> confs(2);
-    confs[0] = q_init;
-    confs[1] = q_goal;
-    API::Trajectory T( confs );
-    T.cutTrajInSmallLP( 20 );
-    T.replaceP3dTraj();
-    Eigen::MatrixXd mat = T.getEigenMatrix(6,7);
-
-    cout << "mat : " << mat << endl;
-
-    HRICS::Ioc ioc( 20, plangroup );
-    ioc.addDemonstration( mat );
-    ioc.generateSamples( 10 );
+    HRICS_run_sphere_ioc();
 }
 
 //----------------------------------------------------------

@@ -345,14 +345,14 @@ void Main_threads::initInterface()
     // 	g_window.setHeight( 0.707*g.height() ); // sqrt(2) / 2
     // 	g_window.moveTo( 0, 0 );
 
-    g_window.setWidth( 1800 );
-    g_window.setHeight( 1024 );
+    //g_window.setWidth( 1800 );
+    //g_window.setHeight( 1024 );
 
     //    g_window.setWidth( 1500 );
     //    g_window.setHeight( 700 );
 
-    //    g_window.setWidth( 1024 );
-    //    g_window.setHeight( 720 );
+    g_window.setWidth( 1024 );
+    g_window.setHeight( 720 );
 
     if( move3d_studio_load_settings )
     {
