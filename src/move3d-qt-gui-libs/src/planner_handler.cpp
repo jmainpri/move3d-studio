@@ -720,6 +720,7 @@ void qt_runHumanIOC()
     confs[1] = q_goal;
     API::Trajectory T( confs );
     T.cutTrajInSmallLP( 20 );
+    T.replaceP3dTraj();
     Eigen::MatrixXd mat = T.getEigenMatrix(6,7);
 
     cout << "mat : " << mat << endl;
