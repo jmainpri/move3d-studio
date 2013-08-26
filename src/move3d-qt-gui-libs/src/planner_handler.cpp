@@ -68,6 +68,7 @@
 #include "hri_costspace/Gestures/HRICS_RecordMotion.hpp"
 #include "hri_costspace/Gestures/HRICS_HumanPredictionCostSpace.hpp"
 #include "hri_costspace/Gestures/HRICS_HumanPredictionSimulator.hpp"
+#include "hri_costspace/HumanTrajectories/HRICS_ioc.hpp"
 
 #if defined( HRI_PLANNER )
 #include "hri_costspace/HRICS_HAMP.hpp"
@@ -694,13 +695,38 @@ void qt_human_prediction_simulation()
 //----------------------------------------------------------
 void qt_runHumanIOC()
 {
-    //    if( global_IOCUpper == NULL )
-    //    {
-    //        cout << "global_IOCUpper == NULL" << endl;
-    //        return;
-    //    }
+    Robot* rob = global_Project->getActiveScene()->getActiveRobot();
+    if (!rob) {
+        cout << "robot not initialized in file "
+             << __FILE__ << " ,  " << __func__ << endl;
+        return;
+    }
 
-    //global_IOCUpper->run();
+    confPtr_t q_init( rob->getInitPos() );
+    confPtr_t q_goal( rob->getGoalPos() );
+    if( *q_init == *q_goal )
+    {
+        cout << "init equal q_goal in file "
+             << __FILE__ << " ,  " << __func__ << endl;
+        return;
+    }
+
+    std::vector<int> planner_joints(1);
+    planner_joints[0] = 1;
+    ChompPlanningGroup* plangroup = new ChompPlanningGroup( rob, planner_joints );
+
+    vector<confPtr_t> confs(2);
+    confs[0] = q_init;
+    confs[1] = q_goal;
+    API::Trajectory T( confs );
+    T.cutTrajInSmallLP( 20 );
+    Eigen::MatrixXd mat = T.getEigenMatrix(6,7);
+
+    cout << "mat : " << mat << endl;
+
+    HRICS::Ioc ioc( 20, plangroup );
+    ioc.addDemonstration( mat );
+    ioc.generateSamples( 10 );
 }
 
 //----------------------------------------------------------
