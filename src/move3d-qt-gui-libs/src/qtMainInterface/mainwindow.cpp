@@ -567,8 +567,8 @@ void MainWindow::initViewerButtons()
     connect(m_ui->pushButtonRestoreView,SIGNAL(clicked(bool)),this,SLOT(restoreView()),Qt::DirectConnection);
     //	connect(m_ui->pushButtonResetGraph,SIGNAL(clicked()),this,SLOT(ResetGraph()));
 
-    connect(m_ui->pushButtonAddTraj,SIGNAL(clicked()),this,SLOT(addTrajToDraw()));
-    connect(m_ui->pushButtonClearTraj,SIGNAL(clicked()),this,SLOT(clearTrajToDraw()));
+    connect(m_ui->pushButtonAddTraj,SIGNAL(clicked()),this,SLOT(addglobal_trajToDraw()));
+    connect(m_ui->pushButtonClearTraj,SIGNAL(clicked()),this,SLOT(clearglobal_trajToDraw()));
 
     connect(m_ui->comboBoxColorTraj, SIGNAL(currentIndexChanged(int)),this,SLOT(colorTrajChange(int)));
 
@@ -739,20 +739,20 @@ void MainWindow::restoreView()
     drawAllWinActive();
 }
 
-void MainWindow::addTrajToDraw()
+void MainWindow::addglobal_trajToDraw()
 {
     p3d_rob *robotPt = (p3d_rob *) p3d_get_desc_curid(P3D_ROBOT);
     p3d_traj* CurrentTrajPt = robotPt->tcur;
 #ifdef MOVE3D_CORE
     API::Trajectory traj(new Robot(robotPt),CurrentTrajPt);
-    trajToDraw.push_back(traj);
+    global_trajToDraw.push_back(traj);
 #endif
 }
 
-void MainWindow::clearTrajToDraw()
+void MainWindow::clearglobal_trajToDraw()
 {
 #ifdef MOVE3D_CORE
-    trajToDraw.clear();
+    global_trajToDraw.clear();
 #endif
 }
 
@@ -760,10 +760,10 @@ void MainWindow::colorTrajChange(int color)
 {
     cout << "Change traj color" << endl;
 #ifdef CXX_PLANNNER
-    for( unsigned int i=0; i<trajToDraw.size(); i++ )
+    for( unsigned int i=0; i<global_trajToDraw.size(); i++ )
     {
         cout << " Change traj " << i << " to : " << color << endl;
-        trajToDraw[i].setColor(color);
+        global_trajToDraw[i].setColor(color);
     }
 #endif
     this->drawAllWinActive();

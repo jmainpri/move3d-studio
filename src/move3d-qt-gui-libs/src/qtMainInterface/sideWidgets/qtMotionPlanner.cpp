@@ -428,7 +428,7 @@ void MotionPlanner::cutTrajAndOptimizeSM()
 
 void MotionPlanner::eraseDebugTraj()
 {
-    trajToDraw.clear();
+    global_trajToDraw.clear();
 }
 
 void MotionPlanner::setCostCriterium(int choice) 

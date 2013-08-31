@@ -133,8 +133,8 @@ private slots:
     void changeLightPosX();
     void changeLightPosY();
     void changeLightPosZ();
-    void addTrajToDraw();
-    void clearTrajToDraw();
+    void addglobal_trajToDraw();
+    void clearglobal_trajToDraw();
     void colorTrajChange(int color);
     void enableRunAndResetButtons();
     void enableStopButton();
