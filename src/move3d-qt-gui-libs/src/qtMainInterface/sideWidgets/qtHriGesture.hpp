@@ -54,6 +54,7 @@ private slots:
     void loadFolder();
     void convertFolderToCSV();
     void loadFromCSV();
+    void loadFolderTwoHumans();
 
     // Occupancy
     void initWorkspaceOccupancy();

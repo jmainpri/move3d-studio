@@ -45,8 +45,9 @@
 #include "planner/planEnvironment.hpp"
 #include "utils/ConfGenerator.h"
 
-using namespace std;
 using namespace QtShiva;
+using std::cout;
+using std::endl;
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 extern Eigen::Vector3d global_DrawnSphere;
@@ -101,6 +102,8 @@ void HriGestureWidget::initRecordedMotion()
     connect( m_ui->pushButtonSaveToCSV,SIGNAL(clicked()),this,SLOT(convertFolderToCSV()));
     connect( m_ui->pushButtonLoadFromCSV,SIGNAL(clicked()),this,SLOT(loadFromCSV()));
 
+    connect( m_ui->pushButtonLoadTwoFolders,SIGNAL(clicked()),this,SLOT(loadFolderTwoHumans()));
+
     m_id_source_rm = 0;
     m_id_target_rm = 0;
     m_saved_file_id = 0;
@@ -110,12 +113,12 @@ void HriGestureWidget::loadRecordedMotion()
 {
     cout << "Load recorded motion" << endl;
 
-    if(!global_motionRecorder) {
+    if( global_motionRecorders.empty() ) {
         cout << "recorder not initialized" << endl;
         return;
     }
 
-    global_motionRecorder->loadMotionFromMultipleFiles( "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/motion_saved_" , 37 );
+    global_motionRecorders[0]->loadMotionFromMultipleFiles( "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/motion_saved_" , 37 );
     //m_recorder->loadFromXml("/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/motion_saved_00000.xml");
 }
 
@@ -129,9 +132,10 @@ void HriGestureWidget::getIthConfigurationInMotion()
 {
     int ith = m_ui->spinBoxShowConfigurationRecordedMotion->value();
 
-    if ( global_motionRecorder ) {
-        global_motionRecorder->setConfiguration( ith );
-        global_motionRecorder->setShowMotion( ith );
+    if ( !global_motionRecorders.empty() )
+    {
+        global_motionRecorders[0]->setRobotToConfiguration( ith );
+        global_motionRecorders[0]->setShowMotion( ith );
     }
     else {
         cout << "global_motionRecorder is not initilized" << endl;
@@ -153,19 +157,22 @@ void HriGestureWidget::setTargetRM()
 
 void HriGestureWidget::extractAndSaveRM()
 {
-    if ( global_motionRecorder )
+    if ( !global_motionRecorders.empty() )
     {
         int begin = m_id_source_rm;
         int end   = m_id_target_rm;
         cout << "Extract motion between " << begin << " and " << end << endl;
-        motion_t part = global_motionRecorder->extractSubpart( begin, end );
+        motion_t part = global_motionRecorders[0]->extractSubpart( begin, end );
 
-        string home(getenv("HOME_MOVE3D")); string filepath; ostringstream filename;
+        std::string home(getenv("HOME_MOVE3D"));
+        std::string filepath;
+        std::ostringstream filename;
+
         filename << "/statFiles/recorded_cut/motion_";
         filename << std::setw( 5 ) << std::setfill( '0' ) << m_saved_file_id++ << ".xml";
         filepath = home+filename.str();
 
-        global_motionRecorder->saveToXml( filepath, part );
+        global_motionRecorders[0]->saveToXml( filepath, part );
         cout << "Save file to : " << filepath << endl;
     }
     else {
@@ -173,11 +180,12 @@ void HriGestureWidget::extractAndSaveRM()
     }
 }
 
-std::string foldername = "/home/jmainpri/workspace/move3d/data/Library_Untouched/Sorted/8";
+//std::string foldername = "/home/jmainpri/workspace/move3d/data/Library_Untouched/Sorted/8";
+std::string foldername = "/home/jmainpri/workspace/move3d/libmove3d/statFiles/collaboration/recorded_motion_01_09_13";
 
 void HriGestureWidget::loadFolder()
 {
-    if ( global_motionRecorder == NULL )
+    if ( global_motionRecorders.empty() )
     {
         cout << "global_motionRecorder is not initilized" << endl;
 
@@ -188,27 +196,27 @@ void HriGestureWidget::loadFolder()
             return;
         }
 
-        global_motionRecorder =  new HRICS::RecordMotion( human );
+        global_motionRecorders.push_back( new HRICS::RecordMotion( human ) );
     }
 
 //    global_motionRecorder->loadXMLFolder();
-    global_motionRecorder->loadCSVFolder( foldername );
+    global_motionRecorders[0]->loadCSVFolder( foldername );
 }
 
 void HriGestureWidget::convertFolderToCSV()
 {
-    if ( global_motionRecorder == NULL )
+    if ( global_motionRecorders.empty() )
     {
         cout << "global_motionRecorder is not initilized" << endl;
         return;
     }
 
-    global_motionRecorder->saveStoredToCSV( foldername + "/compound.csv" );
+    global_motionRecorders[0]->saveStoredToCSV( foldername + "/compound.csv" );
 }
 
 void HriGestureWidget::loadFromCSV()
 {
-    if ( global_motionRecorder == NULL )
+    if ( global_motionRecorders.empty() )
     {
         cout << "global_motionRecorder is not initilized" << endl;
 
@@ -219,10 +227,38 @@ void HriGestureWidget::loadFromCSV()
             return;
         }
 
-        global_motionRecorder =  new HRICS::RecordMotion( human );
+        global_motionRecorders.push_back( new HRICS::RecordMotion( human ) );
     }
 
-    global_motionRecorder->loadRegressedFromCSV();
+    global_motionRecorders[0]->loadRegressedFromCSV();
+}
+
+void HriGestureWidget::loadFolderTwoHumans()
+{
+    if ( !global_motionRecorders.empty() )
+    {
+        for(int i=0;i<int(global_motionRecorders.size());i++)
+        {
+            delete global_motionRecorders[i];
+        }
+
+        global_motionRecorders.clear();
+    }
+
+    Scene* sce = global_Project->getActiveScene();
+    Robot* human1 = sce->getRobotByName( "HERAKLES_HUMAN1" );
+    Robot* human2 = sce->getRobotByName( "HERAKLES_HUMAN2" );
+    if( human1 == NULL || human2 == NULL )
+    {
+        cout << "No humans HERAKLES in the the scene" << endl;
+        return;
+    }
+
+    global_motionRecorders.push_back( new HRICS::RecordMotion( human1 ) );
+    global_motionRecorders.push_back( new HRICS::RecordMotion( human2 ) );
+
+    global_motionRecorders[0]->loadCSVFolder( foldername + "/human0" );
+    global_motionRecorders[1]->loadCSVFolder( foldername + "/human1");
 }
 
 //-------------------------------------------------------------------
@@ -249,7 +285,7 @@ void HriGestureWidget::initWorkspaceOccupancy()
 
 void HriGestureWidget::computeWorkspaceOccupancy()
 {
-    if( global_workspaceOccupancy == NULL || global_motionRecorder == NULL )
+    if( global_workspaceOccupancy == NULL || global_motionRecorders.empty() )
     {
         cout << "global_workspaceOccupancy or global_motionRecorder are not initilized" << endl;
         return;
@@ -260,7 +296,7 @@ void HriGestureWidget::computeWorkspaceOccupancy()
 
 void HriGestureWidget::setClassToDraw(int id)
 {
-    if( global_workspaceOccupancy == NULL || global_motionRecorder == NULL )
+    if( global_workspaceOccupancy == NULL || global_motionRecorders.empty() )
     {
         cout << "global_workspaceOccupancy or global_motionRecorder are not initilized" << endl;
         return;

@@ -66,9 +66,11 @@
 #include "hri_costspace/Gestures/HRICS_GestParameters.hpp"
 #include "hri_costspace/Gestures/HRICS_WorkspaceOccupancy.hpp"
 #include "hri_costspace/Gestures/HRICS_RecordMotion.hpp"
+#include "hri_costspace/Gestures/HRICS_PlayMotion.hpp"
 #include "hri_costspace/Gestures/HRICS_HumanPredictionCostSpace.hpp"
 #include "hri_costspace/Gestures/HRICS_HumanPredictionSimulator.hpp"
 #include "hri_costspace/HumanTrajectories/HRICS_ioc.hpp"
+#include "hri_costspace/HumanTrajectories/HRICS_HumanIoc.hpp"
 
 #if defined( HRI_PLANNER )
 #include "hri_costspace/HRICS_HAMP.hpp"
@@ -568,35 +570,48 @@ void qt_show_recorded_motion()
 {
     cout << "Show recorded motion" << endl;
 
-    if(!global_motionRecorder) {
+    if( global_motionRecorders.empty() ) {
         cout << "recorder not initialized" << endl;
         return;
     }
 
-    global_motionRecorder->showStoredMotion();
-    cout << "End recorded motion" << endl;
+    if( global_motionRecorders.size() == 1 )
+    {
+        global_motionRecorders[0]->showStoredMotion();
+        cout << "End recorded motion" << endl;
+    }
+    else
+    {
+        HRICS::PlayMotion player( global_motionRecorders );
+
+        int i=0;
+        for( i=0;i<int(global_motionRecorders[0]->getStoredMotions().size());i++)
+        {
+            player.play(i);
+        }
+    }
 }
 
 void qt_workspace_occupancy()
 {
     cout << "Loading regressed motion and computing the occupancy" << endl;
-    global_motionRecorder->loadRegressedFromCSV();
-    global_workspaceOccupancy->setRegressedMotions( global_motionRecorder->getStoredMotions() );
+    global_motionRecorders[0]->loadRegressedFromCSV();
+    global_workspaceOccupancy->setRegressedMotions( global_motionRecorders[0]->getStoredMotions() );
     global_workspaceOccupancy->computeOccpancy();
 }
 
 void qt_classify_motions()
 {
-    if( global_humanPredictionSimulator == NULL || global_motionRecorder == NULL )
+    if( global_humanPredictionSimulator == NULL || global_motionRecorders.empty() )
     {
         cout << "global_humanPredictionSimulator or global_motionRecorder are not initilized" << endl;
         return;
     }
 
     std::string foldername = "/home/jmainpri/workspace/move3d/libmove3d/statFiles/recorded_motion/";
-    global_motionRecorder->loadXMLFolder();
+    global_motionRecorders[0]->loadXMLFolder();
 
-    const std::vector<motion_t>& stored_motions = global_motionRecorder->getStoredMotions();
+    const std::vector<motion_t>& stored_motions = global_motionRecorders[0]->getStoredMotions();
 
     for(int i=0;i<8;i++)
     {
@@ -604,7 +619,7 @@ void qt_classify_motions()
         {
             int index = i*25+j;
             cout << std::setw( 3 ) << std::setfill( '0' ) << index  << " : " ;
-            /*int id_class =*/ global_humanPredictionSimulator->classifyMotion( global_motionRecorder->resample( stored_motions[index], 100 ) );
+            /*int id_class =*/ global_humanPredictionSimulator->classifyMotion( global_motionRecorders[0]->resample( stored_motions[index], 100 ) );
             //cout << std::setw( 3 ) << std::setfill( ' ' ) << i << " : " << id_class << endl;
         }
     }
@@ -693,9 +708,14 @@ void qt_human_prediction_simulation()
 //----------------------------------------------------------
 // Inverse Optimal Control Functions
 //----------------------------------------------------------
-void qt_runHumanIOC()
+void qt_runShereIOC()
 {
     HRICS_run_sphere_ioc();
+}
+
+void qt_runHumanIOC()
+{
+    HRICS_run_human_ioc();
 }
 
 //----------------------------------------------------------
@@ -1414,6 +1434,10 @@ void PlannerHandler::startPlanner(QString plannerName)
         else if(plannerName == "PredictionSimulation")
         {
             qt_human_prediction_simulation();
+        }
+        else if( plannerName == "SphereIOC" )
+        {
+            qt_runShereIOC();
         }
         else if( plannerName == "HumanIOC" )
         {
