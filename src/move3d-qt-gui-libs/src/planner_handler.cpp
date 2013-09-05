@@ -69,8 +69,10 @@
 #include "hri_costspace/Gestures/HRICS_PlayMotion.hpp"
 #include "hri_costspace/Gestures/HRICS_HumanPredictionCostSpace.hpp"
 #include "hri_costspace/Gestures/HRICS_HumanPredictionSimulator.hpp"
+
 #include "hri_costspace/HumanTrajectories/HRICS_ioc.hpp"
 #include "hri_costspace/HumanTrajectories/HRICS_HumanIoc.hpp"
+#include "hri_costspace/HumanTrajectories/HRICS_HumanCostSpace.hpp"
 
 #if defined( HRI_PLANNER )
 #include "hri_costspace/HRICS_HAMP.hpp"
@@ -716,6 +718,11 @@ void qt_runShereIOC()
 void qt_runHumanIOC()
 {
     HRICS_run_human_ioc();
+}
+
+void qt_runHumanPlanning()
+{
+    HRICS_run_human_planning();
 }
 
 //----------------------------------------------------------
@@ -1442,6 +1449,10 @@ void PlannerHandler::startPlanner(QString plannerName)
         else if( plannerName == "HumanIOC" )
         {
             qt_runHumanIOC();
+        }
+        else if( plannerName == "HumanPlanning" )
+        {
+            qt_runHumanPlanning();
         }
         else if(plannerName == "test1")
         {

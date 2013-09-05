@@ -567,11 +567,14 @@ void MainWindow::initViewerButtons()
     connect(m_ui->pushButtonRestoreView,SIGNAL(clicked(bool)),this,SLOT(restoreView()),Qt::DirectConnection);
     //	connect(m_ui->pushButtonResetGraph,SIGNAL(clicked()),this,SLOT(ResetGraph()));
 
+    // Trajectories to draw
     connect(m_ui->pushButtonAddTraj,SIGNAL(clicked()),this,SLOT(addglobal_trajToDraw()));
     connect(m_ui->pushButtonClearTraj,SIGNAL(clicked()),this,SLOT(clearglobal_trajToDraw()));
-
     connect(m_ui->comboBoxColorTraj, SIGNAL(currentIndexChanged(int)),this,SLOT(colorTrajChange(int)));
+    connect(m_ui->pushButtonSetTrajAsCurrent, SIGNAL(clicked()),this,SLOT(setTrajToDrawAsCurrent()));
+    //connect(m_ui->spinBoxTrajId, SIGNAL(currentIndexChanged(int)),this,SLOT((int)));
 
+    // Mobile camera
     connect(m_ui->pushButtonMobileCamera,SIGNAL(clicked()),this,SLOT(mobileCamera()));
 }
 
@@ -739,33 +742,39 @@ void MainWindow::restoreView()
     drawAllWinActive();
 }
 
+void MainWindow::setTrajToDrawAsCurrent()
+{
+    int index = m_ui->spinBoxTrajId->value();
+
+    if( index < 0 || index >= int(global_trajToDraw.size()) ) {
+        cout << "out of bounds of traj to draw set" << endl;
+        return;
+    }
+
+    cout << "Set trajectory " << index << " as current traj" << endl;
+    global_trajToDraw[index].replaceP3dTraj();
+}
+
 void MainWindow::addglobal_trajToDraw()
 {
     p3d_rob *robotPt = (p3d_rob *) p3d_get_desc_curid(P3D_ROBOT);
-    p3d_traj* CurrentTrajPt = robotPt->tcur;
-#ifdef MOVE3D_CORE
-    API::Trajectory traj(new Robot(robotPt),CurrentTrajPt);
-    global_trajToDraw.push_back(traj);
-#endif
+    Robot* rob = new Robot(robotPt);
+    global_trajToDraw.push_back( rob->getCurrentTraj() );
 }
 
 void MainWindow::clearglobal_trajToDraw()
 {
-#ifdef MOVE3D_CORE
     global_trajToDraw.clear();
-#endif
 }
 
 void MainWindow::colorTrajChange(int color)
 {
     cout << "Change traj color" << endl;
-#ifdef CXX_PLANNNER
     for( unsigned int i=0; i<global_trajToDraw.size(); i++ )
     {
         cout << " Change traj " << i << " to : " << color << endl;
         global_trajToDraw[i].setColor(color);
     }
-#endif
     this->drawAllWinActive();
 }
 

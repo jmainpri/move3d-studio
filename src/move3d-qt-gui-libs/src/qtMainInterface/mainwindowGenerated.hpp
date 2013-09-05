@@ -172,6 +172,10 @@ public:
     QGridLayout *gridLayout_41;
     QPushButton *pushButtonAddTraj;
     QPushButton *pushButtonClearTraj;
+
+    QSpinBox *spinBoxTrajId;
+    QPushButton *pushButtonSetTrajAsCurrent;
+
     QSpacerItem *horizontalSpacerViewer;
     QComboBox *comboBoxColorTraj;
     QPushButton *pushButtonRestoreView;
@@ -730,6 +734,16 @@ public:
 
         gridLayout_41->addWidget(pushButtonClearTraj, 2, 0, 1, 1);
 
+        pushButtonSetTrajAsCurrent = new QPushButton(groupBox);
+        pushButtonSetTrajAsCurrent->setObjectName(QString::fromUtf8("pushButtonAddTraj"));
+
+        gridLayout_41->addWidget(pushButtonSetTrajAsCurrent, 3, 0, 1, 1);
+
+        spinBoxTrajId = new QSpinBox(groupBox);
+        spinBoxTrajId->setObjectName(QString::fromUtf8("spinBoxTrajId"));
+
+        gridLayout_41->addWidget(spinBoxTrajId, 4, 0, 1, 1);
+
         horizontalSpacerViewer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         gridLayout_41->addItem(horizontalSpacerViewer, 2, 1, 1, 1);
@@ -1237,6 +1251,7 @@ public:
         groupBox->setTitle(QApplication::translate("MainWindow", "Traj to Draw", 0, QApplication::UnicodeUTF8));
         pushButtonAddTraj->setText(QApplication::translate("MainWindow", "Add Current Traj", 0, QApplication::UnicodeUTF8));
         pushButtonClearTraj->setText(QApplication::translate("MainWindow", "Clear All Traj", 0, QApplication::UnicodeUTF8));
+        pushButtonSetTrajAsCurrent->setText(QApplication::translate("MainWindow", "Set Traj As Current", 0, QApplication::UnicodeUTF8));
         comboBoxColorTraj->clear();
         comboBoxColorTraj->insertItems(0, QStringList()
                                        << QApplication::translate("MainWindow", "Black", 0, QApplication::UnicodeUTF8)
