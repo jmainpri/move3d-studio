@@ -113,15 +113,20 @@ extern void* GroundCostObj;
 //! This function prints the joint mapping of a robot
 void printJointMapping( Robot* rob )
 {
+    if( rob == NULL)
+        return;
+
     cout << "print joint mapping" << endl;
 
     for( int i=0; i<int(rob->getNumberOfJoints()); i++)
     {
+        cout << i << " , joint name : " << rob->getJoint(i)->getName() << endl;
+
         for( int j=0; j<int(rob->getJoint(i)->getNumberOfDof()); j++)
         {
             //cout << "jnt->getName() : " << rob->getJoint(i)->getName() << "(" <<i<< ") , ";
             //cout << "index_dof : " << rob->getJoint(i)->getIndexOfFirstDof()+j << endl;
-            cout << "move3d_map[\"" << rob->getJoint(i)->getName() << "\"]=" << rob->getJoint(i)->getIndexOfFirstDof()+j << ";" << endl;
+            //cout << "move3d_map[\"" << rob->getJoint(i)->getName() << "\"]=" << rob->getJoint(i)->getIndexOfFirstDof()+j << ";" << endl;
         }
     }
 }
@@ -198,7 +203,7 @@ void qt_init_after_params()
     //        HRICS_initIverseOptimalControlFramework();
     //    }
 
-    //    printJointMapping( global_Project->getActiveScene()->getRobotByName("HERAKLES_HUMAN1") );
+//        printJointMapping( global_Project->getActiveScene()->getRobotByName("HERAKLES_HUMAN1") );
 }
 
 //------------------------------------------------------------------------------

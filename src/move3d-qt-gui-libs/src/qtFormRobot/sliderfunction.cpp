@@ -10,6 +10,7 @@
 
 #include "planner/cost_space.hpp"
 #include "planner/planEnvironment.hpp"
+#include "planner/TrajectoryOptim/Stomp/stompOptimizer.hpp"
 
 #include "collision_space/CollisionSpace.hpp"
 
@@ -51,7 +52,6 @@ void qt_set_arm_along_body( Robot* robot )
 
 void qt_gik( p3d_rob* robot, const Eigen::Vector3d& point )
 {  
-#ifdef HRI_PLANNER
     if( GLOBAL_AGENTS == NULL ) {
         cout << "No GLOBAL_AGENTS in " << __func__ << endl;
         return;
@@ -84,7 +84,6 @@ void qt_gik( p3d_rob* robot, const Eigen::Vector3d& point )
     else {
         cout << "GIK for " << agent->robotPt->name << " failed"<< endl;
     }
-#endif
 }
 
 void qt_set_otp_cost_recompute()
@@ -286,6 +285,10 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
         ncol = global_collisionSpace->isRobotColliding( distance, potential );
 
         cout << "Distance to nearest obstacle = " << distance << " and potential = " << potential << endl;
+
+        if( global_optimizer ) {
+            global_optimizer->getCollisionSpaceCost( *robot->getCurrentPos() );
+        }
 
         if( ncol )
         {
