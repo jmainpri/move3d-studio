@@ -656,6 +656,8 @@ void qt_saveInterfaceParameters(bool print, std::string fileName)
     }
     settings.endGroup();
 
+    settings.endGroup();
+
     // ------------------------------------------------------------------
     // HricsParam
     // ------------------------------------------------------------------
