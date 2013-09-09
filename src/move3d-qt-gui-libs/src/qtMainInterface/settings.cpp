@@ -14,6 +14,8 @@
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
+#include "guiparams.hpp"
+
 #include "API/Device/robot.hpp"
 #include "API/project.hpp"
 #include "planner/planEnvironment.hpp"
@@ -192,6 +194,143 @@ void qt_loadCntrts(bool print, Robot* rob, QSettings& settings)
 }
 
 //////////////////////////////////////////////////////////////////////////////
+// GUI
+//////////////////////////////////////////////////////////////////////////////
+
+//! Save gui settings
+void qt_loadGuiParameters(bool print, std::string fileName)
+{
+    QSettings settings(QString(fileName.c_str()), QSettings::IniFormat);
+    QMetaEnum metaEnum;
+
+    settings.beginGroup("GuiParam");
+
+    const QMetaObject* metaObject = EnumGuiParameterObject->metaObject();
+
+    cout << "metaObject : " << metaObject << endl;
+
+    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "boolParameter" ) );
+    settings.beginGroup("boolParameter");
+    for( int i=0;i<metaEnum.keyCount();i++)
+    {
+        GuiEnv->setBool(GuiParam::boolParameter(i),settings.value(QString(metaEnum.key(i)),false).toBool());
+
+        if(print)
+        {
+            cout << "Key : " << metaEnum.key(i);
+            cout << " , Value : " << GuiEnv->getBool(GuiParam::boolParameter(i)) << endl;
+        }
+    }
+    settings.endGroup();
+
+    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "intParameter" ) );
+    settings.beginGroup("intParameter");
+    if(print)
+        cout << "---------------------------" << endl;
+    for( int i=0;i<metaEnum.keyCount();i++)
+    {
+        GuiEnv->setInt(GuiParam::intParameter(i),settings.value(QString(metaEnum.key(i)),0).toInt());
+
+        if(print)
+        {
+            cout << "Key : " << metaEnum.key(i);
+            cout << " , Value : " << GuiEnv->getInt(GuiParam::intParameter(i)) << endl;
+        }
+    }
+    settings.endGroup();
+
+    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "doubleParameter" ) );
+    settings.beginGroup("doubleParameter");
+    if(print)
+        cout << "---------------------------" << endl;
+    for( int i=0;i<metaEnum.keyCount();i++)
+    {
+        GuiEnv->setDouble(GuiParam::doubleParameter(i),settings.value(QString(metaEnum.key(i)),0.0).toFloat());
+
+        if(print)
+        {
+            cout << "Key : " << metaEnum.key(i);
+            cout << " , Value : " << GuiEnv->getDouble(GuiParam::doubleParameter(i)) << endl;
+        }
+    }
+    settings.endGroup();
+
+    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "stringParameter" ) );
+    settings.beginGroup("stringParameter");
+    if(print)
+        cout << "---------------------------" << endl;
+    for( int i=0;i<metaEnum.keyCount();i++)
+    {
+        GuiEnv->setString(GuiParam::stringParameter(i),settings.value(QString(metaEnum.key(i)),"").toString());
+
+        if(print)
+        {
+            cout << "Key : " << metaEnum.key(i);
+            cout << " , Value : " << GuiEnv->getString(GuiParam::stringParameter(i)).toStdString() << endl;
+        }
+    }
+    settings.endGroup();
+
+    settings.endGroup();
+}
+
+//! Load gui settings
+void qt_saveGuiParameters( bool print, std::string fileName )
+{
+    QSettings settings(QString(fileName.c_str()), QSettings::IniFormat);
+    QMetaEnum metaEnum;
+
+    const QMetaObject* metaObject = EnumGuiParameterObject->metaObject();
+
+    settings.beginGroup("GuiParam");
+
+    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "boolParameter" ) );
+    settings.beginGroup("boolParameter");
+    for( int i=0;i<metaEnum.keyCount();i++)
+    {
+        cout << "Key : " << metaEnum.key(i);
+        cout << " , Value : " << GuiEnv->getBool(GuiParam::boolParameter(i)) << endl;
+        settings.setValue( QString(metaEnum.key(i)), GuiEnv->getBool(GuiParam::boolParameter(i)));
+    }
+    settings.endGroup();
+
+    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "intParameter" ) );
+    settings.beginGroup("intParameter");
+    cout << "---------------------------" << endl;
+    for( int i=0;i<metaEnum.keyCount();i++)
+    {
+        cout << "Key : " << metaEnum.key(i);
+        cout << " , Value : " << GuiEnv->getInt(GuiParam::intParameter(i)) << endl;
+        settings.setValue(QString(metaEnum.key(i)), GuiEnv->getInt(GuiParam::intParameter(i)));
+    }
+    settings.endGroup();
+
+    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "doubleParameter" ) );
+    settings.beginGroup("doubleParameter");
+    cout << "---------------------------" << endl;
+    for( int i=0;i<metaEnum.keyCount();i++)
+    {
+        cout << "Key : " << metaEnum.key(i);
+        cout << " , Value : " << GuiEnv->getDouble(GuiParam::doubleParameter(i)) << endl;
+        settings.setValue( QString(metaEnum.key(i)), GuiEnv->getDouble(GuiParam::doubleParameter(i)));
+    }
+    settings.endGroup();
+
+    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "stringParameter" ) );
+    settings.beginGroup("stringParameter");
+    cout << "---------------------------" << endl;
+    for( int i=0;i<metaEnum.keyCount();i++)
+    {
+        cout << "Key : " << metaEnum.key(i);
+        cout << " , Value : " << GuiEnv->getString(GuiParam::stringParameter(i)).toStdString() << endl;
+        settings.setValue( QString(metaEnum.key(i)), GuiEnv->getString(GuiParam::stringParameter(i)));
+    }
+    settings.endGroup();
+
+    settings.endGroup();
+}
+
+//////////////////////////////////////////////////////////////////////////////
 // LOAD
 //////////////////////////////////////////////////////////////////////////////
 
@@ -336,6 +475,8 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
     }
     settings.endGroup();
 
+    settings.endGroup();
+
     // ------------------------------------------------------------------
     // GestParam
     // ------------------------------------------------------------------
@@ -403,6 +544,8 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
             cout << " , Value : " << GestEnv->getString(GestParam::stringParameter(i)).toStdString() << endl;
         }
     }
+    settings.endGroup();
+
     settings.endGroup();
 
     // ------------------------------------------------------------------
@@ -474,10 +617,6 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
     }
     settings.endGroup();
 
-    // ------------------------------------------------------------------
-    // ------------------------------------------------------------------
-    // ------------------------------------------------------------------
-
     settings.endGroup();
 
     // ------------------------------------------------------------------
@@ -495,7 +634,7 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
 }
 
 //////////////////////////////////////////////////////////////////////////////
-// LOAD
+// SAVE
 //////////////////////////////////////////////////////////////////////////////
 
 void qt_saveInterfaceParameters(bool print, std::string fileName)
@@ -556,6 +695,8 @@ void qt_saveInterfaceParameters(bool print, std::string fileName)
     }
     settings.endGroup();
 
+    settings.endGroup();
+
     // ------------------------------------------------------------------
     // PlanParam
     // ------------------------------------------------------------------
@@ -604,6 +745,8 @@ void qt_saveInterfaceParameters(bool print, std::string fileName)
         cout << " , Value : " << PlanEnv->getString(PlanParam::stringParameter(i)).toStdString() << endl;
         settings.setValue( QString(metaEnum.key(i)), PlanEnv->getString(PlanParam::stringParameter(i)));
     }
+    settings.endGroup();
+
     settings.endGroup();
 
     // ------------------------------------------------------------------
@@ -708,9 +851,6 @@ void qt_saveInterfaceParameters(bool print, std::string fileName)
     }
     settings.endGroup();
 
-    // ------------------------------------------------------------------
-    // ------------------------------------------------------------------
-    // ------------------------------------------------------------------
     settings.endGroup();
 
     // ------------------------------------------------------------------

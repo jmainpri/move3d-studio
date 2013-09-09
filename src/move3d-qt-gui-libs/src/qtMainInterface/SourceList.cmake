@@ -6,6 +6,7 @@ kcdpropertieswindow.cpp
 mainwindow.cpp
 mainwindowTestFunctions.cpp
 settings.cpp
+guiparams.cpp
 )
 
 BM3D_INC_DIR_PROCESS (${BM3D_MODULE_NAME})
@@ -14,6 +15,7 @@ BM3D_QT_GENERATE_MOC(
 kcdpropertieswindow.hpp 
 mainwindow.hpp
 mainwindowTestFunctions.hpp
+guiparams.hpp
 )
 
 BM3D_QT_GENERATE_UI_HEADERS(

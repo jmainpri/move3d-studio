@@ -2,6 +2,7 @@
 #include "qtMainInterface/mainwindow.hpp"
 #include "qtMainInterface/mainwindowGenerated.hpp"
 #include "qtMainInterface/settings.hpp"
+#include "qtMainInterface/guiparams.hpp"
 #endif
 
 #include "main.hpp"
@@ -322,6 +323,7 @@ void Main_threads::initInterface()
     MainWindow* w = new MainWindow();
     global_w = w;
 
+
     // Start
     connect( w, SIGNAL(runClicked()), this, SLOT(selectPlanner()));
     connect( w, SIGNAL(runClicked()), w, SLOT(enableStopButton()));
@@ -336,23 +338,8 @@ void Main_threads::initInterface()
     connect( global_plannerHandler, SIGNAL(plannerIsReset()), w, SLOT(drawAllWinActive()));
     //  w.showMaximized();
 
-    QRect g = QApplication::desktop()->screenGeometry();
-    cout << "QApplication::desktop()->screenGeometry() : ";
-    cout << " x = " << g.x() << " y = " << g.y() << ", width = " << g.width() << " height = " << g.height() << endl;
-
-    QRect g_window = w->geometry();
-    // 	g_window.setWidth( g.width() );
-    // 	g_window.setHeight( 0.707*g.height() ); // sqrt(2) / 2
-    // 	g_window.moveTo( 0, 0 );
-
-    g_window.setWidth( 1800 );
-    g_window.setHeight( 1024 );
-
-    // g_window.setWidth( 1500 );
-    // g_window.setHeight( 700 );
-
-    //g_window.setWidth( 1024 );
-    //g_window.setHeight( 720 );
+    // Sets up gui specific parameter structure
+    initGuiParameters();
 
     if( move3d_studio_load_settings )
     {
@@ -365,6 +352,29 @@ void Main_threads::initInterface()
     if( ENV.getBool(Env::isCostSpace) ) {
         w->Ui()->tabCost->initCostSpace();
     }
+
+    QRect g = QApplication::desktop()->screenGeometry();
+    cout << "QApplication::desktop()->screenGeometry() : ";
+    cout << " x = " << g.x() << " y = " << g.y() << ", width = " << g.width() << " height = " << g.height() << endl;
+
+    QRect g_window = w->geometry();
+    // g_window.setWidth( g.width() );
+    // g_window.setHeight( 0.707*g.height() ); // sqrt(2) / 2
+    // g_window.moveTo( 0, 0 );
+
+    // g_window.setWidth( 1800 );
+    // g_window.setHeight( 1024 );
+
+    // g_window.setWidth( 1500 );
+    // g_window.setHeight( 700 );
+
+    // g_window.setWidth( 1024 );
+    // g_window.setHeight( 720 );
+
+    cout << "set to : width = " << GuiEnv->getInt( GuiParam::mainwin_w ) << " height = " << GuiEnv->getInt( GuiParam::mainwin_h ) << endl;
+
+    g_window.setWidth( GuiEnv->getInt( GuiParam::mainwin_w ) );
+    g_window.setHeight( GuiEnv->getInt( GuiParam::mainwin_h ) );
 
     w->refreshConstraintedDoFs();
     w->setGeometry( g_window );

@@ -1,5 +1,6 @@
 #include "mainwindow.hpp"
 #include "mainwindowGenerated.hpp"
+#include "guiparams.hpp"
 #include "settings.hpp"
 
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
@@ -22,7 +23,7 @@
 #include <iostream>
 #include <tr1/memory>
 #include <vector>
-
+#include <fstream>
 
 #include "planner/planEnvironment.hpp"
 #include "planner/cost_space.hpp"
@@ -391,12 +392,6 @@ void MainWindow::saveInterfaceParameters()
 
     if (!fileName.isEmpty())
     {
-        //    if( remove( (home+fileName).c_str() ) != 0 )
-        //    {
-        //      cout << "Error deleting file" << endl;
-        //      return;
-        //    }
-
         qt_saveInterfaceParameters( true, fileName.toStdString() );
         cout << "Saving parameters at : " << fileName.toStdString() << endl;
         this->drawAllWinActive();
@@ -418,7 +413,17 @@ void MainWindow::loadParametersQuick()
     if (!home.empty())
     {
         std::string filename = home + "/" + move3d_studio_settings_file;
+
         qt_loadInterfaceParameters( false, filename );
+
+        string guifile = home + "/" + ".guiparams";
+        ifstream infile( guifile.c_str() );
+        if( infile.good() )
+        {
+            qt_loadGuiParameters( false, guifile );
+            cout << "Loading gui parameters at : " << guifile << endl;
+        }
+
         cout << "Loading parameters at : " << filename << endl;
         cout << "quick load succeded" << endl;
         this->drawAllWinActive();
@@ -439,7 +444,7 @@ void MainWindow::saveParametersQuick()
         return;
     }
 
-    string home( home_path );
+    std::string home( home_path );
 
     if (!home.empty())
     {
@@ -451,7 +456,14 @@ void MainWindow::saveParametersQuick()
         }
 
         qt_saveInterfaceParameters( true, filename );
-        cout << "Saving parameters at : " << filename << endl;
+
+        std::string guifile = home + "/" +".guiparams";
+        // TODO implement some other way
+        GuiEnv->setInt( GuiParam::mainwin_w, geometry().width() );
+        GuiEnv->setInt( GuiParam::mainwin_h, geometry().height() );
+        qt_saveGuiParameters( true, guifile );
+        cout << "Saving gui parameteres at : " << guifile << endl;
+        cout << "Saving interface parameters at : " << filename << endl;
         this->drawAllWinActive();
     }
     else
@@ -677,18 +689,15 @@ void MainWindow::setBoolBb(bool value)
     G3D_WIN->vs.BB = value;
 }
 
-
 void MainWindow::setBoolFloor(bool value)
 {
     G3D_WIN->vs.displayFloor = value;
 }
 
-
 void MainWindow::setBoolTiles(bool value)
 {
     G3D_WIN->vs.displayTiles = value;
 }
-
 
 void MainWindow::setBoolWalls(bool value)
 {
@@ -704,7 +713,6 @@ void MainWindow::setBoolJoints(bool value)
 {
     G3D_WIN->vs.displayJoints = value;
 }
-
 
 void MainWindow::setBoolSmooth(bool value)
 {
@@ -777,7 +785,6 @@ void MainWindow::colorTrajChange(int color)
     }
     this->drawAllWinActive();
 }
-
 
 // Run Buttons -----------------------------------------------
 // -----------------------------------------------------------

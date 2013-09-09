@@ -254,3 +254,5 @@
 src/move3d-qt-gui-libs/src/qtMainInterface/sideWidgets/qtHriGesture.hpp
 src/move3d-qt-gui-libs/src/qtMainInterface/sideWidgets/qtHriGesture.cpp
 src/move3d-qt-gui-libs/src/qtMainInterface/sideWidgets/qtHriGesture.ui
+src/move3d-qt-gui-libs/src/qtMainInterface/guiparams.hpp
+src/move3d-qt-gui-libs/src/qtMainInterface/guiparams.cpp
