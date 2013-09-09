@@ -286,7 +286,7 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
 
         cout << "Distance to nearest obstacle = " << distance << " and potential = " << potential << endl;
 
-        if( global_optimizer ) {
+        if( global_optimizer && ( global_optimizer->getRobot() == robot ) ) {
             global_optimizer->getCollisionSpaceCost( *robot->getCurrentPos() );
         }
 
