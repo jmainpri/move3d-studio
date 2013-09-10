@@ -120,12 +120,12 @@ void printJointMapping( Robot* rob )
 
     for( int i=0; i<int(rob->getNumberOfJoints()); i++)
     {
-        cout << i << " , joint name : " << rob->getJoint(i)->getName() << endl;
+//        cout << i << " , joint name : " << rob->getJoint(i)->getName() << endl;
 
         for( int j=0; j<int(rob->getJoint(i)->getNumberOfDof()); j++)
         {
-            //cout << "jnt->getName() : " << rob->getJoint(i)->getName() << "(" <<i<< ") , ";
-            //cout << "index_dof : " << rob->getJoint(i)->getIndexOfFirstDof()+j << endl;
+            cout << "jnt->getName() : " << rob->getJoint(i)->getName() << "(" <<i<< ") , ";
+            cout << "index_dof : " << rob->getJoint(i)->getIndexOfFirstDof()+j << endl;
             //cout << "move3d_map[\"" << rob->getJoint(i)->getName() << "\"]=" << rob->getJoint(i)->getIndexOfFirstDof()+j << ";" << endl;
         }
     }
@@ -722,7 +722,8 @@ void qt_runShereIOC()
 
 void qt_runHumanIOC()
 {
-    HRICS_run_human_ioc();
+    HRICS_run_human_ioc_evaluation();
+//    HRICS_run_human_ioc();
 }
 
 void qt_runHumanPlanning()
