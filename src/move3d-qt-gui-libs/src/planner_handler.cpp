@@ -37,6 +37,7 @@
 #include "API/Search/Dijkstra/dijkstra.hpp"
 
 #include "planner/planner.hpp"
+#include "planner/AStar/AStarPlanner.hpp"
 #include "planner/Diffusion/Variants/Star-RRT.hpp"
 #include "planner/TrajectoryOptim/Classic/smoothing.hpp"
 #include "planner/TrajectoryOptim/Classic/costOptimization.hpp"
@@ -400,7 +401,7 @@ void qt_resetGraph()
 {
     try
     {
-        if (API_activeGraph)
+        if( API_activeGraph )
         {
             delete API_activeGraph;
             API_activeGraph = NULL;
@@ -542,6 +543,28 @@ void qt_runMultiSmooth()
 {
     MultiRun pool;
     pool.runMultiSmooth();
+}
+
+void qt_runAStarPlanning()
+{
+    Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+    confPtr_t q_init = robot->getInitPos();
+    confPtr_t q_goal = robot->getGoalPos();
+
+    // Warning leaking
+    AStarPlanner* planner = new AStarPlanner(robot);
+    planner->set_pace( PlanEnv->getDouble(PlanParam::grid_pace) );
+    planner->init();
+
+    API::Trajectory* traj = planner->computeRobotTrajectory( q_init, q_goal );
+
+    if( traj != NULL )
+    {
+        traj->replaceP3dTraj();
+    }
+    else{
+        cout << "Error in run AStar planner" << endl;
+    }
 }
 
 #ifdef MULTILOCALPATH
@@ -1459,6 +1482,10 @@ void PlannerHandler::startPlanner(QString plannerName)
         else if( plannerName == "HumanPlanning" )
         {
             qt_runHumanPlanning();
+        }
+        else if( plannerName == "AStarPlanning" )
+        {
+            qt_runAStarPlanning();
         }
         else if(plannerName == "test1")
         {

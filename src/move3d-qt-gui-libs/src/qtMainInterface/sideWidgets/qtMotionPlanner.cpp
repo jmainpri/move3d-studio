@@ -54,6 +54,7 @@ MotionPlanner::MotionPlanner(QWidget *parent) :
     initMultiRun();
     initGeneral();
     initShowGraph();
+    initAStar();
 }
 
 MotionPlanner::~MotionPlanner()
@@ -906,4 +907,19 @@ void MotionPlanner::on_pushButtonComputeNavigation_clicked()
 void MotionPlanner::on_checkBoxSmooth_toggled(bool checked)
 {
     PlanEnv->setBool(PlanParam::env_createTrajs,checked);
+}
+
+//------------------------------------------------------------------------
+//------------------------------------------------------------------------
+//------------------------------------------------------------------------
+
+void MotionPlanner::initAStar()
+{
+    connect( m_ui->pushButtonPlanAStar, SIGNAL(clicked()), this, SLOT(planAStarPath()) );
+    new SpinBoxConnector( this, m_ui->doubleSpinBoxPace, PlanEnv->getObject(PlanParam::grid_pace) );
+}
+
+void MotionPlanner::planAStarPath()
+{
+    emit selectedPlanner("AStarPlanning");
 }

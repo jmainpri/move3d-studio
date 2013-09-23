@@ -97,6 +97,9 @@ private slots:
     void edgeToShowChanged();
     void removeNode();
 
+    // AStar -----------------------------
+    void planAStarPath();
+
 signals:
     void selectedPlanner(QString);
 
@@ -120,6 +123,7 @@ private:
     void initOptim();
     void initGeneral();
     void initShowGraph();
+    void initAStar();
     MovingHuman* m_mh;
 };
 
