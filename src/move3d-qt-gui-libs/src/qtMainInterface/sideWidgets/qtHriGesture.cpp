@@ -338,7 +338,7 @@ void HriGestureWidget::initHriIOC()
     new connectCheckBoxToEnv( m_ui->checkBoxInitHriIOC,  GestEnv->getObject(GestParam::init_module_ioc) );
     new connectCheckBoxToEnv( m_ui->checkBoxInitSphereCost,  HriEnv->getObject(HricsParam::init_spheres_cost) );
 
-    connect( m_ui->pushButtonRunIoc, SIGNAL(clicked()), this, SLOT(samplemap()) );
+    connect( m_ui->pushButtonRunIoc, SIGNAL(clicked()), this, SLOT(runIoc()) );
     connect( m_ui->comboBoxIoc, SIGNAL(currentIndexChanged(int)), this, SLOT(setCurrentPhase(int)));
 
 //    global_classifyMotion = new HRICS::ClassifyMotion();
@@ -357,8 +357,9 @@ void HriGestureWidget::setCurrentPhase(int phase)
 
 void HriGestureWidget::runIoc()
 {
-    cout << "HriGestureWidget::HumanIOC" << endl;
-    emit(selectedPlanner(QString("HumanIOC")));
+    cout << "HriGestureWidget::runIoc" << endl;
+    // emit(selectedPlanner(QString("HumanIOC")));
+    emit(selectedPlanner(QString("SphereIOC")));
 }
 
 //-------------------------------------------------------------------

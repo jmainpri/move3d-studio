@@ -302,6 +302,13 @@
            </widget>
           </item>
           <item>
+           <widget class="QCheckBox" name="checkBoxDebug">
+            <property name="text">
+             <string>Debug</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QWidget" name="widget" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
@@ -325,7 +332,7 @@
                </item>
                <item>
                 <property name="text">
-                 <string>New Item</string>
+                 <string>Compare</string>
                 </property>
                </item>
               </widget>
