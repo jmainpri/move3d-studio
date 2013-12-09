@@ -68,7 +68,8 @@ private slots:
 
     // IOC
     void initHriIOC();
-    void samplemap();
+    void runIoc();
+    void setCurrentPhase(int phase);
 
     // Legible
     void initLegibleCost();

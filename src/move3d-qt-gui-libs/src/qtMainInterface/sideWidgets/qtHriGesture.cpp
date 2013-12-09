@@ -338,7 +338,8 @@ void HriGestureWidget::initHriIOC()
     new connectCheckBoxToEnv( m_ui->checkBoxInitHriIOC,  GestEnv->getObject(GestParam::init_module_ioc) );
     new connectCheckBoxToEnv( m_ui->checkBoxInitSphereCost,  HriEnv->getObject(HricsParam::init_spheres_cost) );
 
-    connect( m_ui->pushButtonGenerateSamples, SIGNAL(clicked()), this, SLOT(samplemap()) );
+    connect( m_ui->pushButtonRunIoc, SIGNAL(clicked()), this, SLOT(samplemap()) );
+    connect( m_ui->comboBoxIoc, SIGNAL(currentIndexChanged(int)), this, SLOT(setCurrentPhase(int)));
 
 //    global_classifyMotion = new HRICS::ClassifyMotion();
 
@@ -348,7 +349,13 @@ void HriGestureWidget::initHriIOC()
 //        cout << "ERROR loading GMMs!!!!" << endl;
 }
 
-void HriGestureWidget::samplemap()
+void HriGestureWidget::setCurrentPhase(int phase)
+{
+    HriEnv->setInt(HricsParam::ioc_phase, phase );
+    cout << "set current phase to : " << phase << endl;
+}
+
+void HriGestureWidget::runIoc()
 {
     cout << "HriGestureWidget::HumanIOC" << endl;
     emit(selectedPlanner(QString("HumanIOC")));
@@ -361,5 +368,3 @@ void HriGestureWidget::initLegibleCost()
 {
     new connectCheckBoxToEnv( m_ui->checkBoxUseLegibleCost,  PlanEnv->getObject(PlanParam::useLegibleCost) );
 }
-
-
