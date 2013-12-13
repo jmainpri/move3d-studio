@@ -344,6 +344,7 @@ void HriGestureWidget::initHriIOC()
     new connectComboBoxToEnv( m_ui->comboBoxIoc, HriEnv->getObject(HricsParam::ioc_phase) );
 
     new SpinBoxConnector(this, m_ui->doubleSpinBoxSpherePower, HriEnv->getObject(HricsParam::ioc_spheres_power) );
+    new SpinBoxConnector(this, m_ui->spinBoxSampleIteration, HriEnv->getObject(HricsParam::ioc_sample_iteration) );
 //    m_ui->comboBoxIoc->setCurrentIndex(  );
 
 //    global_classifyMotion = new HRICS::ClassifyMotion();
