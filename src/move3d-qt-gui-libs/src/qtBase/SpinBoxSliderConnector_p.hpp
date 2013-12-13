@@ -46,6 +46,14 @@ public:
 
 };
 
+class connectComboBoxToEnv : public QObject
+{
+    Q_OBJECT
+public:
+    connectComboBoxToEnv( QComboBox* box, QObject* o );
+
+};
+
 class SpinBoxSliderConnector : public QObject
 {
     Q_OBJECT

@@ -340,7 +340,11 @@ void HriGestureWidget::initHriIOC()
     new connectCheckBoxToEnv( m_ui->checkBoxGestureDebug,  GestEnv->getObject(GestParam::print_debug) );
 
     connect( m_ui->pushButtonRunIoc, SIGNAL(clicked()), this, SLOT(runIoc()) );
-    connect( m_ui->comboBoxIoc, SIGNAL(currentIndexChanged(int)), this, SLOT(setCurrentPhase(int)));
+
+    new connectComboBoxToEnv( m_ui->comboBoxIoc, HriEnv->getObject(HricsParam::ioc_phase) );
+
+    new SpinBoxConnector(this, m_ui->doubleSpinBoxSpherePower, HriEnv->getObject(HricsParam::ioc_spheres_power) );
+//    m_ui->comboBoxIoc->setCurrentIndex(  );
 
 //    global_classifyMotion = new HRICS::ClassifyMotion();
 
@@ -352,7 +356,7 @@ void HriGestureWidget::initHriIOC()
 
 void HriGestureWidget::setCurrentPhase(int phase)
 {
-    HriEnv->setInt(HricsParam::ioc_phase, phase );
+    HriEnv->setInt( HricsParam::ioc_phase, phase );
     cout << "set current phase to : " << phase << endl;
 }
 

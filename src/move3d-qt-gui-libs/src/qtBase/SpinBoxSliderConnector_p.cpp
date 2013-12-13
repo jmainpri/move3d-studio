@@ -35,6 +35,15 @@ connectCheckBoxToEnv::connectCheckBoxToEnv( QCheckBox* box, QObject* o )
     box->setChecked( dynamic_cast<boolContainer*>(o)->get());
 }
 
+
+connectComboBoxToEnv::connectComboBoxToEnv( QComboBox* box, QObject* o )
+{
+    connect( o, SIGNAL(valueChanged(int)), box, SLOT(setCurrentIndex(int)));
+    connect( box, SIGNAL(currentIndexChanged(int)), o, SLOT(set(int)) );
+    box->setCurrentIndex( dynamic_cast<intContainer*>(o)->get() );
+}
+
+
 SpinBoxSliderConnector::SpinBoxSliderConnector( QObject* _parent, QDoubleSpinBox* _spinBox, QSlider* _slider) :
     QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
 {
