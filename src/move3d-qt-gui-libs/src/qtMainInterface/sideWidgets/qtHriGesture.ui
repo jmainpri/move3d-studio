@@ -295,17 +295,30 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QCheckBox" name="checkBoxInitSphereCost">
-            <property name="text">
-             <string>Init Spheres IOC</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="checkBoxGestureDebug">
-            <property name="text">
-             <string>Debug</string>
-            </property>
+           <widget class="QWidget" name="widget_4" native="true">
+            <layout class="QGridLayout" name="gridLayout_2">
+             <item row="0" column="1">
+              <widget class="QCheckBox" name="checkBoxGestureDebug">
+               <property name="text">
+                <string>Debug</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QCheckBox" name="checkBoxInitSphereCost">
+               <property name="text">
+                <string>Init Spheres IOC</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QCheckBox" name="checkBoxSingleIteration">
+               <property name="text">
+                <string>Single iteration</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
           <item>

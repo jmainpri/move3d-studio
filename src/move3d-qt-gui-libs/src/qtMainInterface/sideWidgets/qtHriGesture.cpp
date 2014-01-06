@@ -338,6 +338,7 @@ void HriGestureWidget::initHriIOC()
     new connectCheckBoxToEnv( m_ui->checkBoxInitHriIOC,  GestEnv->getObject(GestParam::init_module_ioc) );
     new connectCheckBoxToEnv( m_ui->checkBoxInitSphereCost,  HriEnv->getObject(HricsParam::init_spheres_cost) );
     new connectCheckBoxToEnv( m_ui->checkBoxGestureDebug,  GestEnv->getObject(GestParam::print_debug) );
+    new connectCheckBoxToEnv( m_ui->checkBoxSingleIteration,  HriEnv->getObject(HricsParam::ioc_single_iteration) );
 
     connect( m_ui->pushButtonRunIoc, SIGNAL(clicked()), this, SLOT(runIoc()) );
 
