@@ -439,6 +439,7 @@ int Main_threads::run(int argc, char** argv)
     // The no gui mode can start the application on a distant
     // machine whith out recompiling
     if(noGui) {
+        init_all_draw_functions_dummy();
         coreApp = new QCoreApplication(argc, argv);
     }
     else {

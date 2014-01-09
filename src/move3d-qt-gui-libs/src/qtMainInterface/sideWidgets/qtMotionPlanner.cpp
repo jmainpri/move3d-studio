@@ -55,6 +55,7 @@ MotionPlanner::MotionPlanner(QWidget *parent) :
     initGeneral();
     initShowGraph();
     initAStar();
+    initGraphSampling();
 }
 
 MotionPlanner::~MotionPlanner()
@@ -922,4 +923,18 @@ void MotionPlanner::initAStar()
 void MotionPlanner::planAStarPath()
 {
     emit selectedPlanner("AStarPlanning");
+}
+
+//------------------------------------------------------------------------
+//------------------------------------------------------------------------
+//------------------------------------------------------------------------
+
+void MotionPlanner::initGraphSampling()
+{
+    connect( m_ui->pushButtonSampleGraph, SIGNAL(clicked()), this, SLOT(sampleGraph()) );
+}
+
+void MotionPlanner::sampleGraph()
+{
+    emit selectedPlanner("SampleGraph");
 }

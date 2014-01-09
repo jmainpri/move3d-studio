@@ -100,6 +100,9 @@ private slots:
     // AStar -----------------------------
     void planAStarPath();
 
+    // Sample Graph ----------------------
+    void sampleGraph();
+
 signals:
     void selectedPlanner(QString);
 
@@ -124,6 +127,7 @@ private:
     void initGeneral();
     void initShowGraph();
     void initAStar();
+    void initGraphSampling();
     MovingHuman* m_mh;
 };
 

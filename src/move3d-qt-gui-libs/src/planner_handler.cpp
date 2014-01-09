@@ -35,6 +35,7 @@
 
 #include "API/project.hpp"
 #include "API/Search/Dijkstra/dijkstra.hpp"
+#include "API/Roadmap/graphSampler.hpp"
 
 #include "planner/planner.hpp"
 #include "planner/AStar/AStarPlanner.hpp"
@@ -567,6 +568,14 @@ void qt_runAStarPlanning()
     }
 }
 
+void qt_sampleGraph()
+{
+    cout << "Sample Graph" << endl;
+    graphSampler sampler;
+    sampler.initialize();
+    sampler.sample();
+}
+
 #ifdef MULTILOCALPATH
 
 void qt_runManipTest()
@@ -741,6 +750,7 @@ void qt_human_prediction_simulation()
 void qt_runShereIOC()
 {
     HRICS_run_sphere_ioc();
+    exit(1);
 }
 
 void qt_runHumanIOC()
@@ -1486,6 +1496,10 @@ void PlannerHandler::startPlanner(QString plannerName)
         else if( plannerName == "AStarPlanning" )
         {
             qt_runAStarPlanning();
+        }
+        else if( plannerName == "SampleGraph" )
+        {
+            qt_sampleGraph();
         }
         else if(plannerName == "test1")
         {
