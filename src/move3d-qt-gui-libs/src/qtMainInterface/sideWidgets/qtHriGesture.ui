@@ -36,8 +36,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>567</width>
-        <height>989</height>
+        <width>551</width>
+        <height>992</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -390,6 +390,19 @@
               <widget class="QSpinBox" name="spinBoxSampleIteration"/>
              </item>
             </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="widget_5" native="true">
+         <layout class="QFormLayout" name="formLayout_3">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="pushButtonDetours">
+            <property name="text">
+             <string>Generatge Detours</string>
+            </property>
            </widget>
           </item>
          </layout>

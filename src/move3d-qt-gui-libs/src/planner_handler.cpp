@@ -75,6 +75,7 @@
 #include "hri_costspace/HumanTrajectories/HRICS_ioc.hpp"
 #include "hri_costspace/HumanTrajectories/HRICS_HumanIoc.hpp"
 #include "hri_costspace/HumanTrajectories/HRICS_HumanCostSpace.hpp"
+#include "hri_costspace/HumanTrajectories/HRICS_detours.hpp"
 
 #if defined( HRI_PLANNER )
 #include "hri_costspace/HRICS_HAMP.hpp"
@@ -574,6 +575,13 @@ void qt_sampleGraph()
     graphSampler sampler;
     sampler.initialize();
     sampler.sample();
+}
+
+void qt_generateDetours()
+{
+    cout << "Sample Graph" << endl;
+    HRICS::Detours* det = new HRICS::Detours;
+    det->planAStar();
 }
 
 #ifdef MULTILOCALPATH
@@ -1500,6 +1508,10 @@ void PlannerHandler::startPlanner(QString plannerName)
         else if( plannerName == "SampleGraph" )
         {
             qt_sampleGraph();
+        }
+        else if( plannerName == "Detours" )
+        {
+            qt_generateDetours();
         }
         else if(plannerName == "test1")
         {

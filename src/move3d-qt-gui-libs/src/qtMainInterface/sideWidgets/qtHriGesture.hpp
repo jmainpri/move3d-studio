@@ -70,6 +70,7 @@ private slots:
     void initHriIOC();
     void runIoc();
     void setCurrentPhase(int phase);
+    void runDetours();
 
     // Legible
     void initLegibleCost();

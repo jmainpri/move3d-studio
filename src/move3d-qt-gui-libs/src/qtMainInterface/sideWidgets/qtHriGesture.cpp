@@ -344,8 +344,10 @@ void HriGestureWidget::initHriIOC()
 
     new connectComboBoxToEnv( m_ui->comboBoxIoc, HriEnv->getObject(HricsParam::ioc_phase) );
 
-    new SpinBoxConnector(this, m_ui->doubleSpinBoxSpherePower, HriEnv->getObject(HricsParam::ioc_spheres_power) );
-    new SpinBoxConnector(this, m_ui->spinBoxSampleIteration, HriEnv->getObject(HricsParam::ioc_sample_iteration) );
+    new SpinBoxConnector( this, m_ui->doubleSpinBoxSpherePower, HriEnv->getObject(HricsParam::ioc_spheres_power) );
+    new SpinBoxConnector( this, m_ui->spinBoxSampleIteration, HriEnv->getObject(HricsParam::ioc_sample_iteration) );
+
+    connect( m_ui->pushButtonDetours,SIGNAL(clicked()),this,SLOT(runDetours()));
 //    m_ui->comboBoxIoc->setCurrentIndex(  );
 
 //    global_classifyMotion = new HRICS::ClassifyMotion();
@@ -367,6 +369,11 @@ void HriGestureWidget::runIoc()
     cout << "HriGestureWidget::runIoc" << endl;
     // emit(selectedPlanner(QString("HumanIOC")));
     emit(selectedPlanner(QString("SphereIOC")));
+}
+
+void HriGestureWidget::runDetours()
+{
+    emit(selectedPlanner(QString("Detours")));
 }
 
 //-------------------------------------------------------------------
