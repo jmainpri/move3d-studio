@@ -61,8 +61,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>427</width>
-            <height>504</height>
+            <width>350</width>
+            <height>481</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -707,10 +707,59 @@
               <string>Graph Sampling</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_16">
+              <item row="1" column="1">
+               <widget class="QDoubleSpinBox" name="doubleSpinBoxSampleParamA">
+                <property name="maximum">
+                 <double>100.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="QSlider" name="horizontalSliderSampleParamB">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QSlider" name="horizontalSliderSampleParamA">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QDoubleSpinBox" name="doubleSpinBoxSampleParamB">
+                <property name="maximum">
+                 <double>100.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_11">
+                <property name="text">
+                 <string>Sample Param A</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_13">
+                <property name="text">
+                 <string>Sample Param B</string>
+                </property>
+               </widget>
+              </item>
               <item row="0" column="0">
                <widget class="QPushButton" name="pushButtonSampleGraph">
                 <property name="text">
                  <string>Sample Graph</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QCheckBox" name="checkBoxSampleGraphMultipLoop">
+                <property name="text">
+                 <string>Multi Loop</string>
                 </property>
                </widget>
               </item>
@@ -759,7 +808,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>411</width>
+            <width>389</width>
             <height>814</height>
            </rect>
           </property>
@@ -1376,8 +1425,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>427</width>
-            <height>504</height>
+            <width>375</width>
+            <height>319</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_35">

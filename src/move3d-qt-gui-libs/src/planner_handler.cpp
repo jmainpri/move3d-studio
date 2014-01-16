@@ -758,7 +758,8 @@ void qt_human_prediction_simulation()
 void qt_runShereIOC()
 {
     HRICS_run_sphere_ioc();
-    exit(1);
+    // TODO add variables for that
+    // exit(1);
 }
 
 void qt_runHumanIOC()

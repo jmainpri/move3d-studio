@@ -61,7 +61,6 @@ public:
     SpinBoxSliderConnector( QObject* _parent, QDoubleSpinBox* _spinBox, QSlider* _slider);
     SpinBoxSliderConnector( QObject* _parent, QDoubleSpinBox* _spinBox, QSlider* _slider, QObject* o );
 
-
     ~SpinBoxSliderConnector();
 
     /**

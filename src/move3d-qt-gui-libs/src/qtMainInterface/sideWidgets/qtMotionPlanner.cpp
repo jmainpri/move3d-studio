@@ -932,6 +932,9 @@ void MotionPlanner::planAStarPath()
 void MotionPlanner::initGraphSampling()
 {
     connect( m_ui->pushButtonSampleGraph, SIGNAL(clicked()), this, SLOT(sampleGraph()) );
+    new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxSampleParamA, m_ui->horizontalSliderSampleParamA, PlanEnv->getObject(PlanParam::samplegraphVarianceA) );
+    new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxSampleParamB, m_ui->horizontalSliderSampleParamB, PlanEnv->getObject(PlanParam::samplegraphVarianceB) );
+    new connectCheckBoxToEnv( m_ui->checkBoxSampleGraphMultipLoop, PlanEnv->getObject(PlanParam::samplegraphMultiLoop) );
 }
 
 void MotionPlanner::sampleGraph()
