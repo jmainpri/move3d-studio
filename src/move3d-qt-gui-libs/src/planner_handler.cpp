@@ -57,9 +57,6 @@
 #include "bio/BioEnergy/include/Energy-pkg.h"
 #endif
 
-#include "hri_costspace/HRICS_parameters.hpp"
-#include "hri_costspace/HumanTrajectories/HRICS_spheres.hpp"
-
 #if defined( HRI_COSTSPACE )
 #include "hri_costspace/HRICS_costspace.hpp"
 #include "hri_costspace/HRICS_Workspace.hpp"
@@ -76,6 +73,10 @@
 #include "hri_costspace/HumanTrajectories/HRICS_HumanIoc.hpp"
 #include "hri_costspace/HumanTrajectories/HRICS_HumanCostSpace.hpp"
 #include "hri_costspace/HumanTrajectories/HRICS_detours.hpp"
+
+#include "hri_costspace/HRICS_parameters.hpp"
+#include "hri_costspace/HumanTrajectories/HRICS_spheres.hpp"
+#include "hri_costspace/HumanTrajectories/HRICS_squares.hpp"
 
 #if defined( HRI_PLANNER )
 #include "hri_costspace/HRICS_HAMP.hpp"
@@ -199,6 +200,7 @@ void qt_init_after_params()
 
         }
         HRICS_init_sphere_cost();
+        HRICS_init_square_cost();
     }
 
     //    if( GestEnv->getBool(GestParam::init_module_ioc) )
