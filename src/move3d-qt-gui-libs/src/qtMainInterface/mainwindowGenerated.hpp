@@ -117,6 +117,7 @@ public:
     QGroupBox *groupBoxDrawEnv;
     QGridLayout *gridLayout_12;
     QCheckBox *checkBoxDrawGraph;
+    QCheckBox *checkBoxDrawEdges;
     QCheckBox *checkBoxDrawExploration;
     QCheckBox *checkBoxDrawTraj;
     QCheckBox *checkBoxDisableDraw;
@@ -464,37 +465,31 @@ public:
 
         checkBoxDrawGraph = new QCheckBox(groupBoxDrawEnv);
         checkBoxDrawGraph->setObjectName(QString::fromUtf8("checkBoxDrawGraph"));
-        //checkBoxDrawGraph->setChecked(false);
-
         gridLayout_12->addWidget(checkBoxDrawGraph, 1, 0, 1, 1);
+
+        checkBoxDrawEdges = new QCheckBox(groupBoxDrawEnv);
+        checkBoxDrawEdges->setObjectName(QString::fromUtf8("checkBoxDrawEdges"));
+        gridLayout_12->addWidget(checkBoxDrawEdges, 2, 0, 1, 1);
 
         checkBoxDrawExploration = new QCheckBox(groupBoxDrawEnv);
         checkBoxDrawExploration->setObjectName(QString::fromUtf8("checkBoxDrawExploration"));
-        //checkBoxDrawExploration->setChecked(false);
-
-        gridLayout_12->addWidget(checkBoxDrawExploration, 2, 0, 1, 1);
+        gridLayout_12->addWidget(checkBoxDrawExploration, 3, 0, 1, 1);
 
         checkBoxDrawTraj = new QCheckBox(groupBoxDrawEnv);
         checkBoxDrawTraj->setObjectName(QString::fromUtf8("checkBoxDrawTraj"));
-
-        gridLayout_12->addWidget(checkBoxDrawTraj, 3, 0, 1, 1);
+        gridLayout_12->addWidget(checkBoxDrawTraj, 4, 0, 1, 1);
 
         checkBoxDisableDraw = new QCheckBox(groupBoxDrawEnv);
         checkBoxDisableDraw->setObjectName(QString::fromUtf8("checkBoxDisableDraw"));
-
-        gridLayout_12->addWidget(checkBoxDisableDraw, 4, 0, 1, 1);
+        gridLayout_12->addWidget(checkBoxDisableDraw, 5, 0, 1, 1);
 
         checkBoxDrawDebug = new QCheckBox(groupBoxDrawEnv);
         checkBoxDrawDebug->setObjectName(QString::fromUtf8("checkBoxDrawDebug"));
-
-        gridLayout_12->addWidget(checkBoxDrawDebug, 5, 0, 1, 1);
-
+        gridLayout_12->addWidget(checkBoxDrawDebug, 6, 0, 1, 1);
 
         checkBoxDrawTrajVector = new QCheckBox(groupBoxDrawEnv);
         checkBoxDrawTrajVector->setObjectName(QString::fromUtf8("checkBoxDrawTrajVector"));
-
-        gridLayout_12->addWidget(checkBoxDrawTrajVector, 6, 0, 1, 1);
-
+        gridLayout_12->addWidget(checkBoxDrawTrajVector, 7, 0, 1, 1);
 
         spinBoxJointToDraw = new QSpinBox(groupBoxDrawEnv);
         spinBoxJointToDraw->setObjectName(QString::fromUtf8("spinBoxJointToDraw"));
@@ -1216,6 +1211,7 @@ public:
         
         groupBoxDrawEnv->setTitle(QApplication::translate("MainWindow", "Draw Env", 0, QApplication::UnicodeUTF8));
         checkBoxDrawGraph->setText(QApplication::translate("MainWindow", "Draw Graph", 0, QApplication::UnicodeUTF8));
+        checkBoxDrawEdges->setText(QApplication::translate("MainWindow", "Draw Edges", 0, QApplication::UnicodeUTF8));
         checkBoxDrawExploration->setText(QApplication::translate("MainWindow", "Draw Explor.", 0, QApplication::UnicodeUTF8));
         checkBoxDrawTraj->setText(QApplication::translate("MainWindow", "Draw Traj", 0, QApplication::UnicodeUTF8));
         checkBoxDisableDraw->setText(QApplication::translate("MainWindow", "No Draw", 0, QApplication::UnicodeUTF8));

@@ -579,6 +579,13 @@ void qt_sampleGraph()
     sampler.sample();
 }
 
+void qt_makeGridGraph()
+{
+    cout << "Make Grid Graph" << endl;
+    graphSampler sampler;
+    sampler.makeGrid(6);
+}
+
 void qt_generateDetours()
 {
     cout << "Sample Graph" << endl;
@@ -1511,6 +1518,10 @@ void PlannerHandler::startPlanner(QString plannerName)
         else if( plannerName == "SampleGraph" )
         {
             qt_sampleGraph();
+        }
+        else if( plannerName == "MakeGridGraph" )
+        {
+            qt_makeGridGraph();
         }
         else if( plannerName == "Detours" )
         {

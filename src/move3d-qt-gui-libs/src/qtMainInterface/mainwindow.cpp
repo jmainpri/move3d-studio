@@ -563,6 +563,7 @@ void MainWindow::initViewerButtons()
 
     new connectCheckBoxToEnv(m_ui->checkBoxDisableDraw, ENV.getObject(Env::drawDisabled));
     new connectCheckBoxToEnv(m_ui->checkBoxDrawGraph, ENV.getObject(Env::drawGraph));
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawEdges, ENV.getObject(Env::drawEdges));
     new connectCheckBoxToEnv(m_ui->checkBoxDrawExploration, ENV.getObject(Env::drawExploration));
     new connectCheckBoxToEnv(m_ui->checkBoxDrawTraj, ENV.getObject(Env::drawTraj));
     new connectCheckBoxToEnv(m_ui->checkBoxDrawTrajVector, ENV.getObject(Env::drawTrajVector));
@@ -570,6 +571,7 @@ void MainWindow::initViewerButtons()
     new connectCheckBoxToEnv(m_ui->checkBoxDrawMultiColoredTraj, ENV.getObject(Env::drawMultiColorLocalpath));
     
     m_ui->checkBoxDrawGraph->setCheckState(Qt::Checked);
+    //m_ui->checkBoxDrawGraph->setCheckState(Qt::Checked);
 
     // Joint to Draw
     new QtShiva::SpinBoxConnector( this, m_ui->spinBoxJointToDraw, ENV.getObject(Env::jntToDraw) );

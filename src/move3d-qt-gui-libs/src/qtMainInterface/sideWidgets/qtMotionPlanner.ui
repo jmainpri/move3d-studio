@@ -26,7 +26,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>
@@ -61,8 +61,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>350</width>
-            <height>481</height>
+            <width>427</width>
+            <height>469</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -109,41 +109,6 @@
                <widget class="QCheckBox" name="checkBoxClosestInCompCo">
                 <property name="text">
                  <string>Connect to the closest</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="groupBox_7">
-             <property name="title">
-              <string>Time Limit</string>
-             </property>
-             <layout class="QHBoxLayout" name="horizontalLayout_11">
-              <property name="leftMargin">
-               <number>12</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>12</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QDoubleSpinBox" name="doubleSpinBoxTimeLimitPlanning">
-                <property name="maximum">
-                 <double>50000.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QSlider" name="horizontalSliderTimeLimitPlanning">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
                 </property>
                </widget>
               </item>
@@ -450,8 +415,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>427</width>
-            <height>504</height>
+            <width>411</width>
+            <height>478</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_11">
@@ -707,59 +672,66 @@
               <string>Graph Sampling</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_16">
-              <item row="1" column="1">
-               <widget class="QDoubleSpinBox" name="doubleSpinBoxSampleParamA">
-                <property name="maximum">
-                 <double>100.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="2">
-               <widget class="QSlider" name="horizontalSliderSampleParamB">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QSlider" name="horizontalSliderSampleParamA">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
               <item row="2" column="1">
-               <widget class="QDoubleSpinBox" name="doubleSpinBoxSampleParamB">
-                <property name="maximum">
-                 <double>100.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
                <widget class="QLabel" name="label_11">
                 <property name="text">
                  <string>Sample Param A</string>
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label_13">
-                <property name="text">
-                 <string>Sample Param B</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
+              <item row="1" column="1">
                <widget class="QPushButton" name="pushButtonSampleGraph">
                 <property name="text">
                  <string>Sample Graph</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
+              <item row="2" column="4">
+               <widget class="QSlider" name="horizontalSliderSampleParamA">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="4">
+               <widget class="QSlider" name="horizontalSliderSampleParamB">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="3">
+               <widget class="QDoubleSpinBox" name="doubleSpinBoxSampleParamA">
+                <property name="maximum">
+                 <double>100.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="3">
+               <widget class="QDoubleSpinBox" name="doubleSpinBoxSampleParamB">
+                <property name="maximum">
+                 <double>100.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLabel" name="label_13">
+                <property name="text">
+                 <string>Sample Param B</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="3">
                <widget class="QCheckBox" name="checkBoxSampleGraphMultipLoop">
                 <property name="text">
                  <string>Multi Loop</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QPushButton" name="pushButtonMakeGridGraph">
+                <property name="text">
+                 <string>Grid Graph</string>
                 </property>
                </widget>
               </item>
@@ -808,7 +780,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>389</width>
+            <width>411</width>
             <height>814</height>
            </rect>
           </property>
@@ -1425,8 +1397,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>375</width>
-            <height>319</height>
+            <width>427</width>
+            <height>469</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_35">
@@ -1791,6 +1763,54 @@
        <number>5</number>
       </property>
       <item>
+       <widget class="QWidget" name="widget_time" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout_11">
+         <property name="leftMargin">
+          <number>12</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>12</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_14">
+           <property name="text">
+            <string>Time limit</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxTimeLimitPlanning">
+           <property name="decimals">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <double>300.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="horizontalSliderTimeLimitPlanning">
+           <property name="maximum">
+            <number>99</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
        <widget class="QWidget" name="widget_13" native="true">
         <layout class="QHBoxLayout" name="horizontalLayout">
          <property name="margin">
@@ -1799,7 +1819,7 @@
          <item>
           <widget class="QLabel" name="label_10">
            <property name="text">
-            <string>With Time Limit:</string>
+            <string>Enable for :</string>
            </property>
           </widget>
          </item>
@@ -1951,30 +1971,24 @@
        </widget>
       </item>
       <item>
-       <widget class="QWidget" name="widget" native="true">
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <widget class="QWidget" name="widget_time_limit" native="true">
+        <layout class="QGridLayout" name="gridLayout_17">
          <property name="margin">
           <number>0</number>
          </property>
-         <item>
+         <item row="0" column="0">
           <widget class="QPushButton" name="pushButtonCheckAllEdges">
            <property name="text">
             <string>Check All Edges In Graph</string>
            </property>
           </widget>
          </item>
-         <item>
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="pushButtonAStarInCurrentGraph">
+           <property name="text">
+            <string>A* in current graph</string>
            </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
+          </widget>
          </item>
         </layout>
        </widget>

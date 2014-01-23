@@ -83,6 +83,7 @@ private slots:
 
     // General ---------------------------
     void checkAllEdges();
+    void computeAStarInCurrentGraph();
     void envDmaxSpinBoxValueChanged( double dmax );
     void envIsWithGoalValueChanged( bool state );
     void envBiDirValueChanged( bool state );
@@ -102,6 +103,7 @@ private slots:
 
     // Sample Graph ----------------------
     void sampleGraph();
+    void makeGridGraph();
 
 signals:
     void selectedPlanner(QString);

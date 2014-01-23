@@ -38,7 +38,9 @@
 
 #include "hri_costspace/HRICS_Navigation.hpp"
 
-using namespace std;
+//using namespace std;
+using std::cout;
+using std::endl;
 using namespace QtShiva;
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
@@ -70,8 +72,10 @@ MotionPlanner::~MotionPlanner()
 void MotionPlanner::initGeneral()
 {
     connect(m_ui->pushButtonCheckAllEdges,SIGNAL(clicked()),this,SLOT(checkAllEdges()));
-    m_ui->doubleSpinBoxDMax->setMaximum(p3d_get_env_dmax());
+    connect(m_ui->pushButtonAStarInCurrentGraph,SIGNAL(clicked()),this,SLOT(computeAStarInCurrentGraph()));
+
     // Connecting the Dmax Env variable
+    m_ui->doubleSpinBoxDMax->setMaximum(p3d_get_env_dmax());
     m_ui->doubleSpinBoxDMax->setValue(p3d_get_env_dmax());
     connect(m_ui->doubleSpinBoxDMax, SIGNAL(valueChanged( double )), SLOT(envDmaxSpinBoxValueChanged( double ) ) );
     connect(m_ui->doubleSpinBoxDMax, SIGNAL(valueChanged( double )), ENV.getObject(Env::dmax),SLOT(set(double)));
@@ -97,7 +101,7 @@ void MotionPlanner::testParam(double param)
 
 void MotionPlanner::checkAllEdges()
 {
-    if(API_activeGraph)
+    if( API_activeGraph )
     {
         Graph* tmpGraph = new Graph(*API_activeGraph);
 
@@ -109,10 +113,18 @@ void MotionPlanner::checkAllEdges()
             cout << "Graph Not valid" << endl;
         }
     }
-    else
+    else cout << "Graph Empty" << endl;
+}
+
+void MotionPlanner::computeAStarInCurrentGraph()
+{
+    if( API_activeGraph )
     {
-        cout << "Graph Empty" << endl;
+        Robot* robot = API_activeGraph->getRobot();
+        API_activeGraph->extractBestAStarPathSoFar( robot->getInitPos(), robot->getGoalPos() );
+        m_mainWindow->drawAllWinActive();
     }
+    else cout << "Graph Empty" << endl;
 }
 
 void MotionPlanner::envDmaxSpinBoxValueChanged( double dmax )
@@ -440,13 +452,13 @@ void MotionPlanner::setCostCriterium(int choice)
     p3d_SetDeltaCostChoice(choice);
 #endif
 
-    map<int,CostSpaceDeltaStepMethod> methods;
+    std::map<int,CostSpaceDeltaStepMethod> methods;
 
-    methods.insert ( pair<int,CostSpaceDeltaStepMethod>(MECHANICAL_WORK,cs_mechanical_work) );
-    methods.insert ( pair<int,CostSpaceDeltaStepMethod>(INTEGRAL,cs_integral) );
-    methods.insert ( pair<int,CostSpaceDeltaStepMethod>(2,cs_visibility) );
-    methods.insert ( pair<int,CostSpaceDeltaStepMethod>(3,cs_average) );
-    methods.insert ( pair<int,CostSpaceDeltaStepMethod>(4,cs_config_cost_and_dist) );
+    methods.insert ( std::pair<int,CostSpaceDeltaStepMethod>(MECHANICAL_WORK,cs_mechanical_work) );
+    methods.insert ( std::pair<int,CostSpaceDeltaStepMethod>(INTEGRAL,cs_integral) );
+    methods.insert ( std::pair<int,CostSpaceDeltaStepMethod>(2,cs_visibility) );
+    methods.insert ( std::pair<int,CostSpaceDeltaStepMethod>(3,cs_average) );
+    methods.insert ( std::pair<int,CostSpaceDeltaStepMethod>(4,cs_config_cost_and_dist) );
 
     ENV.setInt(Env::costDeltaMethod,choice);
     //m_ui->comboBoxTrajCostExtimation->setCurrentIndex(choice);
@@ -507,7 +519,7 @@ Node* MotionPlanner::getIthNodeInBestTraj()
     confPtr_t q_init = global_Move3DPlanner->getInitConf();
     confPtr_t q_goal = global_Move3DPlanner->getGoalConf();
 
-    pair<bool,vector<Node*> > nodes = API_activeGraph->extractBestNodePathSoFar( q_init, q_goal );
+    std::pair<bool,std::vector<Node*> > nodes = API_activeGraph->extractBestNodePathSoFar( q_init, q_goal );
 
     if ( nodes.second.empty() )
     {
@@ -738,7 +750,7 @@ void MotionPlanner::nodeToShowChanged()
         return;
     }
 
-    vector<Node*> nodes = API_activeGraph->getNodes();
+    std::vector<Node*> nodes = API_activeGraph->getNodes();
 
     if (nodes.empty()) {
         cout << "Warning :: nodes is empty!!!" << endl;
@@ -772,7 +784,7 @@ void MotionPlanner::edgeToShowChanged()
         return;
     }
 
-    vector<Edge*> edges = API_activeGraph->getEdges();
+    std::vector<Edge*> edges = API_activeGraph->getEdges();
 
     if (edges.empty()) {
         cout << "Warning :: edges is empty!!!" << endl;
@@ -812,7 +824,7 @@ Node* MotionPlanner::getIthNodeInActiveGraph()
         return NULL;
     }
 
-    vector<Node*> nodes = API_activeGraph->getNodes();
+    std::vector<Node*> nodes = API_activeGraph->getNodes();
 
     if ( nodes.empty() )
     {
@@ -857,8 +869,8 @@ void MotionPlanner::removeNode()
     }
     catch (std::string str)
     {
-        cerr << "Exeption in MotionPlanner::removeNode()" << endl;
-        cerr << str << endl;
+        std::cerr << "Exeption in MotionPlanner::removeNode()" << endl;
+        std::cerr << str << endl;
     }
 
     m_mainWindow->drawAllWinActive();
@@ -932,6 +944,7 @@ void MotionPlanner::planAStarPath()
 void MotionPlanner::initGraphSampling()
 {
     connect( m_ui->pushButtonSampleGraph, SIGNAL(clicked()), this, SLOT(sampleGraph()) );
+    connect( m_ui->pushButtonMakeGridGraph, SIGNAL(clicked()), this, SLOT(makeGridGraph()) );
     new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxSampleParamA, m_ui->horizontalSliderSampleParamA, PlanEnv->getObject(PlanParam::samplegraphVarianceA) );
     new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxSampleParamB, m_ui->horizontalSliderSampleParamB, PlanEnv->getObject(PlanParam::samplegraphVarianceB) );
     new connectCheckBoxToEnv( m_ui->checkBoxSampleGraphMultipLoop, PlanEnv->getObject(PlanParam::samplegraphMultiLoop) );
@@ -940,4 +953,9 @@ void MotionPlanner::initGraphSampling()
 void MotionPlanner::sampleGraph()
 {
     emit selectedPlanner("SampleGraph");
+}
+
+void MotionPlanner::makeGridGraph()
+{
+    emit selectedPlanner("MakeGridGraph");
 }
