@@ -118,13 +118,7 @@ void MotionPlanner::checkAllEdges()
 
 void MotionPlanner::computeAStarInCurrentGraph()
 {
-    if( API_activeGraph )
-    {
-        Robot* robot = API_activeGraph->getRobot();
-        API_activeGraph->extractBestAStarPathSoFar( robot->getInitPos(), robot->getGoalPos() );
-        m_mainWindow->drawAllWinActive();
-    }
-    else cout << "Graph Empty" << endl;
+    emit selectedPlanner("ComputeAStarInCurrentGraph");
 }
 
 void MotionPlanner::envDmaxSpinBoxValueChanged( double dmax )

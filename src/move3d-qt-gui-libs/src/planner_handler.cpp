@@ -571,6 +571,20 @@ void qt_runAStarPlanning()
     }
 }
 
+void qt_runAStarInCurrentGraph()
+{
+    if( API_activeGraph)
+    {
+        Robot* robot = API_activeGraph->getRobot();
+
+        // API_activeGraph->extractBestAStarPathSoFar( robot->getInitPos(), robot->getGoalPos() );
+        API_activeGraph->extractDijkstraShortestPathsTraj( robot->getInitPos(), robot->getGoalPos() );
+
+        g3d_draw_allwin_active();
+    }
+    else cout << "Graph Empty" << endl;
+}
+
 void qt_sampleGraph()
 {
     cout << "Sample Graph" << endl;
@@ -583,7 +597,7 @@ void qt_makeGridGraph()
 {
     cout << "Make Grid Graph" << endl;
     graphSampler sampler;
-    sampler.makeGrid(6);
+    sampler.makeGrid(3);
 }
 
 void qt_generateDetours()
@@ -1514,6 +1528,10 @@ void PlannerHandler::startPlanner(QString plannerName)
         else if( plannerName == "AStarPlanning" )
         {
             qt_runAStarPlanning();
+        }
+        else if( plannerName == "ComputeAStarInCurrentGraph" )
+        {
+            qt_runAStarInCurrentGraph();
         }
         else if( plannerName == "SampleGraph" )
         {
