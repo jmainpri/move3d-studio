@@ -107,15 +107,15 @@ void SaveContext::printVariables(unsigned int id)
 		cout << iter3->second->get() << endl;
 	}
 	
-#ifdef QT_LIBRARY
+
 	cout << "String -----------------------------" << endl;
 	map<Env::stringParameter, stringContainer*>::iterator iter4 = _MapString[id].begin();
 	
 	for(; iter4 != _MapString[id].end(); iter4++)
 	{
-		cout << iter4->second->get().toStdString() << endl;
+        cout << iter4->second->get() << endl;
 	}
-#endif
+
 	cout << "------------ end --------------" << endl;
 }
 

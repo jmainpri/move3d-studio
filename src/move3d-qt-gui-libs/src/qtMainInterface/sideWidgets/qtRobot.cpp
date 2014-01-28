@@ -135,9 +135,7 @@ void RobotWidget::initModel()
 
     new QtShiva::SpinBoxConnector( this, m_ui->spinBoxArmId,ENV.getObject( Env::currentArmId) );
 
-    QString RobotObjectToCarry("No Object");
-
-    ENV.setString(Env::ObjectToCarry,RobotObjectToCarry);
+    ENV.setString( Env::ObjectToCarry, "No Object" );
 
     // List all robots with only one
     // Freeflyer joint
@@ -352,7 +350,7 @@ void RobotWidget::currentObjectChange(int i)
     if((m_FreeFlyers.size() > 0) && (i != 0))
     {
         //cout << "Env::ObjectToCarry  is "<< m_FreeFlyers[i-1] << endl;
-        ENV.setString(Env::ObjectToCarry,m_FreeFlyers[i-1]);
+        ENV.setString( Env::ObjectToCarry, m_FreeFlyers[i-1].toStdString() );
     }
 }
 
@@ -396,7 +394,7 @@ void RobotWidget::GrabObject()
 
     int armId = ENV.getInt( Env::currentArmId );
     string robot_name = robot->getName();
-    string object_name = ENV.getString(Env::ObjectToCarry).toStdString();
+    string object_name = ENV.getString(Env::ObjectToCarry);
     cout << "Robot " << robot_name << " grasp object " << object_name;
     cout << " with arm " << armId << endl;
 

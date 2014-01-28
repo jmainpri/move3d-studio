@@ -586,7 +586,7 @@ void MotionPlanner::saveContext()
     QListWidgetItem* item= new QListWidgetItem(contextList);
     itemList.push_back(item);
 
-    ENV.setString(Env::nameOfFile,m_ui->lineEditContext->text());
+    ENV.setString(Env::nameOfFile,m_ui->lineEditContext->text().toStdString());
 
     itemList.back()->setText(m_ui->lineEditContext->text());
 

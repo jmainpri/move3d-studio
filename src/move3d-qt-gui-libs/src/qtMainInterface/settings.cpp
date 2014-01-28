@@ -261,12 +261,12 @@ void qt_loadGuiParameters(bool print, std::string fileName)
         cout << "---------------------------" << endl;
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        GuiEnv->setString(GuiParam::stringParameter(i),settings.value(QString(metaEnum.key(i)),"").toString());
+        GuiEnv->setString(GuiParam::stringParameter(i),settings.value(QString(metaEnum.key(i)),"").toString().toStdString());
 
         if(print)
         {
             cout << "Key : " << metaEnum.key(i);
-            cout << " , Value : " << GuiEnv->getString(GuiParam::stringParameter(i)).toStdString() << endl;
+            cout << " , Value : " << GuiEnv->getString(GuiParam::stringParameter(i)) << endl;
         }
     }
     settings.endGroup();
@@ -322,8 +322,8 @@ void qt_saveGuiParameters( bool print, std::string fileName )
     for( int i=0;i<metaEnum.keyCount();i++)
     {
         cout << "Key : " << metaEnum.key(i);
-        cout << " , Value : " << GuiEnv->getString(GuiParam::stringParameter(i)).toStdString() << endl;
-        settings.setValue( QString(metaEnum.key(i)), GuiEnv->getString(GuiParam::stringParameter(i)));
+        cout << " , Value : " << GuiEnv->getString(GuiParam::stringParameter(i)) << endl;
+        settings.setValue( QString(metaEnum.key(i)), QString(GuiEnv->getString(GuiParam::stringParameter(i)).c_str()) );
     }
     settings.endGroup();
 
@@ -396,12 +396,12 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
         cout << "---------------------------" << endl;
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        ENV.setString(Env::stringParameter(i),settings.value(QString(metaEnum.key(i)),"").toString());
+        ENV.setString(Env::stringParameter(i),settings.value(QString(metaEnum.key(i)),"").toString().toStdString());
 
         if(print)
         {
             cout << "Key : " << metaEnum.key(i);
-            cout << " , Value : " << ENV.getString(Env::stringParameter(i)).toStdString() << endl;
+            cout << " , Value : " << ENV.getString(Env::stringParameter(i)) << endl;
         }
     }
     settings.endGroup();
@@ -465,12 +465,12 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
         cout << "---------------------------" << endl;
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        PlanEnv->setString(PlanParam::stringParameter(i),settings.value(QString(metaEnum.key(i)),"").toString());
+        PlanEnv->setString(PlanParam::stringParameter(i),settings.value(QString(metaEnum.key(i)),"").toString().toStdString() );
 
         if(print)
         {
             cout << "Key : " << metaEnum.key(i);
-            cout << " , Value : " << PlanEnv->getString(PlanParam::stringParameter(i)).toStdString() << endl;
+            cout << " , Value : " << PlanEnv->getString(PlanParam::stringParameter(i)) << endl;
         }
     }
     settings.endGroup();
@@ -536,12 +536,12 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
         cout << "---------------------------" << endl;
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        GestEnv->setString(GestParam::stringParameter(i),settings.value(QString(metaEnum.key(i)),"").toString());
+        GestEnv->setString(GestParam::stringParameter(i),settings.value(QString(metaEnum.key(i)),"").toString().toStdString() );
 
         if(print)
         {
             cout << "Key : " << metaEnum.key(i);
-            cout << " , Value : " << GestEnv->getString(GestParam::stringParameter(i)).toStdString() << endl;
+            cout << " , Value : " << GestEnv->getString(GestParam::stringParameter(i)) << endl;
         }
     }
     settings.endGroup();
@@ -607,12 +607,12 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
         cout << "---------------------------" << endl;
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        HriEnv->setString(HricsParam::stringParameter(i),settings.value(QString(metaEnum.key(i)),"").toString());
+        HriEnv->setString(HricsParam::stringParameter(i),settings.value(QString(metaEnum.key(i)),"").toString().toStdString() );
 
         if(print)
         {
             cout << "Key : " << metaEnum.key(i);
-            cout << " , Value : " << HriEnv->getString(HricsParam::stringParameter(i)).toStdString() << endl;
+            cout << " , Value : " << HriEnv->getString(HricsParam::stringParameter(i)) << endl;
         }
     }
     settings.endGroup();
@@ -644,6 +644,8 @@ void qt_saveInterfaceParameters(bool print, std::string fileName)
     // ------------------------------------------------------------------
     // ENV
     // ------------------------------------------------------------------
+    cout << "---------------------------" << endl;
+    cout << "ENV" << endl;
     const QMetaObject* metaObject = ENV.metaObject();
     QMetaEnum metaEnum;
 
@@ -690,8 +692,8 @@ void qt_saveInterfaceParameters(bool print, std::string fileName)
     for( int i=0;i<metaEnum.keyCount();i++)
     {
         cout << "Key : " << metaEnum.key(i);
-        cout << " , Value : " << ENV.getString(Env::stringParameter(i)).toStdString() << endl;
-        settings.setValue( QString(metaEnum.key(i)), ENV.getString(Env::stringParameter(i)));
+        cout << " , Value : " << ENV.getString(Env::stringParameter(i)) << endl;
+        settings.setValue( QString(metaEnum.key(i)), QString(ENV.getString(Env::stringParameter(i)).c_str()));
     }
     settings.endGroup();
 
@@ -700,6 +702,8 @@ void qt_saveInterfaceParameters(bool print, std::string fileName)
     // ------------------------------------------------------------------
     // PlanParam
     // ------------------------------------------------------------------
+    cout << "---------------------------" << endl;
+    cout << "PLAN PARAM" << endl;
     settings.beginGroup("PlanParam");
 
     metaObject = EnumPlannerParameterObject->metaObject();
@@ -742,8 +746,8 @@ void qt_saveInterfaceParameters(bool print, std::string fileName)
     for( int i=0;i<metaEnum.keyCount();i++)
     {
         cout << "Key : " << metaEnum.key(i);
-        cout << " , Value : " << PlanEnv->getString(PlanParam::stringParameter(i)).toStdString() << endl;
-        settings.setValue( QString(metaEnum.key(i)), PlanEnv->getString(PlanParam::stringParameter(i)));
+        cout << " , Value : " << PlanEnv->getString(PlanParam::stringParameter(i)) << endl;
+        settings.setValue( QString(metaEnum.key(i)), QString(PlanEnv->getString(PlanParam::stringParameter(i)).c_str()) );
     }
     settings.endGroup();
 
@@ -752,6 +756,8 @@ void qt_saveInterfaceParameters(bool print, std::string fileName)
     // ------------------------------------------------------------------
     // GestParam
     // ------------------------------------------------------------------
+    cout << "---------------------------" << endl;
+    cout << "GEST PARAM" << endl;
     settings.beginGroup("GestParam");
 
     metaObject = EnumGestureParameterObject->metaObject();
@@ -794,8 +800,8 @@ void qt_saveInterfaceParameters(bool print, std::string fileName)
     for( int i=0;i<metaEnum.keyCount();i++)
     {
         cout << "Key : " << metaEnum.key(i);
-        cout << " , Value : " << GestEnv->getString(GestParam::stringParameter(i)).toStdString() << endl;
-        settings.setValue( QString(metaEnum.key(i)), GestEnv->getString(GestParam::stringParameter(i)));
+        cout << " , Value : " << GestEnv->getString(GestParam::stringParameter(i)) << endl;
+        settings.setValue( QString(metaEnum.key(i)), QString(GestEnv->getString(GestParam::stringParameter(i)).c_str()) );
     }
     settings.endGroup();
 
@@ -804,6 +810,8 @@ void qt_saveInterfaceParameters(bool print, std::string fileName)
     // ------------------------------------------------------------------
     // HricsParam
     // ------------------------------------------------------------------
+    cout << "---------------------------" << endl;
+    cout << "HRICS PARAM" << endl;
     settings.beginGroup("HricsParam");
 
     metaObject = EnumHricsParameterObject->metaObject();
@@ -846,8 +854,8 @@ void qt_saveInterfaceParameters(bool print, std::string fileName)
     for( int i=0;i<metaEnum.keyCount();i++)
     {
         cout << "Key : " << metaEnum.key(i);
-        cout << " , Value : " << HriEnv->getString(HricsParam::stringParameter(i)).toStdString() << endl;
-        settings.setValue( QString(metaEnum.key(i)), HriEnv->getString(HricsParam::stringParameter(i)));
+        cout << " , Value : " << HriEnv->getString(HricsParam::stringParameter(i)) << endl; // QString(ENV.getString(Env::stringParameter(i)).c_str())
+        settings.setValue( QString(metaEnum.key(i)),QString(HriEnv->getString(HricsParam::stringParameter(i)).c_str()));
     }
     settings.endGroup();
 

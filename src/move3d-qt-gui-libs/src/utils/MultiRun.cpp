@@ -39,7 +39,7 @@ MultiRun::MultiRun()
 void MultiRun::saveVectorToFile(int Context)
 {
     std::ostringstream oss;
-    oss << getenv("HOME_MOVE3D") << "/statFiles/"<<ENV.getString(Env::nameOfFile).toStdString();
+    oss << getenv("HOME_MOVE3D") << "/statFiles/"<<ENV.getString(Env::nameOfFile);
 
     std::ofstream s;
     s.open(oss.str().c_str());

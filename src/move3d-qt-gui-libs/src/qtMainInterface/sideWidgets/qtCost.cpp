@@ -19,6 +19,7 @@
 
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
 
+#include "planner/planEnvironment.hpp"
 #include "planner/cost_space.hpp"
 #include "planner/TrajectoryOptim/Stomp/stompOptimizer.hpp"
 
@@ -333,8 +334,9 @@ void CostWidget::setCostFunction(int costFunctionId)
     vector<string> AllCost = global_costSpace->getAllCost();
     if (costFunctionId< int(AllCost.size()) && costFunctionId>= 0)
     {
+        PlanEnv->setString( PlanParam::active_cost_function, AllCost[costFunctionId] );
         global_costSpace->setCost(AllCost[costFunctionId]);
-        cout << "Cost Function is now :  " << AllCost[costFunctionId] << endl;
+        cout << "Cost Function is now :  " << PlanEnv->getString( PlanParam::active_cost_function ) << endl;
     }
 }
 

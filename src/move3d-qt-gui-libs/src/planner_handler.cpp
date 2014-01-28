@@ -77,6 +77,7 @@
 #include "hri_costspace/HRICS_parameters.hpp"
 #include "hri_costspace/HumanTrajectories/HRICS_spheres.hpp"
 #include "hri_costspace/HumanTrajectories/HRICS_squares.hpp"
+#include "hri_costspace/HumanTrajectories/HRICS_run_multiple_stomp.hpp"
 
 #if defined( HRI_PLANNER )
 #include "hri_costspace/HRICS_HAMP.hpp"
@@ -139,21 +140,6 @@ void printJointMapping( Robot* rob )
 //  Init Functions
 //------------------------------------------------------------------------------
 
-//! This function initialises the basic costspace
-void qt_init_costspace()
-{
-    GlobalCostSpace::initialize();
-
-    std::string function;
-
-    if( GroundCostObj != NULL )
-        function = "costMap2D";
-    else
-        function = "costDistToObst";
-
-    global_costSpace->setCost( function );
-}
-
 //! This function initialises the software
 //! after the parameter file has been loaded
 void qt_init_after_params()
@@ -161,9 +147,9 @@ void qt_init_after_params()
     cout << "p3d_set_user_drawnjnt : " << ENV.getInt(Env::jntToDraw) << endl;
     p3d_set_user_drawnjnt( ENV.getInt(Env::jntToDraw) );
 
-    if(ENV.getBool(Env::isCostSpace) || ENV.getBool(Env::useTRRT) )
+    if( ENV.getBool(Env::isCostSpace) || ENV.getBool(Env::useTRRT) )
     {
-        qt_init_costspace();
+        GlobalCostSpace::initialize();
     }
 
     if ( ENV.getBool(Env::enableHri) )
@@ -196,11 +182,19 @@ void qt_init_after_params()
         if( !ENV.getBool(Env::isCostSpace) )
         {
             ENV.setBool( Env::isCostSpace, true );
-            qt_init_costspace();
+            GlobalCostSpace::initialize();
+            global_costSpace->setCost( PlanEnv->getString(PlanParam::active_cost_function) );
 
         }
         HRICS_init_sphere_cost();
         HRICS_init_square_cost();
+    }
+
+    if( ENV.getBool(Env::isCostSpace) )
+    {
+        std::string cost_function = PlanEnv->getString(PlanParam::active_cost_function);
+        global_costSpace->setCost( cost_function );
+        cout << "SET COST FUNCTION : " << cost_function << endl;
     }
 
     //    if( GestEnv->getBool(GestParam::init_module_ioc) )
@@ -902,8 +896,18 @@ void qt_simpleNav()
 
 void qt_runParallelStomp()
 {
-    //    srompRun_MultipleParallel();
-    srompRun_OneParallel();
+    if( PlanEnv->getBool(PlanParam::trajStompRunMultiple) )
+    {
+        // srompRun_MultipleParallel();
+        HRICS::MultipleStomp planner;
+        planner.loadTrajsFromFile();
+//        planner.multipleRun( 10 );
+//        planner.saveTrajsToFile();
+    }
+    else
+    {
+        srompRun_OneParallel();
+    }
 }
 
 #ifdef MULTILOCALPATH
