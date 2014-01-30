@@ -335,10 +335,15 @@ void HriGestureWidget::initGestureRecognition()
 //-------------------------------------------------------------------
 void HriGestureWidget::initHriIOC()
 {
-    new connectCheckBoxToEnv( m_ui->checkBoxInitHriIOC,  GestEnv->getObject(GestParam::init_module_ioc) );
-    new connectCheckBoxToEnv( m_ui->checkBoxInitSphereCost,  HriEnv->getObject(HricsParam::init_spheres_cost) );
-    new connectCheckBoxToEnv( m_ui->checkBoxGestureDebug,  GestEnv->getObject(GestParam::print_debug) );
-    new connectCheckBoxToEnv( m_ui->checkBoxSingleIteration,  HriEnv->getObject(HricsParam::ioc_single_iteration) );
+    new connectCheckBoxToEnv( m_ui->checkBoxInitHriIOC,         GestEnv->getObject(GestParam::init_module_ioc) );
+    new connectCheckBoxToEnv( m_ui->checkBoxInitSphereCost,     HriEnv->getObject(HricsParam::init_spheres_cost) );
+    new connectCheckBoxToEnv( m_ui->checkBoxGestureDebug,       GestEnv->getObject(GestParam::print_debug) );
+    new connectCheckBoxToEnv( m_ui->checkBoxSingleIteration,    HriEnv->getObject(HricsParam::ioc_single_iteration) );
+
+    new connectCheckBoxToEnv( m_ui->checkBoxDrawDemonstrations,  HriEnv->getObject(HricsParam::ioc_draw_demonstrations) );
+    new connectCheckBoxToEnv( m_ui->checkBoxDrawSamples,         HriEnv->getObject(HricsParam::ioc_draw_samples) );
+    new connectCheckBoxToEnv( m_ui->checkBoxLoadSampleFromFile,  HriEnv->getObject(HricsParam::ioc_load_samples_from_file) );
+    new connectCheckBoxToEnv( m_ui->checkBoxSampleAroundDemo,  HriEnv->getObject(HricsParam::ioc_sample_around_demo) );
 
     connect( m_ui->pushButtonRunIoc, SIGNAL(clicked()), this, SLOT(runIoc()) );
 
@@ -346,6 +351,9 @@ void HriGestureWidget::initHriIOC()
 
     new SpinBoxConnector( this, m_ui->doubleSpinBoxSpherePower, HriEnv->getObject(HricsParam::ioc_spheres_power) );
     new SpinBoxConnector( this, m_ui->spinBoxSampleIteration, HriEnv->getObject(HricsParam::ioc_sample_iteration) );
+    new SpinBoxConnector( this, m_ui->spinBoxNbOfWayPoints, HriEnv->getObject(HricsParam::ioc_nb_of_way_points) );
+
+    new SpinBoxConnector( this, m_ui->doubleSpinBoxStandardDev, HriEnv->getObject(HricsParam::ioc_sample_std_dev) );
 
     connect( m_ui->pushButtonDetours,SIGNAL(clicked()),this,SLOT(runDetours()));
 //    m_ui->comboBoxIoc->setCurrentIndex(  );

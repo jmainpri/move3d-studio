@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>569</width>
-    <height>991</height>
+    <width>581</width>
+    <height>1124</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,8 +36,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>551</width>
-        <height>992</height>
+        <width>579</width>
+        <height>1122</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -297,6 +297,20 @@
           <item>
            <widget class="QWidget" name="widget_4" native="true">
             <layout class="QGridLayout" name="gridLayout_2">
+             <item row="2" column="0">
+              <widget class="QCheckBox" name="checkBoxLoadSampleFromFile">
+               <property name="text">
+                <string>Load samples from file</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QCheckBox" name="checkBoxSingleIteration">
+               <property name="text">
+                <string>Single iteration</string>
+               </property>
+              </widget>
+             </item>
              <item row="0" column="1">
               <widget class="QCheckBox" name="checkBoxGestureDebug">
                <property name="text">
@@ -311,10 +325,24 @@
                </property>
               </widget>
              </item>
-             <item row="1" column="0">
-              <widget class="QCheckBox" name="checkBoxSingleIteration">
+             <item row="1" column="1">
+              <widget class="QCheckBox" name="checkBoxDrawDemonstrations">
                <property name="text">
-                <string>Single iteration</string>
+                <string>Draw demonstrations</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QCheckBox" name="checkBoxDrawSamples">
+               <property name="text">
+                <string>Draw samples</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QCheckBox" name="checkBoxSampleAroundDemo">
+               <property name="text">
+                <string>Sample around demo</string>
                </property>
               </widget>
              </item>
@@ -362,32 +390,53 @@
           </item>
           <item>
            <widget class="QWidget" name="widget_2" native="true">
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
-             <item>
+            <layout class="QGridLayout" name="gridLayout_5">
+             <item row="0" column="0">
               <widget class="QLabel" name="label_2">
                <property name="text">
                 <string>Spheres Power</string>
                </property>
               </widget>
              </item>
-             <item>
+             <item row="0" column="1">
               <widget class="QDoubleSpinBox" name="doubleSpinBoxSpherePower"/>
              </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QWidget" name="widget_3" native="true">
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
-             <item>
+             <item row="1" column="0">
               <widget class="QLabel" name="label_3">
                <property name="text">
                 <string>Sample Iteration</string>
                </property>
               </widget>
              </item>
-             <item>
+             <item row="1" column="1">
               <widget class="QSpinBox" name="spinBoxSampleIteration"/>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>Nb of way points</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QSpinBox" name="spinBoxNbOfWayPoints">
+               <property name="minimum">
+                <number>4</number>
+               </property>
+               <property name="maximum">
+                <number>300</number>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_6">
+               <property name="text">
+                <string>Standard Deviation</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QDoubleSpinBox" name="doubleSpinBoxStandardDev"/>
              </item>
             </layout>
            </widget>

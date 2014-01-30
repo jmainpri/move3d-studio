@@ -775,8 +775,11 @@ void qt_human_prediction_simulation()
 void qt_runShereIOC()
 {
     HRICS_run_sphere_ioc();
-    // TODO add variables for that
-    // exit(1);
+
+    if( HriEnv->getBool(HricsParam::ioc_exit_after_run) )
+    {
+        exit(1);
+    }
 }
 
 void qt_runHumanIOC()
@@ -900,9 +903,8 @@ void qt_runParallelStomp()
     {
         // srompRun_MultipleParallel();
         HRICS::MultipleStomp planner;
-        planner.loadTrajsFromFile();
-//        planner.multipleRun( 10 );
-//        planner.saveTrajsToFile();
+        planner.loadTrajsFromFile( 100 );
+//        planner.multipleRun( 100 );
     }
     else
     {
