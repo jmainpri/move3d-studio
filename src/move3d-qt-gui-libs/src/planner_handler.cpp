@@ -58,10 +58,12 @@
 #endif
 
 #if defined( HRI_COSTSPACE )
+#include "hri_costspace/HRICS_parameters.hpp"
 #include "hri_costspace/HRICS_costspace.hpp"
 #include "hri_costspace/HRICS_Workspace.hpp"
 #include "hri_costspace/HRICS_Miscellaneous.hpp"
 #include "hri_costspace/HRICS_Navigation.hpp"
+
 #include "hri_costspace/Gestures/HRICS_GestParameters.hpp"
 #include "hri_costspace/Gestures/HRICS_WorkspaceOccupancy.hpp"
 #include "hri_costspace/Gestures/HRICS_RecordMotion.hpp"
@@ -69,15 +71,13 @@
 #include "hri_costspace/Gestures/HRICS_HumanPredictionCostSpace.hpp"
 #include "hri_costspace/Gestures/HRICS_HumanPredictionSimulator.hpp"
 
-#include "hri_costspace/HumanTrajectories/HRICS_ioc.hpp"
-#include "hri_costspace/HumanTrajectories/HRICS_HumanIoc.hpp"
-#include "hri_costspace/HumanTrajectories/HRICS_HumanCostSpace.hpp"
-#include "hri_costspace/HumanTrajectories/HRICS_detours.hpp"
-
-#include "hri_costspace/HRICS_parameters.hpp"
-#include "hri_costspace/HumanTrajectories/HRICS_spheres.hpp"
-#include "hri_costspace/HumanTrajectories/HRICS_squares.hpp"
-#include "hri_costspace/HumanTrajectories/HRICS_run_multiple_stomp.hpp"
+#include "hri_costspace/human_trajectories/HRICS_ioc.hpp"
+#include "hri_costspace/human_trajectories/HRICS_human_ioc.hpp"
+#include "hri_costspace/human_trajectories/HRICS_human_cost_space.hpp"
+#include "hri_costspace/human_trajectories/HRICS_detours.hpp"
+#include "hri_costspace/human_trajectories/HRICS_spheres.hpp"
+#include "hri_costspace/human_trajectories/HRICS_squares.hpp"
+#include "hri_costspace/human_trajectories/HRICS_run_multiple_planners.hpp"
 
 #if defined( HRI_PLANNER )
 #include "hri_costspace/HRICS_HAMP.hpp"
@@ -902,8 +902,8 @@ void qt_runParallelStomp()
     if( PlanEnv->getBool(PlanParam::trajStompRunMultiple) )
     {
         // srompRun_MultipleParallel();
-        HRICS::MultipleStomp planner;
-        planner.loadTrajsFromFile( 100 );
+        HRICS::MultiplePlanners planner( global_Project->getActiveScene()->getRobotByNameContaining("ROBOT") );
+        planner.loadTrajsFromFile( "/home/jmainpri/workspace/move3d/move3d-launch/matlab/stomp_trajs/per_feature_square/ASTAR" );
 //        planner.multipleRun( 100 );
     }
     else

@@ -348,6 +348,7 @@ void HriGestureWidget::initHriIOC()
     connect( m_ui->pushButtonRunIoc, SIGNAL(clicked()), this, SLOT(runIoc()) );
 
     new connectComboBoxToEnv( m_ui->comboBoxIoc, HriEnv->getObject(HricsParam::ioc_phase) );
+    new connectComboBoxToEnv( m_ui->comboBoxPlannerType, HriEnv->getObject(HricsParam::ioc_planner_type) );
 
     new SpinBoxConnector( this, m_ui->doubleSpinBoxSpherePower, HriEnv->getObject(HricsParam::ioc_spheres_power) );
     new SpinBoxConnector( this, m_ui->spinBoxSampleIteration, HriEnv->getObject(HricsParam::ioc_sample_iteration) );
