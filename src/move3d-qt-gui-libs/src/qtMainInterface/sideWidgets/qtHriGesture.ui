@@ -35,7 +35,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>0</y>
+        <y>-7</y>
         <width>563</width>
         <height>1129</height>
        </rect>
@@ -379,6 +379,11 @@
                <item>
                 <property name="text">
                  <string>Planning per Feature</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Default</string>
                 </property>
                </item>
               </widget>
