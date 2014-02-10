@@ -361,6 +361,13 @@
             </property>
            </widget>
           </item>
+          <item row="5" column="1">
+           <widget class="QCheckBox" name="checkBoxStompNoPrint">
+            <property name="text">
+             <string>No Print</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>

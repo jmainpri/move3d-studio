@@ -114,6 +114,7 @@ void ReplanningWidget::init()
     new connectCheckBoxToEnv( m_ui->checkBoxCovAdaptation, PlanEnv->getObject(PlanParam::trajStompMatrixAdaptation) );
     new connectCheckBoxToEnv( m_ui->checkBoxStompMaxIteration, PlanEnv->getObject(PlanParam::trajStompWithIterLimit) );
     new connectCheckBoxToEnv( m_ui->checkBoxDrawParallel, PlanEnv->getObject(PlanParam::drawParallelTraj) );
+    new connectCheckBoxToEnv( m_ui->checkBoxStompNoPrint, PlanEnv->getObject(PlanParam::trajStompNoPrint) );
 
     // Stomp max iteration
     new SpinBoxConnector(this,m_ui->spinBoxStompMaxIteration,PlanEnv->getObject(PlanParam::stompMaxIteration));
