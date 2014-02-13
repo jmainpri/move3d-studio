@@ -77,6 +77,7 @@
 #include "hri_costspace/human_trajectories/HRICS_detours.hpp"
 #include "hri_costspace/human_trajectories/HRICS_spheres.hpp"
 #include "hri_costspace/human_trajectories/HRICS_squares.hpp"
+#include "hri_costspace/human_trajectories/HRICS_boxes.hpp"
 #include "hri_costspace/human_trajectories/HRICS_run_multiple_planners.hpp"
 
 #if defined( HRI_PLANNER )
@@ -181,13 +182,23 @@ void qt_init_after_params()
     {
         if( !ENV.getBool(Env::isCostSpace) )
         {
-            ENV.setBool( Env::isCostSpace, true );
             GlobalCostSpace::initialize();
-            global_costSpace->setCost( PlanEnv->getString(PlanParam::active_cost_function) );
-
         }
-        HRICS_init_sphere_cost();
-        HRICS_init_square_cost();
+
+        bool init_cost = false;
+
+        init_cost |= HRICS_init_sphere_cost();
+        cout << "init_cost : " << init_cost << endl;
+        init_cost |= HRICS_init_square_cost();
+        cout << "init_cost : " << init_cost << endl;
+        init_cost |= HRICS_init_boxes_cost();
+        cout << "init_cost : " << init_cost << endl;
+
+        if( init_cost == true )
+        {
+            ENV.setBool( Env::isCostSpace, true );
+            global_costSpace->setCost( PlanEnv->getString(PlanParam::active_cost_function) );
+        }
     }
 
     if( ENV.getBool(Env::isCostSpace) )
@@ -202,7 +213,7 @@ void qt_init_after_params()
     //        HRICS_initIverseOptimalControlFramework();
     //    }
 
-//        printJointMapping( global_Project->getActiveScene()->getRobotByName("HERAKLES_HUMAN1") );
+    printJointMapping( global_Project->getActiveScene()->getRobotByNameContaining("ROBOT") );
 }
 
 //------------------------------------------------------------------------------
