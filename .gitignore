@@ -18,7 +18,7 @@ other_libraries/
 *.sce
 *.swp
 CMakeCache*
-move3d-studio.config
-move3d-studio.creator
-move3d-studio.include
-move3d-studio.files
+*.config
+*.creator
+*.include
+*.files
