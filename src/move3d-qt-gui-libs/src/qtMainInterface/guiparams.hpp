@@ -30,6 +30,8 @@ namespace GuiParam
 
         enum intParameter
         {
+            mainwin_x,
+            mainwin_y,
             mainwin_w,
             mainwin_h
         };

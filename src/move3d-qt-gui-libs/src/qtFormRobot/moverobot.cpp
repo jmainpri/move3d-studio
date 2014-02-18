@@ -426,7 +426,7 @@ int FormRobot::calc_real_dof(void)
 void FormRobot::initSliders()
 {
     //    int       i, j, k, ir, ord;
-    int k;
+    int k=0;
     //int /*njnt,*/ nb_dof;
     //configPt robot_pos_deg;
     //p3d_rob *robotPt;

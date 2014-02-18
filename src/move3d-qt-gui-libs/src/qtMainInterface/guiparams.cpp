@@ -53,9 +53,10 @@ void initGuiParameters()
 
     // Int
     // ------------------------------------------------------------------
+    myIntMap.insert( std::make_pair( GuiParam::mainwin_x,    new intContainer(0) ));
+    myIntMap.insert( std::make_pair( GuiParam::mainwin_y,    new intContainer(0) ));
     myIntMap.insert( std::make_pair( GuiParam::mainwin_w,    new intContainer(1000) ));
     myIntMap.insert( std::make_pair( GuiParam::mainwin_h,    new intContainer(600) ));
-
 
     // Double
     // ------------------------------------------------------------------

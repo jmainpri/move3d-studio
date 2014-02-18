@@ -13,35 +13,35 @@ const int REPLOT_SIZE = 100;      // 0 to 200
  */
 class ReplottingVectors : public QwtPlot
 {
-  Q_OBJECT
-  
+    Q_OBJECT
+
 public:
-  ReplottingVectors(QWidget* = NULL);
-  int getPlotSize() { return REPLOT_SIZE; }
-  
-  void addData(const std::vector<const std::vector<double>* >& data);
-  void clearData();
-  
-  void setTimerInterval(double interval);
-  
+    ReplottingVectors(QWidget* = NULL);
+    int getPlotSize() { return REPLOT_SIZE; }
+
+    void addData(const std::vector<const std::vector<double>* >& data);
+    void clearData();
+
+    void setTimerInterval(double interval);
+
 protected:
-  virtual void timerEvent(QTimerEvent *e);
-  
+    virtual void timerEvent(QTimerEvent *e);
+
 private:
-  void alignScales();
-	
-	std::vector< QwtPlotCurve* > cData;
-  std::vector<double> Max_y;
-  QwtArray< double >								d_x;
-	std::vector< QwtArray< double > > d_y;
-  std::vector< const std::vector<double>* > m_data;
-  
-  bool init;
-  double m_Max_y;
-  double m_Min_y;
-  
-  int d_interval; // timer in ms
-  int d_timerId;
+    void alignScales();
+
+    std::vector< QwtPlotCurve* > cData;
+    std::vector<double> Max_y;
+    QwtArray< double >								d_x;
+    std::vector< QwtArray< double > > d_y;
+    std::vector< const std::vector<double>* > m_data;
+
+    bool init;
+    double m_Max_y;
+    double m_Min_y;
+
+    int d_interval; // timer in ms
+    int d_timerId;
 };
 
 #endif

@@ -76,6 +76,7 @@
 #include "hri_costspace/human_trajectories/HRICS_human_cost_space.hpp"
 #include "hri_costspace/human_trajectories/HRICS_detours.hpp"
 #include "hri_costspace/human_trajectories/HRICS_spheres.hpp"
+#include "hri_costspace/human_trajectories/HRICS_spheres_3d.hpp"
 #include "hri_costspace/human_trajectories/HRICS_squares.hpp"
 #include "hri_costspace/human_trajectories/HRICS_boxes.hpp"
 #include "hri_costspace/human_trajectories/HRICS_run_multiple_planners.hpp"
@@ -104,7 +105,6 @@ using namespace std;
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 /*
- *
  *      This file implements a pipe to read out commands from qt and
  *      pass it on to the XForms thread, the main loop runs in a
  *      distinct thread using X11 and XForms doesn't permit qt's thread to act upon X11
@@ -192,6 +192,8 @@ void qt_init_after_params()
         init_cost |= HRICS_init_square_cost();
         cout << "init_cost : " << init_cost << endl;
         init_cost |= HRICS_init_boxes_cost();
+        cout << "init_cost : " << init_cost << endl;
+        init_cost |= HRICS_init_shperes_3d_cost();
         cout << "init_cost : " << init_cost << endl;
 
         if( init_cost == true )

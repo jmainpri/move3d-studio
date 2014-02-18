@@ -461,6 +461,8 @@ void MainWindow::saveParametersQuick()
         // TODO implement some other way
         GuiEnv->setInt( GuiParam::mainwin_w, geometry().width() );
         GuiEnv->setInt( GuiParam::mainwin_h, geometry().height() );
+        GuiEnv->setInt( GuiParam::mainwin_x, geometry().x() );
+        GuiEnv->setInt( GuiParam::mainwin_y, geometry().y() );
         qt_saveGuiParameters( true, guifile );
         cout << "Saving gui parameteres at : " << guifile << endl;
         cout << "Saving interface parameters at : " << filename << endl;

@@ -40,7 +40,7 @@
 #include "hri_costspace/Gestures/HRICS_HumanPredictionCostSpace.hpp"
 #include "hri_costspace/Gestures/HRICS_GestParameters.hpp"
 #include "hri_costspace/HRICS_parameters.hpp"
-#include "hri_costspace/HumanTrajectories/HRICS_ioc.hpp"
+#include "hri_costspace/human_trajectories/HRICS_ioc.hpp"
 
 #include "planner/planEnvironment.hpp"
 #include "utils/ConfGenerator.h"

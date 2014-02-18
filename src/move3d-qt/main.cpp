@@ -372,14 +372,30 @@ void Main_threads::initInterface()
     // g_window.setHeight( 720 );
 
     cout << "set to : width = " << GuiEnv->getInt( GuiParam::mainwin_w ) << " height = " << GuiEnv->getInt( GuiParam::mainwin_h ) << endl;
+    cout << "set to : x = " << GuiEnv->getInt( GuiParam::mainwin_x ) << " y = " << GuiEnv->getInt( GuiParam::mainwin_y ) << endl;
 
     g_window.setWidth( GuiEnv->getInt( GuiParam::mainwin_w ) );
     g_window.setHeight( GuiEnv->getInt( GuiParam::mainwin_h ) );
+    g_window.setX( 0 );
+    g_window.setY( 0 );
 
     w->refreshConstraintedDoFs();
     w->setGeometry( g_window );
     w->show();
     w->raise();
+    w->move( GuiEnv->getInt( GuiParam::mainwin_x ), GuiEnv->getInt( GuiParam::mainwin_y ) );
+
+//    QDesktopWidget *desktop = QApplication::desktop();
+//    if ( 1==desktop->screenCount()  ) {
+//        // single monitor - use built in
+//        // showFullScreen();
+//        cout << "ONLY ONE MONITOR" << endl;
+//    } else {
+//        QRect rect = desktop->screenGeometry(1);
+//        w->move( p );
+//        // setWindowState(Qt::WindowFullScreen);
+//        cout << "MOVE WINDOWN TO MAIN MONITOR" << endl;
+//    }
 #endif
 }
 
