@@ -43,6 +43,7 @@
 #include "qtMainInterface/sideWidgets/qtMotionPlanner.hpp"
 #include "qtMainInterface/sideWidgets/qtRobot.hpp"
 #include "qtMainInterface/sideWidgets/qtUtil.hpp"
+#include "qtMainInterface/sideWidgets/qtHriGesture.hpp"
 
 // TODO set buttons using const char
 //#include "qtMainInterface/images/start.hpp"
@@ -209,6 +210,8 @@ public:
     QPushButton *pushButtonShowTrace;
     QPushButton *pushButtonSaveVideo;
     QSpacerItem *horizontalSpacerShowTraj2;
+    QCheckBox* checkBoxSpeedVsPlaceOnTraj;
+    QLabel* labelSpeedVsPlaceOnTraj;
     QHBoxLayout *horizontalLayoutTrajSpeed;
 
     QLabel *label;
@@ -770,6 +773,7 @@ public:
         // Layouts
         //----------------------------------------------------------------------
         vSplitter->addWidget(sidePanel);
+
         verticalLayout = new QWidget(vSplitter);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -777,11 +781,13 @@ public:
         sizePolicy2.setVerticalStretch(0);
         sizePolicy2.setHeightForWidth(verticalLayout->sizePolicy().hasHeightForWidth());
         verticalLayout->setSizePolicy(sizePolicy2);
+
         verticalLayout_2 = new QVBoxLayout(verticalLayout);
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         verticalLayout_2->setContentsMargins(-1, -1, -1, 2);
+
         hSplitter = new QSplitter(verticalLayout);
         hSplitter->setObjectName(QString::fromUtf8("hSplitter"));
         hSplitter->setOrientation(Qt::Vertical);
@@ -1019,9 +1025,17 @@ public:
                 pushButtonShowTrace = new QPushButton(groupBoxTrajectory);
                 pushButtonShowTrace->setObjectName(QString::fromUtf8("pushButtonShowTrace"));
 
-                horizontalLayoutShowTraj->addWidget(pushButtonSaveVideo);
-                horizontalLayoutShowTraj->addWidget(pushButtonShowTraj);
-                horizontalLayoutShowTraj->addWidget(pushButtonShowTrace);
+                checkBoxSpeedVsPlaceOnTraj = new QCheckBox(groupBoxTrajectory);
+                checkBoxSpeedVsPlaceOnTraj->setObjectName(QString::fromUtf8("checkBoxSpeedVsPlaceOnTraj"));
+
+                labelSpeedVsPlaceOnTraj = new QLabel(groupBoxTrajectory);
+                labelSpeedVsPlaceOnTraj->setText(QApplication::translate("MainWindow", "Speed Vs. Position", 0, QApplication::UnicodeUTF8));
+
+                horizontalLayoutShowTraj->addWidget( labelSpeedVsPlaceOnTraj );
+                horizontalLayoutShowTraj->addWidget( checkBoxSpeedVsPlaceOnTraj );
+                horizontalLayoutShowTraj->addWidget( pushButtonSaveVideo );
+                horizontalLayoutShowTraj->addWidget( pushButtonShowTraj );
+                horizontalLayoutShowTraj->addWidget( pushButtonShowTrace );
 
                 horizontalSpacerShowTraj2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
                 horizontalLayoutShowTraj->addItem(horizontalSpacerShowTraj2);
@@ -1075,6 +1089,7 @@ public:
                 pushButtonTest3 = new QPushButton(groupBoxTests);
                 pushButtonTest3->setObjectName(QString::fromUtf8("pushButtonTest3"));
                 verticalLayout_4->addWidget(pushButtonTest3);
+
 
                 horizontalLayout_3->addWidget(groupBoxTests);
             }
@@ -1299,6 +1314,7 @@ public:
                 pushButtonShowTraj->setText(QApplication::translate("MainWindow", "Show Trajectory", 0, QApplication::UnicodeUTF8));
                 pushButtonShowTrace->setText(QApplication::translate("MainWindow", "Show Trace", 0, QApplication::UnicodeUTF8));
                 label->setText(QApplication::translate("MainWindow", "Speed", 0, QApplication::UnicodeUTF8));
+
                 groupBoxTests->setTitle(QApplication::translate("MainWindow", "Tests", 0, QApplication::UnicodeUTF8));
                 pushButtonTest1->setText(QApplication::translate("MainWindow", "Test 1", 0, QApplication::UnicodeUTF8));
                 pushButtonTest2->setText(QApplication::translate("MainWindow", "Test 2", 0, QApplication::UnicodeUTF8));

@@ -57,15 +57,6 @@ HriGestureWidget::HriGestureWidget(QWidget *parent) :
     m_ui(new Ui::HriGestureWidget)
 {
     m_ui->setupUi(this);
-
-    //this->initHRI();
-    //this->initHumanLike();
-
-    initRecordedMotion();
-    initWorkspaceOccupancy();
-    initGestureRecognition();
-    initHriIOC();
-    initLegibleCost();
 }
 
 HriGestureWidget::~HriGestureWidget()
@@ -76,6 +67,17 @@ HriGestureWidget::~HriGestureWidget()
     //#endif
 }
 
+void HriGestureWidget::init()
+{
+    //this->initHRI();
+    //this->initHumanLike();
+
+    initRecordedMotion();
+    initWorkspaceOccupancy();
+    initGestureRecognition();
+    initHriIOC();
+    initLegibleCost();
+}
 
 //--------------------------------------------------------------------
 // Recorded motion
@@ -355,6 +357,9 @@ void HriGestureWidget::initHriIOC()
     new SpinBoxConnector( this, m_ui->spinBoxNbOfWayPoints, HriEnv->getObject(HricsParam::ioc_nb_of_way_points) );
 
     new SpinBoxConnector( this, m_ui->doubleSpinBoxStandardDev, HriEnv->getObject(HricsParam::ioc_sample_std_dev) );
+
+    new SpinBoxConnector( this, m_ui->spinBoxSphereLayerToDraw, HriEnv->getObject(HricsParam::ioc_spheres_to_draw) );
+    connect( m_ui->spinBoxSphereLayerToDraw, SIGNAL(valueChanged(int)), m_mainWindow, SLOT(drawAllWinActive()));
 
     connect( m_ui->pushButtonDetours,SIGNAL(clicked()),this,SLOT(runDetours()));
 //    m_ui->comboBoxIoc->setCurrentIndex(  );

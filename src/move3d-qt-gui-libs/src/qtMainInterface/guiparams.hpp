@@ -3,6 +3,8 @@
 
 #include <libmove3d/p3d/ParametersEnv.hpp>
 
+#include "mainwindow.hpp"
+
 #ifdef QT_LIBRARY
 class GuiParam : public QObject
 {
@@ -64,5 +66,9 @@ void initGuiParameters();
 #ifdef QT_LIBRARY
 extern GuiParam* EnumGuiParameterObject;
 #endif
+
+// Parameters of individual (computer, account) settings
+void qt_saveGuiParameters(bool print, std::string fileName, MainWindow* mw);
+void qt_loadGuiParameters(bool print, std::string fileName, MainWindow* mw);
 
 #endif // GUI_PARAMETERS_HPP

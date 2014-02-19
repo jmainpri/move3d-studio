@@ -357,7 +357,7 @@ void Main_threads::initInterface()
     cout << "QApplication::desktop()->screenGeometry() : ";
     cout << " x = " << g.x() << " y = " << g.y() << ", width = " << g.width() << " height = " << g.height() << endl;
 
-    QRect g_window = w->geometry();
+    // QRect g_window = w->geometry();
     // g_window.setWidth( g.width() );
     // g_window.setHeight( 0.707*g.height() ); // sqrt(2) / 2
     // g_window.moveTo( 0, 0 );
@@ -371,16 +371,16 @@ void Main_threads::initInterface()
     // g_window.setWidth( 1024 );
     // g_window.setHeight( 720 );
 
-    cout << "set to : width = " << GuiEnv->getInt( GuiParam::mainwin_w ) << " height = " << GuiEnv->getInt( GuiParam::mainwin_h ) << endl;
-    cout << "set to : x = " << GuiEnv->getInt( GuiParam::mainwin_x ) << " y = " << GuiEnv->getInt( GuiParam::mainwin_y ) << endl;
+//    cout << "set to : width = " << GuiEnv->getInt( GuiParam::mainwin_w ) << " height = " << GuiEnv->getInt( GuiParam::mainwin_h ) << endl;
+//    cout << "set to : x = " << GuiEnv->getInt( GuiParam::mainwin_x ) << " y = " << GuiEnv->getInt( GuiParam::mainwin_y ) << endl;
 
-    g_window.setWidth( GuiEnv->getInt( GuiParam::mainwin_w ) );
-    g_window.setHeight( GuiEnv->getInt( GuiParam::mainwin_h ) );
-    g_window.setX( 0 );
-    g_window.setY( 0 );
+//    g_window.setWidth( GuiEnv->getInt( GuiParam::mainwin_w ) );
+//    g_window.setHeight( GuiEnv->getInt( GuiParam::mainwin_h ) );
+//    g_window.setX( 0 );
+//    g_window.setY( 0 );
 
     w->refreshConstraintedDoFs();
-    w->setGeometry( g_window );
+//    w->setGeometry( g_window );
     w->show();
     w->raise();
     w->move( GuiEnv->getInt( GuiParam::mainwin_x ), GuiEnv->getInt( GuiParam::mainwin_y ) );

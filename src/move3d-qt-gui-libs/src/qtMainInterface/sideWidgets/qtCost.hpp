@@ -60,6 +60,7 @@ public:
 #ifdef HRI_COSTSPACE
     HricsWidget* getHriWidget();
     OtpWidget* getOtpWidget();
+    HriGestureWidget* getGestureWidget();
 #endif
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
     ReplanningWidget* getReplanningWidget();

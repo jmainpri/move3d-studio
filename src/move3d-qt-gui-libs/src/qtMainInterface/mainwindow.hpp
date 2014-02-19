@@ -1,13 +1,15 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
-#include "p3d_sys.h"
-#include "../p3d/env.hpp"
+#include <libmove3d/include/p3d_sys.h>
+#include <libmove3d/p3d/env.hpp>
+#include <libmove3d/p3d/ParametersEnv.hpp>
+
+#include <libmove3d/planners/API/Trajectory/trajectory.hpp>
 
 #include "qtMainInterface/kcdpropertieswindow.hpp"
 #include "qtBase/qt_widgets.hpp"
 #include "qtFormRobot/moverobot.hpp"
-#include "../p3d/ParametersEnv.hpp"
 
 #ifdef USE_QWT
 #include "qtPlot/histoWin.hpp"
@@ -109,6 +111,9 @@ public slots:
     void loadParametersQuick();
 
 private slots:
+    void switchSpeedVsPosition(bool enable);
+    void setRobotAlongTraj(double param);
+
     void saveInterfaceParameters();
     void loadInterfaceParameters();
     void saveParametersQuick();
@@ -162,13 +167,13 @@ signals:
 
 private:
 
-    Ui::MainWindow*							m_ui;
+    Ui::MainWindow*					m_ui;
 
-    KCDpropertiesWindow*				mKCDpropertiesWindow;
+    KCDpropertiesWindow*			mKCDpropertiesWindow;
 
     MainWindowTestFunctions*		m_testFunctions;
 
-    std::vector<QAction*>				m_RobotsInMenu;
+    std::vector<QAction*>			m_RobotsInMenu;
 
     void connectCheckBoxes();
 
@@ -176,10 +181,14 @@ private:
     void initViewerButtons();
     void initLightSource();
 
-    p3d_traj* m_currentTraj;
-
+    // Screen recording
     QTimer *timer;
     bool isRecording;
+
+    // Show traj
+    API::Trajectory current_traj_;
+    double traj_fps_tmp_;
+    long int traj_id_;
 };
 
 // Global MainWindow Pointer 

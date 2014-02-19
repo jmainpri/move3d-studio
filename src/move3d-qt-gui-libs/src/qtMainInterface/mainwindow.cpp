@@ -27,13 +27,14 @@
 
 #include "planner/planEnvironment.hpp"
 #include "planner/cost_space.hpp"
+#include "planner/TrajectoryOptim/Classic/smoothing.hpp"
+#include "planner/TrajectoryOptim/Classic/costOptimization.hpp"
 
 #include "API/planningAPI.hpp"
 #include "API/Trajectory/trajectory.hpp"
-#include "planner/TrajectoryOptim/Classic/smoothing.hpp"
+
 // Warning contains boost function that conlicts with Qt
 //#include "planner_cxx/API/Trajectory/RoboptimTrajectory.h"
-#include "planner/TrajectoryOptim/Classic/costOptimization.hpp"
 #include "API/Grids/GridToGraph/gridtograph.hpp"
 #include "API/Search/GraphState.hpp"
 #include "API/Grids/PointCloud.hpp"
@@ -44,6 +45,7 @@
 
 #include "utils/testModel.hpp"
 #include "utils/SaveContext.hpp"
+
 #include "ui_qtMotionPlanner.h"
 
 using namespace std;
@@ -76,6 +78,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_ui->tabCost->getHriWidget()->setMotionWidget(this->m_ui->tabMotionPlanner);
     m_ui->tabCost->getHriWidget()->initHRI();
     m_ui->tabCost->getOtpWidget()->setMainWindow(this);
+    m_ui->tabCost->getGestureWidget()->setMainWindow(this);
+    m_ui->tabCost->getGestureWidget()->init();
 #endif
 
     m_ui->tabCost->getDistFieldWidget()->setMainWindow(this);
@@ -106,6 +110,7 @@ MainWindow::MainWindow(QWidget *parent)
             connect(m_ui->pushButtonShowTraj,SIGNAL(clicked(bool)),this,SLOT(showTraj()),Qt::DirectConnection);
             connect(m_ui->pushButtonSaveVideo,SIGNAL(clicked(bool)),this,SLOT(saveVideo()));
             new QtShiva::SpinBoxSliderConnector( this, m_ui->doubleSpinBoxTrajSpeed, m_ui->horizontalSliderTrajSpeed , ENV.getObject(Env::showTrajFPS) );
+            connect(m_ui->checkBoxSpeedVsPlaceOnTraj, SIGNAL(toggled(bool)), this, SLOT(switchSpeedVsPosition(bool)) );
         }
     }
 
@@ -143,7 +148,7 @@ MainWindow::MainWindow(QWidget *parent)
     initRobotsMenu();
     initShortcuts();
 
-    //timer for recording
+    // timer for recording
     timer = new QTimer(this);
     connect( timer, SIGNAL(timeout()), this, SLOT(saveVideoTimer()), Qt::DirectConnection );
     isRecording = false;
@@ -420,7 +425,7 @@ void MainWindow::loadParametersQuick()
         ifstream infile( guifile.c_str() );
         if( infile.good() )
         {
-            qt_loadGuiParameters( false, guifile );
+            qt_loadGuiParameters( false, guifile, this );
             cout << "Loading gui parameters at : " << guifile << endl;
         }
 
@@ -463,7 +468,7 @@ void MainWindow::saveParametersQuick()
         GuiEnv->setInt( GuiParam::mainwin_h, geometry().height() );
         GuiEnv->setInt( GuiParam::mainwin_x, geometry().x() );
         GuiEnv->setInt( GuiParam::mainwin_y, geometry().y() );
-        qt_saveGuiParameters( true, guifile );
+        qt_saveGuiParameters( true, guifile, this );
         cout << "Saving gui parameteres at : " << guifile << endl;
         cout << "Saving interface parameters at : " << filename << endl;
         this->drawAllWinActive();
@@ -625,6 +630,35 @@ void MainWindow::showTraj()
 void MainWindow::showTrace()
 {
     G3D_DRAW_TRACE = !G3D_DRAW_TRACE;
+    drawAllWinActive();
+}
+
+void MainWindow::switchSpeedVsPosition(bool enable)
+{
+    if( enable )
+    {
+        connect( ENV.getObject(Env::showTrajFPS), SIGNAL(valueChanged(double)), this, SLOT(setRobotAlongTraj(double)));
+        traj_fps_tmp_ = ENV.getDouble( Env::showTrajFPS );
+    }
+    else
+    {
+        disconnect( ENV.getObject(Env::showTrajFPS), SIGNAL(valueChanged(double)), this, SLOT(setRobotAlongTraj(double)));
+        ENV.setDouble( Env::showTrajFPS, traj_fps_tmp_ );
+    }
+}
+
+void MainWindow::setRobotAlongTraj(double param)
+{
+    Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+    if( robot == NULL){
+        cout << "error in " << __PRETTY_FUNCTION__ << " : active robot is not defined" << endl;
+        return;
+    }
+
+    current_traj_ = robot->getCurrentTraj(); // TODO move that in  switchSpeedVsPosition
+    traj_id_ = current_traj_.Id();
+
+    robot->setAndUpdate( *current_traj_.configAtParam( (param/100)*current_traj_.getRangeMax() ) );
     drawAllWinActive();
 }
 

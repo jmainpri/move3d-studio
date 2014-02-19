@@ -138,6 +138,7 @@ QObject( _parent ), m_spinBox( _spinBox ), m_slider( _slider )
 
 SpinBoxSliderConnector::~SpinBoxSliderConnector()
 {
+
 }
 
 void SpinBoxSliderConnector::computeScaling()

@@ -136,6 +136,11 @@ OtpWidget* CostWidget::getOtpWidget()
 {
     return m_tabOtp;
 }
+
+HriGestureWidget* CostWidget::getGestureWidget()
+{
+    return m_tabGesture;
+}
 #endif
 
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
