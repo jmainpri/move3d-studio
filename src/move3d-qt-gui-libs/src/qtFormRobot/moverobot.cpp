@@ -23,6 +23,7 @@
 extern ManipulationTestFunctions* global_manipPlanTest;
 #endif
 
+using namespace Move3D;
 using namespace std;
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
@@ -69,7 +70,7 @@ void MoveRobot::initAllForms(GLWidget* ptrOpenGl)
         }
 
 //#if defined( MOVE3D_CORE )
-        Robot* ptrRob = envPt->getRobot(i);
+        Move3D::Robot* ptrRob = envPt->getRobot(i);
 
         FormRobot* form = newGridLayoutForRobotStacked( ptrRob );
 
@@ -109,7 +110,7 @@ FormRobot* MoveRobot::getRobotFormByName(string name)
     return 0x00;
 }
 
-void MoveRobot::setRobotConstraintedDof(Robot* ptrRob)
+void MoveRobot::setRobotConstraintedDof( Move3D::Robot* ptrRob)
 {
     FormRobot* form = getRobotFormByName(ptrRob->getName());
     form->resetConstraintedDoFs();
@@ -182,7 +183,7 @@ void MoveRobot::updateAllRobotInitPos()
 {
     for(unsigned int i=0;i<mRobots.size();i++)
     {
-        Robot* robot = mRobots[i]->getRobot();
+        Move3D::Robot* robot = mRobots[i]->getRobot();
         mRobots[i]->setSliders( *robot->getInitPos() );
         mRobots[i]->getComboBox()->setCurrentIndex(0);
         cout << "Set Robot " << robot->getName() << " to its initial position" << endl;
@@ -213,7 +214,7 @@ void MoveRobot::changeEvent(QEvent *e)
  * This function intialize a Robot Form from a
  * Robot structure
  */
-FormRobot* MoveRobot::newGridLayoutForRobotStacked(Robot* ptrRob)
+FormRobot* MoveRobot::newGridLayoutForRobotStacked( Move3D::Robot* ptrRob)
 {
     QString						robotName(ptrRob->getName().c_str());
     QWidget*					tab;
@@ -370,7 +371,7 @@ FormRobot* MoveRobot::newGridLayoutForRobotStacked(Robot* ptrRob)
 // FormRobot
 //---------------------------------------------------------------------
 
-FormRobot::FormRobot(Robot* R, QGridLayout* GL, QComboBox* pos, QComboBox* configs, QComboBox* trajs, GLWidget* openGl) :
+FormRobot::FormRobot( Move3D::Robot* R, QGridLayout* GL, QComboBox* pos, QComboBox* configs, QComboBox* trajs, GLWidget* openGl) :
     mRobot(R),
     mGridLayout(GL),
     mPositions(pos),

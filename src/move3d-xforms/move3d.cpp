@@ -38,7 +38,6 @@
 #endif
 
 #ifdef CXX_PLANNER
-#include <planningAPI.hpp>
 #include <cost_space.hpp>
 #include <boost/bind.hpp>
 #endif

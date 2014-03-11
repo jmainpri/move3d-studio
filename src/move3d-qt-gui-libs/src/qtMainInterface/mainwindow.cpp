@@ -30,26 +30,30 @@
 #include "planner/TrajectoryOptim/Classic/smoothing.hpp"
 #include "planner/TrajectoryOptim/Classic/costOptimization.hpp"
 
-#include "API/planningAPI.hpp"
 #include "API/Trajectory/trajectory.hpp"
 
 // Warning contains boost function that conlicts with Qt
 //#include "planner_cxx/API/Trajectory/RoboptimTrajectory.h"
 #include "API/Grids/GridToGraph/gridtograph.hpp"
-#include "API/Search/GraphState.hpp"
 #include "API/Grids/PointCloud.hpp"
 #include "API/Grids/BaseGrid.hpp"
 #include "API/Grids/TwoDGrid.hpp"
+#include "API/Search/GraphState.hpp"
 //#include "API/Roadmap2/BoostGraphTest.h"
 #include "API/Roadmap/graphConverter.hpp"
+#include "API/project.hpp"
 
 #include "utils/testModel.hpp"
 #include "utils/SaveContext.hpp"
 
+// Generated headers
 #include "ui_qtMotionPlanner.h"
+#include "ui_qtCost.h"
 
 using namespace std;
 using namespace QtShiva;
+using namespace Move3D;
+
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 extern std::string global_ActiveRobotName;
@@ -113,6 +117,17 @@ MainWindow::MainWindow(QWidget *parent)
             connect(m_ui->checkBoxSpeedVsPlaceOnTraj, SIGNAL(toggled(bool)), this, SLOT(switchSpeedVsPosition(bool)) );
         }
     }
+
+    // Tab menus
+    // cout << "GuiEnv : " << GuiEnv << endl;
+    // connect( GuiEnv->getObject(GuiParam::tab_index_main), SIGNAL(valueChanged(int)), m_ui->mainTabWidget, SLOT(setCurrentIndex(int)) );
+    connect( m_ui->mainTabWidget, SIGNAL(currentChanged(int)), GuiEnv->getObject(GuiParam::tab_index_main), SLOT(set(int)) );
+    connect( GuiEnv->getObject(GuiParam::tab_index_main), SIGNAL(valueChanged(int)), m_ui->mainTabWidget, SLOT(setCurrentIndex(int)) );
+    // m_ui->mainTabWidget->setCurrentIndex( GuiEnv->getInt(GuiParam::tab_index_main) );
+
+    connect( m_ui->tabCost->Ui()->tabWidgetCosts, SIGNAL(currentChanged(int)), GuiEnv->getObject(GuiParam::tab_index_cost), SLOT(set(int)) );
+    connect( GuiEnv->getObject(GuiParam::tab_index_cost), SIGNAL(valueChanged(int)), m_ui->tabCost->Ui()->tabWidgetCosts, SLOT(setCurrentIndex(int)) );
+    // m_ui->tabCost->Ui()->tabWidgetCosts->setCurrentIndex( GuiEnv->getInt(GuiParam::tab_index_cost) );
 
     // Connect Menu slots
     connect(m_ui->actionOpenScenario,SIGNAL(triggered()),this,SLOT(openScenario()));

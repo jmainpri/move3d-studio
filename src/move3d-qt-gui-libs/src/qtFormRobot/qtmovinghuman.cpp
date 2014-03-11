@@ -6,6 +6,9 @@
 #include "planner_handler.hpp"
 
 #include "API/project.hpp"
+#include "API/Device/robot.hpp"
+
+using namespace Move3D;
 
 MovingHuman::MovingHuman(QWidget *parent) :
     QWidget(parent),

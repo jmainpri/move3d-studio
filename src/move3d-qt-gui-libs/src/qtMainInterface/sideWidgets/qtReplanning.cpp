@@ -27,12 +27,11 @@
 #endif
 
 using namespace std;
-MOVE3D_USING_SHARED_PTR_NAMESPACE
-
-// import most common Eigen types 
-//USING_PART_OF_NAMESPACE_EIGEN
 using namespace Eigen;
 using namespace QtShiva;
+using namespace Move3D;
+
+MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 ReplanningWidget::ReplanningWidget(QWidget *parent) :
     QWidget(parent),
@@ -318,7 +317,7 @@ void ReplanningWidget::setInitMethodRadioButtons(int type)
 
 void ReplanningWidget::multiThreadGraphicalMode(bool enable)
 {
-    global_rePlanningEnv->set_multithread_graphical( enable );
+    Move3D::global_rePlanningEnv->set_multithread_graphical( enable );
 }
 
 void ReplanningWidget::setMlpCntrtsAndFixJoints()

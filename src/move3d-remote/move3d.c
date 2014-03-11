@@ -47,7 +47,6 @@
 #include "../graphic/proto/g3d_glut.hpp"
 
 #if defined( CXX_PLANNER ) || defined( MOVE3D_CORE ) 
-#include "API/planningAPI.hpp"
 #include "planner/cost_space.hpp"
 #include <boost/bind.hpp>
 #endif

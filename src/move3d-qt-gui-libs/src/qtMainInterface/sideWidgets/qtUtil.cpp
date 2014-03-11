@@ -19,6 +19,8 @@
 
 using namespace std;
 using namespace QtShiva;
+using namespace Move3D;
+
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 UtilWidget::UtilWidget(QWidget *parent) :

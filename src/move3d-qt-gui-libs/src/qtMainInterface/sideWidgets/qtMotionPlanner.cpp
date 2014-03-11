@@ -31,6 +31,7 @@
 
 #include "API/project.hpp"
 #include "API/Roadmap/compco.hpp"
+#include "API/Roadmap/node.hpp"
 #include "API/Trajectory/trajectory.hpp"
 
 #include "SaveContext.hpp"
@@ -42,6 +43,8 @@
 using std::cout;
 using std::endl;
 using namespace QtShiva;
+using namespace Move3D;
+
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 MotionPlanner::MotionPlanner(QWidget *parent) :
@@ -366,7 +369,7 @@ void MotionPlanner::cutTrajInSmallLP()
     Robot* rob =	global_Project->getActiveScene()->getActiveRobot();
     double dmax = global_Project->getActiveScene()->getDMax();
 
-    API::Trajectory traj = rob->getCurrentTraj();
+    Move3D::Trajectory traj = rob->getCurrentTraj();
 
     cout << "Cutting into small LP" << endl;
     traj.cutTrajInSmallLP( floor( traj.getRangeMax() / dmax ) );
@@ -504,7 +507,7 @@ void MotionPlanner::extractBestTraj()
 #endif
 }
 
-Node* MotionPlanner::getIthNodeInBestTraj()
+Move3D::Node* MotionPlanner::getIthNodeInBestTraj()
 {
     if (API_activeGraph == NULL) {
         cout << "Graph is NULL" << endl;
@@ -744,7 +747,7 @@ void MotionPlanner::nodeToShowChanged()
         return;
     }
 
-    std::vector<Node*> nodes = API_activeGraph->getNodes();
+    std::vector<Move3D::Node*> nodes = API_activeGraph->getNodes();
 
     if (nodes.empty()) {
         cout << "Warning :: nodes is empty!!!" << endl;
@@ -757,7 +760,7 @@ void MotionPlanner::nodeToShowChanged()
 
     if ( (ith >= 0) && ( ((int)nodes.size()) > ith) )
     {
-        Robot* rob = API_activeGraph->getRobot();
+        Move3D::Robot* rob = Move3D::API_activeGraph->getRobot();
         rob->setAndUpdate(*nodes[ith]->getConfiguration());
 
         cout << "Node number : " << nodes[ith]->getNodeStruct()->num << endl ;

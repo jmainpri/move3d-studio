@@ -13,6 +13,7 @@
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 #include <iostream>
+#include <iomanip>
 #include <algorithm>
 #include <fstream>
 #include <tr1/memory>
@@ -29,6 +30,7 @@
 #include "hri_costspace/HRICS_costspace.hpp"
 #endif
 #include "API/Search/Dijkstra/dijkstra.hpp"
+#include "API/project.hpp"
 
 #ifdef USE_QWT
 #include "qtPlot/basicPlot.hpp"
@@ -52,8 +54,11 @@
 #include "Planner-pkg.h"
 
 using namespace std;
-MOVE3D_USING_SHARED_PTR_NAMESPACE
 using namespace QtShiva;
+using namespace Move3D;
+
+MOVE3D_USING_SHARED_PTR_NAMESPACE
+
 
 // import most common Eigen types 
 //USING_PART_OF_NAMESPACE_EIGEN
@@ -449,7 +454,7 @@ void CostWidget::graphSearchTest()
     Dijkstra graphSearch(ptrGraph);
 
     cout << "graphSearch.extractTrajectory" << endl;
-    API::Trajectory* traj = graphSearch.extractTrajectory(Init,Goal);
+    Move3D::Trajectory* traj = graphSearch.extractTrajectory( Init, Goal );
 
     cout << "-------------------------------" << endl;
     cout << "Trajectory Cost = "<< traj->cost() << endl;
@@ -488,7 +493,8 @@ void CostWidget::showTrajCost()
 
     cout << "Show traj cost of robot : " << robot->getName() << endl;
 
-    API::Trajectory traj = robot->getCurrentTraj();
+    cout << "robot->getCurrentTraj()" << endl;
+    Move3D::Trajectory traj = robot->getCurrentTraj();
 
     double step = traj.getRangeMax() / double(nbSample);
 
@@ -546,7 +552,7 @@ void CostWidget::showCostProfile()
     myPlot->setGeometry( m_plot->getPlot()->geometry() );
     int nbSample = myPlot->getPlotSize();
 
-    API::Trajectory traj(new Robot(robotPt),CurrentTrajPt);
+    Move3D::Trajectory traj(new Robot(robotPt),CurrentTrajPt);
 
     //	cout << "nbSample : " << nbSample << endl;
     const double step = traj.getRangeMax() / (double) nbSample;
@@ -600,7 +606,7 @@ void CostWidget::showHRITrajCost()
 #if defined(USE_QWT)
     cout << "--------------------------------" << endl;
     Robot* robot = HRICS_humanCostMaps->getRobot();
-    API::Trajectory traj( robot->getCurrentTraj() );
+    Move3D::Trajectory traj( robot->getCurrentTraj() );
 
     MultiPlot* myPlot = new MultiPlot( m_plot );
     myPlot->setGeometry( m_plot->getPlot()->geometry() );
@@ -714,7 +720,7 @@ void CostWidget::showSTOMPTrajCost()
     std::vector<double> general_cost;
 
     if ( global_optimizer ) {
-        API::Trajectory traj( global_Project->getActiveScene()->getActiveRobot() );
+        Move3D::Trajectory traj( global_Project->getActiveScene()->getActiveRobot() );
         global_optimizer->getCostProfiles( smoothness_cost, collision_cost, general_cost );
         global_optimizer->setGroupTrajectoryToApiTraj( traj );
         traj.replaceP3dTraj();
@@ -811,15 +817,15 @@ void CostWidget::computeAStar()
         //        ptrGraph->insertNode(N);
         //        ptrGraph->linkNode(N);
 
-        API::AStar search;
-        vector<API::State*> path = search.solve(InitialState);
+        Move3D::AStar search;
+        vector<Move3D::State*> path = search.solve(InitialState);
 
         if(path.size() == 0 )
         {
             return;
         }
 
-        API::Trajectory* traj = new API::Trajectory(new Robot(XYZ_ROBOT));
+        Move3D::Trajectory* traj = new Move3D::Trajectory(new Robot(XYZ_ROBOT));
 
         for (unsigned int i=0;i<path.size();i++)
         {

@@ -25,6 +25,7 @@
 #include "planner/replanningSimulators.hpp"
 #include "planner/TrajectoryOptim/trajectoryOptim.hpp"
 
+#include "API/project.hpp"
 #include "API/Trajectory/trajectory.hpp" 
 
 #include "hri_costspace/HRICS_Miscellaneous.hpp"
@@ -50,6 +51,8 @@
 
 using namespace std;
 using namespace QtShiva;
+using namespace Move3D;
+
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 extern string global_ActiveRobotName;
@@ -190,7 +193,7 @@ void RobotWidget::initModel()
 
 void RobotWidget::printAbsPos()
 {
-    Robot* r = global_Project->getActiveScene()->getActiveRobot();
+    Move3D::Robot* r = global_Project->getActiveScene()->getActiveRobot();
 
     unsigned int joint = m_ui->spinBoxPrintAbsPos->value();
 
@@ -361,7 +364,7 @@ void RobotWidget::currentObjectChange(int i)
 //  
 //  if(m_FreeFlyers.size() > 0)
 //  {
-//    double radius = 1.5;
+//    double radius = 1.5;QtShiva
 //    //take only x and y composantes of the base
 //    double dof[2][2];
 //    for(int i = 0; i < 2; i++){
@@ -390,7 +393,7 @@ void RobotWidget::GrabObject()
         GLOBAL_AGENTS = hri_create_agents();
     }
 
-    Robot* robot = global_Project->getActiveScene()->getRobotByNameContaining("_ROBOT");
+    Move3D::Robot* robot = global_Project->getActiveScene()->getRobotByNameContaining("_ROBOT");
 
     int armId = ENV.getInt( Env::currentArmId );
     string robot_name = robot->getName();
@@ -415,7 +418,7 @@ void RobotWidget::ReleaseObject()
         GLOBAL_AGENTS = hri_create_agents();
     }
 
-    Robot* robot = global_Project->getActiveScene()->getRobotByNameContaining("_ROBOT");
+    Move3D::Robot* robot = global_Project->getActiveScene()->getRobotByNameContaining("_ROBOT");
 
     int armId = ENV.getInt( Env::currentArmId );
     string robot_name = robot->getName();
@@ -433,7 +436,7 @@ void RobotWidget::ReleaseObject()
 
 void RobotWidget::SetBounds()
 {
-    Robot* robot = global_Project->getActiveScene()->getRobotByNameContaining("_ROBOT");
+    Move3D::Robot* robot = global_Project->getActiveScene()->getRobotByNameContaining("_ROBOT");
 
     confPtr_t q = robot->getCurrentPos();
 
@@ -467,7 +470,7 @@ void RobotWidget::SetBounds()
 
 void RobotWidget::printCurrentPos()
 {
-    Robot* currRobot = global_Project->getActiveScene()->getActiveRobot();
+    Move3D::Robot* currRobot = global_Project->getActiveScene()->getActiveRobot();
     currRobot->getCurrentPos()->print(true);
 
     HRICS::printPr2Config();
@@ -485,7 +488,7 @@ void RobotWidget::switchFKIK()
 
 void RobotWidget::printPQPColPair()
 {
-    Robot* currRobot = global_Project->getActiveScene()->getActiveRobot();
+    Move3D::Robot* currRobot = global_Project->getActiveScene()->getActiveRobot();
 
     if(  currRobot->getCurrentPos()->isInCollision() )
     {
@@ -1064,7 +1067,7 @@ void RobotWidget::getVisballPos()
 {
     if( global_manipPlanTest != NULL )
     {
-        Robot* rob = global_Project->getActiveScene()->getRobotByName("VISBALL_INTERNAL");
+        Move3D::Robot* rob = global_Project->getActiveScene()->getRobotByName("VISBALL_INTERNAL");
 
         if( rob != NULL )
         {
@@ -1111,7 +1114,7 @@ void RobotWidget::resetManipulationData()
         global_manipPlanTest->resetToPoint();
     }
 
-    Robot* rob = global_Project->getActiveScene()->getRobotByNameContaining( global_ActiveRobotName );
+    Move3D::Robot* rob = global_Project->getActiveScene()->getRobotByNameContaining( global_ActiveRobotName );
     //  Robot* rob = global_Project->getActiveScene()->getRobotByName(rob1->name);
 
     qInit = rob->getInitPos();
@@ -1312,8 +1315,8 @@ void RobotWidget::makeSoftmotionTraj()
 
 void RobotWidget::makeNormalTraj()
 {
-    Robot* robot = global_Project->getActiveScene()->getActiveRobot();
-    API::Trajectory traj(robot);
+    Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+    Move3D::Trajectory traj(robot);
 
     for(int i=(robot->getRobotStruct()->nconf-1) ; i>0; i--)
     {
@@ -1371,7 +1374,7 @@ void RobotWidget::deleteConfig()
 void RobotWidget::on_spinBoxNavigate_valueChanged(int value)
 {
     p3d_rob* robot = p3d_get_robot_by_name(global_ActiveRobotName.c_str());
-    Robot* rob = new Robot(robot);
+    Move3D::Robot* rob = new Move3D::Robot(robot);
     if ( (value < robot->nconf) && (value > 0))
     {
         configPt conf = robot->conf[value]->q;

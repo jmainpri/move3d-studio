@@ -102,6 +102,8 @@ extern ManipulationTestFunctions* global_manipPlanTest;
 const char *qt_fileName = NULL;
 
 using namespace std;
+using namespace Move3D;
+
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 /*
@@ -117,7 +119,7 @@ MOVE3D_USING_SHARED_PTR_NAMESPACE
 extern void* GroundCostObj;
 
 //! This function prints the joint mapping of a robot
-void printJointMapping( Robot* rob )
+void printJointMapping( Move3D::Robot* rob )
 {
     if( rob == NULL)
         return;
@@ -187,14 +189,14 @@ void qt_init_after_params()
 
         bool init_cost = false;
 
-        init_cost |= HRICS_init_sphere_cost();
-        cout << "init_cost : " << init_cost << endl;
-        init_cost |= HRICS_init_square_cost();
         cout << "init_cost : " << init_cost << endl;
         init_cost |= HRICS_init_boxes_cost();
         cout << "init_cost : " << init_cost << endl;
         init_cost |= HRICS_init_shperes_3d_cost();
         cout << "init_cost : " << init_cost << endl;
+        init_cost |= HRICS_init_sphere_cost();
+        cout << "init_cost : " << init_cost << endl;
+        init_cost |= HRICS_init_square_cost();
 
         if( init_cost == true )
         {
@@ -250,7 +252,7 @@ void qt_test1()
     //  confPtr_t q_init = robot->getInitPos();
     //  confPtr_t q_goal = robot->getGoalPos();
 
-    //  API::Trajectory* path_ = m_navigation->computeRobotTrajectory( q_init, q_goal );
+    //  Move3D::Trajectory* path_ = m_navigation->computeRobotTrajectory( q_init, q_goal );
 
     //  if( path_ )
     //    path_->replaceP3dTraj();
@@ -293,7 +295,7 @@ void qt_test2()
     //  }
 
     cout << "Clear traj" << endl;
-    Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+    Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
     p3d_destroy_traj( robot->getRobotStruct(), robot->getRobotStruct()->tcur );
 
     if( global_rePlanningEnv != NULL )
@@ -396,7 +398,7 @@ void qt_test3()
     //    confPtr_t q_rob(new Configuration(robot,q));
     //
     //    // Generate trajectory
-    //    API::CostOptimization optim( robot->getCurrentTraj() );
+    //    Move3D::CostOptimization optim( robot->getCurrentTraj() );
     //    double step = optim.getRangeMax() / 10;
     //    cout << "Connect configuration " << endl;
     //    optim.connectConfiguration( q_rob, step );
@@ -446,7 +448,7 @@ void qt_resetGraph()
 void qt_runDiffusion()
 {
     cout << "Run Diffusion" << endl;
-    Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+    Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
 
     try
     {
@@ -494,7 +496,7 @@ void qt_runDiffusion()
 void qt_runPRM()
 {
     cout << "Run Probabilistic Road Map" << endl;
-    Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+    Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
 
     try
     {
@@ -558,7 +560,7 @@ void qt_runMultiSmooth()
 
 void qt_runAStarPlanning()
 {
-    Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+    Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
     confPtr_t q_init = robot->getInitPos();
     confPtr_t q_goal = robot->getGoalPos();
 
@@ -567,7 +569,7 @@ void qt_runAStarPlanning()
     planner->set_pace( PlanEnv->getDouble(PlanParam::grid_pace) );
     planner->init();
 
-    API::Trajectory* traj = planner->computeRobotTrajectory( q_init, q_goal );
+    Move3D::Trajectory* traj = planner->computeRobotTrajectory( q_init, q_goal );
 
     if( traj != NULL )
     {
@@ -582,7 +584,7 @@ void qt_runAStarInCurrentGraph()
 {
     if( API_activeGraph)
     {
-        Robot* robot = API_activeGraph->getRobot();
+        Move3D::Robot* robot = API_activeGraph->getRobot();
 
         // API_activeGraph->extractBestAStarPathSoFar( robot->getInitPos(), robot->getGoalPos() );
         API_activeGraph->extractDijkstraShortestPathsTraj( robot->getInitPos(), robot->getGoalPos() );
@@ -604,7 +606,7 @@ void qt_makeGridGraph()
 {
     cout << "Make Grid Graph" << endl;
     graphSampler sampler;
-    sampler.makeGrid(3);
+    sampler.makeGrid(6);
 }
 
 void qt_generateDetours()
@@ -814,7 +816,7 @@ HRICS::Navigation* navPlanner = NULL;
 void qt_computeAStar()
 {
     cout << "Compute AStar" <<  endl;
-    Robot* rob;
+    Move3D::Robot* rob;
 
     if (navPlanner == NULL)
     {
@@ -921,7 +923,7 @@ void qt_runParallelStomp()
     }
     else
     {
-        srompRun_OneParallel();
+        stomp_motion_planner::srompRun_OneParallel();
     }
 }
 
@@ -1015,7 +1017,7 @@ void qt_showTraj()
     if (PlanEnv->getBool(PlanParam::env_showHumanTraj))
     {
         p3d_rob *hum_robotPt;
-        Robot* rob = global_Project->getActiveScene()->getRobotByNameContaining("HUMAN");
+        Move3D::Robot* rob = global_Project->getActiveScene()->getRobotByNameContaining("HUMAN");
         if (rob)
         {
             hum_robotPt = rob->getRobotStruct();
@@ -1034,10 +1036,10 @@ void qt_showTraj()
  */
 void qt_shortCut()
 {
-    Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+    Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
 
     cout << "Random shortCut for robot : " << robot->getName() << endl;
-    API::Smoothing optimTrj(robot->getCurrentTraj());
+    Move3D::Smoothing optimTrj(robot->getCurrentTraj());
     optimTrj.runShortCut(PlanEnv->getInt(PlanParam::smoothMaxIterations));
     optimTrj.replaceP3dTraj();
 
@@ -1050,10 +1052,10 @@ void qt_shortCut()
  */
 void qt_optimize()
 {
-    Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+    Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
 
     cout << "Random deformation for robot : " << robot ->getName()<< endl;
-    API::CostOptimization optimTrj(robot->getCurrentTraj());
+    Move3D::CostOptimization optimTrj(robot->getCurrentTraj());
     optimTrj.runDeformation(PlanEnv->getInt(PlanParam::smoothMaxIterations));
     optimTrj.replaceP3dTraj();
 
@@ -1071,8 +1073,8 @@ void qt_oneStepOptim()
 
     //	  	p3d_SetIsCostFuncSpace(TRUE);
 #ifdef MOVE3D_CORE
-    Robot* trajRobot = new Robot(robotPt);
-    API::CostOptimization optimTrj(trajRobot,CurrentTrajPt);
+    Move3D::Robot* trajRobot = new Move3D::Robot(robotPt);
+    Move3D::CostOptimization optimTrj(trajRobot,CurrentTrajPt);
 
     optimTrj.oneLoopDeform();
     //		optimTrj.removeRedundantNodes();
@@ -1097,8 +1099,8 @@ void qt_removeRedundantNodes()
         PrintInfo(("Warning: no current trajectory to optimize\n"));
     }
 #ifdef MOVE3D_CORE
-    Robot* trajRobot = new Robot(robotPt);
-    API::CostOptimization optimTrj(trajRobot,CurrentTrajPt);
+    Move3D::Robot* trajRobot = new Move3D::Robot(robotPt);
+    Move3D::CostOptimization optimTrj(trajRobot,CurrentTrajPt);
     delete trajRobot;
 
     optimTrj.removeRedundantNodes();
@@ -1251,7 +1253,7 @@ void qt_load_HRICS_Grid(std::string docname)
 #ifdef HRI_COSTSPACE
     ENV.setBool(Env::drawGrid,false);
 
-    Robot* human = global_Project->getActiveScene()->getRobotByNameContaining("HUMAN");
+    Move3D::Robot* human = global_Project->getActiveScene()->getRobotByNameContaining("HUMAN");
 
     HRICS_activeNatu  = new HRICS::Natural( human );
 

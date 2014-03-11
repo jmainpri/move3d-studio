@@ -35,9 +35,12 @@
 #include "hri_costspace/HRICS_costspace.hpp"
 #include "planner/planEnvironment.hpp"
 #include "utils/ConfGenerator.h"
+#include "API/project.hpp"
 
 using namespace std;
 using namespace QtShiva;
+using namespace Move3D;
+
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 extern Eigen::Vector3d global_DrawnSphere;
@@ -281,7 +284,7 @@ void HricsWidget::set_X_line(bool enable)
 {	
     if (enable && API_activeGrid)
     {
-        unsigned int maxLines = dynamic_cast<API::ThreeDGrid*>(API_activeGrid)->getXNumberOfCells();
+        unsigned int maxLines = dynamic_cast<Move3D::ThreeDGrid*>(API_activeGrid)->getXNumberOfCells();
         m_ui->doubleSpinBoxWhichGridLine->setMaximum(maxLines);
     }
 
@@ -292,7 +295,7 @@ void HricsWidget::set_Y_line(bool enable)
 {
     if (enable && API_activeGrid)
     {
-        unsigned int maxLines = dynamic_cast<API::ThreeDGrid*>(API_activeGrid)->getYNumberOfCells();
+        unsigned int maxLines = dynamic_cast<Move3D::ThreeDGrid*>(API_activeGrid)->getYNumberOfCells();
         m_ui->doubleSpinBoxWhichGridLine->setMaximum(maxLines);
     }
 
@@ -304,7 +307,7 @@ void HricsWidget::set_Z_line(bool enable)
 {
     if (enable && API_activeGrid)
     {
-        unsigned int maxLines = dynamic_cast<API::ThreeDGrid*>(API_activeGrid)->getZNumberOfCells();
+        unsigned int maxLines = dynamic_cast<Move3D::ThreeDGrid*>(API_activeGrid)->getZNumberOfCells();
         m_ui->doubleSpinBoxWhichGridLine->setMaximum(maxLines);
     }
 

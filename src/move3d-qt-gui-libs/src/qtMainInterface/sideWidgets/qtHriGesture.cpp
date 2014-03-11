@@ -12,6 +12,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 #include <tr1/memory>
 #include <boost/bind.hpp>
 #include <sys/time.h>
@@ -44,8 +45,10 @@
 
 #include "planner/planEnvironment.hpp"
 #include "utils/ConfGenerator.h"
+#include "API/project.hpp"
 
 using namespace QtShiva;
+using namespace Move3D;
 using std::cout;
 using std::endl;
 MOVE3D_USING_SHARED_PTR_NAMESPACE

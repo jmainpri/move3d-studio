@@ -20,7 +20,10 @@
 // Foward declaration of class Node
 // problem with boost graph and moc (until fix is not node)
 // do not include boost graph in Qt headers
-class Node;
+namespace Move3D
+{
+    class Node;
+}
 
 #ifdef USE_QWT
 #include "qtPlot/basicPlotWindow.hpp"
@@ -45,11 +48,11 @@ public:
 
     void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
 
-    Node* getIthNodeInActiveGraph();
+    Move3D::Node* getIthNodeInActiveGraph();
     Ui::MotionPlanner* getMui(){return m_ui;}
 
 public slots:
-    Node* getIthNodeInBestTraj();
+    Move3D::Node* getIthNodeInBestTraj();
 
 private slots:
 

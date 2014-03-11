@@ -186,7 +186,7 @@ private:
     bool isRecording;
 
     // Show traj
-    API::Trajectory current_traj_;
+    Move3D::Trajectory current_traj_;
     double traj_fps_tmp_;
     long int traj_id_;
 };

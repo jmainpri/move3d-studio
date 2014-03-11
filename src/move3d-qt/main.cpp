@@ -35,6 +35,7 @@ extern bool move3d_studio_load_settings;
 extern std::string move3d_studio_settings_file;
 
 using namespace std;
+using namespace Move3D;
 
 /**
  * @ingroup qtWindow
@@ -320,9 +321,11 @@ void Main_threads::loadSettings()
 void Main_threads::initInterface()
 {
 #ifdef QT_UI_XML_FILES
+    // Sets up gui specific parameter structure
+    initGuiParameters();
+
     MainWindow* w = new MainWindow();
     global_w = w;
-
 
     // Start
     connect( w, SIGNAL(runClicked()), this, SLOT(selectPlanner()));
@@ -337,9 +340,6 @@ void Main_threads::initInterface()
     connect( global_plannerHandler, SIGNAL(plannerIsReset()), w, SLOT(enableRunButton()));
     connect( global_plannerHandler, SIGNAL(plannerIsReset()), w, SLOT(drawAllWinActive()));
     //  w.showMaximized();
-
-    // Sets up gui specific parameter structure
-    initGuiParameters();
 
     if( move3d_studio_load_settings )
     {

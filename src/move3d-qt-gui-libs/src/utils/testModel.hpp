@@ -9,7 +9,9 @@
 #define TESTMODEL_HPP_
 
 #ifndef ROBOT_HPP
+namespace Move3D {
 class Robot;
+}
 #endif
 
 /**
@@ -37,7 +39,7 @@ public:
 	void runAllTests();
 
 private:
-	Robot* modelRobot;
+    Move3D::Robot* modelRobot;
 
 	int nbColisionTest;
 	int nbLocalPathTest;

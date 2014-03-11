@@ -63,6 +63,9 @@ void initGuiParameters()
     myIntMap.insert( std::make_pair( GuiParam::mainwin_y,    new intContainer(0) ));
     myIntMap.insert( std::make_pair( GuiParam::mainwin_w,    new intContainer(1000) ));
     myIntMap.insert( std::make_pair( GuiParam::mainwin_h,    new intContainer(600) ));
+    myIntMap.insert( std::make_pair( GuiParam::tab_index_main,    new intContainer(-1) ));
+    myIntMap.insert( std::make_pair( GuiParam::tab_index_cost,    new intContainer(-1) ));
+
 
     // Double
     // ------------------------------------------------------------------
@@ -100,6 +103,67 @@ void initGuiParameters()
 //////////////////////////////////////////////////////////////////////////////
 
 //! Save gui settings
+void qt_saveGuiParameters( bool print, std::string fileName, MainWindow* mw )
+{
+    QSettings settings(QString(fileName.c_str()), QSettings::IniFormat);
+    QMetaEnum metaEnum;
+
+    const QMetaObject* metaObject = EnumGuiParameterObject->metaObject();
+
+    settings.beginGroup("GuiParam");
+
+    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "boolParameter" ) );
+    settings.beginGroup("boolParameter");
+    for( int i=0;i<metaEnum.keyCount();i++)
+    {
+        cout << "Key : " << metaEnum.key(i);
+        cout << " , Value : " << GuiEnv->getBool(GuiParam::boolParameter(i)) << endl;
+        settings.setValue( QString(metaEnum.key(i)), GuiEnv->getBool(GuiParam::boolParameter(i)));
+    }
+    settings.endGroup();
+
+    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "intParameter" ) );
+    settings.beginGroup("intParameter");
+    cout << "---------------------------" << endl;
+    for( int i=0;i<metaEnum.keyCount();i++)
+    {
+        cout << "Key : " << metaEnum.key(i);
+        cout << " , Value : " << GuiEnv->getInt(GuiParam::intParameter(i)) << endl;
+        settings.setValue(QString(metaEnum.key(i)), GuiEnv->getInt(GuiParam::intParameter(i)));
+    }
+    settings.endGroup();
+
+    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "doubleParameter" ) );
+    settings.beginGroup("doubleParameter");
+    cout << "---------------------------" << endl;
+    for( int i=0;i<metaEnum.keyCount();i++)
+    {
+        cout << "Key : " << metaEnum.key(i);
+        cout << " , Value : " << GuiEnv->getDouble(GuiParam::doubleParameter(i)) << endl;
+        settings.setValue( QString(metaEnum.key(i)), GuiEnv->getDouble(GuiParam::doubleParameter(i)));
+    }
+    settings.endGroup();
+
+    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "stringParameter" ) );
+    settings.beginGroup("stringParameter");
+    cout << "---------------------------" << endl;
+    for( int i=0;i<metaEnum.keyCount();i++)
+    {
+        cout << "Key : " << metaEnum.key(i);
+        cout << " , Value : " << GuiEnv->getString(GuiParam::stringParameter(i)) << endl;
+        settings.setValue( QString(metaEnum.key(i)), QString(GuiEnv->getString(GuiParam::stringParameter(i)).c_str()) );
+    }
+    settings.endGroup();
+
+    settings.setValue("splitterSizes", mw->Ui()->vSplitter->saveState());
+    settings.setValue("mainWindowGeometry", mw->saveGeometry());
+    settings.setValue("mainWindowState", mw->saveState());
+
+    settings.endGroup();
+}
+
+
+//! Load gui settings
 void qt_loadGuiParameters(bool print, std::string fileName, MainWindow* mw)
 {
     QSettings settings(QString(fileName.c_str()), QSettings::IniFormat);
@@ -179,64 +243,3 @@ void qt_loadGuiParameters(bool print, std::string fileName, MainWindow* mw)
 
     settings.endGroup();
 }
-
-//! Load gui settings
-void qt_saveGuiParameters( bool print, std::string fileName, MainWindow* mw )
-{
-    QSettings settings(QString(fileName.c_str()), QSettings::IniFormat);
-    QMetaEnum metaEnum;
-
-    const QMetaObject* metaObject = EnumGuiParameterObject->metaObject();
-
-    settings.beginGroup("GuiParam");
-
-    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "boolParameter" ) );
-    settings.beginGroup("boolParameter");
-    for( int i=0;i<metaEnum.keyCount();i++)
-    {
-        cout << "Key : " << metaEnum.key(i);
-        cout << " , Value : " << GuiEnv->getBool(GuiParam::boolParameter(i)) << endl;
-        settings.setValue( QString(metaEnum.key(i)), GuiEnv->getBool(GuiParam::boolParameter(i)));
-    }
-    settings.endGroup();
-
-    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "intParameter" ) );
-    settings.beginGroup("intParameter");
-    cout << "---------------------------" << endl;
-    for( int i=0;i<metaEnum.keyCount();i++)
-    {
-        cout << "Key : " << metaEnum.key(i);
-        cout << " , Value : " << GuiEnv->getInt(GuiParam::intParameter(i)) << endl;
-        settings.setValue(QString(metaEnum.key(i)), GuiEnv->getInt(GuiParam::intParameter(i)));
-    }
-    settings.endGroup();
-
-    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "doubleParameter" ) );
-    settings.beginGroup("doubleParameter");
-    cout << "---------------------------" << endl;
-    for( int i=0;i<metaEnum.keyCount();i++)
-    {
-        cout << "Key : " << metaEnum.key(i);
-        cout << " , Value : " << GuiEnv->getDouble(GuiParam::doubleParameter(i)) << endl;
-        settings.setValue( QString(metaEnum.key(i)), GuiEnv->getDouble(GuiParam::doubleParameter(i)));
-    }
-    settings.endGroup();
-
-    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "stringParameter" ) );
-    settings.beginGroup("stringParameter");
-    cout << "---------------------------" << endl;
-    for( int i=0;i<metaEnum.keyCount();i++)
-    {
-        cout << "Key : " << metaEnum.key(i);
-        cout << " , Value : " << GuiEnv->getString(GuiParam::stringParameter(i)) << endl;
-        settings.setValue( QString(metaEnum.key(i)), QString(GuiEnv->getString(GuiParam::stringParameter(i)).c_str()) );
-    }
-    settings.endGroup();
-
-    settings.setValue("splitterSizes", mw->Ui()->vSplitter->saveState());
-    settings.setValue("mainWindowGeometry", mw->saveGeometry());
-    settings.setValue("mainWindowState", mw->saveState());
-
-    settings.endGroup();
-}
-

@@ -31,9 +31,12 @@
 #include "qtMotionPlanner.hpp"
 
 #include "hri_costspace/HRICS_costspace.hpp"
+#include "API/project.hpp"
 
 using namespace std;
 using namespace QtShiva;
+using namespace Move3D;
+
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 extern Eigen::Vector3d global_DrawnSphere;
@@ -313,7 +316,7 @@ void NaturalWidget::setActiveGrid(int ith_grid)
     else
     {
         ENV.setBool(Env::drawGrid,true);
-        //vector<API::BaseGrid*> API_allGrids = api_get_all_grids();
+        //vector<Move3D::BaseGrid*> API_allGrids = api_get_all_grids();
         //API_activeGrid = API_allGrids[ith_grid-1];
     }
 
@@ -323,7 +326,7 @@ void NaturalWidget::setActiveGrid(int ith_grid)
 void NaturalWidget::mergeGrids()
 {
     cout << "Broken, fix!!" << endl;
-    //vector<API::BaseGrid*> API_allGrids = api_get_all_grids();
+    //vector<Move3D::BaseGrid*> API_allGrids = api_get_all_grids();
 
 //    HRICS::NaturalGrid* first = dynamic_cast<HRICS::NaturalGrid*>(API_allGrids[0]);
 //    HRICS::NaturalGrid* secon = dynamic_cast<HRICS::NaturalGrid*>(API_allGrids[1]);

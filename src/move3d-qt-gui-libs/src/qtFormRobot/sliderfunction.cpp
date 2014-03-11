@@ -21,6 +21,7 @@
 
 #include "API/ConfigSpace/configuration.hpp"
 #include "API/Device/robot.hpp"
+#include "API/project.hpp"
 
 #include "p3d/env.hpp"
 
@@ -29,7 +30,9 @@
 
 #include <sys/time.h>
 
+using namespace Move3D;
 using namespace std;
+
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 static bool recompute_cost=true;

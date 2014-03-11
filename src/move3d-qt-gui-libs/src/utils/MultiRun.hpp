@@ -32,7 +32,7 @@ private:
   std::vector< double >                    mTime;
   std::vector< std::vector<double> >       mConvergence;
   
-  Robot* mRobot;
+  Move3D::Robot* mRobot;
 };
 
 #endif // MULTIRUNS_HPP

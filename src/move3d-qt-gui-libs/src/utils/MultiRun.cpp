@@ -4,6 +4,7 @@
 #include "API/project.hpp"
 #include "API/Roadmap/graph.hpp"
 #include "API/Roadmap/graphConverter.hpp"
+
 #include "planner/planEnvironment.hpp"
 #include "planner/plannerFunctions.hpp"
 #include "planner/TrajectoryOptim/Classic/smoothing.hpp"
@@ -26,6 +27,8 @@
 #include <algorithm>
 
 using namespace std;
+using namespace Move3D;
+
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 MultiRun::MultiRun()
@@ -167,7 +170,7 @@ void MultiRun::runMultiRRT()
                 //                ENV.setBool(Env::isCostSpace,true);
 
                 Robot currRobot((p3d_rob *) p3d_get_desc_curid(P3D_ROBOT));
-                API::Trajectory Traj(
+                Move3D::Trajectory Traj(
                                                          &currRobot,
                                                          currRobot.getTrajStruct());
                 if(XYZ_GRAPH==NULL)
@@ -322,7 +325,7 @@ void MultiRun::runMultiGreedy()
 
             Robot currRobot((p3d_rob *) p3d_get_desc_curid(P3D_ROBOT));
 
-            API::Smoothing optimTrj(
+            Move3D::Smoothing optimTrj(
                                                             &currRobot,
                                                             currRobot.getTrajStruct());
 
@@ -551,7 +554,7 @@ void MultiRun::runMultiSmooth()
       continue;
     }
 
-        API::CostOptimization optimTrj( mRobot, mRobot->getTrajStruct() );
+        Move3D::CostOptimization optimTrj( mRobot, mRobot->getTrajStruct() );
 
         cout << "Run Nb"  << i << " = " << endl;
 

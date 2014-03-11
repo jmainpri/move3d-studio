@@ -72,6 +72,8 @@ public slots:
     void setCostFunction(int costFunctionId);
     void initCostSpace();
 
+    Ui::CostWidget* Ui() { return m_ui; }
+
 private slots:
 
     // General Cost --------------------------------

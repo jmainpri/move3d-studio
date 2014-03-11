@@ -35,7 +35,9 @@ namespace GuiParam
             mainwin_x,
             mainwin_y,
             mainwin_w,
-            mainwin_h
+            mainwin_h,
+            tab_index_main,
+            tab_index_cost
         };
 
         enum doubleParameter

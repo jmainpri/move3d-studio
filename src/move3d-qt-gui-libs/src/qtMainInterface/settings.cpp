@@ -29,6 +29,7 @@
 #include <QtCore/QMetaProperty>
 #include <QtCore/QSettings>
 
+using namespace Move3D;
 using namespace std;
 
 //---------------------------------------------------------

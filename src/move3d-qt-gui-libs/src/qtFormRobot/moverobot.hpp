@@ -34,7 +34,7 @@ class DofSlider : public QObject
 public:
     DofSlider() {}
 
-    DofSlider(Robot* R, GLWidget* Gl, FormRobot* FR) :
+    DofSlider( Move3D::Robot* R, GLWidget* Gl, FormRobot* FR) :
         mRobot(R),
         mOpenGl(Gl),
         mFormRobot(FR)
@@ -50,7 +50,7 @@ public:
     /**
      * Creates a slider with a spinbox and a label
      */
-    void makeSlider(QGridLayout* gridLayout, Joint *jntPt, int DofNumOnJnt);
+    void makeSlider(QGridLayout* gridLayout, Move3D::Joint *jntPt, int DofNumOnJnt);
 
     void setValue(double value) { mConnector->setValue(value); }
 
@@ -61,7 +61,7 @@ public:
 
 
 #if defined( MOVE3D_CORE ) 
-    Robot* getRobot() { return mRobot; }
+    Move3D::Robot* getRobot() { return mRobot; }
 #endif
 
 public slots:
@@ -70,7 +70,7 @@ public slots:
 
 private:
 #if defined( MOVE3D_CORE ) 
-    Robot*  mRobot;
+    Move3D::Robot*  mRobot;
 #endif
 
     int								mDofNum;
@@ -95,7 +95,7 @@ class FormRobot : public QObject {
     Q_OBJECT
 
 public:
-    FormRobot(Robot* R, QGridLayout* GL, QComboBox* pos, QComboBox* configs, QComboBox* trajs, GLWidget* openGl);
+    FormRobot( Move3D::Robot* R, QGridLayout* GL, QComboBox* pos, QComboBox* configs, QComboBox* trajs, GLWidget* openGl);
 
     ~FormRobot() {}
 
@@ -107,13 +107,13 @@ public:
     /**
      * Sets the associated sliders to the values int ptrConf
      */
-    void setSliders(Configuration& ptrConf);
+    void setSliders( Move3D::Configuration& ptrConf );
 
 
     /**
      * Returns the robot structure
      */
-    Robot* getRobot() { return mRobot; }
+    Move3D::Robot* getRobot() { return mRobot; }
 
     /**
      *
@@ -176,7 +176,7 @@ private:
 
     int calc_real_dof(void);
 
-    Robot*                      mRobot;
+    Move3D::Robot*              mRobot;
 
     std::vector<DofSlider*>		mSliders;
     QGridLayout*				mGridLayout;
@@ -184,7 +184,7 @@ private:
     QComboBox*					mPositions;
 
     QComboBox*                  mConfigNames;
-    std::vector< MOVE3D_PTR_NAMESPACE::shared_ptr<Configuration> >	mConfigurations;
+    std::vector< Move3D::confPtr_t >	mConfigurations;
 
     QComboBox*					mTrajectoriesNames;
     std::vector<p3d_traj*>		mTrajectories;
@@ -223,7 +223,7 @@ public:
     /**
      * Sets the constraints
      */
-    void setRobotConstraintedDof(Robot* ptrRob);
+    void setRobotConstraintedDof( Move3D::Robot* ptrRob );
 
     /**
    * Refresh all constrainted DoFs
@@ -231,7 +231,7 @@ public:
     void refreshConstraintedDoFs();
 
 protected:
-    void changeEvent(QEvent *e);
+    void changeEvent( QEvent *e );
 
 private:
     Ui::MoveRobot *m_ui;
@@ -240,24 +240,24 @@ private:
     /**
      * Creates a new gridLayout inside a tabWidget
      */
-    //FormRobot* newGridLayoutForRobot(Robot* ptrRob);
-    FormRobot* newGridLayoutForRobotStacked(Robot* ptrRob);
+    //FormRobot* newGridLayoutForRobot( Move3D::Robot* ptrRob);
+    FormRobot* newGridLayoutForRobotStacked( Move3D::Robot* ptrRob);
 
 #endif
 
     /**
      * Members
      */
-    std::vector<FormRobot*>			mRobots;
+    std::vector<FormRobot*>		mRobots;
 
     // Tab Widget
     QTabWidget*                 mTabWidget;
 
     // Stacked Widgets
-    QStackedLayout*							m_StackedLayout;
-    QComboBox*									m_pageComboBox;
+    QStackedLayout*				m_StackedLayout;
+    QComboBox*					m_pageComboBox;
 
-    GLWidget*										mOpenGl;
+    GLWidget*					mOpenGl;
 };
 
 #endif // MOVEROBOT_HPP
