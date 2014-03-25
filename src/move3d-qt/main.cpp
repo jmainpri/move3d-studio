@@ -643,6 +643,7 @@ int main(int argc, char *argv[])
     move3d_set_api_functions_localpath();
     move3d_set_api_functions_robot();
     move3d_set_api_functions_joint();
+    move3d_set_api_functions_draw();
 
     enum DisplayMode
     {
