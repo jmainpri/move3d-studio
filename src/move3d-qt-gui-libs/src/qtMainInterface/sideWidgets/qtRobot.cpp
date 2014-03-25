@@ -453,17 +453,17 @@ void RobotWidget::SetBounds()
     
     for ( int j=2; j<int(robot->getNumberOfJoints()); j++ )
     {
-        if( robot->getJoint(j)->getJointStruct()->type == P3D_FREEFLYER )
+        if( robot->getJoint(j)->getP3dJointStruct()->type == P3D_FREEFLYER )
         {
             cout << "set joint : " << robot->getJoint(j)->getName() << " bounds" << endl;
 
             for ( int k=0; k<3; k++ )
             {
-                p3d_jnt_set_dof_bounds_deg (      robot->getRobotStruct()->joints[j], k, limits[2*k], limits[2*k+1] );
-                p3d_jnt_set_dof_rand_bounds_deg ( robot->getRobotStruct()->joints[j], k, limits[2*k], limits[2*k+1] );
+                p3d_jnt_set_dof_bounds_deg (      robot->getP3dRobotStruct()->joints[j], k, limits[2*k], limits[2*k+1] );
+                p3d_jnt_set_dof_rand_bounds_deg ( robot->getP3dRobotStruct()->joints[j], k, limits[2*k], limits[2*k+1] );
             }
 
-            robot->getRobotStruct()->joints[j]->dist = 0.10;
+            robot->getP3dRobotStruct()->joints[j]->dist = 0.10;
         }
     }
 }
@@ -1119,7 +1119,7 @@ void RobotWidget::resetManipulationData()
 
     qInit = rob->getInitPos();
     qGoal = rob->getGoalPos();
-    qOpen = shared_ptr<Configuration>( new Configuration( rob, rob->getRobotStruct()->openChainConf ));
+    qOpen = shared_ptr<Configuration>( new Configuration( rob, rob->getP3dRobotStruct()->openChainConf ));
 
     rob->setAndUpdate(*qInit);
 
@@ -1197,7 +1197,7 @@ void RobotWidget::armFree()
     limits[4] = 0;
     limits[5] = 0;
 
-    p3d_change_ff_translation_bounds( qInit->getRobot()->getRobotStruct(), limits );
+    p3d_change_ff_translation_bounds( qInit->getRobot()->getP3dRobotStruct(), limits );
 
     Manip::Phase = ARM_FREE;
     callToManipulationPlanner();
@@ -1318,9 +1318,9 @@ void RobotWidget::makeNormalTraj()
     Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
     Move3D::Trajectory traj(robot);
 
-    for(int i=(robot->getRobotStruct()->nconf-1) ; i>0; i--)
+    for(int i=(robot->getP3dRobotStruct()->nconf-1) ; i>0; i--)
     {
-        MOVE3D_PTR_NAMESPACE::shared_ptr<Configuration> q(new Configuration(robot,robot->getRobotStruct()->conf[i]->q));
+        MOVE3D_PTR_NAMESPACE::shared_ptr<Configuration> q(new Configuration(robot,robot->getP3dRobotStruct()->conf[i]->q));
         traj.push_back(q);
     }
 

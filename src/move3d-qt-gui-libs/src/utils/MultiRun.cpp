@@ -114,7 +114,7 @@ void MultiRun::runMultiRRT()
     mNames.push_back("Integral");
     mNames.push_back("Meca-Work");
 
-  Robot* rob = global_Project->getActiveScene()->getActiveRobot();
+    Robot* rob = global_Project->getActiveScene()->getActiveRobot();
 
     mVectDoubles.resize(9);
 
@@ -123,7 +123,7 @@ void MultiRun::runMultiRRT()
     for (unsigned int j = 0; j < storedContext.getNumberStored(); j++)
     {
         storedContext.switchCurrentEnvTo( j );
-//		storedPlannerContext->switchCurrentEnvTo( j );
+        //		storedPlannerContext->switchCurrentEnvTo( j );
         // storedContext.getTime(j).clear();
         // vector<double> time = storedContext.getTime(j);
 
@@ -147,7 +147,7 @@ void MultiRun::runMultiRRT()
             try
             {
                 p3d_planner_functions_set_run_id( context );
-                nbNodes = p3d_run_rrt(rob->getRobotStruct());
+                nbNodes = p3d_run_rrt(rob->getP3dRobotStruct());
             }
             catch (string str)
             {
@@ -171,8 +171,8 @@ void MultiRun::runMultiRRT()
 
                 Robot currRobot((p3d_rob *) p3d_get_desc_curid(P3D_ROBOT));
                 Move3D::Trajectory Traj(
-                                                         &currRobot,
-                                                         currRobot.getTrajStruct());
+                            &currRobot,
+                            currRobot.getP3dRobotStruct()->tcur);
                 if(XYZ_GRAPH==NULL)
                 {
                     GraphConverter gc;
@@ -256,7 +256,7 @@ void MultiRun::runMultiRRT()
         }
 
         storedContext.addTime( mTime );
-//		storedPlannerContext->addTime( mTime );
+        //		storedPlannerContext->addTime( mTime );
         saveVectorToFile( j );
         ENV.setBool(Env::StopMultiRun,false);
         cout << "Save to file" << endl;
@@ -295,7 +295,7 @@ void MultiRun::runMultiGreedy()
     for (unsigned int j = 0; j < storedContext.getNumberStored(); j++)
     {
         storedContext.switchCurrentEnvTo(j);
-//		storedPlannerContext->switchCurrentEnvTo(j);
+        //		storedPlannerContext->switchCurrentEnvTo(j);
         //			storedContext.getTime(j).clear();
         //			vector<double> time = storedContext.getTime(j);
         for (int i = 0; i < ENV.getInt(Env::nbMultiRun); i++)
@@ -326,8 +326,8 @@ void MultiRun::runMultiGreedy()
             Robot currRobot((p3d_rob *) p3d_get_desc_curid(P3D_ROBOT));
 
             Move3D::Smoothing optimTrj(
-                                                            &currRobot,
-                                                            currRobot.getTrajStruct());
+                        &currRobot,
+                        currRobot.getP3dRobotStruct()->tcur);
 
             mTime.push_back(tu);
             mVectDoubles[0].push_back(tu);
@@ -345,7 +345,7 @@ void MultiRun::runMultiGreedy()
             cout << " Mean Collision test : "  << optimTrj.meanCollTest() << endl;
         }
         storedContext.addTime(mTime);
-//		storedPlannerContext->addTime(mTime);
+        //		storedPlannerContext->addTime(mTime);
         saveVectorToFile(j);
     }
 
@@ -358,91 +358,91 @@ void MultiRun::runMultiGreedy()
  */
 void MultiRun::computeConvergence( int run_id, double time )
 {
-  if (traj_convergence_with_time.empty()) {
-    return;
-  }
-
-//  cout << endl;
-//  cout << "traj_convergence_with_time.size() : " << traj_convergence_with_time.size() << endl;
-
-  int nb_samples = 100;
-  double step = (time/(nb_samples-1));
-
-  mConvergence[run_id].clear();
-
-  // Resamples the vector to build
-  // the convergence rate vector
-  for ( double t=0.0; t<=(time+0.0001); t += step )
-  {
-    int ith = 0;
-    double min = numeric_limits<double>::max();
-
-    // Find the step in vector with closest time step
-    for(int i=0;i<int(traj_convergence_with_time.size()); i++)
-    {
-      if ( min > abs(traj_convergence_with_time[i].first-t) )
-      {
-        min = abs(traj_convergence_with_time[i].first-t);
-        ith = i;
-        continue;
-      }
+    if (traj_convergence_with_time.empty()) {
+        return;
     }
 
-    mConvergence[run_id].push_back( traj_convergence_with_time[ith].second );
-  }
+    //  cout << endl;
+    //  cout << "traj_convergence_with_time.size() : " << traj_convergence_with_time.size() << endl;
 
+    int nb_samples = 100;
+    double step = (time/(nb_samples-1));
 
-  double max = *std::max_element( mConvergence[run_id].begin(), mConvergence[run_id].end() );
+    mConvergence[run_id].clear();
 
-  for(int i=0;i<int(mConvergence[run_id].size()); i++)
-  {
-    if(  mConvergence[run_id][i] > max )
+    // Resamples the vector to build
+    // the convergence rate vector
+    for ( double t=0.0; t<=(time+0.0001); t += step )
     {
-      mConvergence[run_id][i] = max;
+        int ith = 0;
+        double min = numeric_limits<double>::max();
+
+        // Find the step in vector with closest time step
+        for(int i=0;i<int(traj_convergence_with_time.size()); i++)
+        {
+            if ( min > abs(traj_convergence_with_time[i].first-t) )
+            {
+                min = abs(traj_convergence_with_time[i].first-t);
+                ith = i;
+                continue;
+            }
+        }
+
+        mConvergence[run_id].push_back( traj_convergence_with_time[ith].second );
     }
-  }
 
-//  for(int i=0;i<int(traj_convergence_with_time.size()); i++)
-//  {
-//    cout << "traj_convergence_with_time[" << i << "].first = " << traj_convergence_with_time[i].first << endl;
-//    cout << "traj_convergence_with_time[" << i << "].secon = " << traj_convergence_with_time[i].second << endl;
-//  }
-//
-//  for(int i=0;i<int(mConvergence[run_id].size()); i++)
-//  {
-//    cout << "mConvergence[" << run_id << "][" << i <<"]= " << mConvergence[run_id][i] << endl;
-//  }
 
-  if( int(mConvergence[run_id].size()) != (nb_samples) )
-  {
-    mConvergence[run_id].resize( nb_samples );
-  }
+    double max = *std::max_element( mConvergence[run_id].begin(), mConvergence[run_id].end() );
+
+    for(int i=0;i<int(mConvergence[run_id].size()); i++)
+    {
+        if(  mConvergence[run_id][i] > max )
+        {
+            mConvergence[run_id][i] = max;
+        }
+    }
+
+    //  for(int i=0;i<int(traj_convergence_with_time.size()); i++)
+    //  {
+    //    cout << "traj_convergence_with_time[" << i << "].first = " << traj_convergence_with_time[i].first << endl;
+    //    cout << "traj_convergence_with_time[" << i << "].secon = " << traj_convergence_with_time[i].second << endl;
+    //  }
+    //
+    //  for(int i=0;i<int(mConvergence[run_id].size()); i++)
+    //  {
+    //    cout << "mConvergence[" << run_id << "][" << i <<"]= " << mConvergence[run_id][i] << endl;
+    //  }
+
+    if( int(mConvergence[run_id].size()) != (nb_samples) )
+    {
+        mConvergence[run_id].resize( nb_samples );
+    }
 }
 
 void MultiRun::computeAverageConvergenceAndSave()
 {
-  if( mConvergence.empty() ) {
-    return;
-  }
-
-  // Compute Average
-  int nb_samples = mConvergence[0].size();
-  vector<double> average;
-
-  for(int j=0;j<nb_samples; j++)
-  {
-    double value = 0.0;
-
-    for(int i=0;i<int(mConvergence.size()); i++) {
-      value += mConvergence[i][j];
+    if( mConvergence.empty() ) {
+        return;
     }
 
-    average.push_back( value/double(mConvergence.size()) );
-  }
+    // Compute Average
+    int nb_samples = mConvergence[0].size();
+    vector<double> average;
 
-  // Save to file
-  std::string home( getenv("HOME_MOVE3D") );
-  std::ostringstream oss;
+    for(int j=0;j<nb_samples; j++)
+    {
+        double value = 0.0;
+
+        for(int i=0;i<int(mConvergence.size()); i++) {
+            value += mConvergence[i][j];
+        }
+
+        average.push_back( value/double(mConvergence.size()) );
+    }
+
+    // Save to file
+    std::string home( getenv("HOME_MOVE3D") );
+    std::ostringstream oss;
     oss << "/statFiles/Average.csv";
 
     const char *path = (home+oss.str()).c_str();
@@ -454,12 +454,12 @@ void MultiRun::computeAverageConvergenceAndSave()
 
     for (int i=0; i<int(average.size()); i++)
     {
-    s << average[i] << ";";
+        s << average[i] << ";";
         s << endl;
     }
 
-  s << endl;
-  s.close();
+    s << endl;
+    s.close();
 }
 
 //void MultiRun::loadTraj()
@@ -496,23 +496,23 @@ void MultiRun::computeAverageConvergenceAndSave()
 
 bool MultiRun::runSingleRRT()
 {
-  bool result = false;
+    bool result = false;
 
-  timeval tim;
-  gettimeofday(&tim, NULL);
-  double t_init = tim.tv_sec+(tim.tv_usec/1000000.0);
+    timeval tim;
+    gettimeofday(&tim, NULL);
+    double t_init = tim.tv_sec+(tim.tv_usec/1000000.0);
 
-  result = p3d_run_rrt(mRobot->getRobotStruct());
+    result = p3d_run_rrt(mRobot->getP3dRobotStruct());
 
-  gettimeofday(&tim, NULL);
-  double dt = tim.tv_sec+(tim.tv_usec/1000000.0) - t_init;
-  cout << "RRT computed in : " << dt << " sec" << endl;
+    gettimeofday(&tim, NULL);
+    double dt = tim.tv_sec+(tim.tv_usec/1000000.0) - t_init;
+    cout << "RRT computed in : " << dt << " sec" << endl;
 
-  if( !ENV.getBool(Env::drawDisabled) ) {
-    g3d_draw_allwin_active();
-  }
+    if( !ENV.getBool(Env::drawDisabled) ) {
+        g3d_draw_allwin_active();
+    }
 
-  return result;
+    return result;
 }
 
 
@@ -521,90 +521,90 @@ bool MultiRun::runSingleRRT()
  */
 void MultiRun::runMultiSmooth()
 {
-  int nb_runs = ENV.getInt(Env::nbMultiSmooth);
-  double time_limit = 10.0;
+    int nb_runs = ENV.getInt(Env::nbMultiSmooth);
+    double time_limit = 10.0;
 
-  mTime.clear();
+    mTime.clear();
 
     mNames.clear();
     mNames.push_back("Time");
-  mNames.push_back("Iteration");
+    mNames.push_back("Iteration");
     mNames.push_back("Cost");
 
-  mVectDoubles.clear();
+    mVectDoubles.clear();
     mVectDoubles.resize(3);
 
-  mConvergence.resize( nb_runs );
+    mConvergence.resize( nb_runs );
 
-  mRobot = global_Project->getActiveScene()->getRobotByNameContaining("PR2_ROBOT");
+    mRobot = global_Project->getActiveScene()->getRobotByNameContaining("PR2_ROBOT");
 
-  if( mRobot == NULL ) {
-    cout << "Change the robot name int " << __func__ << endl;
-    return;
-  }
+    if( mRobot == NULL ) {
+        cout << "Change the robot name int " << __func__ << endl;
+        return;
+    }
 
-  ENV.setBool(Env::isRunning,true);
+    ENV.setBool(Env::isRunning,true);
 
     for(int i =0;i<nb_runs;i++)
     {
         //loadTraj();
-    ENV.setBool(Env::isCostSpace,false);
+        ENV.setBool(Env::isCostSpace,false);
 
-    if( !runSingleRRT() ) {
-      continue;
-    }
+        if( !runSingleRRT() ) {
+            continue;
+        }
 
-        Move3D::CostOptimization optimTrj( mRobot, mRobot->getTrajStruct() );
+        Move3D::CostOptimization optimTrj( mRobot, mRobot->getP3dRobotStruct()->tcur );
 
         cout << "Run Nb"  << i << " = " << endl;
 
 
-    ENV.setBool(Env::isCostSpace,true);
+        ENV.setBool(Env::isCostSpace,true);
 
-    timeval tim;
-    gettimeofday(&tim, NULL);
-    double t_init = tim.tv_sec+(tim.tv_usec/1000000.0);
-    double time = 0.0;
+        timeval tim;
+        gettimeofday(&tim, NULL);
+        double t_init = tim.tv_sec+(tim.tv_usec/1000000.0);
+        double time = 0.0;
 
         if( PlanEnv->getBool(PlanParam::withDeformation) )
         {
-      PlanEnv->setBool(PlanParam::trajStompComputeColl, false );
-      PlanEnv->setBool( PlanParam::trajWithTimeLimit, true );
-      PlanEnv->setDouble( PlanParam::timeLimitSmoothing, time_limit );
+            PlanEnv->setBool(PlanParam::trajStompComputeColl, false );
+            PlanEnv->setBool( PlanParam::trajWithTimeLimit, true );
+            PlanEnv->setDouble( PlanParam::timeLimitSmoothing, time_limit );
 
-      optimTrj.cutTrajInSmallLP( PlanEnv->getInt( PlanParam::nb_pointsOnTraj ) );
+            optimTrj.cutTrajInSmallLP( PlanEnv->getInt( PlanParam::nb_pointsOnTraj ) );
             optimTrj.runDeformation( PlanEnv->getInt(PlanParam::smoothMaxIterations) , i );
-      optimTrj.replaceP3dTraj();
+            optimTrj.replaceP3dTraj();
         }
-    else if( PlanEnv->getBool(PlanParam::withShortCut) )
+        else if( PlanEnv->getBool(PlanParam::withShortCut) )
         {
-      PlanEnv->setBool(PlanParam::trajStompComputeColl, false );
-      PlanEnv->setBool( PlanParam::trajWithTimeLimit, true );
-      PlanEnv->setDouble( PlanParam::timeLimitSmoothing, time_limit );
+            PlanEnv->setBool(PlanParam::trajStompComputeColl, false );
+            PlanEnv->setBool( PlanParam::trajWithTimeLimit, true );
+            PlanEnv->setDouble( PlanParam::timeLimitSmoothing, time_limit );
 
-      optimTrj.cutTrajInSmallLP( PlanEnv->getInt( PlanParam::nb_pointsOnTraj ) );
+            optimTrj.cutTrajInSmallLP( PlanEnv->getInt( PlanParam::nb_pointsOnTraj ) );
             optimTrj.runShortCut( PlanEnv->getInt(PlanParam::smoothMaxIterations) , i );
-      optimTrj.replaceP3dTraj();
+            optimTrj.replaceP3dTraj();
         }
         else if( PlanEnv->getBool(PlanParam::withStomp) )
-    {
-      PlanEnv->setBool(PlanParam::trajStompComputeColl, true );
-      PlanEnv->setBool( PlanParam::withCurrentTraj, true );
-      PlanEnv->setBool( PlanParam::trajStompWithTimeLimit, true );
-      PlanEnv->setDouble( PlanParam::trajStompTimeLimit , time_limit );
+        {
+            PlanEnv->setBool(PlanParam::trajStompComputeColl, true );
+            PlanEnv->setBool( PlanParam::withCurrentTraj, true );
+            PlanEnv->setBool( PlanParam::trajStompWithTimeLimit, true );
+            PlanEnv->setDouble( PlanParam::trajStompTimeLimit , time_limit );
 
-      traj_optim_runStomp(i);
-    }
+            traj_optim_runStomp(i);
+        }
 
         gettimeofday(&tim, NULL);
-    time = tim.tv_sec+(tim.tv_usec/1000000.0) - t_init;
-    cout << "Time optim : " << time << endl;
+        time = tim.tv_sec+(tim.tv_usec/1000000.0) - t_init;
+        cout << "Time optim : " << time << endl;
 
-    computeConvergence( i, time_limit );
+        computeConvergence( i, time_limit );
 
         mTime.push_back( time );
         mVectDoubles[0].push_back( time );
-    mVectDoubles[1].push_back( optimTrj.getIteration() );
+        mVectDoubles[1].push_back( optimTrj.getIteration() );
         mVectDoubles[2].push_back( optimTrj.cost() );
 
         //ENV.setBool(Env::drawTraj,true);
@@ -616,10 +616,10 @@ void MultiRun::runMultiSmooth()
         }
     }
 
-  computeAverageConvergenceAndSave();
+    computeAverageConvergenceAndSave();
     saveVectorToFile(0);
 
-  ENV.setBool(Env::isRunning,false);
+    ENV.setBool(Env::isRunning,false);
 
     cout << " End of Tests ----------------------" << endl;
     return;

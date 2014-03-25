@@ -17,8 +17,8 @@
 //------------------------------------------------------------------------
 // Validator for one localpath
 //------------------------------------------------------------------------
-//p3d_multiLocalPath_disable_all_groupToPlan( m_robot->getRobotStruct() , false );
-//p3d_multiLocalPath_set_groupToPlan( m_robot->getRobotStruct(), m_UpBodyMLP, 1, false);
+//p3d_multiLocalPath_disable_all_groupToPlan( m_robot->getP3dRobotStruct() , false );
+//p3d_multiLocalPath_set_groupToPlan( m_robot->getP3dRobotStruct(), m_UpBodyMLP, 1, false);
 
 GroupValidator::GroupValidator( QWidget *parent, p3d_rob* rob, int group ) : 
 m_currentRobot(rob) ,

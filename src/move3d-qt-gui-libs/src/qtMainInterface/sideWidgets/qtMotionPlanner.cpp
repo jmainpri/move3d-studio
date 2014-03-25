@@ -385,7 +385,7 @@ void MotionPlanner::cutTrajAndOptimizeSM()
 #ifdef LIGHT_PLANNER
     MANPIPULATION_TRAJECTORY_CONF_STR confs;
     SM_TRAJ smTraj;
-    if ( p3d_convert_traj_to_softMotion( rob->getRobotStruct()->tcur, ENV.getBool(Env::smoothSoftMotionTraj),  true, false, confs.first, confs.second, smTraj) == 1)
+    if ( p3d_convert_traj_to_softMotion( rob->getP3dRobotStruct()->tcur, ENV.getBool(Env::smoothSoftMotionTraj),  true, false, confs.first, confs.second, smTraj) == 1)
     {
         printf("p3d_optim_traj_softMotion : cannot compute the softMotion trajectory\n");
         return;
@@ -796,7 +796,7 @@ void MotionPlanner::edgeToShowChanged()
     {
         Robot* rob = API_activeGraph->getRobot();
         MOVE3D_PTR_NAMESPACE::shared_ptr<LocalPath> lp=edges[ith]->getLocalPath();
-        configPt q = lp->getLocalpathStruct()->config_at_distance(rob->getRobotStruct(), lp->getLocalpathStruct(), lp->length()/2);
+        configPt q = lp->getP3dLocalpathStruct()->config_at_distance(rob->getP3dRobotStruct(), lp->getP3dLocalpathStruct(), lp->length()/2);
         Configuration* config=new Configuration(rob);
         config->setConfiguration(q);
         rob->setAndUpdate(*config);

@@ -19,7 +19,7 @@
 
 ConstraintsWidget::ConstraintsWidget(QWidget *parent, FormRobot* fr )
 {
-  m_currentRobot = fr->getRobot()->getRobotStruct();
+  m_currentRobot = fr->getRobot()->getP3dRobotStruct();
   m_form = fr;
 	init();
   
@@ -102,7 +102,7 @@ void ConstraintsWidget::createCntrts()
 //------------------------------------------------------------------------
 CntrtsValidator::CntrtsValidator(QWidget *parent, FormRobot* fr, p3d_cntrt* cntrt)
 {
-	m_currentRobot = fr->getRobot()->getRobotStruct();;
+	m_currentRobot = fr->getRobot()->getP3dRobotStruct();;
   m_cntrt = cntrt;
   m_form = fr;
 }
@@ -125,7 +125,7 @@ void CntrtsValidator::checkCntrts(bool value)
 //------------------------------------------------------------------------
 CntrtDoFWidget::CntrtDoFWidget(QWidget *parent, FormRobot* fr, int numDof) :   m_numDof( numDof ) 
 {
-  m_currentRobot = fr->getRobot()->getRobotStruct();;
+  m_currentRobot = fr->getRobot()->getP3dRobotStruct();;
   m_form = fr;
   
   m_jnt = p3d_robot_dof_to_jnt(m_currentRobot, m_numDof, &m_jntDoFId);

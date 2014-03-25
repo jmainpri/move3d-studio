@@ -82,7 +82,7 @@ void MoveRobot::initAllForms(GLWidget* ptrOpenGl)
         ptrRob->setAndUpdate( *ptrConf );
         form->setSliders( *ptrConf );
         mRobots.push_back( form );
-        //cout << "MoveRobot::ptrRob->getRobotStruct()->getNumberOfJoints() = "  << ptrRob->getNumberOfJoints() << endl;
+        //cout << "MoveRobot::ptrRob->getP3dRobotStruct()->getNumberOfJoints() = "  << ptrRob->getNumberOfJoints() << endl;
 //#endif
 #ifdef WITH_XFORMS
         std::string str = "g3d_draw_allwin_active";
@@ -379,7 +379,7 @@ FormRobot::FormRobot( Move3D::Robot* R, QGridLayout* GL, QComboBox* pos, QComboB
     mTrajectoriesNames(trajs),
     mOpenGl(openGl)
 {
-    p3d_rob* rob = mRobot->getRobotStruct();
+    p3d_rob* rob = mRobot->getP3dRobotStruct();
 
     for(int i=0; i<rob->nconf; i++)
     {
@@ -433,9 +433,9 @@ void FormRobot::initSliders()
     //p3d_rob *robotPt;
     Joint * jntPt;
 
-    //nb_dof =    mRobot->getRobotStruct()->nb_dof; //p3d_get_robot_ndof();
-    //ir =        ptrRob->getRobotStruct()->num; //p3d_get_desc_curnum(P3D_ROBOT);
-    //robotPt =   mRobot->getRobotStruct(); //(p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
+    //nb_dof =    mRobot->getP3dRobotStruct()->nb_dof; //p3d_get_robot_ndof();
+    //ir =        ptrRob->getP3dRobotStruct()->num; //p3d_get_desc_curnum(P3D_ROBOT);
+    //robotPt =   mRobot->getP3dRobotStruct(); //(p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
 
     if(calc_real_dof() > 0)
     {
@@ -450,7 +450,7 @@ void FormRobot::initSliders()
             {
                 k = jntPt->getIndexOfFirstDof() + j;
 
-                if(/*(p3d_jnt_get_dof_is_user(jntPt->getJointStruct(),j)) || (robotPt->cntrt_manager->in_cntrt[k] == 1)*/ true )
+                if(/*(p3d_jnt_get_dof_is_user(jntPt->getP3dJointStruct(),j)) || (robotPt->cntrt_manager->in_cntrt[k] == 1)*/ true )
                 {
                     DofSlider* oneSlider = new DofSlider(mRobot,mOpenGl,this);
                     oneSlider->makeSlider( mGridLayout, jntPt, j );
@@ -466,7 +466,7 @@ void FormRobot::initSliders()
 
 void FormRobot::resetConstraintedDoFs()
 {
-    p3d_rob* robotPt =   mRobot->getRobotStruct(); //(p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
+    p3d_rob* robotPt =   mRobot->getP3dRobotStruct(); //(p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
 
     if(calc_real_dof() > 0)
     {
@@ -513,7 +513,7 @@ void FormRobot::setSliders(Configuration& ptrConfRad)
 
     if( mRobot->getName().compare( RobotName ) == 0 )
     {
-        p3d_rob* robotPt = ptrConfDeg->getRobot()->getRobotStruct();
+        p3d_rob* robotPt = ptrConfDeg->getRobot()->getP3dRobotStruct();
         int numDof = 0;
 
         if(calc_real_dof() > 0)
@@ -672,9 +672,9 @@ void FormRobot::saveCurrentConfigToVector()
     mConfigNames->setCurrentIndex( mConfigurations.size() - 1 );
 
     cout << "Create new config to save" << endl;
-    p3d_set_new_robot_config(mRobot->getRobotStruct(), name.toStdString().c_str(),
+    p3d_set_new_robot_config(mRobot->getP3dRobotStruct(), name.toStdString().c_str(),
                              mRobot->getCurrentPos()->getConfigStruct(), NULL,
-                             mRobot->getRobotStruct()->confcur);
+                             mRobot->getP3dRobotStruct()->confcur);
 
     cout << "Save Config in Pos: " << mConfigurations.size() << endl;
 }
@@ -767,7 +767,7 @@ void FormRobot::setCurrentTraj(int id)
     // TODO fix this
     cout << "mTrajectories[id]->num = " << mTrajectories[id]->num << endl;
 
-    mRobot->getRobotStruct()->tcur = mTrajectories[id];
+    mRobot->getP3dRobotStruct()->tcur = mTrajectories[id];
 
     mOpenGl->updateGL();
 
@@ -789,7 +789,7 @@ void FormRobot::showConstraints()
  */
 void FormRobot::showMultiLocalpath()
 {
-    MultiLocalPathWidget* localPathGroups = new MultiLocalPathWidget( 0, mRobot->getRobotStruct() );
+    MultiLocalPathWidget* localPathGroups = new MultiLocalPathWidget( 0, mRobot->getP3dRobotStruct() );
     localPathGroups->show();
 }
 #endif
@@ -804,7 +804,7 @@ void FormRobot::showMultiLocalpath()
  */
 void DofSlider::makeSlider(QGridLayout* gridLayout, Joint *jnt, int DofNumOnJnt)
 {
-    p3d_jnt* jntPt = jnt->getJointStruct();
+    p3d_jnt* jntPt = jnt->getP3dJointStruct();
     mDofNum = jntPt->index_dof + DofNumOnJnt;
     QString dofName( p3d_jnt_get_dof_name(jntPt, DofNumOnJnt) );
 
@@ -889,9 +889,9 @@ void DofSlider::dofValueChanged(double value)
     //    robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
     //    nb_dof = p3d_get_robot_ndof();
 
-    //nb_dof =    mRobot->getRobotStruct()->nb_dof; //p3d_get_robot_ndof();
-    /*ir =*/        mRobot->getRobotStruct()->num; //p3d_get_desc_curnum(P3D_ROBOT);
-    robotPt =   mRobot->getRobotStruct(); //(p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
+    //nb_dof =    mRobot->getP3dRobotStruct()->nb_dof; //p3d_get_robot_ndof();
+    /*ir =*/        mRobot->getP3dRobotStruct()->num; //p3d_get_desc_curnum(P3D_ROBOT);
+    robotPt =   mRobot->getP3dRobotStruct(); //(p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
 
     //  cout << "robotPt = " << robotPt << endl;
 

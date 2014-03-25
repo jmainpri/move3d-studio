@@ -158,13 +158,13 @@ void qt_otp()
         if( found_ik ) {
             HRI_AGENT* robot_agent = hri_get_agent_by_name( GLOBAL_AGENTS, robot->getName().c_str() );
             hri_activate_coll_robot_and_all_humans_arms( robot_agent, GLOBAL_AGENTS, false );
-            //qt_gik( human->getRobotStruct(), points[i] );
+            //qt_gik( human->getP3dRobotStruct(), points[i] );
         }
         cout << "Ik(" << found_ik << ") at iteration : " << i << endl;
 
         // Disable cntrts
         p3d_cntrt* ct;
-        p3d_rob* rob = robot->getRobotStruct();
+        p3d_rob* rob = robot->getP3dRobotStruct();
         for(int i=0; i<rob->cntrt_manager->ncntrts; i++) {
             ct = rob->cntrt_manager->cntrts[i];
             p3d_desactivateCntrt( rob, ct );
@@ -210,8 +210,8 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
 
                 cout << "Set and update : " << Object->getName() << endl << WSPoint << endl;
 
-                p3d_col_deactivate_rob_rob(Object->getRobotStruct(),
-                                           dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getHuman()->getRobotStruct());
+                p3d_col_deactivate_rob_rob(Object->getP3dRobotStruct(),
+                                           dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->getHuman()->getP3dRobotStruct());
             }
         }
 

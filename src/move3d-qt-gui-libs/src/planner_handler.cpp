@@ -296,7 +296,7 @@ void qt_test2()
 
     cout << "Clear traj" << endl;
     Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
-    p3d_destroy_traj( robot->getRobotStruct(), robot->getRobotStruct()->tcur );
+    p3d_destroy_traj( robot->getP3dRobotStruct(), robot->getP3dRobotStruct()->tcur );
 
     if( global_rePlanningEnv != NULL )
         global_rePlanningEnv->resetTrajectoriesToDraw();
@@ -364,7 +364,7 @@ void qt_test3()
     //
     //    // Disable cntrts
     //    p3d_cntrt* ct;
-    //    p3d_rob* rob = robot->getRobotStruct();
+    //    p3d_rob* rob = robot->getP3dRobotStruct();
     //    for(int i=0; i<rob->cntrt_manager->ncntrts; i++) {
     //      ct = rob->cntrt_manager->cntrts[i];
     //      p3d_desactivateCntrt( rob, ct );
@@ -388,7 +388,7 @@ void qt_test3()
     //  if( generator.computeRobotIkForGrabing( q, point ) )
     //  {
     //    // Deactivate cntrts
-    //    p3d_rob* rob = robot->getRobotStruct();
+    //    p3d_rob* rob = robot->getP3dRobotStruct();
     //    for(int i=0; i<rob->cntrt_manager->ncntrts; i++) {
     //      p3d_cntrt* ct = rob->cntrt_manager->cntrts[i];
     //      p3d_desactivateCntrt( rob, ct );
@@ -462,11 +462,11 @@ void qt_runDiffusion()
         cout << "ENV.getBool(Env::Env::treePlannerIsEST) = " << ENV.getBool(Env::treePlannerIsEST) << endl;
         if (ENV.getBool(Env::treePlannerIsEST))
         {
-            p3d_run_est(robot->getRobotStruct());
+            p3d_run_est(robot->getP3dRobotStruct());
         }
         else
         {
-            p3d_run_rrt(robot->getRobotStruct());
+            p3d_run_rrt(robot->getP3dRobotStruct());
         }
 
         gettimeofday(&tim, NULL);
@@ -508,16 +508,16 @@ void qt_runPRM()
         switch(ENV.getInt(Env::PRMType))
         {
         case 0:
-            p3d_run_prm(robot->getRobotStruct());
+            p3d_run_prm(robot->getP3dRobotStruct());
             break;
         case 1:
-            p3d_run_vis_prm(robot->getRobotStruct());
+            p3d_run_vis_prm(robot->getP3dRobotStruct());
             break;
         case 2:
-            p3d_run_acr(robot->getRobotStruct());
+            p3d_run_acr(robot->getP3dRobotStruct());
             break;
         case 3:
-            p3d_run_perturb_prm(robot->getRobotStruct());
+            p3d_run_perturb_prm(robot->getP3dRobotStruct());
             break;
         default:
             cout << "Error No Other PRM"  << endl;
@@ -1020,7 +1020,7 @@ void qt_showTraj()
         Move3D::Robot* rob = global_Project->getActiveScene()->getRobotByNameContaining("HUMAN");
         if (rob)
         {
-            hum_robotPt = rob->getRobotStruct();
+            hum_robotPt = rob->getP3dRobotStruct();
             // dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->loadInitConf(true,false);
             double tmp = ENV.getDouble(Env::showTrajFPS);
             ENV.setDouble(Env::showTrajFPS,tmp*5);
@@ -1127,7 +1127,7 @@ void qt_removeRedundantNodes()
 void qt_makeTrajFromViaPoints()
 {
     //    p3d_rob * robotPt = p3d_get_robot_by_name("PR2_ROBOT");//justin//JIDOKUKA_ROBOT
-    p3d_rob * robotPt =  global_Project->getActiveScene()->getActiveRobot()->getRobotStruct();
+    p3d_rob * robotPt =  global_Project->getActiveScene()->getActiveRobot()->getP3dRobotStruct();
     ManipulationViaConfPlanner m_viaConfPlan(robotPt);
     std::vector<SM_TRAJ> smTrajs;
 

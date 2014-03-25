@@ -79,19 +79,19 @@ void qt_loadCameraAndAxis(bool print, g3d_states& vs, QSettings& settings)
 //! Save multilocalpath info in a QSetting struct
 void qt_saveMultiLocalPath(bool print, Robot* rob, QSettings& settings) 
 {	
-    if( rob->getRobotStruct()->mlp->nblpGp < 1 )
+    if( rob->getP3dRobotStruct()->mlp->nblpGp < 1 )
         return;
 
     settings.beginGroup("ActiveRobotLocalpath");
     settings.setValue( QString("RobotName"), QString(rob->getName().c_str()));
 
     // over all localpaths
-    for(int i=0; i<rob->getRobotStruct()->mlp->nblpGp; i++)
+    for(int i=0; i<rob->getP3dRobotStruct()->mlp->nblpGp; i++)
     {
         // get group name
-        std::string LocalpathName = rob->getRobotStruct()->mlp->mlpJoints[i]->gpName;
+        std::string LocalpathName = rob->getP3dRobotStruct()->mlp->mlpJoints[i]->gpName;
 
-        bool value = (p3d_multiLocalPath_get_value_groupToPlan( rob->getRobotStruct(), i) == 1);
+        bool value = (p3d_multiLocalPath_get_value_groupToPlan( rob->getP3dRobotStruct(), i) == 1);
         settings.setValue( QString(LocalpathName.c_str()),value);
     }
     settings.endGroup();
@@ -101,7 +101,7 @@ void qt_saveMultiLocalPath(bool print, Robot* rob, QSettings& settings)
 //! Load multilocalpath info in a QSetting struct
 void qt_loadMultiLocalPath(bool print, Robot* rob, QSettings& settings) 
 {	
-    if( rob->getRobotStruct()->mlp->nblpGp < 1 )
+    if( rob->getP3dRobotStruct()->mlp->nblpGp < 1 )
         return;
 
     settings.beginGroup("ActiveRobotLocalpath");
@@ -114,18 +114,18 @@ void qt_loadMultiLocalPath(bool print, Robot* rob, QSettings& settings)
     }
 
     // over all localpaths
-    for(int i=0; i<rob->getRobotStruct()->mlp->nblpGp; i++)
+    for(int i=0; i<rob->getP3dRobotStruct()->mlp->nblpGp; i++)
     {
         // get group name
-        std::string LocalpathName = rob->getRobotStruct()->mlp->mlpJoints[i]->gpName;
+        std::string LocalpathName = rob->getP3dRobotStruct()->mlp->mlpJoints[i]->gpName;
 
         bool value = settings.value( QString( LocalpathName.c_str() )).toBool();
-        p3d_multiLocalPath_set_groupToPlan( rob->getRobotStruct(), i , value, false );
+        p3d_multiLocalPath_set_groupToPlan( rob->getP3dRobotStruct(), i , value, false );
     }
 
     if(print)
     {
-        p3d_multilocapath_print_group_info( rob->getRobotStruct() );
+        p3d_multilocapath_print_group_info( rob->getP3dRobotStruct() );
     }
     settings.endGroup();
 }
@@ -138,17 +138,17 @@ void qt_loadMultiLocalPath(bool print, Robot* rob, QSettings& settings)
 //! Save cntrts info in a QSetting struct
 void qt_saveCntrts(bool print, Robot* rob, QSettings& settings) 
 {	
-    if( rob->getRobotStruct()->cntrt_manager->ncntrts < 1 )
+    if( rob->getP3dRobotStruct()->cntrt_manager->ncntrts < 1 )
         return;
 
     settings.beginGroup("ActiveRobotCntrts");
     settings.setValue( QString("RobotName"), QString(rob->getName().c_str()));
 
     // over all constraints
-    for(int i=0; i<rob->getRobotStruct()->cntrt_manager->ncntrts; i++)
+    for(int i=0; i<rob->getP3dRobotStruct()->cntrt_manager->ncntrts; i++)
     {
         // get constraint from the cntrts manager
-        p3d_cntrt* ct = rob->getRobotStruct()->cntrt_manager->cntrts[i];
+        p3d_cntrt* ct = rob->getP3dRobotStruct()->cntrt_manager->cntrts[i];
 
         std::string cntName = ct->namecntrt;
 
@@ -164,7 +164,7 @@ void qt_saveCntrts(bool print, Robot* rob, QSettings& settings)
 //! Load cntrts info in a QSetting struct
 void qt_loadCntrts(bool print, Robot* rob, QSettings& settings) 
 {	
-    if( rob->getRobotStruct()->cntrt_manager->ncntrts < 1 )
+    if( rob->getP3dRobotStruct()->cntrt_manager->ncntrts < 1 )
         return;
 
     settings.beginGroup("ActiveRobotCntrts");
@@ -177,17 +177,17 @@ void qt_loadCntrts(bool print, Robot* rob, QSettings& settings)
     }
 
     // over all constraints
-    for(int i=0; i<rob->getRobotStruct()->cntrt_manager->ncntrts; i++)
+    for(int i=0; i<rob->getP3dRobotStruct()->cntrt_manager->ncntrts; i++)
     {
         // get constraint from the cntrts manager
-        p3d_cntrt* ct = rob->getRobotStruct()->cntrt_manager->cntrts[i];
+        p3d_cntrt* ct = rob->getP3dRobotStruct()->cntrt_manager->cntrts[i];
 
         std::string cntName = ct->namecntrt;
 
         if( settings.value(QString(cntName.c_str())).toBool())
-            p3d_activateCntrt( rob->getRobotStruct(), ct );
+            p3d_activateCntrt( rob->getP3dRobotStruct(), ct );
         else
-            p3d_desactivateCntrt( rob->getRobotStruct(), ct );
+            p3d_desactivateCntrt( rob->getP3dRobotStruct(), ct );
     }
     settings.endGroup();
 }
