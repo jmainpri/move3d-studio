@@ -670,7 +670,7 @@ void MainWindow::setRobotAlongTraj(double param)
         return;
     }
 
-    current_traj_ = robot->getCurrentTraj(); // TODO move that in  switchSpeedVsPosition
+    current_traj_ = robot->getCurrentTraj(); // TODO move that in switchSpeedVsPosition
     traj_id_ = current_traj_.Id();
 
     robot->setAndUpdate( *current_traj_.configAtParam( (param/100)*current_traj_.getRangeMax() ) );

@@ -11,6 +11,7 @@
 #include "API/scene.hpp"
 #include "API/project.hpp"
 #include "API/libmove3d_api.hpp"
+#include "API/libmove3d_simple_api.hpp"
 
 #include <iostream>
 #include <string>
@@ -639,8 +640,14 @@ void draw_opengl()
  */
 int main(int argc, char *argv[])
 {
-    move3d_set_api_functions_configuration();
-    move3d_set_api_functions_localpath();
+    move3d_set_api_scene();
+
+//   move3d_set_api_functions_configuration();
+//   move3d_set_api_functions_localpath();
+
+    move3d_set_api_functions_configuration_simple();
+    move3d_set_api_functions_localpath_simple();
+
     move3d_set_api_functions_robot();
     move3d_set_api_functions_joint();
     move3d_set_api_functions_draw();

@@ -519,6 +519,9 @@ void qt_runPRM()
         case 3:
             p3d_run_perturb_prm(robot->getP3dRobotStruct());
             break;
+        case 4:
+            p3d_run_simple_prm(robot->getP3dRobotStruct());
+            break;
         default:
             cout << "Error No Other PRM"  << endl;
             ChronoPrint("");
