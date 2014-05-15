@@ -125,6 +125,7 @@ public:
     QCheckBox *checkBoxDrawDebug;
     QCheckBox *checkBoxDrawTrajVector;
     QSpinBox *spinBoxJointToDraw;
+    QDoubleSpinBox *spinBoxScaleNodeSphere;
     QWidget *widgetMobCamButton;
     QHBoxLayout *horizontalLayout_5;
 
@@ -494,6 +495,9 @@ public:
         checkBoxDrawTrajVector->setObjectName(QString::fromUtf8("checkBoxDrawTrajVector"));
         gridLayout_12->addWidget(checkBoxDrawTrajVector, 7, 0, 1, 1);
 
+        // -------------------------------
+        // Spin Box joint to draw
+
         spinBoxJointToDraw = new QSpinBox(groupBoxDrawEnv);
         spinBoxJointToDraw->setObjectName(QString::fromUtf8("spinBoxJointToDraw"));
         spinBoxJointToDraw->setMinimum(-1);
@@ -501,6 +505,16 @@ public:
 
         gridLayout_12->addWidget(spinBoxJointToDraw, 1, 1, 1, 1);
 
+        // -------------------------------
+        // Spin Box sale of nodes spheres
+
+        spinBoxScaleNodeSphere = new QDoubleSpinBox(groupBoxDrawEnv);
+        spinBoxScaleNodeSphere->setObjectName(QString::fromUtf8("spinBoxScaleNodeSphere"));
+        spinBoxScaleNodeSphere->setMinimum(0.1);
+        spinBoxScaleNodeSphere->setMaximum(10.0);
+        spinBoxScaleNodeSphere->setSingleStep(0.1);
+
+        gridLayout_12->addWidget(spinBoxScaleNodeSphere, 2, 1, 1, 1);
 
         verticalLayout_3->addWidget(groupBoxDrawEnv);
 

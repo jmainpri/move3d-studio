@@ -35,9 +35,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>0</y>
+        <y>-109</y>
         <width>563</width>
-        <height>1162</height>
+        <height>1264</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -495,6 +495,43 @@
            <widget class="QPushButton" name="pushButtonDetours">
             <property name="text">
              <string>Generatge Detours</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_7">
+         <property name="title">
+          <string>Classification</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_8">
+          <item row="1" column="2">
+           <widget class="QPushButton" name="pushButtonClassifyBothBad">
+            <property name="text">
+             <string>Both Bad</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="pushButtonClassifyBad">
+            <property name="text">
+             <string>Bad</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="pushButtonClassifyGood">
+            <property name="text">
+             <string>Good</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="pushButtonClassifyInit">
+            <property name="text">
+             <string>Init</string>
             </property>
            </widget>
           </item>

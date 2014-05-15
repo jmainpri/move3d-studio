@@ -17,7 +17,7 @@
 #include "API/Device/robot.hpp"
 #include "API/project.hpp"
 #include "planner/planEnvironment.hpp"
-#include "hri_costspace/Gestures/HRICS_GestParameters.hpp"
+#include "hri_costspace/gestures/HRICS_gest_parameters.hpp"
 #include "hri_costspace/HRICS_parameters.hpp"
 
 //#include "env.hpp"
@@ -743,4 +743,97 @@ void qt_saveInterfaceParameters(bool print, std::string fileName)
     //    cout << "Key : " << metaEnum.key(i) << endl;
     //    //cout << " , Value : " << ENV.getVector(Env::vectorParameter(i)) << endl;
     //  }
+}
+
+bool qt_setParameterENV( const QMetaObject* metaObject, const std::string& name, double value )
+{
+    QMetaEnum metaEnum;
+
+    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "boolParameter" ) );
+    for( int i=0;i<metaEnum.keyCount();i++)
+    {
+        if( std::string(metaEnum.key(i)) == name ) {
+            ENV.setBool(Env::boolParameter(i),bool(value));
+            return true;
+        }
+    }
+
+    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "intParameter" ) );
+    for( int i=0;i<metaEnum.keyCount();i++)
+    {
+        if( std::string(metaEnum.key(i)) == name ) {
+            ENV.setInt(Env::intParameter(i),int(value));
+            return true;
+        }
+    }
+
+    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "doubleParameter" ) );
+    for( int i=0;i<metaEnum.keyCount();i++)
+    {
+        if( std::string(metaEnum.key(i)) == name ) {
+            ENV.setDouble(Env::doubleParameter(i),double(value));
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+template <class enumBool, class enumInt, class enumDouble, class enumString, class enumVector>
+bool qt_setParameter( const QMetaObject* metaObject,
+                      Parameters< enumBool, enumInt, enumDouble, enumString, enumVector >* env,
+                      const std::string& name, double value )
+{
+    QMetaEnum metaEnum;
+
+    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "boolParameter" ) );
+    for( int i=0;i<metaEnum.keyCount();i++)
+    {
+        if( std::string(metaEnum.key(i)) == name ) {
+            env->setBool( enumBool(i),bool(value));
+            return true;
+        }
+    }
+
+    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "intParameter" ) );
+    for( int i=0;i<metaEnum.keyCount();i++)
+    {
+        if( std::string(metaEnum.key(i)) == name ) {
+            env->setInt( enumInt(i),int(value));
+            return true;
+        }
+    }
+
+    metaEnum = metaObject->enumerator( metaObject->indexOfEnumerator( "doubleParameter" ) );
+    for( int i=0;i<metaEnum.keyCount();i++)
+    {
+        if( std::string(metaEnum.key(i)) == name ) {
+            env->setDouble( enumDouble(i),double(value));
+            cout << "set " << name << " to value : " << value << endl;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool qt_setParameter( const std::string& name, double value )
+{
+    if( qt_setParameterENV( ENV.metaObject(), name, value ) ){
+        return true;
+    }
+    if( qt_setParameter<PlanParam::boolParameter, PlanParam::intParameter ,PlanParam::doubleParameter, PlanParam::stringParameter, PlanParam::vectorParameter>(
+        EnumPlannerParameterObject->metaObject(), PlanEnv, name, value ) ) {
+        return true;
+    }
+    if( qt_setParameter<GestParam::boolParameter, GestParam::intParameter, GestParam::doubleParameter, GestParam::stringParameter, GestParam::vectorParameter>(
+        EnumGestureParameterObject->metaObject(), GestEnv, name, value ) ) {
+        return true;
+    }
+    if( qt_setParameter<HricsParam::boolParameter, HricsParam::intParameter, HricsParam::doubleParameter, HricsParam::stringParameter, HricsParam::vectorParameter>(
+        EnumHricsParameterObject->metaObject(), HriEnv, name, value ) ) {
+        return true;
+    }
+    return false;
 }

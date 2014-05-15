@@ -23,12 +23,14 @@
 #include "planner/plannerFunctions.hpp"
 #include "planner/replanningAlgorithms.hpp"
 #include "planner/replanningSimulators.hpp"
-#include "planner/TrajectoryOptim/trajectoryOptim.hpp"
+// #include "planner/TrajectoryOptim/trajectoryOptim.hpp"
+
+#include "utils/multilocalpath_utils.hpp"
 
 #include "API/project.hpp"
 #include "API/Trajectory/trajectory.hpp" 
 
-#include "hri_costspace/HRICS_Miscellaneous.hpp"
+#include "hri_costspace/HRICS_miscellaneous.hpp"
 
 #include <QMessageBox>
 #include <QString>

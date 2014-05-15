@@ -26,7 +26,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>
@@ -61,8 +61,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>350</width>
-            <height>428</height>
+            <width>427</width>
+            <height>469</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -196,7 +196,7 @@
                     <double>0.000000000000000</double>
                    </property>
                    <property name="maximum">
-                    <double>20.000000000000000</double>
+                    <double>50.000000000000000</double>
                    </property>
                   </widget>
                  </item>
@@ -414,7 +414,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-9</y>
             <width>411</width>
             <height>478</height>
            </rect>
@@ -457,6 +457,11 @@
                    <item>
                     <property name="text">
                      <string>sPRM</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>PRM*</string>
                     </property>
                    </item>
                   </widget>

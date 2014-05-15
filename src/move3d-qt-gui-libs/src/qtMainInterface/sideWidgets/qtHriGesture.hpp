@@ -44,6 +44,7 @@ signals:
 private slots:
 
     // Record Motion
+    //-------------------------------------------------------------------
     void initRecordedMotion();
     void loadRecordedMotion();
     void showRecordedMotion();
@@ -57,6 +58,7 @@ private slots:
     void loadFolderTwoHumans();
 
     // Occupancy
+    //-------------------------------------------------------------------
     void initWorkspaceOccupancy();
     void computeWorkspaceOccupancy();
     void setClassToDraw(int id);
@@ -64,16 +66,27 @@ private slots:
     void startGestureSimulation();
 
     // Gesture Recognition
+    //-------------------------------------------------------------------
     void initGestureRecognition();
 
     // IOC
+    //-------------------------------------------------------------------
     void initHriIOC();
     void runIoc();
     void setCurrentPhase(int phase);
     void runDetours();
 
     // Legible
+    //-------------------------------------------------------------------
     void initLegibleCost();
+
+    // Classify
+    //-------------------------------------------------------------------
+    void initClassification();
+    void classifyInit();
+    void classifyGood();
+    void classifyBad();
+    void classifyBothBad();
 
 private:
 

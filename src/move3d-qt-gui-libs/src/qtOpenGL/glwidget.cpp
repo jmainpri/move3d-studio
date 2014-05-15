@@ -33,7 +33,7 @@ extern void* GroundCostObj;
 static int current_widget_id = 0;
 
 GLWidget::GLWidget(QWidget *parent) :
-        QGLWidget(parent)
+    QGLWidget(parent)
 {
     x = 0;
     y = 0;
@@ -60,7 +60,7 @@ GLWidget::GLWidget(QWidget *parent) :
 
     m_mainWindow = false;
     m_save_traj = false;
-  
+
     _isThreadWorking = true;
     _light = false;
 
@@ -105,25 +105,25 @@ static double time_last_save=0.0;
 
 void GLWidget::addCurrentImage()
 {
-  //ChronoTimeOfDayOn();
-  //	QPixmap* image = new QPixmap(renderPixmap());
-  QImage* image = new QImage(grabFrameBuffer());
-  
-  if( save_on_disk ) {
-    string str = string(getenv("HOME_MOVE3D")) + "/video/";
-    ostringstream oss(ostringstream::out);
-    oss << str << "Image_" << setfill('0') << setw(4) << picsId++ << ".jpg";
-    image->save(oss.str().c_str(), "JPG", 100);
-    delete image;
-  }
-  else {
-    _pictures.push_back(image);
-    //cout << "pictures.size() : " << _pictures.size() << endl;
-  }
-  
-  ChronoTimeOfDayTimes(&time_current);
-  cout << "time addCurrentImage : " << time_current-time_last_save << endl;
-  time_last_save = time_current;
+    //ChronoTimeOfDayOn();
+    //	QPixmap* image = new QPixmap(renderPixmap());
+    QImage* image = new QImage(grabFrameBuffer());
+
+    if( save_on_disk ) {
+        string str = string(getenv("HOME_MOVE3D")) + "/video/";
+        ostringstream oss(ostringstream::out);
+        oss << str << "Image_" << setfill('0') << setw(4) << picsId++ << ".jpg";
+        image->save(oss.str().c_str(), "JPG", 100);
+        delete image;
+    }
+    else {
+        _pictures.push_back(image);
+        //cout << "pictures.size() : " << _pictures.size() << endl;
+    }
+
+    ChronoTimeOfDayTimes(&time_current);
+    cout << "time addCurrentImage : " << time_current-time_last_save << endl;
+    time_last_save = time_current;
 }
 
 void GLWidget::saveImagesToDisk()
@@ -131,27 +131,34 @@ void GLWidget::saveImagesToDisk()
     string str = string(getenv("HOME_MOVE3D")) + "/video/";
 
     ostringstream oss(ostringstream::out);
-//    oss << "cd "<< str <<";rm *.jpg";
-    system(oss.str().c_str());
-    cout << "saving in : " << str << endl;
-  
-  if( !save_on_disk ) {
-    for (int i = 0; i < _pictures.size(); i++)
-    {
-      oss.str("");
-      oss << str << "Image_" << setfill('0') << setw(4) << i << ".jpg";
-      cout << "Saving : " << oss.str() << endl;
-      _pictures.at(i)->save(oss.str().c_str(), "JPG", 100);
+    //    oss << "cd "<< str <<";rm *.jpg";
+    if (! system( oss.str().c_str() ) ){
+        cout << "Error in system command" << endl;
+        return;
     }
-    resetImageVector();
-    cout << "Images saved to video/" << endl;
-  }
+    cout << "saving in : " << str << endl;
+
+    if( !save_on_disk ) {
+        for (int i = 0; i < _pictures.size(); i++)
+        {
+            oss.str("");
+            oss << str << "Image_" << setfill('0') << setw(4) << i << ".jpg";
+            cout << "Saving : " << oss.str() << endl;
+            _pictures.at(i)->save(oss.str().c_str(), "JPG", 100);
+        }
+        resetImageVector();
+        cout << "Images saved to video/" << endl;
+    }
 
     oss.str("");
     //change to video directory then compress jpg files to AVI video for more parameters and video format see man pages of mencoder
     //oss << "cd "<< str <<";mencoder mf://*.jpg -mf w=800:h=600:fps=25:type=jpeg -ovc lavc -lavcopts vcodec=mpeg4 -oac copy -o output.avi";
     oss << "cd "<< str <<";ffmpeg -f image2 -r 25 -i Image_%04d.jpg -vcodec mpeg4 -b 1600k output.mp4";
-    system(oss.str().c_str());
+
+    if (! system(oss.str().c_str()) )
+    {
+        cout << "Error in system command" << endl;
+    }
 }
 
 void GLWidget::resetImageVector()
@@ -220,11 +227,11 @@ void GLWidget::initG3DFunctions()
     ext_g3d_get_win_mouse = (void (*) (int*,int*))(qt_get_win_mouse);
     ext_g3d_draw_allwin_active = draw_opengl;
     ext_g3d_calc_cam_param = (void (*) (g3d_cam_param&) )(qt_ui_calc_param);
-  
+
     ext_g3d_add_traj_to_ui = qt_add_traj;
-    ext_g3d_add_config_to_ui = qt_add_config_to_ui;  
-//    ext_g3d_add_traj_to_ui = NULL;
-//    ext_g3d_add_config_to_ui = NULL;
+    ext_g3d_add_config_to_ui = qt_add_config_to_ui;
+    //    ext_g3d_add_traj_to_ui = NULL;
+    //    ext_g3d_add_config_to_ui = NULL;
 
     Graphic::initDrawFunctions();
 }
@@ -343,10 +350,10 @@ void GLWidget::paintGL()
     g3d_draw(m_id);
 
     glPopMatrix();
-  
-  if( m_save_traj ) {
-    addCurrentImage();
-  }
+
+    if( m_save_traj ) {
+        addCurrentImage();
+    }
 }
 
 void GLWidget::myPaintGL()
@@ -508,24 +515,24 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
         if (event->buttons() & Qt::LeftButton)
         {
             if( (dx<0 && qt_get_cur_g3d_win()->vs.lightPosition[0]>xmin )
-                || (dx>0 && qt_get_cur_g3d_win()->vs.lightPosition[0]>xmax ) )
-                {
+                    || (dx>0 && qt_get_cur_g3d_win()->vs.lightPosition[0]>xmax ) )
+            {
                 qt_get_cur_g3d_win()->vs.lightPosition[0] += (dx*(xmax-xmin) / 100);
             }
         }
         else if (event->buttons() & Qt::MidButton)
         {
             if( (dy<0 && qt_get_cur_g3d_win()->vs.lightPosition[1]>ymin )
-                || (dy>0 && qt_get_cur_g3d_win()->vs.lightPosition[1]>ymax ) )
-                {
+                    || (dy>0 && qt_get_cur_g3d_win()->vs.lightPosition[1]>ymax ) )
+            {
                 qt_get_cur_g3d_win()->vs.lightPosition[1] += (dy * (ymax-ymin ) / 100);
             }
         }
         else if (event->buttons() & Qt::RightButton)
         {
             if( (dy<0 && qt_get_cur_g3d_win()->vs.lightPosition[2]>zmin )
-                || (dy>0 && qt_get_cur_g3d_win()->vs.lightPosition[2]>zmax ) )
-                {
+                    || (dy>0 && qt_get_cur_g3d_win()->vs.lightPosition[2]>zmax ) )
+            {
                 qt_get_cur_g3d_win()->vs.lightPosition[2] += (dy*(zmax - zmin) / 100);
             }
         }
@@ -556,7 +563,7 @@ void GLWidget::mouseDoubleClickEvent (QMouseEvent *event)
         list.clear();
         list.push_back( 0 );
         list.push_back( geom.width() );
-	
+
         m_mainWindow->Ui()->vSplitter->setSizes ( list );
 
         list.clear();
@@ -618,6 +625,6 @@ void GLWidget::keyReleaseEvent(QKeyEvent *e)
     switch (e->key())
     {
 
-        break;
+    break;
     }
 }

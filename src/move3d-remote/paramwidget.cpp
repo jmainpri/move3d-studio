@@ -3,7 +3,7 @@
 #include "posterreader.hpp"
 #include "planner_handler.hpp"
 #include "planner/planEnvironment.hpp"
-#include "hri_costspace/HRICS_Natural.hpp"
+#include "hri_costspace/HRICS_natural.hpp"
 #include "hri_costspace/HRICS_costspace.hpp"
 
 ParamWidget::ParamWidget(QWidget *parent) :

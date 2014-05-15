@@ -24,7 +24,7 @@
 #include "planner/cost_space.hpp"
 #include "planner/TrajectoryOptim/Stomp/stompOptimizer.hpp"
 
-#include "collision_space/CollisionSpace.hpp"
+#include "collision_space/collision_space.hpp"
 
 #if defined(HRI_COSTSPACE)
 #include "hri_costspace/HRICS_costspace.hpp"
@@ -403,7 +403,7 @@ void CostWidget::newGraphAndReComputeCost()
     else
     {
         Graph* myGraph = new Graph(new Robot(XYZ_GRAPH->rob),XYZ_GRAPH);
-        myGraph->recomputeCost();
+        myGraph->computeAllEdgesAndNodesCost();
         cout << "All graph cost recomputed XYZ_GRAPH is uptodate" << endl;
     }
 

@@ -37,7 +37,7 @@
 #include "SaveContext.hpp"
 #include "MultiRun.hpp"
 
-#include "hri_costspace/HRICS_Navigation.hpp"
+#include "hri_costspace/HRICS_navigation.hpp"
 
 //using namespace std;
 using std::cout;
@@ -66,7 +66,6 @@ MotionPlanner::MotionPlanner(QWidget *parent) :
 MotionPlanner::~MotionPlanner()
 {
     delete m_ui;
-
 }
 
 //---------------------------------------------------------------------
@@ -104,19 +103,7 @@ void MotionPlanner::testParam(double param)
 
 void MotionPlanner::checkAllEdges()
 {
-    if( API_activeGraph )
-    {
-        Graph* tmpGraph = new Graph(*API_activeGraph);
-
-        if(tmpGraph->checkAllEdgesValid())
-        {
-            cout << "Graph valid" << endl;
-        }
-        else {
-            cout << "Graph Not valid" << endl;
-        }
-    }
-    else cout << "Graph Empty" << endl;
+    emit selectedPlanner("checkAllEdges");
 }
 
 void MotionPlanner::computeAStarInCurrentGraph()
@@ -195,43 +182,43 @@ void MotionPlanner::envPRMTypeChanged(int type )
 //---------------------------------------------------------------------
 void MotionPlanner::initDiffusion()
 {
-    new connectCheckBoxToEnv(m_ui->isWithGoal,              ENV.getObject(Env::expandToGoal));
-    new connectCheckBoxToEnv(m_ui->isBidir,                 ENV.getObject(Env::biDir));
+    new connectCheckBoxToEnv( m_ui->isWithGoal,              ENV.getObject(Env::expandToGoal));
+    new connectCheckBoxToEnv( m_ui->isBidir,                 ENV.getObject(Env::biDir));
 
     connect(m_ui->isWithGoal, SIGNAL(toggled( bool )), SLOT(envIsWithGoalValueChanged( bool ) ) );
     connect(m_ui->isBidir, SIGNAL(toggled( bool )), SLOT(envBiDirValueChanged( bool ) ) );
 
-    new connectCheckBoxToEnv(m_ui->isManhattan,             ENV.getObject(Env::isManhattan));
+    new connectCheckBoxToEnv( m_ui->isManhattan,             ENV.getObject(Env::isManhattan));
 #ifndef BIO
     m_ui->isManhattan->setDisabled(true);
 #endif
 
-    new connectCheckBoxToEnv(m_ui->isEST,                   ENV.getObject(Env::treePlannerIsEST));
-    new connectCheckBoxToEnv(m_ui->isBalanced,              ENV.getObject(Env::expandBalanced));
-    new connectCheckBoxToEnv(m_ui->isRefinementControl,     ENV.getObject(Env::refinementControl));
-    new connectCheckBoxToEnv(m_ui->isDiscardingNodes,       ENV.getObject(Env::discardNodes));
-    new connectCheckBoxToEnv(m_ui->checkBoxIsGoalBias,      ENV.getObject(Env::isGoalBiased));
-    new connectCheckBoxToEnv(m_ui->checkBoxRandomInCompCo,  ENV.getObject(Env::randomConnectionToGoal));
-    new connectCheckBoxToEnv(m_ui->checkBoxClosestInCompCo, ENV.getObject(Env::tryClosest));
+    new connectCheckBoxToEnv( m_ui->isEST,                   ENV.getObject(Env::treePlannerIsEST));
+    new connectCheckBoxToEnv( m_ui->isBalanced,              ENV.getObject(Env::expandBalanced));
+    new connectCheckBoxToEnv( m_ui->isRefinementControl,     ENV.getObject(Env::refinementControl));
+    new connectCheckBoxToEnv( m_ui->isDiscardingNodes,       ENV.getObject(Env::discardNodes));
+    new connectCheckBoxToEnv( m_ui->checkBoxIsGoalBias,      ENV.getObject(Env::isGoalBiased));
+    new connectCheckBoxToEnv( m_ui->checkBoxRandomInCompCo,  ENV.getObject(Env::randomConnectionToGoal));
+    new connectCheckBoxToEnv( m_ui->checkBoxClosestInCompCo, ENV.getObject(Env::tryClosest));
 
     connect(m_ui->checkBoxRandomInCompCo, SIGNAL(toggled( bool )), SLOT(envRandomConnectionToGoalValueChanged( bool ) ) );
     connect(m_ui->checkBoxClosestInCompCo, SIGNAL(toggled( bool )), SLOT(envTryClosestValueChanged( bool ) ) );
 
+    connect( m_ui->expansionMethod, SIGNAL(currentIndexChanged(int)),&ENV, SLOT(setExpansionMethodSlot(int)), Qt::DirectConnection);
+    connect( &ENV, SIGNAL(expansionMethodChanged(int)), m_ui->expansionMethod, SLOT(setCurrentIndex(int) ));
     m_ui->expansionMethod->setCurrentIndex((int)ENV.getExpansionMethod());
-    connect(m_ui->expansionMethod, SIGNAL(currentIndexChanged(int)),&ENV, SLOT(setExpansionMethodSlot(int)), Qt::DirectConnection);
-    connect(&ENV, SIGNAL(expansionMethodChanged(int)),m_ui->expansionMethod, SLOT(setCurrentIndex(int)));
 
+    connect( m_ui->spinBoxMaxNodes, SIGNAL(valueChanged(int)), ENV.getObject(Env::maxNodeCompco), SLOT(set(int)) );
+    connect( ENV.getObject(Env::maxNodeCompco), SIGNAL(valueChanged( int )), m_ui->spinBoxMaxNodes, SLOT(setValue(int)) );
     m_ui->spinBoxMaxNodes->setValue(ENV.getInt(Env::maxNodeCompco));
-    connect(m_ui->spinBoxMaxNodes, SIGNAL(valueChanged(int)), ENV.getObject(Env::maxNodeCompco), SLOT(set(int)));
-    connect(ENV.getObject(Env::maxNodeCompco), SIGNAL(valueChanged( int )), m_ui->spinBoxMaxNodes, SLOT(setValue(int)));
 
-    m_ui->spinBoxMaxIterations->setValue( PlanEnv->getInt(PlanParam::plannerMaxIterations) );
     connect(m_ui->spinBoxMaxIterations, SIGNAL(valueChanged(int)), PlanEnv->getObject(PlanParam::plannerMaxIterations), SLOT(set(int)));
     connect(PlanEnv->getObject(PlanParam::plannerMaxIterations), SIGNAL(valueChanged(int)), m_ui->spinBoxMaxIterations, SLOT(setValue(int)));
+    m_ui->spinBoxMaxIterations->setValue( PlanEnv->getInt(PlanParam::plannerMaxIterations) );
 
-    m_ui->spinBoxNbTry->setValue(ENV.getInt(Env::NbTry));
     connect(m_ui->spinBoxNbTry, SIGNAL(valueChanged( int )), ENV.getObject(Env::NbTry), SLOT(set(int)));
     connect(ENV.getObject(Env::NbTry), SIGNAL(valueChanged( int )), m_ui->spinBoxNbTry, SLOT(setValue(int)));
+    m_ui->spinBoxNbTry->setValue(ENV.getInt(Env::NbTry));
 
     new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxExtentionStep, m_ui->horizontalSliderExtentionStep, ENV.getObject(Env::extensionStep) );
     new QtShiva::SpinBoxSliderConnector(this, m_ui->doubleSpinBoxBias, m_ui->horizontalSliderBias, ENV.getObject(Env::Bias) );

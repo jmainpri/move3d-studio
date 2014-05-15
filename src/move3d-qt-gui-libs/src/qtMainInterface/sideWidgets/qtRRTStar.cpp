@@ -31,8 +31,17 @@ RRTStarWidget::~RRTStarWidget()
 
 void RRTStarWidget::init()
 {
-  new connectCheckBoxToEnv( m_ui->checkBoxRRTstar,	PlanEnv->getObject(PlanParam::starRRT));
-  new connectCheckBoxToEnv( m_ui->checkBoxWithRewire,	PlanEnv->getObject(PlanParam::starRewire));
+  //new connectCheckBoxToEnv( m_ui->radioButtonRRTStart,	PlanEnv->getObject(PlanParam::starRRT));
+
+    connect( m_ui->radioButtonRRTStart, SIGNAL(toggled(bool)), PlanEnv->getObject(PlanParam::starRRT), SLOT(set(bool)), Qt::DirectConnection);
+    connect( PlanEnv->getObject(PlanParam::starRRT), SIGNAL(valueChanged(bool)), m_ui->radioButtonRRTStart, SLOT(setChecked(bool)), Qt::DirectConnection);
+    m_ui->radioButtonRRTStart->setChecked( PlanEnv->getBool(PlanParam::starRRT) );
+
+    connect( m_ui->radioButtonRRG, SIGNAL(toggled(bool)), PlanEnv->getObject(PlanParam::rrg), SLOT(set(bool)), Qt::DirectConnection);
+    connect( PlanEnv->getObject(PlanParam::rrg), SIGNAL(valueChanged(bool)), m_ui->radioButtonRRG, SLOT(setChecked(bool)), Qt::DirectConnection);
+    m_ui->radioButtonRRG->setChecked( PlanEnv->getBool(PlanParam::rrg) );
+
+    new connectCheckBoxToEnv( m_ui->checkBoxWithRewire,	PlanEnv->getObject(PlanParam::starRewire));
   
   // Radius
   new SpinBoxSliderConnector( this, m_ui->doubleSpinBoxRadius, m_ui->horizontalSliderRadius, PlanEnv->getObject(PlanParam::starRadius));

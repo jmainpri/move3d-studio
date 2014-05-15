@@ -12,21 +12,22 @@
 #include "planner/planEnvironment.hpp"
 #include "planner/TrajectoryOptim/Stomp/stompOptimizer.hpp"
 
-#include "collision_space/CollisionSpace.hpp"
+#include "collision_space/collision_space.hpp"
 
 #ifdef HRI_COSTSPACE
 #include "hri_costspace/HRICS_costspace.hpp"
-#include "hri_costspace/HRICS_Miscellaneous.hpp"
+#include "hri_costspace/HRICS_miscellaneous.hpp"
 #endif
+
+#include "feature_space/features.hpp"
 
 #include "API/ConfigSpace/configuration.hpp"
 #include "API/Device/robot.hpp"
 #include "API/project.hpp"
 
-#include "p3d/env.hpp"
-
-#include "P3d-pkg.h"
-#include "Collision-pkg.h"
+#include <libmove3d/p3d/env.hpp>
+#include <libmove3d/include/P3d-pkg.h>
+#include <libmove3d/include/Collision-pkg.h>
 
 #include <sys/time.h>
 
@@ -276,8 +277,10 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
 
 #endif
 
+//    cout << "features : " << API_activeFeatureSpace->getFeatures( *robot->getCurrentPos() ).transpose() << endl;
 
-#ifdef P3D_COLLISION_CHECKING
+    /*
+
     int ncol = false;
 
     if( global_collisionSpace )
@@ -313,10 +316,10 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
         Robot* robot(global_Project->getActiveScene()->getRobotByName(robotPt->name));
         ncol = robot->isInCollision();
     }
-#endif
-
-//    cout << "ncol : " << ncol << endl;
 
     //HRICS::setThePlacemateInIkeaShelf();
     g3d_set_draw_coll( ncol );
+
+    */
+//    cout << "ncol : " << ncol << endl;
 }

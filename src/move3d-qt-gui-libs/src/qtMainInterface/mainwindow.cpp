@@ -87,6 +87,8 @@ MainWindow::MainWindow(QWidget *parent)
 #endif
 
     m_ui->tabCost->getDistFieldWidget()->setMainWindow(this);
+    m_ui->tabCost->getDistFieldWidget()->initDistField();
+
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
     m_ui->tabCost->getReplanningWidget()->setMainWindow(this);
 #endif
@@ -580,7 +582,6 @@ void MainWindow::initViewerButtons()
     connect(m_ui->checkBoxDrawGraph,SIGNAL(toggled(bool)),this,SLOT(drawAllWinActive()),Qt::QueuedConnection);
     connect(m_ui->checkBoxDrawTraj,SIGNAL(toggled(bool)),this,SLOT(drawAllWinActive()),Qt::QueuedConnection);
 
-
     connect( ENV.getObject(Env::drawGraph), SIGNAL(valueChanged(bool)), this, SLOT(test()) );
 
     new connectCheckBoxToEnv(m_ui->checkBoxDisableDraw, ENV.getObject(Env::drawDisabled));
@@ -595,11 +596,16 @@ void MainWindow::initViewerButtons()
     m_ui->checkBoxDrawGraph->setCheckState(Qt::Checked);
     //m_ui->checkBoxDrawGraph->setCheckState(Qt::Checked);
 
-    // Joint to Draw
+    // Joint to draw
     new QtShiva::SpinBoxConnector( this, m_ui->spinBoxJointToDraw, ENV.getObject(Env::jntToDraw) );
     connect(m_ui->spinBoxJointToDraw,SIGNAL(valueChanged(int)),this,SLOT(drawAllWinActive()));
     ENV.setInt( Env::jntToDraw, XYZ_ROBOT->o[XYZ_ROBOT->no-1]->jnt->num );
 
+    // Scaling node drawing factor
+    new QtShiva::SpinBoxConnector( this, m_ui->spinBoxScaleNodeSphere, PlanEnv->getObject(PlanParam::drawScaleFactorNodeSphere) );
+    connect( m_ui->spinBoxScaleNodeSphere, SIGNAL(valueChanged(double)), this, SLOT(drawAllWinActive()) );
+
+    // Reset camera view button
     connect(m_ui->pushButtonRestoreView,SIGNAL(clicked(bool)),this,SLOT(restoreView()),Qt::DirectConnection);
     //	connect(m_ui->pushButtonResetGraph,SIGNAL(clicked()),this,SLOT(ResetGraph()));
 

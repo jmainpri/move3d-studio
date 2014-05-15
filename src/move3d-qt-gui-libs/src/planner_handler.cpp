@@ -48,6 +48,7 @@
 #include "planner/plannerFunctions.hpp"
 
 #include "utils/MultiRun.hpp"
+#include "utils/multilocalpath_utils.hpp"
 
 #include "qtLibrary.hpp"
 #include <QtCore/QMutexLocker>
@@ -57,32 +58,35 @@
 #include "bio/BioEnergy/include/Energy-pkg.h"
 #endif
 
+#include "feature_space/features.hpp"
+#include "feature_space/spheres.hpp"
+#include "feature_space/spheres_3d.hpp"
+#include "feature_space/squares.hpp"
+#include "feature_space/boxes.hpp"
+#include "feature_space/clearance.hpp"
+
 #if defined( HRI_COSTSPACE )
 #include "hri_costspace/HRICS_parameters.hpp"
 #include "hri_costspace/HRICS_costspace.hpp"
-#include "hri_costspace/HRICS_Workspace.hpp"
-#include "hri_costspace/HRICS_Miscellaneous.hpp"
-#include "hri_costspace/HRICS_Navigation.hpp"
+#include "hri_costspace/HRICS_workspace.hpp"
+#include "hri_costspace/HRICS_miscellaneous.hpp"
+#include "hri_costspace/HRICS_navigation.hpp"
 
-#include "hri_costspace/Gestures/HRICS_GestParameters.hpp"
-#include "hri_costspace/Gestures/HRICS_WorkspaceOccupancy.hpp"
-#include "hri_costspace/Gestures/HRICS_RecordMotion.hpp"
-#include "hri_costspace/Gestures/HRICS_PlayMotion.hpp"
-#include "hri_costspace/Gestures/HRICS_HumanPredictionCostSpace.hpp"
-#include "hri_costspace/Gestures/HRICS_HumanPredictionSimulator.hpp"
+#include "hri_costspace/gestures/HRICS_gest_parameters.hpp"
+#include "hri_costspace/gestures/HRICS_workspace_occupancy.hpp"
+#include "hri_costspace/gestures/HRICS_record_motion.hpp"
+#include "hri_costspace/gestures/HRICS_play_motion.hpp"
+#include "hri_costspace/gestures/HRICS_human_prediction_cost_space.hpp"
+#include "hri_costspace/gestures/HRICS_human_prediction_simulator.hpp"
 
 #include "hri_costspace/human_trajectories/HRICS_ioc.hpp"
 #include "hri_costspace/human_trajectories/HRICS_human_ioc.hpp"
 #include "hri_costspace/human_trajectories/HRICS_human_cost_space.hpp"
 #include "hri_costspace/human_trajectories/HRICS_detours.hpp"
-#include "hri_costspace/human_trajectories/HRICS_spheres.hpp"
-#include "hri_costspace/human_trajectories/HRICS_spheres_3d.hpp"
-#include "hri_costspace/human_trajectories/HRICS_squares.hpp"
-#include "hri_costspace/human_trajectories/HRICS_boxes.hpp"
 #include "hri_costspace/human_trajectories/HRICS_run_multiple_planners.hpp"
 
 #if defined( HRI_PLANNER )
-#include "hri_costspace/HRICS_HAMP.hpp"
+#include "hri_costspace/HRICS_hamp.hpp"
 #include "hri_costspace/HRICS_otpmotionpl.hpp"
 #endif
 #endif
@@ -162,7 +166,7 @@ void qt_init_after_params()
 
     if( ENV.getBool(Env::setActiveJointsGroup) )
     {
-        traj_optim_init_mlp_cntrts_and_fix_joints();
+        traj_optim_init_mlp_cntrts_and_fix_joints( global_Project->getActiveScene()->getActiveRobot() );
     }
 
     if( ENV.getBool(Env::setStompPlanner) )
@@ -178,6 +182,14 @@ void qt_init_after_params()
     if( GestEnv->getBool(GestParam::init_module_at_start) )
     {
         HRICS_initOccupancyPredictionFramework();
+    }
+
+    if( PlanEnv->getBool(PlanParam::initColisionSpace))
+    {
+        traj_optim_initScenario();
+
+        if( global_Project->getActiveScene()->getActiveRobot()->getName() == "PR2_ROBOT")
+            FEATURES_init_Clearance_cost();
     }
 
     if( HriEnv->getBool(HricsParam::init_spheres_cost) )
@@ -450,6 +462,9 @@ void qt_runDiffusion()
     cout << "Run Diffusion" << endl;
     Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
 
+    // Remove displayed trajectory
+    p3d_destroy_traj( robot->getP3dRobotStruct(), robot->getP3dRobotStruct()->tcur );
+
     try
     {
 #ifdef P3D_PLANNER
@@ -462,11 +477,11 @@ void qt_runDiffusion()
         cout << "ENV.getBool(Env::Env::treePlannerIsEST) = " << ENV.getBool(Env::treePlannerIsEST) << endl;
         if (ENV.getBool(Env::treePlannerIsEST))
         {
-            p3d_run_est(robot->getP3dRobotStruct());
+            p3d_run_est( robot->getP3dRobotStruct() );
         }
         else
         {
-            p3d_run_rrt(robot->getP3dRobotStruct());
+            p3d_run_rrt( robot->getP3dRobotStruct() );
         }
 
         gettimeofday(&tim, NULL);
@@ -481,13 +496,15 @@ void qt_runDiffusion()
     {
         cerr << "Exeption in run qt_runDiffusion : " << endl;
         cerr << str << endl;
-        ENV.setBool(Env::isRunning,false);
     }
     catch (...)
     {
         cerr << "Exeption in run qt_runDiffusion" << endl;
-        ENV.setBool(Env::isRunning,false);
     }
+
+    // TEST
+//    if( API_activeFeatureSpace != NULL )
+//        API_activeFeatureSpace->extractAllTrajectories( API_activeGraph, robot->getInitPos(), robot->getGoalPos(), 10 );
 }
 
 /**
@@ -497,6 +514,9 @@ void qt_runPRM()
 {
     cout << "Run Probabilistic Road Map" << endl;
     Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+
+    // Remove displayed trajectory
+    p3d_destroy_traj( robot->getP3dRobotStruct(), robot->getP3dRobotStruct()->tcur );
 
     try
     {
@@ -508,24 +528,18 @@ void qt_runPRM()
         switch(ENV.getInt(Env::PRMType))
         {
         case 0:
+        case 1:
+        case 2:
+        case 4:
+        case 5:
             p3d_run_prm(robot->getP3dRobotStruct());
             break;
-        case 1:
-            p3d_run_vis_prm(robot->getP3dRobotStruct());
-            break;
-        case 2:
-            p3d_run_acr(robot->getP3dRobotStruct());
-            break;
+
         case 3:
             p3d_run_perturb_prm(robot->getP3dRobotStruct());
             break;
-        case 4:
-            p3d_run_simple_prm(robot->getP3dRobotStruct());
-            break;
         default:
             cout << "Error No Other PRM"  << endl;
-            ChronoPrint("");
-            ChronoOff();
             return;
         }
 
@@ -546,7 +560,9 @@ void qt_runPRM()
         cerr << "Exeption in run qt_runPRM" << endl;
     }
 
-    ENV.setBool(Env::isRunning,false);
+    // TEST
+//    if( API_activeFeatureSpace != NULL )
+//        API_activeFeatureSpace->extractAllTrajectories( API_activeGraph, robot->getInitPos(), robot->getGoalPos(), 7 );
 }
 
 void qt_runMultiRRT()
@@ -564,16 +580,15 @@ void qt_runMultiSmooth()
 void qt_runAStarPlanning()
 {
     Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
-    confPtr_t q_init = robot->getInitPos();
-    confPtr_t q_goal = robot->getGoalPos();
+    Move3D::confPtr_t q_init = robot->getInitPos();
+    Move3D::confPtr_t q_goal = robot->getGoalPos();
 
     // Warning leaking
-    AStarPlanner* planner = new AStarPlanner(robot);
+    Move3D::AStarPlanner* planner = new Move3D::AStarPlanner(robot);
     planner->set_pace( PlanEnv->getDouble(PlanParam::grid_pace) );
     planner->init();
 
     Move3D::Trajectory* traj = planner->computeRobotTrajectory( q_init, q_goal );
-
     if( traj != NULL )
     {
         traj->replaceP3dTraj();
@@ -617,6 +632,59 @@ void qt_generateDetours()
     cout << "Sample Graph" << endl;
     HRICS::Detours* det = new HRICS::Detours;
     det->planAStar();
+}
+
+void qt_extractAllTrajectories()
+{
+    ENV.setBool(Env::drawGraph,false);
+    ENV.setBool(Env::drawTrajVector,false);
+    ENV.setBool(Env::drawGrid,false);
+
+    if( dynamic_cast<PlanarFeature*>(API_activeFeatureSpace) != NULL ){
+        dynamic_cast<PlanarFeature*>(API_activeFeatureSpace)->generateRandomEnvironment();
+    }
+
+    g3d_draw_allwin_active();
+
+    ChronoTimeOfDayOn();
+
+    if( API_activeGraph == NULL )
+        qt_runPRM();
+    else
+        API_activeGraph->resetAllEdgesFeatures();
+
+    Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+    robot->removeCurrentTraj();
+
+    if( API_activeFeatureSpace != NULL )
+        API_activeFeatureSpace->extractAllTrajectories( API_activeGraph, robot->getInitPos(), robot->getGoalPos(), 7 );
+
+    double time;
+    ChronoTimeOfDayTimes( &time );
+    ChronoTimeOfDayOff();
+
+    cout << "time to compute : " << time << endl;
+
+    ENV.setBool(Env::drawTrajVector,true);
+    ENV.setBool(Env::drawGrid,true);
+
+    if( robot->getNumberOfActiveDoF() == 2 )
+    {
+        Move3D::WeightVect w( Move3D::WeightVect::Constant( API_activeFeatureSpace->getNumberOfFeatures(), 0.5 ));
+        cout << " w.transpose() : " << w.transpose() << endl;
+        API_activeFeatureSpace->setWeights( w );
+
+        // Create grid and set as active grid
+        Move3D::PlanGrid* grid = new Move3D::PlanGrid( robot, PlanEnv->getDouble(PlanParam::grid_pace),
+                                                       global_Project->getActiveScene()->getBounds(), false );
+
+        grid->setCostBounds( 0.0, 1.0 );
+
+        if( API_activeGrid != NULL ) delete API_activeGrid;
+        API_activeGrid = grid;
+    }
+
+    g3d_draw_allwin_active();
 }
 
 #ifdef MULTILOCALPATH
@@ -677,7 +745,8 @@ void qt_show_recorded_motion()
 void qt_workspace_occupancy()
 {
     cout << "Loading regressed motion and computing the occupancy" << endl;
-    global_motionRecorders[0]->loadRegressedFromCSV();
+    std::string foldername = "/home/jmainpri/Dropbox/workspace/gesture-recognition/gmm/gmm-gmr-gesture-recognition/";
+    global_motionRecorders[0]->loadRegressedFromCSV( foldername );
     global_workspaceOccupancy->setRegressedMotions( global_motionRecorders[0]->getStoredMotions() );
     global_workspaceOccupancy->computeOccpancy();
 }
@@ -919,20 +988,33 @@ void qt_runParallelStomp()
 {
     if( PlanEnv->getBool(PlanParam::trajStompRunMultiple) )
     {
-        // srompRun_MultipleParallel();
-        HRICS::MultiplePlanners planner( global_Project->getActiveScene()->getRobotByNameContaining("ROBOT") );
-        planner.loadTrajsFromFile( "/home/jmainpri/workspace/move3d/move3d-launch/matlab/stomp_trajs/per_feature_square/ASTAR" );
+        cout << "RUN MULTIPLE PARALLEL STOMP" << endl;
+        stomp_motion_planner::srompRun_MultipleParallel();
+
+//        HRICS::MultiplePlanners planner( global_Project->getActiveScene()->getRobotByNameContaining("ROBOT") );
+//        planner.loadTrajsFromFile( "/home/jmainpri/workspace/move3d/move3d-launch/matlab/stomp_trajs/per_feature_square/ASTAR" );
 //        planner.multipleRun( 100 );
     }
     else
     {
+        cout << "RUN ONE PARALLEL STOMP" << endl;
         stomp_motion_planner::srompRun_OneParallel();
     }
 }
 
-#ifdef MULTILOCALPATH
 void qt_runStomp()
 {
+    cout << "-----------------------------------------------------------" << endl;
+
+    if( !PlanEnv->getBool(PlanParam::trajStompRunParallel) )
+    {
+        cout << "RUN NORMAL STOMP" << endl;
+    }
+    else {
+        qt_runParallelStomp();
+        return;
+    }
+
     if( traj_optim_runStomp(0) )
     {
         cout << "Stomp has run succesfully!!!" << endl;
@@ -942,9 +1024,11 @@ void qt_runStomp()
     }
 }
 
-
 void qt_runStompNoReset()
 {
+    cout << "-----------------------------------------------------------" << endl;
+    cout << "RUN NORMAL STOMP (no reset)" << endl;
+
     if( traj_optim_runStompNoReset(0) )
     {
         cout << "Stomp has run succesfully!!!" << endl;
@@ -953,10 +1037,10 @@ void qt_runStompNoReset()
         cout << "Stomp fail!!!" << endl;
     }
 }
-
+#ifdef MULTILOCALPATH
 void qt_init_mlp_cntrts_and_fixjoints() 
 {
-    traj_optim_init_mlp_cntrts_and_fix_joints();
+    traj_optim_init_mlp_cntrts_and_fix_joints(  global_Project->getActiveScene()->getActiveRobot() );
 }
 
 void qt_runChomp()
@@ -1121,6 +1205,25 @@ void qt_removeRedundantNodes()
 #endif
 
     return;
+}
+
+void qt_recomputeValidEdges()
+{
+    if( API_activeGraph )
+    {
+        // Graph* tmpGraph = new Graph( *API_activeGraph );
+
+        API_activeGraph->resetAllEdgesValid();
+
+        if( API_activeGraph->checkAllEdgesValid() )
+        {
+            cout << "Graph valid" << endl;
+        }
+        else {
+            cout << "Graph Not valid" << endl;
+        }
+    }
+    else cout << "Graph Empty" << endl;
 }
 
 #ifdef LIGHT_PLANNER
@@ -1468,6 +1571,10 @@ void PlannerHandler::startPlanner(QString plannerName)
             std::cout << "Shortcut trajectory : " << std::endl;
             qt_shortCut();
         }
+        else if (plannerName == "checkAllEdges")
+        {
+            qt_recomputeValidEdges();
+        }
 
 #ifdef HRI_PLANNER
         else if( plannerName == "realTimeOtp"){
@@ -1509,10 +1616,6 @@ void PlannerHandler::startPlanner(QString plannerName)
         }
         else if( plannerName == "runNoReset") {
             qt_runStompNoReset();
-        }
-        else if( plannerName == "convertToSoftMotion"){
-            //traj_optim_generate_softMotion();
-            traj_optim_generate_pointsOnTraj();
         }
         else if( plannerName == "initMlpCntrtsAndFixJoints" ){
             qt_init_mlp_cntrts_and_fixjoints();
@@ -1568,6 +1671,10 @@ void PlannerHandler::startPlanner(QString plannerName)
         else if( plannerName == "Detours" )
         {
             qt_generateDetours();
+        }
+        else if(plannerName == "ExtractAllTrajectories" )
+        {
+            qt_extractAllTrajectories();
         }
         else if(plannerName == "test1")
         {

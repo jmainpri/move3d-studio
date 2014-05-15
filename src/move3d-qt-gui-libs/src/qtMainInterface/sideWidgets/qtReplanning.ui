@@ -27,8 +27,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>530</width>
-        <height>969</height>
+        <width>514</width>
+        <height>979</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -303,6 +303,9 @@
           <property name="bottomMargin">
            <number>0</number>
           </property>
+          <item row="4" column="1">
+           <widget class="QSpinBox" name="spinBoxStompDrawIteration"/>
+          </item>
           <item row="6" column="1">
            <widget class="QCheckBox" name="checkBoxInitStomp">
             <property name="text">
@@ -351,9 +354,6 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="1">
-           <widget class="QSpinBox" name="spinBoxStompDrawIteration"/>
-          </item>
           <item row="5" column="0">
            <widget class="QCheckBox" name="checkBoxDrawParallel">
             <property name="text">
@@ -365,6 +365,20 @@
            <widget class="QCheckBox" name="checkBoxStompNoPrint">
             <property name="text">
              <string>No Print</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QCheckBox" name="checkBoxStompParallel">
+            <property name="text">
+             <string>Parallel</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QCheckBox" name="checkBoxMultipleStomp">
+            <property name="text">
+             <string>Multiple</string>
             </property>
            </widget>
           </item>

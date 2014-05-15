@@ -14,7 +14,7 @@
 
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
 
-#include "collision_space/CollisionSpace.hpp"
+#include "collision_space/collision_space.hpp"
 
 #include "API/project.hpp"
 
@@ -34,8 +34,6 @@ QWidget(parent),
 m_ui(new Ui::DistFieldWidget)
 {
 	m_ui->setupUi(this);
-	
-	initDistField();
 }
 
 DistFieldWidget::~DistFieldWidget()
@@ -47,15 +45,20 @@ void DistFieldWidget::initDistField()
 {
     // This function enables multi-threading
     //  connect(this, SIGNAL(selectedPlanner(QString)), global_plannerHandler, SLOT(startPlanner(QString)));
-    connect(m_ui->pushButtonCreateDistanceField, SIGNAL(clicked()), this, SLOT(createDistanceField()));
-    connect(m_ui->pushButtonDeleteDistanceField, SIGNAL(clicked()), this, SLOT(deleteDistanceField()));
-    connect(m_ui->pushButtonAddAllPoints,        SIGNAL(clicked()), this, SLOT(addAllPointsToField()));
-    connect(m_ui->pushButtonGenerateRobotBoundingVolumes, SIGNAL(clicked()), this, SLOT(generateRobotBoundingVolumes()));
+    connect( m_ui->pushButtonCreateDistanceField, SIGNAL(clicked()), this, SLOT(createDistanceField()));
+    connect( m_ui->pushButtonDeleteDistanceField, SIGNAL(clicked()), this, SLOT(deleteDistanceField()));
+    connect( m_ui->pushButtonAddAllPoints,        SIGNAL(clicked()), this, SLOT(addAllPointsToField()));
+    connect( m_ui->pushButtonGenerateRobotBoundingVolumes, SIGNAL(clicked()), this, SLOT(generateRobotBoundingVolumes()));
     
     new connectCheckBoxToEnv( m_ui->checkBoxDrawOccupVoxels,     PlanEnv->getObject(PlanParam::drawOccupVoxels ));
     new connectCheckBoxToEnv( m_ui->checkBoxDrawSampledPoints,   PlanEnv->getObject(PlanParam::drawSampledPoints ));
     new connectCheckBoxToEnv( m_ui->checkBoxDrawStaticCells,     PlanEnv->getObject(PlanParam::drawStaticVoxels ));
     new connectCheckBoxToEnv( m_ui->checkBoxDrawBoundingVolumes, PlanEnv->getObject(PlanParam::drawBoundingVolumes ));
+
+    connect( m_ui->checkBoxDrawOccupVoxels,SIGNAL(toggled(bool)),     m_mainWindow, SLOT(drawAllWinActive()), Qt::QueuedConnection);
+    connect( m_ui->checkBoxDrawSampledPoints,SIGNAL(toggled(bool)),   m_mainWindow, SLOT(drawAllWinActive()), Qt::QueuedConnection);
+    connect( m_ui->checkBoxDrawStaticCells,SIGNAL(toggled(bool)),     m_mainWindow, SLOT(drawAllWinActive()), Qt::QueuedConnection);
+    connect( m_ui->checkBoxDrawBoundingVolumes,SIGNAL(toggled(bool)), m_mainWindow, SLOT(drawAllWinActive()), Qt::QueuedConnection);
     
     // Set the number of cells in the grid
     SpinBoxConnector(this,m_ui->spinBoxNbMaxCells, ENV.getObject(Env::nbCells));

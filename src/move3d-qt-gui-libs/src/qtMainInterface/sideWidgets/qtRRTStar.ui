@@ -39,9 +39,16 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QCheckBox" name="checkBoxRRTstar">
+           <widget class="QRadioButton" name="radioButtonRRTStart">
             <property name="text">
              <string>RRT*</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButtonRRG">
+            <property name="text">
+             <string>RRG</string>
             </property>
            </widget>
           </item>
@@ -86,8 +93,14 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBoxRadius">
+               <property name="minimum">
+                <double>1.000000000000000</double>
+               </property>
                <property name="maximum">
-                <double>1000.000000000000000</double>
+                <double>100.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
                </property>
               </widget>
              </item>

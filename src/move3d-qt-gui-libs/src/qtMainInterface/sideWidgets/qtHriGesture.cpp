@@ -35,15 +35,17 @@
 #include "qtMotionPlanner.hpp"
 
 #include "hri_costspace/HRICS_costspace.hpp"
-#include "hri_costspace/Gestures/HRICS_RecordMotion.hpp"
-#include "hri_costspace/Gestures/HRICS_WorkspaceOccupancy.hpp"
-#include "hri_costspace/Gestures/HRICS_ClassifyMotion.hpp"
-#include "hri_costspace/Gestures/HRICS_HumanPredictionCostSpace.hpp"
-#include "hri_costspace/Gestures/HRICS_GestParameters.hpp"
+#include "hri_costspace/gestures/HRICS_record_motion.hpp"
+#include "hri_costspace/gestures/HRICS_workspace_occupancy.hpp"
+#include "hri_costspace/gestures/HRICS_classify_motion.hpp"
+#include "hri_costspace/gestures/HRICS_human_prediction_cost_space.hpp"
+#include "hri_costspace/gestures/HRICS_gest_parameters.hpp"
 #include "hri_costspace/HRICS_parameters.hpp"
 #include "hri_costspace/human_trajectories/HRICS_ioc.hpp"
 
 #include "planner/planEnvironment.hpp"
+#include "planner/AStar/AStarPlanner.hpp"
+
 #include "utils/ConfGenerator.h"
 #include "API/project.hpp"
 
@@ -80,6 +82,7 @@ void HriGestureWidget::init()
     initGestureRecognition();
     initHriIOC();
     initLegibleCost();
+    initClassification();
 }
 
 //--------------------------------------------------------------------
@@ -235,7 +238,9 @@ void HriGestureWidget::loadFromCSV()
         global_motionRecorders.push_back( new HRICS::RecordMotion( human ) );
     }
 
-    global_motionRecorders[0]->loadRegressedFromCSV();
+
+    std::string foldername = "/home/jmainpri/Dropbox/workspace/gesture-recognition/gmm/gmm-gmr-gesture-recognition/";
+    global_motionRecorders[0]->loadRegressedFromCSV( foldername );
 }
 
 void HriGestureWidget::loadFolderTwoHumans()
@@ -399,4 +404,36 @@ void HriGestureWidget::runDetours()
 void HriGestureWidget::initLegibleCost()
 {
     new connectCheckBoxToEnv( m_ui->checkBoxUseLegibleCost,  PlanEnv->getObject(PlanParam::useLegibleCost) );
+}
+
+//-------------------------------------------------------------------
+// Classification
+//-------------------------------------------------------------------
+void HriGestureWidget::initClassification()
+{
+    connect( m_ui->pushButtonClassifyBad,SIGNAL(clicked()),this,SLOT(classifyBad()));
+    connect( m_ui->pushButtonClassifyGood,SIGNAL(clicked()),this,SLOT(classifyGood()));
+    connect( m_ui->pushButtonClassifyBothBad,SIGNAL(clicked()),this,SLOT(classifyBothBad()));
+    connect( m_ui->pushButtonClassifyInit,SIGNAL(clicked()),this,SLOT(classifyInit()));
+}
+
+void HriGestureWidget::classifyInit()
+{
+    emit(selectedPlanner(QString("ExtractAllTrajectories")));
+}
+
+void HriGestureWidget::classifyGood()
+{
+
+    cout << "classify good" << endl;
+}
+
+void HriGestureWidget::classifyBad()
+{
+    cout << "classify bad" << endl;
+}
+
+void HriGestureWidget::classifyBothBad()
+{
+    cout << "classify both bad" << endl;
 }
