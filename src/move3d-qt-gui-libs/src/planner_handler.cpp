@@ -181,7 +181,7 @@ void qt_init_after_params()
 
     if( GestEnv->getBool(GestParam::init_module_at_start) )
     {
-        HRICS_initOccupancyPredictionFramework();
+        HRICS_initOccupancyPredictionFramework( "PR2_ROBOT", "HERAKLES_HUMAN1" );
     }
 
     if( PlanEnv->getBool(PlanParam::initColisionSpace))
@@ -747,7 +747,7 @@ void qt_workspace_occupancy()
     cout << "Loading regressed motion and computing the occupancy" << endl;
     std::string foldername = "/home/jmainpri/Dropbox/workspace/gesture-recognition/gmm/gmm-gmr-gesture-recognition/";
     global_motionRecorders[0]->loadRegressedFromCSV( foldername );
-    global_workspaceOccupancy->setRegressedMotions( global_motionRecorders[0]->getStoredMotions() );
+    global_workspaceOccupancy->setRegressedMotions( global_motionRecorders[0]->getStoredMotions(), true );
     global_workspaceOccupancy->computeOccpancy();
 }
 

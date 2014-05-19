@@ -219,7 +219,7 @@ void HriGestureWidget::convertFolderToCSV()
         return;
     }
 
-    global_motionRecorders[0]->saveStoredToCSV( foldername + "/compound.csv" );
+    global_motionRecorders[0]->saveStoredToCSV( foldername + "/compound.csv", false );
 }
 
 void HriGestureWidget::loadFromCSV()
