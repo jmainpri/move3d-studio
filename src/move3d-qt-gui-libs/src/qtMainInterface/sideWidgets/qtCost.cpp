@@ -243,10 +243,9 @@ void CostWidget::initCostSpace()
 {  
     if (ENV.getBool(Env::isCostSpace) && global_costSpace == NULL )
     {
+        cout << "initalize global costspace" << endl;
         GlobalCostSpace::initialize();
     }
-
-    //  GlobalCostSpace::initialize();
 
     if (ENV.getBool(Env::enableHri))
     {
@@ -278,6 +277,8 @@ void CostWidget::initCostSpace()
 
 void CostWidget::resetCostFunctions()
 {
+    cout << "reset cost function user interface" << endl;
+
     vector<string> AllCost = global_costSpace->getAllCost();
     m_ui->comboBoxCostFunctions->clear();
     m_ui->comboBoxCostFunctions->blockSignals(true);
@@ -506,13 +507,7 @@ void CostWidget::showTrajCost()
     TrajectoryStatistics traj_statistics;
     traj.costStatistics( traj_statistics );
 
-    cout << "--- stats on traj ---" << endl;
-    cout << " length = " << traj_statistics.length << endl;
-    cout << " max = " << traj_statistics.max << endl;
-    cout << " average = " << traj_statistics.average << endl;
-    cout << " integral = " << traj_statistics.integral << endl;
-    cout << " mecha_work = " << traj_statistics.mecha_work << endl;
-    cout << "---------------------" << endl;
+    traj_statistics.print();
 
     int nb_points = PlanEnv->getInt( PlanParam::nb_pointsOnTraj );
     double cost_n_points = traj.costNPoints( nb_points );

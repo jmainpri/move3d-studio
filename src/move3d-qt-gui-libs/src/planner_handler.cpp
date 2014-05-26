@@ -79,6 +79,7 @@
 #include "hri_costspace/gestures/HRICS_human_prediction_cost_space.hpp"
 #include "hri_costspace/gestures/HRICS_human_prediction_simulator.hpp"
 
+#include "hri_costspace/human_trajectories/HRICS_ioc_sequences.hpp"
 #include "hri_costspace/human_trajectories/HRICS_ioc.hpp"
 #include "hri_costspace/human_trajectories/HRICS_human_ioc.hpp"
 #include "hri_costspace/human_trajectories/HRICS_human_cost_space.hpp"
@@ -192,7 +193,7 @@ void qt_init_after_params()
             FEATURES_init_Clearance_cost();
     }
 
-    if( HriEnv->getBool(HricsParam::init_spheres_cost) )
+    if( HriEnv->getBool(HricsParam::init_spheres_cost) || HriEnv->getBool(HricsParam::init_human_trajectory_cost) )
     {
         if( !ENV.getBool(Env::isCostSpace) )
         {
@@ -201,19 +202,25 @@ void qt_init_after_params()
 
         bool init_cost = false;
 
-        cout << "init_cost : " << init_cost << endl;
-        init_cost |= HRICS_init_boxes_cost();
-        cout << "init_cost : " << init_cost << endl;
-        init_cost |= HRICS_init_shperes_3d_cost();
-        cout << "init_cost : " << init_cost << endl;
-        init_cost |= HRICS_init_sphere_cost();
-        cout << "init_cost : " << init_cost << endl;
-        init_cost |= HRICS_init_square_cost();
+        if( HriEnv->getBool(HricsParam::init_spheres_cost) )
+        {
+            cout << "init_cost : " << init_cost << endl;
+            init_cost |= HRICS_init_boxes_cost();
+            cout << "init_cost : " << init_cost << endl;
+            init_cost |= HRICS_init_shperes_3d_cost();
+            cout << "init_cost : " << init_cost << endl;
+            init_cost |= HRICS_init_sphere_cost();
+            cout << "init_cost : " << init_cost << endl;
+            init_cost |= HRICS_init_square_cost();
+        }
+        if( HriEnv->getBool(HricsParam::init_human_trajectory_cost) )
+        {
+            init_cost |= HRICS_init_human_trajectory_cost();
+        }
 
         if( init_cost == true )
         {
-            ENV.setBool( Env::isCostSpace, true );
-            global_costSpace->setCost( PlanEnv->getString(PlanParam::active_cost_function) );
+            ENV.setBool( Env::isCostSpace, true ); // will initilize the cost space with cost space function
         }
     }
 
@@ -859,21 +866,30 @@ void qt_human_prediction_simulation()
 //----------------------------------------------------------
 // Inverse Optimal Control Functions
 //----------------------------------------------------------
-void qt_runShereIOC()
+void qt_runIOC()
 {
-    HRICS_run_sphere_ioc();
+    // TODO BUG WITH THE destructor...
+
+//    HRICS::IocSequences* ioc = new HRICS::IocSequences;
+//    ioc->run();
+
+    HRICS::IocSequences ioc;
+    ioc.run();
+
+    cout << "End IOC RUN!!!" << endl;
 
     if( HriEnv->getBool(HricsParam::ioc_exit_after_run) )
     {
+        cout << "exit move3d" << endl;
         exit(1);
     }
 }
 
-void qt_runHumanIOC()
-{
-    HRICS_run_human_ioc_evaluation();
+//void qt_runHumanIOC()
+//{
+//    HRICS_run_human_ioc_evaluation();
 //    HRICS_run_human_ioc();
-}
+//}
 
 void qt_runHumanPlanning()
 {
@@ -1640,13 +1656,12 @@ void PlannerHandler::startPlanner(QString plannerName)
         {
             qt_human_prediction_simulation();
         }
-        else if( plannerName == "SphereIOC" )
+        else if( plannerName == "SphereIOC" ||  plannerName == "HumanIOC"  || plannerName == "RunIOC" )
         {
-            qt_runShereIOC();
-        }
-        else if( plannerName == "HumanIOC" )
-        {
-            qt_runHumanIOC();
+            qt_runIOC();
+            cout << "END : qt_runIOC" << endl;
+//            qt_runShereIOC();
+//            qt_runHumanIOC();
         }
         else if( plannerName == "HumanPlanning" )
         {

@@ -347,6 +347,9 @@ void HriGestureWidget::initHriIOC()
 {
     new connectCheckBoxToEnv( m_ui->checkBoxInitHriIOC,         GestEnv->getObject(GestParam::init_module_ioc) );
     new connectCheckBoxToEnv( m_ui->checkBoxInitSphereCost,     HriEnv->getObject(HricsParam::init_spheres_cost) );
+    new connectCheckBoxToEnv( m_ui->checkBoxInitHumanTrajCost,  HriEnv->getObject(HricsParam::init_human_trajectory_cost) );
+    new connectCheckBoxToEnv( m_ui->checkBoxIocExitAfterRun,    HriEnv->getObject(HricsParam::ioc_exit_after_run) );
+
     new connectCheckBoxToEnv( m_ui->checkBoxGestureDebug,       GestEnv->getObject(GestParam::print_debug) );
     new connectCheckBoxToEnv( m_ui->checkBoxSingleIteration,    HriEnv->getObject(HricsParam::ioc_single_iteration) );
 
@@ -390,7 +393,7 @@ void HriGestureWidget::runIoc()
 {
     cout << "HriGestureWidget::runIoc" << endl;
     // emit(selectedPlanner(QString("HumanIOC")));
-    emit(selectedPlanner(QString("SphereIOC")));
+    emit(selectedPlanner(QString("RunIOC")));
 }
 
 void HriGestureWidget::runDetours()

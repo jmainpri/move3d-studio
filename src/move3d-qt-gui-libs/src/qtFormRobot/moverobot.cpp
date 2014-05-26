@@ -77,7 +77,7 @@ void MoveRobot::initAllForms(GLWidget* ptrOpenGl)
         form->initSliders();
         form->resetConstraintedDoFs();
 
-        shared_ptr<Configuration> ptrConf = ptrRob->getInitPos();
+        confPtr_t ptrConf = ptrRob->getInitPos();
 
         ptrRob->setAndUpdate( *ptrConf );
         form->setSliders( *ptrConf );
