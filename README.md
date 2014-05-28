@@ -10,7 +10,7 @@ Depends on libmove3d and libmove3d-hri
     mkdir build && cd build
     ccmake .. -DMOVE3D_QT=ON -DUSE_QWT=OFF
 
-Choose the type of build you want (MOVE3D_QT is the builds the original Qt interface)    
+Choose the type of build you want (MOVE3D_QT builds the original Qt interface)    
 
     make install
     
