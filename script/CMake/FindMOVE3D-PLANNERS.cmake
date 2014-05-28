@@ -10,11 +10,19 @@
 pkg_check_modules(PC_MOVE3D_MOTIONPLANNER QUIET libmove3d-planners)
 
 find_path (MOVE3D-PLANNERS_INCLUDE_DIR planner/planner.hpp
- PATHS $ENV{ROBOTPKG_BASE}/include/libmove3d/planners ${PC_MOVE3D_MOTIONPLANNER_INCLUDEDIR} ${PC_MOVE3D_MOTIONPLANNER_INCLUDE_DIRS}
+ PATHS 
+$ENV{ROBOTPKG_BASE}/include/libmove3d/planners 
+$ENV{MOVE3D_INSTALL_DIR}/include/libmove3d/planners
+${PC_MOVE3D_MOTIONPLANNER_INCLUDEDIR} 
+${PC_MOVE3D_MOTIONPLANNER_INCLUDE_DIRS}
  )
 
 find_library (MOVE3D-PLANNERS_LIBRARIES move3d-planners
-  PATHS ${MOVE3D-PLANNERS_LIB} $ENV{ROBOTPKG_BASE}/lib ${PC_MOVE3D_MOTIONPLANNER_LIBRARY_DIRS}
+  PATHS 
+${MOVE3D-PLANNERS_LIB} 
+$ENV{ROBOTPKG_BASE}/lib 
+$ENV{MOVE3D_INSTALL_DIR}/lib 
+${PC_MOVE3D_MOTIONPLANNER_LIBRARY_DIRS}
   )
 
 ## -----------------------------------------------------------------------------

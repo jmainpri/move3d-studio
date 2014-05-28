@@ -10,11 +10,19 @@
 ## Check for the header files
 
 find_path (MOVE3D-QTGUI_INCLUDE_DIR qtLibrary.hpp
- PATHS $ENV{HOME}/workspace/Move3D-Qt-Gui-libs/src $ENV{HOME}/Devel/Move3D-Qt-Gui-libs/src $ENV{ROBOTPKG_BASE}/include/Move3D-Qt-Gui/src/
+ PATHS 
+$ENV{HOME}/workspace/Move3D-Qt-Gui-libs/src 
+$ENV{HOME}/Devel/Move3D-Qt-Gui-libs/src 
+$ENV{ROBOTPKG_BASE}/include/Move3D-Qt-Gui/src/
+$ENV{MOVE3D_INSTALL_DIR}/include/Move3D-Qt-Gui/src/
  )
 
 find_library (MOVE3D-QTGUI_LIBRARIES Move3D-Qt-Gui
-  PATHS ${MOVE3D-QTGUI_LIB} $ENV{HOME}/workspace/Move3D-Qt-Gui-libs/lib/$ENV{HOSTTYPE} $ENV{HOME}/Devel/Move3D-Qt-Gui-libs/lib/$ENV{HOSTTYPE} $ENV{ROBOTPKG_BASE}/lib
+  PATHS ${MOVE3D-QTGUI_LIB} 
+$ENV{HOME}/workspace/Move3D-Qt-Gui-libs/lib/$ENV{HOSTTYPE} 
+$ENV{HOME}/Devel/Move3D-Qt-Gui-libs/lib/$ENV{HOSTTYPE} 
+$ENV{ROBOTPKG_BASE}/lib
+$ENV{MOVE3D_INSTALL_DIR}/lib
   )
 
 ## -----------------------------------------------------------------------------
