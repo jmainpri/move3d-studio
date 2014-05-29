@@ -5,7 +5,7 @@ Graphical user interface for libmove3d
 
 ### Stand alone install
 
-Depends on libmove3d and libmove3d-hri
+Depends on libmove3d, libmove3d-hri and libmove3d-planners
 
     mkdir build && cd build
     ccmake .. -DMOVE3D_QT=ON -DUSE_QWT=OFF
