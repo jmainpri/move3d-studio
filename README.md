@@ -3,7 +3,7 @@ move3d-studio
 
 Graphical user interface for libmove3d
 
-### Stand allone install
+### Stand alone install
 
 Depends on libmove3d and libmove3d-hri
 
