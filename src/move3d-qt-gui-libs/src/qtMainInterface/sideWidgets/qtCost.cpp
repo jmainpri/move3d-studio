@@ -460,7 +460,7 @@ void CostWidget::graphSearchTest()
     cout << "-------------------------------" << endl;
     cout << "Trajectory Cost = "<< traj->cost() << endl;
     cout << "   nl = "<< traj->getNbOfPaths() << endl;
-    cout << "   length = "<< traj->getRangeMax() << endl;
+    cout << "   length = "<< traj->getParamMax() << endl;
 
     ENV.setBool(Env::drawGraph,false);
     ENV.setBool(Env::drawTraj,true);
@@ -497,7 +497,7 @@ void CostWidget::showTrajCost()
     cout << "robot->getCurrentTraj()" << endl;
     Move3D::Trajectory traj = robot->getCurrentTraj();
 
-    double step = traj.getRangeMax() / double(nbSample);
+    double step = traj.getParamMax() / double(nbSample);
 
     vector<double> cost;
 
@@ -517,7 +517,7 @@ void CostWidget::showTrajCost()
 
     if (global_costSpace)
     {
-        for( double param=0; param<traj.getRangeMax(); param = param + step)
+        for( double param=0; param<traj.getParamMax(); param = param + step)
         {
             cost.push_back( traj.configAtParam(param)->cost() );
         }
@@ -550,7 +550,7 @@ void CostWidget::showCostProfile()
     Move3D::Trajectory traj(new Robot(robotPt),CurrentTrajPt);
 
     //	cout << "nbSample : " << nbSample << endl;
-    const double step = traj.getRangeMax() / (double) nbSample;
+    const double step = traj.getParamMax() / (double) nbSample;
 
     std::vector< std::pair<double,double> > profile = traj.getCostProfile();
 
@@ -559,7 +559,7 @@ void CostWidget::showCostProfile()
 
     std::vector<double> cost;
 
-    for( double param=0.0; param< traj.getRangeMax(); param += step)
+    for( double param=0.0; param< traj.getParamMax(); param += step)
     {
         while( profile[i].first < param )
         {
@@ -608,10 +608,10 @@ void CostWidget::showHRITrajCost()
 
     int nbSample = myPlot->getPlotSize();
 
-    double step = traj.getRangeMax() / double(nbSample-1);
+    double step = traj.getParamMax() / double(nbSample-1);
 
     cout << "Traj cost = " << traj.costDeltaAlongTraj() << endl;
-    // cout << "Traj param max = " << traj.getRangeMax() << endl;
+    // cout << "Traj param max = " << traj.getParamMax() << endl;
     // cout << "Traj step = " << step << endl;
 
     std::ostringstream oss;

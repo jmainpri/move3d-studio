@@ -359,7 +359,7 @@ void MotionPlanner::cutTrajInSmallLP()
     Move3D::Trajectory traj = rob->getCurrentTraj();
 
     cout << "Cutting into small LP" << endl;
-    traj.cutTrajInSmallLP( floor( traj.getRangeMax() / dmax ) );
+    traj.cutTrajInSmallLP( floor( traj.getParamMax() / dmax ) );
     traj.replaceP3dTraj();
 }
 

@@ -50,11 +50,11 @@
     Trajectory* traj = currentTrajPt;
 
     int nbSample = myPlot->getPlotSize();
-    double step = traj->getRangeMax() / (double) nbSample;
+    double step = traj->getParamMax() / (double) nbSample;
 
     vector<double> cost;
 
-    for( double param=0; param<traj.getRangeMax(); param = param + step)
+    for( double param=0; param<traj.getParamMax(); param = param + step)
     {
         cost.push_back(traj->configAtParam(param)->cost());
     }

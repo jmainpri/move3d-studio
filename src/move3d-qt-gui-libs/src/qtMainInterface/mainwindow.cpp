@@ -641,6 +641,7 @@ void MainWindow::initViewerButtons()
     connect(m_ui->pushButtonClearTraj,SIGNAL(clicked()),this,SLOT(clearglobal_trajToDraw()));
     connect(m_ui->comboBoxColorTraj, SIGNAL(currentIndexChanged(int)),this,SLOT(colorTrajChange(int)));
     connect(m_ui->pushButtonSetTrajAsCurrent, SIGNAL(clicked()),this,SLOT(setTrajToDrawAsCurrent()));
+
     //connect(m_ui->spinBoxTrajId, SIGNAL(currentIndexChanged(int)),this,SLOT((int)));
 
     // Mobile camera
@@ -706,7 +707,7 @@ void MainWindow::setRobotAlongTraj(double param)
     current_traj_ = robot->getCurrentTraj(); // TODO move that in switchSpeedVsPosition
     traj_id_ = current_traj_.Id();
 
-    robot->setAndUpdate( *current_traj_.configAtParam( (param/100)*current_traj_.getRangeMax() ) );
+    robot->setAndUpdate( *current_traj_.configAtParam( (param/100)*current_traj_.getParamMax() ) );
     drawAllWinActive();
 }
 
@@ -847,6 +848,8 @@ void MainWindow::setTrajToDrawAsCurrent()
 
     cout << "Set trajectory " << index << " as current traj" << endl;
     global_trajToDraw[index].replaceP3dTraj();
+
+    drawAllWinActive();
 }
 
 void MainWindow::addglobal_trajToDraw()

@@ -76,6 +76,7 @@
 
 #include "utils/MultiRun.hpp"
 #include "utils/multilocalpath_utils.hpp"
+#include "utils/misc_functions.hpp"
 
 #include "qtLibrary.hpp"
 #include <QtCore/QMutexLocker>
@@ -149,27 +150,6 @@ MOVE3D_USING_SHARED_PTR_NAMESPACE
  */
 
 extern void* GroundCostObj;
-
-//! This function prints the joint mapping of a robot
-void printJointMapping( Move3D::Robot* rob )
-{
-    if( rob == NULL)
-        return;
-
-    cout << "print joint mapping" << endl;
-
-    for( int i=0; i<int(rob->getNumberOfJoints()); i++)
-    {
-//        cout << i << " , joint name : " << rob->getJoint(i)->getName() << endl;
-
-        for( int j=0; j<int(rob->getJoint(i)->getNumberOfDof()); j++)
-        {
-            cout << "jnt->getName() : " << rob->getJoint(i)->getName() << "(" <<i<< ") , ";
-            cout << "index_dof : " << rob->getJoint(i)->getIndexOfFirstDof()+j << endl;
-            //cout << "move3d_map[\"" << rob->getJoint(i)->getName() << "\"]=" << rob->getJoint(i)->getIndexOfFirstDof()+j << ";" << endl;
-        }
-    }
-}
 
 //------------------------------------------------------------------------------
 //  Init Functions
@@ -263,7 +243,8 @@ void qt_init_after_params()
     //        HRICS_initIverseOptimalControlFramework();
     //    }
 
-    printJointMapping( global_Project->getActiveScene()->getRobotByNameContaining("ROBOT") );
+//    print_joint_mapping( global_Project->getActiveScene()->getRobotByNameContaining("ROBOT") );
+//    print_joint_anchors( global_Project->getActiveScene()->getActiveRobot() );
 }
 
 //------------------------------------------------------------------------------
@@ -445,7 +426,7 @@ void qt_test3()
     //
     //    // Generate trajectory
     //    Move3D::CostOptimization optim( robot->getCurrentTraj() );
-    //    double step = optim.getRangeMax() / 10;
+    //    double step = optim.getParamMax() / 10;
     //    cout << "Connect configuration " << endl;
     //    optim.connectConfiguration( q_rob, step );
     //    optim.replaceP3dTraj();
