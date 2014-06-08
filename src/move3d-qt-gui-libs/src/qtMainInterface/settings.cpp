@@ -210,7 +210,8 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
     settings.beginGroup("boolParameter");
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        ENV.setBool(Env::boolParameter(i),settings.value(QString(metaEnum.key(i)),false).toBool());
+        bool default_value = ENV.getBool(Env::boolParameter(i));
+        ENV.setBool(Env::boolParameter(i),settings.value(QString(metaEnum.key(i)),default_value).toBool());
 
         if(print)
         {
@@ -226,7 +227,8 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
         cout << "---------------------------" << endl;
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        ENV.setInt(Env::intParameter(i),settings.value(QString(metaEnum.key(i)),0).toInt());
+        int default_value = ENV.getInt(Env::intParameter(i));
+        ENV.setInt(Env::intParameter(i),settings.value(QString(metaEnum.key(i)),default_value).toInt());
 
         if(print)
         {
@@ -242,7 +244,8 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
         cout << "---------------------------" << endl;
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        ENV.setDouble(Env::doubleParameter(i),settings.value(QString(metaEnum.key(i)),0.0).toFloat());
+        double default_value = ENV.getDouble(Env::doubleParameter(i));
+        ENV.setDouble(Env::doubleParameter(i),settings.value(QString(metaEnum.key(i)),default_value).toFloat());
 
         if(print)
         {
@@ -258,7 +261,8 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
         cout << "---------------------------" << endl;
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        ENV.setString(Env::stringParameter(i),settings.value(QString(metaEnum.key(i)),"").toString().toStdString());
+        std::string default_value = ENV.getString(Env::stringParameter(i));
+        ENV.setString(Env::stringParameter(i),settings.value(QString(metaEnum.key(i)),QString(default_value.c_str())).toString().toStdString());
 
         if(print)
         {
@@ -279,7 +283,8 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
     settings.beginGroup("boolParameter");
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        PlanEnv->setBool(PlanParam::boolParameter(i),settings.value(QString(metaEnum.key(i)),false).toBool());
+        bool default_value = PlanEnv->getBool(PlanParam::boolParameter(i));
+        PlanEnv->setBool(PlanParam::boolParameter(i),settings.value(QString(metaEnum.key(i)),default_value).toBool());
 
         if(print)
         {
@@ -295,7 +300,8 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
         cout << "---------------------------" << endl;
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        PlanEnv->setInt(PlanParam::intParameter(i),settings.value(QString(metaEnum.key(i)),0).toInt());
+        int default_value = PlanEnv->getInt(PlanParam::intParameter(i));
+        PlanEnv->setInt(PlanParam::intParameter(i),settings.value(QString(metaEnum.key(i)),default_value).toInt());
 
         if(print)
         {
@@ -311,7 +317,8 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
         cout << "---------------------------" << endl;
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        PlanEnv->setDouble(PlanParam::doubleParameter(i),settings.value(QString(metaEnum.key(i)),0.0).toFloat());
+        double default_value = PlanEnv->getDouble(PlanParam::doubleParameter(i));
+        PlanEnv->setDouble(PlanParam::doubleParameter(i),settings.value(QString(metaEnum.key(i)),default_value).toFloat());
 
         if(print)
         {
@@ -327,7 +334,8 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
         cout << "---------------------------" << endl;
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        PlanEnv->setString(PlanParam::stringParameter(i),settings.value(QString(metaEnum.key(i)),"").toString().toStdString() );
+        std::string default_value = PlanEnv->getString(PlanParam::stringParameter(i));
+        PlanEnv->setString(PlanParam::stringParameter(i),settings.value(QString(metaEnum.key(i)),QString(default_value.c_str())).toString().toStdString() );
 
         if(print)
         {
@@ -350,7 +358,8 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
     settings.beginGroup("boolParameter");
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        GestEnv->setBool(GestParam::boolParameter(i),settings.value(QString(metaEnum.key(i)),false).toBool());
+        bool default_value = GestEnv->getBool(GestParam::boolParameter(i));
+        GestEnv->setBool(GestParam::boolParameter(i),settings.value(QString(metaEnum.key(i)),default_value).toBool());
 
         if(print)
         {
@@ -366,7 +375,8 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
         cout << "---------------------------" << endl;
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        GestEnv->setInt(GestParam::intParameter(i),settings.value(QString(metaEnum.key(i)),0).toInt());
+        int default_value = GestEnv->getInt(GestParam::intParameter(i));
+        GestEnv->setInt(GestParam::intParameter(i),settings.value(QString(metaEnum.key(i)),default_value).toInt());
 
         if(print)
         {
@@ -382,7 +392,8 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
         cout << "---------------------------" << endl;
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        GestEnv->setDouble(GestParam::doubleParameter(i),settings.value(QString(metaEnum.key(i)),0.0).toFloat());
+        double default_value = GestEnv->getDouble(GestParam::doubleParameter(i));
+        GestEnv->setDouble(GestParam::doubleParameter(i),settings.value(QString(metaEnum.key(i)),default_value).toFloat());
 
         if(print)
         {
@@ -398,7 +409,8 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
         cout << "---------------------------" << endl;
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        GestEnv->setString(GestParam::stringParameter(i),settings.value(QString(metaEnum.key(i)),"").toString().toStdString() );
+        std::string default_value = GestEnv->getString(GestParam::stringParameter(i));
+        GestEnv->setString(GestParam::stringParameter(i),settings.value(QString(metaEnum.key(i)),QString(default_value.c_str())).toString().toStdString() );
 
         if(print)
         {
@@ -421,7 +433,8 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
     settings.beginGroup("boolParameter");
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        HriEnv->setBool(HricsParam::boolParameter(i),settings.value(QString(metaEnum.key(i)),false).toBool());
+        bool default_value = HriEnv->getBool(HricsParam::boolParameter(i));
+        HriEnv->setBool(HricsParam::boolParameter(i),settings.value(QString(metaEnum.key(i)),default_value).toBool());
 
         if(print)
         {
@@ -437,7 +450,8 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
         cout << "---------------------------" << endl;
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        HriEnv->setInt(HricsParam::intParameter(i),settings.value(QString(metaEnum.key(i)),0).toInt());
+        int default_value = HriEnv->getInt(HricsParam::intParameter(i));
+        HriEnv->setInt(HricsParam::intParameter(i),settings.value(QString(metaEnum.key(i)),default_value).toInt());
 
         if(print)
         {
@@ -453,7 +467,8 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
         cout << "---------------------------" << endl;
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        HriEnv->setDouble(HricsParam::doubleParameter(i),settings.value(QString(metaEnum.key(i)),0.0).toFloat());
+        double default_value = HriEnv->getDouble(HricsParam::doubleParameter(i));
+        HriEnv->setDouble(HricsParam::doubleParameter(i),settings.value(QString(metaEnum.key(i)),default_value).toFloat());
 
         if(print)
         {
@@ -469,7 +484,8 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
         cout << "---------------------------" << endl;
     for( int i=0;i<metaEnum.keyCount();i++)
     {
-        HriEnv->setString(HricsParam::stringParameter(i),settings.value(QString(metaEnum.key(i)),"").toString().toStdString() );
+        std::string default_value = HriEnv->getString(HricsParam::stringParameter(i));
+        HriEnv->setString(HricsParam::stringParameter(i),settings.value(QString(metaEnum.key(i)),QString(default_value.c_str())).toString().toStdString() );
 
         if(print)
         {

@@ -92,8 +92,11 @@ void ReplanningWidget::init()
     connect(m_ui->pushButtonFixJoints, SIGNAL(clicked()), this, SLOT(setMlpCntrtsAndFixJoints()));
 
     // Smooth And Obstacle Weigth
-    new SpinBoxConnector(this,m_ui->doubleSpinBoxSmoothWeight, PlanEnv->getObject(PlanParam::trajOptimSmoothWeight));
-    new SpinBoxConnector(this,m_ui->doubleSpinBoxObstacWeight, PlanEnv->getObject(PlanParam::trajOptimObstacWeight));
+    new SpinBoxConnector( this, m_ui->doubleSpinBoxSmoothWeight, PlanEnv->getObject(PlanParam::trajOptimSmoothWeight) );
+    new SpinBoxConnector( this, m_ui->doubleSpinBoxObstacWeight, PlanEnv->getObject(PlanParam::trajOptimObstacWeight) );
+    new SpinBoxConnector( this, m_ui->doubleSpinBoxGeneraWeight, PlanEnv->getObject(PlanParam::trajOptimGlobalWeight) );
+    new SpinBoxConnector( this, m_ui->doubleSpinBoxObstacFactor, PlanEnv->getObject(PlanParam::trajOptimObstacFator) );
+    new SpinBoxConnector( this, m_ui->doubleSpinBoxSmoothFactor, PlanEnv->getObject(PlanParam::trajOptimSmoothFator) );
 
     //---------------------------------------
     // Test the multi gaussian
