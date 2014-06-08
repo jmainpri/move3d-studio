@@ -95,8 +95,8 @@ void ReplanningWidget::init()
     new SpinBoxConnector( this, m_ui->doubleSpinBoxSmoothWeight, PlanEnv->getObject(PlanParam::trajOptimSmoothWeight) );
     new SpinBoxConnector( this, m_ui->doubleSpinBoxObstacWeight, PlanEnv->getObject(PlanParam::trajOptimObstacWeight) );
     new SpinBoxConnector( this, m_ui->doubleSpinBoxGeneraWeight, PlanEnv->getObject(PlanParam::trajOptimGlobalWeight) );
-    new SpinBoxConnector( this, m_ui->doubleSpinBoxObstacFactor, PlanEnv->getObject(PlanParam::trajOptimObstacFator) );
-    new SpinBoxConnector( this, m_ui->doubleSpinBoxSmoothFactor, PlanEnv->getObject(PlanParam::trajOptimSmoothFator) );
+    new SpinBoxConnector( this, m_ui->doubleSpinBoxObstacFactor, PlanEnv->getObject(PlanParam::trajOptimObstacFactor) );
+    new SpinBoxConnector( this, m_ui->doubleSpinBoxSmoothFactor, PlanEnv->getObject(PlanParam::trajOptimSmoothFactor) );
 
     //---------------------------------------
     // Test the multi gaussian
