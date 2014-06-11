@@ -303,34 +303,14 @@
           <property name="bottomMargin">
            <number>0</number>
           </property>
-          <item row="4" column="1">
-           <widget class="QSpinBox" name="spinBoxStompDrawIteration"/>
-          </item>
-          <item row="6" column="1">
-           <widget class="QCheckBox" name="checkBoxInitStomp">
-            <property name="text">
-             <string>Init Stomp</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBoxTimeLimit"/>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_9">
-            <property name="text">
-             <string>Draw Every n Iteration</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
+          <item row="2" column="0">
            <widget class="QCheckBox" name="checkBoxStompMaxIteration">
             <property name="text">
              <string>Use Iteration Limit</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
+          <item row="2" column="1">
            <widget class="QSpinBox" name="spinBoxStompMaxIteration">
             <property name="minimum">
              <number>1</number>
@@ -340,45 +320,72 @@
             </property>
            </widget>
           </item>
-          <item row="6" column="0">
+          <item row="7" column="0">
            <widget class="QCheckBox" name="checkBoxWithRRT">
             <property name="text">
              <string>With RRT</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="0">
+          <item row="1" column="0">
            <widget class="QCheckBox" name="checkBoxTimeLimit">
             <property name="text">
              <string>Use Time Limit</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="0">
+          <item row="6" column="0">
            <widget class="QCheckBox" name="checkBoxDrawParallel">
             <property name="text">
              <string>Draw Parallel</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
+          <item row="6" column="1">
            <widget class="QCheckBox" name="checkBoxStompNoPrint">
             <property name="text">
              <string>No Print</string>
             </property>
            </widget>
           </item>
-          <item row="7" column="0">
+          <item row="8" column="0">
            <widget class="QCheckBox" name="checkBoxStompParallel">
             <property name="text">
              <string>Parallel</string>
             </property>
            </widget>
           </item>
-          <item row="7" column="1">
+          <item row="8" column="1">
            <widget class="QCheckBox" name="checkBoxMultipleStomp">
             <property name="text">
              <string>Multiple</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QSpinBox" name="spinBoxStompDrawIteration"/>
+          </item>
+          <item row="7" column="1">
+           <widget class="QCheckBox" name="checkBoxInitStomp">
+            <property name="text">
+             <string>Init Stomp</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QDoubleSpinBox" name="doubleSpinBoxTimeLimit"/>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_9">
+            <property name="text">
+             <string>Draw Every n Iteration</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="checkBoxStopWhenCollisionFree">
+            <property name="text">
+             <string>Stop When Collision Free</string>
             </property>
            </widget>
           </item>

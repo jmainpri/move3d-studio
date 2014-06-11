@@ -259,8 +259,18 @@ void qt_drawAllWinActive()
 
 void qt_test1()
 {
-    delete global_workspaceOccupancy;
-    global_workspaceOccupancy = NULL;
+//    delete global_workspaceOccupancy;
+//    global_workspaceOccupancy = NULL;
+
+    Move3D::Scene* sce = global_Project->getActiveScene();
+    Move3D::Robot* robot = sce->getActiveRobot();
+
+    if( robot != NULL ){
+        cout << "Got robot" << endl;
+    }
+
+    Move3D::Trajectory traj = robot->getCurrentTraj();
+    traj.saveToFile("tmp_traj_file.m3dtraj");
 
     //  Scene* sce = global_Project->getActiveScene();
     //  Robot* robot = sce->getRobotByName("PR2_ROBOT");
@@ -306,6 +316,17 @@ void qt_test1()
 
 void qt_test2()
 {
+    Move3D::Scene* sce = global_Project->getActiveScene();
+    Move3D::Robot* robot = sce->getActiveRobot();
+
+    if( robot != NULL ){
+        cout << "Got robot" << endl;
+    }
+
+    Move3D::Trajectory traj(robot);
+    traj.loadFromFile("tmp_traj_file.m3dtraj");
+    traj.replaceP3dTraj();
+
     //  cout << "Plan param 1 : " << PlanEnv->getBool(PlanParam::starRRT) << endl;
     //  cout << "Plan param 2 : " << PlanEnv->getBool(PlanParam::starRewire) << endl;
 
@@ -321,12 +342,16 @@ void qt_test2()
     //    HRICS::execShelfScenario();
     //  }
 
-    cout << "Clear traj" << endl;
-    Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
-    p3d_destroy_traj( robot->getP3dRobotStruct(), robot->getP3dRobotStruct()->tcur );
 
-    if( global_rePlanningEnv != NULL )
-        global_rePlanningEnv->resetTrajectoriesToDraw();
+
+//    cout << "Clear traj" << endl;
+//    Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+//    p3d_destroy_traj( robot->getP3dRobotStruct(), robot->getP3dRobotStruct()->tcur );
+
+//    if( global_rePlanningEnv != NULL )
+//        global_rePlanningEnv->resetTrajectoriesToDraw();
+
+
 }
 
 //static bool recompute_cost=false;
@@ -747,14 +772,18 @@ void qt_show_recorded_motion()
     }
     else
     {
+        cout << "Start motion player" << endl;
+
         HRICS::PlayMotion player( global_motionRecorders );
 
-        int i=0;
-        for( i=0;i<int(global_motionRecorders[0]->getStoredMotions().size());i++)
+        for( int i=0; i<int(global_motionRecorders[0]->getStoredMotions().size()); i++ )
         {
+            cout << "play motion " << i << endl;
             player.play(i);
         }
     }
+
+    cout << "End!!!" << endl;
 }
 
 void qt_workspace_occupancy()
@@ -1645,7 +1674,8 @@ void PlannerHandler::startPlanner(QString plannerName)
             qt_init_mlp_cntrts_and_fixjoints();
         }
 #endif
-        else if( plannerName == "ShowRecordedMotion"){
+        else if( plannerName == "ShowRecordedMotion")
+        {
             qt_show_recorded_motion();
         }
         else if(plannerName == "WorkspaceOccupancy")

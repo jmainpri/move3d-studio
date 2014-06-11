@@ -717,7 +717,7 @@ void CostWidget::showSTOMPTrajCost()
     if ( global_optimizer ) {
         Move3D::Trajectory traj( global_Project->getActiveScene()->getActiveRobot() );
         global_optimizer->getCostProfiles( smoothness_cost, collision_cost, general_cost );
-        global_optimizer->setGroupTrajectoryToApiTraj( traj );
+        global_optimizer->setGroupTrajectoryToMove3DTraj( traj );
         traj.replaceP3dTraj();
     }
     else {
