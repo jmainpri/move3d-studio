@@ -543,8 +543,8 @@ void qt_runDiffusion()
     }
 
     // TEST
-//    if( API_activeFeatureSpace != NULL )
-//        API_activeFeatureSpace->extractAllTrajectories( API_activeGraph, robot->getInitPos(), robot->getGoalPos(), 10 );
+//    if( global_activeFeatureFunction != NULL )
+//        global_activeFeatureFunction->extractAllTrajectories( API_activeGraph, robot->getInitPos(), robot->getGoalPos(), 10 );
 }
 
 /**
@@ -601,8 +601,8 @@ void qt_runPRM()
     }
 
     // TEST
-//    if( API_activeFeatureSpace != NULL )
-//        API_activeFeatureSpace->extractAllTrajectories( API_activeGraph, robot->getInitPos(), robot->getGoalPos(), 7 );
+//    if( global_activeFeatureFunction != NULL )
+//        global_activeFeatureFunction->extractAllTrajectories( API_activeGraph, robot->getInitPos(), robot->getGoalPos(), 7 );
 }
 
 void qt_runMultiRRT()
@@ -680,8 +680,8 @@ void qt_extractAllTrajectories()
     ENV.setBool(Env::drawTrajVector,false);
     ENV.setBool(Env::drawGrid,false);
 
-    if( dynamic_cast<PlanarFeature*>(API_activeFeatureSpace) != NULL ){
-        dynamic_cast<PlanarFeature*>(API_activeFeatureSpace)->generateRandomEnvironment();
+    if( dynamic_cast<PlanarFeature*>(global_activeFeatureFunction) != NULL ){
+        dynamic_cast<PlanarFeature*>(global_activeFeatureFunction)->generateRandomEnvironment();
     }
 
     g3d_draw_allwin_active();
@@ -696,8 +696,8 @@ void qt_extractAllTrajectories()
     Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
     robot->removeCurrentTraj();
 
-    if( API_activeFeatureSpace != NULL )
-        API_activeFeatureSpace->extractAllTrajectories( API_activeGraph, robot->getInitPos(), robot->getGoalPos(), 7 );
+    if( global_activeFeatureFunction != NULL )
+        global_activeFeatureFunction->extractAllTrajectories( API_activeGraph, robot->getInitPos(), robot->getGoalPos(), 7 );
 
     double time;
     ChronoTimeOfDayTimes( &time );
@@ -710,9 +710,9 @@ void qt_extractAllTrajectories()
 
     if( robot->getNumberOfActiveDoF() == 2 )
     {
-        Move3D::WeightVect w( Move3D::WeightVect::Constant( API_activeFeatureSpace->getNumberOfFeatures(), 0.5 ));
+        Move3D::WeightVect w( Move3D::WeightVect::Constant( global_activeFeatureFunction->getNumberOfFeatures(), 0.5 ));
         cout << " w.transpose() : " << w.transpose() << endl;
-        API_activeFeatureSpace->setWeights( w );
+        global_activeFeatureFunction->setWeights( w );
 
         // Create grid and set as active grid
         Move3D::PlanGrid* grid = new Move3D::PlanGrid( robot, PlanEnv->getDouble(PlanParam::grid_pace),

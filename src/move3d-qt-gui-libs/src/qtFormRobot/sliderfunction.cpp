@@ -277,7 +277,7 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
 
 #endif
 
-//    cout << "features : " << API_activeFeatureSpace->getFeatures( *robot->getCurrentPos() ).transpose() << endl;
+//    cout << "features : " << global_activeFeatureFunction->getFeatures( *robot->getCurrentPos() ).transpose() << endl;
 
     /*
 
