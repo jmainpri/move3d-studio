@@ -262,15 +262,15 @@ void qt_test1()
 //    delete global_workspaceOccupancy;
 //    global_workspaceOccupancy = NULL;
 
-    Move3D::Scene* sce = global_Project->getActiveScene();
-    Move3D::Robot* robot = sce->getActiveRobot();
+//    Move3D::Scene* sce = global_Project->getActiveScene();
+//    Move3D::Robot* robot = sce->getActiveRobot();
 
-    if( robot != NULL ){
-        cout << "Got robot" << endl;
-    }
+//    if( robot != NULL ){
+//        cout << "Got robot" << endl;
+//    }
 
-    Move3D::Trajectory traj = robot->getCurrentTraj();
-    traj.saveToFile("tmp_traj_file.m3dtraj");
+//    Move3D::Trajectory traj = robot->getCurrentTraj();
+//    traj.saveToFile("tmp_traj_file.m3dtraj");
 
     //  Scene* sce = global_Project->getActiveScene();
     //  Robot* robot = sce->getRobotByName("PR2_ROBOT");
@@ -778,8 +778,19 @@ void qt_show_recorded_motion()
 
         for( int i=0; i<int(global_motionRecorders[0]->getStoredMotions().size()); i++ )
         {
-            cout << "play motion " << i << endl;
+            cout << "play motion " << i;
+            cout << " , from file : " << global_motionRecorders[0]->getStoredMotionName(i) << endl;
+
             player.play(i);
+
+            bool use_button = false;
+            while( !GestEnv->getBool(GestParam::play_next) ) {
+                usleep(100);
+                use_button = true;
+            }
+            if( use_button ){
+                GestEnv->setBool( GestParam::play_next, false );
+            }
         }
     }
 

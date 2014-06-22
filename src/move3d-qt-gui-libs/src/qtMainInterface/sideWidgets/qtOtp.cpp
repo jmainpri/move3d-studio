@@ -2206,8 +2206,8 @@ void OtpWidget::reloadGuiParams()
 
     m_ui->checkBoxReach->setChecked(ENV.getBool(Env::drawGrid));
     m_ui->checkBoxDrawPoint->setChecked(PlanEnv->getBool(PlanParam::env_drawRandomPoint));
-    m_ui->radioButtonHumGrid->setChecked(PlanEnv->getBool(PlanParam::env_humanGridDraw));
-    m_ui->radioButtonRobGrid->setChecked(PlanEnv->getBool(PlanParam::env_robotGridDraw));
+//    m_ui->radioButtonHumGrid->setChecked(PlanEnv->getBool(PlanParam::env_humanGridDraw));
+//    m_ui->radioButtonRobGrid->setChecked(PlanEnv->getBool(PlanParam::env_robotGridDraw));
     m_ui->radioButtonDistGrid->setChecked(PlanEnv->getBool(PlanParam::env_drawDistGrid));
 
     m_k_distance->setValue(ENV.getDouble(Env::Kdistance));

@@ -617,6 +617,7 @@ void MainWindow::initViewerButtons()
     new connectCheckBoxToEnv(m_ui->checkBoxDrawExploration, ENV.getObject(Env::drawExploration));
     new connectCheckBoxToEnv(m_ui->checkBoxDrawTraj, ENV.getObject(Env::drawTraj));
     new connectCheckBoxToEnv(m_ui->checkBoxDrawTrajVector, ENV.getObject(Env::drawTrajVector));
+    new connectCheckBoxToEnv(m_ui->checkBoxDrawModule, PlanEnv->getObject(PlanParam::drawModule));
     new connectCheckBoxToEnv(m_ui->checkBoxDrawDebug, ENV.getObject(Env::debugCostOptim));
     new connectCheckBoxToEnv(m_ui->checkBoxDrawMultiColoredTraj, ENV.getObject(Env::drawMultiColorLocalpath));
     
@@ -627,7 +628,6 @@ void MainWindow::initViewerButtons()
     new QtShiva::SpinBoxConnector( this, m_ui->spinBoxJointToDraw, ENV.getObject(Env::jntToDraw) );
     connect(m_ui->spinBoxJointToDraw,SIGNAL(valueChanged(int)),this,SLOT(drawAllWinActive()));
     ENV.setInt( Env::jntToDraw, XYZ_ROBOT->o[XYZ_ROBOT->no-1]->jnt->num );
-
     // Scaling node drawing factor
     new QtShiva::SpinBoxConnector( this, m_ui->spinBoxScaleNodeSphere, PlanEnv->getObject(PlanParam::drawScaleFactorNodeSphere) );
     connect( m_ui->spinBoxScaleNodeSphere, SIGNAL(valueChanged(double)), this, SLOT(drawAllWinActive()) );

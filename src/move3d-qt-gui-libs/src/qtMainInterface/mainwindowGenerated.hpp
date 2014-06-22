@@ -147,6 +147,7 @@ public:
     QCheckBox *checkBoxDrawGraph;
     QCheckBox *checkBoxDrawEdges;
     QCheckBox *checkBoxDrawExploration;
+    QCheckBox *checkBoxDrawModule;
     QCheckBox *checkBoxDrawTraj;
     QCheckBox *checkBoxDisableDraw;
     QCheckBox *checkBoxDrawDebug;
@@ -522,6 +523,9 @@ public:
         checkBoxDrawTrajVector->setObjectName(QString::fromUtf8("checkBoxDrawTrajVector"));
         gridLayout_12->addWidget(checkBoxDrawTrajVector, 7, 0, 1, 1);
 
+        checkBoxDrawModule = new QCheckBox(groupBoxDrawEnv);
+        checkBoxDrawModule->setObjectName(QString::fromUtf8("checkBoxDrawTrajVector"));
+        gridLayout_12->addWidget(checkBoxDrawModule, 8, 0, 1, 1);
         // -------------------------------
         // Spin Box joint to draw
 
@@ -1273,6 +1277,7 @@ public:
         checkBoxDisableDraw->setText(QApplication::translate("MainWindow", "No Draw", 0, QApplication::UnicodeUTF8));
         checkBoxDrawDebug->setText(QApplication::translate("MainWindow", "Draw Debug", 0, QApplication::UnicodeUTF8));
         checkBoxDrawTrajVector->setText(QApplication::translate("MainWindow", "Draw Traj Vector", 0, QApplication::UnicodeUTF8));
+        checkBoxDrawModule->setText(QApplication::translate("MainWindow", "Draw Module", 0, QApplication::UnicodeUTF8));
         pushButtonMobileCamera->setText(QApplication::translate("MainWindow", "Mob. Camera", 0, QApplication::UnicodeUTF8));
         pushButtonChangeCamera->setText(QApplication::translate("MainWindow", "Change Camera", 0, QApplication::UnicodeUTF8));
         

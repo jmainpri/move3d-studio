@@ -35,9 +35,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-170</y>
+        <y>0</y>
         <width>563</width>
-        <height>1292</height>
+        <height>1320</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -152,6 +152,13 @@
            <widget class="QPushButton" name="pushButtonLoadTwoFolders">
             <property name="text">
              <string>Load two folders</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QCheckBox" name="checkBoxPlayNext">
+            <property name="text">
+             <string>Play Next</string>
             </property>
            </widget>
           </item>
