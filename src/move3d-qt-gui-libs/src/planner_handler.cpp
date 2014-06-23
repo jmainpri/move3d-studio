@@ -756,6 +756,8 @@ void qt_handover()
 // Gesture Functions
 //----------------------------------------------------------
 
+bool remove_motion;
+
 void qt_show_recorded_motion()
 {
     cout << "Show recorded motion" << endl;
@@ -776,7 +778,9 @@ void qt_show_recorded_motion()
 
         HRICS::PlayMotion player( global_motionRecorders );
 
-        for( int i=0; i<int(global_motionRecorders[0]->getStoredMotions().size()); i++ )
+        std::vector<std::string> names;
+
+        for( size_t i=0; i<global_motionRecorders[0]->getStoredMotions().size(); i++ )
         {
             cout << "play motion " << i;
             cout << " , from file : " << global_motionRecorders[0]->getStoredMotionName(i) << endl;
@@ -791,7 +795,17 @@ void qt_show_recorded_motion()
             if( use_button ){
                 GestEnv->setBool( GestParam::play_next, false );
             }
+            if( remove_motion ){
+                names.push_back( global_motionRecorders[0]->getStoredMotionName(i) );
+                remove_motion = false;
+            }
         }
+
+        cout << "remove" << endl;
+        for( size_t i=0; i<names.size(); i++ )
+        {
+            cout << names[i] << endl;
+         }
     }
 
     cout << "End!!!" << endl;
