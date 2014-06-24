@@ -776,16 +776,30 @@ void qt_show_recorded_motion()
     {
         cout << "Start motion player" << endl;
 
-        HRICS::PlayMotion player( global_motionRecorders );
+        HRICS::PlayMotion* player = NULL;
+
+        if( global_ht_simulator == NULL )
+        {
+            cout << "USE MOTION RECORDER" << endl;
+            player = new HRICS::PlayMotion( global_motionRecorders );
+        }
+        else
+        {
+            cout << "USE MOTION VECTOR" << endl;
+            player = new HRICS::PlayMotion( global_ht_simulator->getMotions() );
+        }
 
         std::vector<std::string> names;
 
-        for( size_t i=0; i<global_motionRecorders[0]->getStoredMotions().size(); i++ )
+        for( int i=0; i<player->getNumberOfMotions(); i++ )
         {
-            cout << "play motion " << i;
-            cout << " , from file : " << global_motionRecorders[0]->getStoredMotionName(i) << endl;
+            if( global_ht_simulator == NULL )
+            {
+                cout << "play motion " << i;
+                cout << " , from file : " << global_motionRecorders[0]->getStoredMotionName(i) << endl;
+            }
 
-            player.play(i);
+            player->play(i);
 
             bool use_button = false;
             while( !GestEnv->getBool(GestParam::play_next) ) {
@@ -795,17 +809,23 @@ void qt_show_recorded_motion()
             if( use_button ){
                 GestEnv->setBool( GestParam::play_next, false );
             }
-            if( remove_motion ){
-                names.push_back( global_motionRecorders[0]->getStoredMotionName(i) );
-                remove_motion = false;
+            if( global_ht_simulator == NULL )
+            {
+                if( remove_motion ){
+                    names.push_back( global_motionRecorders[0]->getStoredMotionName(i) );
+                    remove_motion = false;
+                }
             }
         }
 
-        cout << "remove" << endl;
-        for( size_t i=0; i<names.size(); i++ )
+        if( !names.empty() )
         {
-            cout << names[i] << endl;
-         }
+            cout << "remove" << endl;
+            for( size_t i=0; i<names.size(); i++ )
+            {
+                cout << names[i] << endl;
+            }
+        }
     }
 
     cout << "End!!!" << endl;
