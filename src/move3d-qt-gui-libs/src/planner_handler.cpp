@@ -111,6 +111,7 @@
 #include "hri_costspace/human_trajectories/HRICS_ioc.hpp"
 #include "hri_costspace/human_trajectories/HRICS_human_ioc.hpp"
 #include "hri_costspace/human_trajectories/HRICS_human_cost_space.hpp"
+#include "hri_costspace/human_trajectories/HRICS_human_simulator.hpp"
 #include "hri_costspace/human_trajectories/HRICS_detours.hpp"
 #include "hri_costspace/human_trajectories/HRICS_run_multiple_planners.hpp"
 
@@ -791,6 +792,7 @@ void qt_show_recorded_motion()
 
         std::vector<std::string> names;
 
+        //int i=3;
         for( int i=0; i<player->getNumberOfMotions(); i++ )
         {
             if( global_ht_simulator == NULL )
@@ -972,11 +974,6 @@ void qt_runIOC()
 //    HRICS_run_human_ioc_evaluation();
 //    HRICS_run_human_ioc();
 //}
-
-void qt_runHumanPlanning()
-{
-    HRICS_run_human_planning();
-}
 
 //----------------------------------------------------------
 // Navigation Functions
@@ -1748,7 +1745,8 @@ void PlannerHandler::startPlanner(QString plannerName)
         }
         else if( plannerName == "HumanPlanning" )
         {
-            qt_runHumanPlanning();
+//            qt_runHumanPlanning();
+            cout << "Not implemented anymore" << endl;
         }
         else if( plannerName == "AStarPlanning" )
         {
