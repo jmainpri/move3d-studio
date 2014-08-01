@@ -258,8 +258,17 @@ void qt_drawAllWinActive()
 
 //static HRICS::Navigation* m_navigation = NULL;
 
+
+void qt_showTraj();
+
 void qt_test1()
 {
+
+    for( int i=0; i<int(global_trajToDraw.size()); i++ )
+    {
+        global_trajToDraw[i].replaceP3dTraj();
+        qt_showTraj();
+    }
 //    delete global_workspaceOccupancy;
 //    global_workspaceOccupancy = NULL;
 

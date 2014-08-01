@@ -347,18 +347,20 @@ void HriGestureWidget::initGestureRecognition()
 //-------------------------------------------------------------------
 void HriGestureWidget::initHriIOC()
 {
-    new connectCheckBoxToEnv( m_ui->checkBoxInitHriIOC,         GestEnv->getObject(GestParam::init_module_ioc) );
-    new connectCheckBoxToEnv( m_ui->checkBoxInitSphereCost,     HriEnv->getObject(HricsParam::init_spheres_cost) );
-    new connectCheckBoxToEnv( m_ui->checkBoxInitHumanTrajCost,  HriEnv->getObject(HricsParam::init_human_trajectory_cost) );
-    new connectCheckBoxToEnv( m_ui->checkBoxIocExitAfterRun,    HriEnv->getObject(HricsParam::ioc_exit_after_run) );
+    new connectCheckBoxToEnv( m_ui->checkBoxInitHriIOC,          GestEnv->getObject(GestParam::init_module_ioc) );
+    new connectCheckBoxToEnv( m_ui->checkBoxInitSphereCost,      HriEnv->getObject(HricsParam::init_spheres_cost) );
+    new connectCheckBoxToEnv( m_ui->checkBoxInitHumanTrajCost,   HriEnv->getObject(HricsParam::init_human_trajectory_cost) );
+    new connectCheckBoxToEnv( m_ui->checkBoxIocExitAfterRun,     HriEnv->getObject(HricsParam::ioc_exit_after_run) );
 
-    new connectCheckBoxToEnv( m_ui->checkBoxGestureDebug,       GestEnv->getObject(GestParam::print_debug) );
-    new connectCheckBoxToEnv( m_ui->checkBoxSingleIteration,    HriEnv->getObject(HricsParam::ioc_single_iteration) );
+    new connectCheckBoxToEnv( m_ui->checkBoxGestureDebug,        GestEnv->getObject(GestParam::print_debug) );
+    new connectCheckBoxToEnv( m_ui->checkBoxSingleIteration,     HriEnv->getObject(HricsParam::ioc_single_iteration) );
 
     new connectCheckBoxToEnv( m_ui->checkBoxDrawDemonstrations,  HriEnv->getObject(HricsParam::ioc_draw_demonstrations) );
     new connectCheckBoxToEnv( m_ui->checkBoxDrawSamples,         HriEnv->getObject(HricsParam::ioc_draw_samples) );
     new connectCheckBoxToEnv( m_ui->checkBoxLoadSampleFromFile,  HriEnv->getObject(HricsParam::ioc_load_samples_from_file) );
-    new connectCheckBoxToEnv( m_ui->checkBoxSampleAroundDemo,  HriEnv->getObject(HricsParam::ioc_sample_around_demo) );
+    new connectCheckBoxToEnv( m_ui->checkBoxSampleAroundDemo,    HriEnv->getObject(HricsParam::ioc_sample_around_demo) );
+    new connectCheckBoxToEnv( m_ui->checkBoxUseSimulationDemos,  HriEnv->getObject(HricsParam::ioc_use_simulation_demos) );
+    new connectCheckBoxToEnv( m_ui->checkBoxUserSetPelvisBounds, HriEnv->getObject(HricsParam::ioc_user_set_pelvis_bounds) );
 
     connect( m_ui->pushButtonRunIoc, SIGNAL(clicked()), this, SLOT(runIoc()) );
 
