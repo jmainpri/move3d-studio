@@ -371,6 +371,10 @@ void qt_test2()
 
 void qt_test3()
 {
+    Move3D::Scene* sce = global_Project->getActiveScene();
+    Move3D::Robot* robot = sce->getActiveRobot();
+
+    print_joint_mapping(robot);
     //  HRICS_humanCostMaps->testCostFunction();
     //  HRICS_humanCostMaps->saveAgentGrids();
 
@@ -797,6 +801,10 @@ void qt_show_recorded_motion()
         {
             cout << "USE MOTION VECTOR" << endl;
             player = new HRICS::PlayMotion( global_ht_simulator->getMotions() );
+        }
+
+        if( player->getNumberOfMotions() == 0 ){
+            cout << "no motions to play" << endl;
         }
 
         std::vector<std::string> names;
