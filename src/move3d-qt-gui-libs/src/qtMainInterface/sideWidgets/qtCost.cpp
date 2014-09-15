@@ -707,7 +707,7 @@ void CostWidget::showHRITrajCost()
 
 void CostWidget::showSTOMPTrajCost()
 {
-#ifdef USE_QWT
+//#ifdef USE_QWT
     cout << "showSTOMPTrajCost" << endl;
 
     std::vector<double> smoothness_cost;
@@ -715,6 +715,7 @@ void CostWidget::showSTOMPTrajCost()
     std::vector<double> general_cost;
 
     if ( global_optimizer ) {
+        cout << "get all cost profiles" << endl;
         Move3D::Trajectory traj( global_Project->getActiveScene()->getActiveRobot() );
         global_optimizer->getCostProfiles( smoothness_cost, collision_cost, general_cost );
         global_optimizer->setGroupTrajectoryToMove3DTraj( traj );
@@ -724,8 +725,12 @@ void CostWidget::showSTOMPTrajCost()
         return;
     }
 
+    cout << "create multiplot" << endl;
+
     MultiPlot* myPlot = new MultiPlot( m_plot );
+
     myPlot->setGeometry( m_plot->getPlot()->geometry() );
+
 
     int nb_sample = myPlot->getPlotSize();
 
@@ -736,6 +741,9 @@ void CostWidget::showSTOMPTrajCost()
     double inc = double(smoothness_cost.size())/double(nb_sample);
     double k =0;
 
+    cout << "nb samples : " << nb_sample << endl;
+    cout << "inc : " << inc << endl;
+
     for (int j=0; j<nb_sample; j++)
     {
         smoothness_cost_curve.push_back(smoothness_cost[floor(k)]);
@@ -743,11 +751,17 @@ void CostWidget::showSTOMPTrajCost()
         general_cost_curve.push_back(general_cost[floor(k)]);
 
         k += inc;
+
+        if( floor(k) >= smoothness_cost.size() ||
+            floor(k) >= collision_cost.size() ||
+            floor(k) >= general_cost.size() )
+            break;
     }
 
-    for( int i=0;i<int(collision_cost.size());i++)
+    for( int i=0;i<int(smoothness_cost.size());i++)
     {
-        cout << "collision_cost[" << i << "] = " << collision_cost[i] << endl;
+//        cout << "general_cost[" << i << "] = " << general_cost[i] << endl;
+        cout << "smoothness_cost[" << i << "] = " << smoothness_cost[i] << endl;
     }
 
     std::vector< std::vector<double> > curves;
@@ -758,7 +772,6 @@ void CostWidget::showSTOMPTrajCost()
     std::vector< std::string > plotNames;
     plotNames.push_back( "Smoothness" );
     plotNames.push_back( "Obstacle" );
-    //plotNames.push_back( "Reachability" );
     plotNames.push_back( "General" );
 
     myPlot->setData( plotNames , curves );
@@ -766,7 +779,7 @@ void CostWidget::showSTOMPTrajCost()
     delete m_plot->getPlot();
     m_plot->setPlot(myPlot);
     m_plot->show();
-#endif
+//#endif
 }
 
 void CostWidget::setPlotedVector(vector<double> v)

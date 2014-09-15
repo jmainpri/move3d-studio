@@ -51,7 +51,7 @@ public:
 private:
 	void alignScales();
 	
-	QVector< double >								d_x;
+    QVector< double >				 d_x;
 	std::vector< QVector< double > > d_y;
 	
 	bool init;

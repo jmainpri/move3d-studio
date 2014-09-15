@@ -259,7 +259,7 @@ void qt_drawAllWinActive()
 //static HRICS::Navigation* m_navigation = NULL;
 
 
-void qt_showTraj();
+bool qt_showTraj();
 
 void qt_test1()
 {
@@ -818,6 +818,10 @@ void qt_show_recorded_motion()
                 cout << " , from file : " << global_motionRecorders[0]->getStoredMotionName(i) << endl;
             }
 
+            if ( i > 0 ){
+                break;
+            }
+
             player->play(i);
 
             bool use_button = false;
@@ -835,6 +839,8 @@ void qt_show_recorded_motion()
                     remove_motion = false;
                 }
             }
+
+
         }
 
         if( !names.empty() )
@@ -1208,11 +1214,62 @@ void qt_executePlan()
 }
 #endif
 
-void qt_showTraj()
+bool qt_showMotion( const Move3D::Trajectory& motion )
+{
+    cout << __PRETTY_FUNCTION__ << endl;
+
+    if( motion.size() == 0 ) {
+        cout << "warning : motion is empty" << endl;
+        return false;
+    }
+
+    cout << "time length : " << motion.getTimeLength() << endl;
+
+    Move3D::Robot* robot = motion.getRobot();
+    bool StopRun = false;
+    double tu_init = 0.0, tu = 0.0, t = 0.0;
+    timeval tim;
+
+    while ( !StopRun )
+    {
+        t = tu - tu_init;
+
+        robot->setAndUpdate( *motion.configAtTime( t ) );
+
+        g3d_draw_allwin_active();
+
+        gettimeofday(&tim, NULL);
+        tu = tim.tv_sec + (tim.tv_usec/1000000.0);
+
+        if( tu_init == 0.0 )
+            tu_init = tu;
+
+        if ( t >= motion.getTimeLength() )
+            StopRun = true;
+
+        if ( PlanEnv->getBool(PlanParam::stopPlanner) )
+            StopRun = true;
+    }
+
+    cout << "end " << __PRETTY_FUNCTION__ << endl;
+
+    return true;
+}
+
+bool qt_showTraj()
 {
     p3d_rob *robotPt = (p3d_rob*) p3d_get_desc_curid(P3D_ROBOT);
+
+    Move3D::Robot* rob = global_Project->getActiveScene()->getRobotByNameContaining( robotPt->name );
+    if( rob->getCurrentMove3DTraj().size() != 0 ) {
+        qt_showMotion( rob->getCurrentMove3DTraj() );
+        ENV.setBool(Env::isRunning ,false);
+        return true;
+    }
+
     g3d_show_tcur_rob(robotPt,default_drawtraj_fct_qt_pipe);
     ENV.setBool(Env::isRunning,false);
+
     if (PlanEnv->getBool(PlanParam::env_showHumanTraj))
     {
         p3d_rob *hum_robotPt;
@@ -1228,6 +1285,8 @@ void qt_showTraj()
             // dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->showBestConf();
         }
     }
+
+    return true;
 }
 
 /**
