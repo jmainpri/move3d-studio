@@ -801,6 +801,7 @@ void qt_show_recorded_motion()
         {
             cout << "USE MOTION VECTOR" << endl;
             player = new HRICS::PlayMotion( global_ht_simulator->getMotions() );
+            player->setMotionsNames( global_ht_simulator->getMotionsNames() );
         }
 
         if( player->getNumberOfMotions() == 0 ){
@@ -818,12 +819,16 @@ void qt_show_recorded_motion()
                 cout << " , from file : " << global_motionRecorders[0]->getStoredMotionName(i) << endl;
             }
 
-            if ( i > 0 ){
-                break;
-            }
+//            if ( i > 0 ){
+//                break;
+//            }
 
             player->play(i);
 
+
+            if( GestEnv->getBool( GestParam::play_repeat ) ){
+                i--;
+            }
             bool use_button = false;
             while( !GestEnv->getBool(GestParam::play_next) ) {
                 usleep(100);
@@ -832,15 +837,14 @@ void qt_show_recorded_motion()
             if( use_button ){
                 GestEnv->setBool( GestParam::play_next, false );
             }
-            if( global_ht_simulator == NULL )
+
+            else if( global_ht_simulator == NULL )
             {
                 if( remove_motion ){
                     names.push_back( global_motionRecorders[0]->getStoredMotionName(i) );
                     remove_motion = false;
                 }
             }
-
-
         }
 
         if( !names.empty() )

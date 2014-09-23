@@ -707,7 +707,7 @@ void CostWidget::showHRITrajCost()
 
 void CostWidget::showSTOMPTrajCost()
 {
-//#ifdef USE_QWT
+#ifdef USE_QWT
     cout << "showSTOMPTrajCost" << endl;
 
     std::vector<double> smoothness_cost;
@@ -779,7 +779,7 @@ void CostWidget::showSTOMPTrajCost()
     delete m_plot->getPlot();
     m_plot->setPlot(myPlot);
     m_plot->show();
-//#endif
+#endif
 }
 
 void CostWidget::setPlotedVector(vector<double> v)
