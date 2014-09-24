@@ -260,15 +260,49 @@ void qt_drawAllWinActive()
 
 
 bool qt_showTraj();
+bool qt_showMotion( const Move3D::Trajectory& motion );
 
 void qt_test1()
 {
+    Move3D::Scene* sce = global_Project->getActiveScene();
+    Move3D::Robot* robot = sce->getActiveRobot();
 
-    for( int i=0; i<int(global_trajToDraw.size()); i++ )
-    {
-        global_trajToDraw[i].replaceP3dTraj();
-        qt_showTraj();
+    if( robot != NULL ){
+        cout << "Got robot" << endl;
     }
+
+    std::cout << "Load file to global motion recorder" << std::endl;
+
+    cout.precision(4);
+    cout << "motion duration : " << HRICS::motion_duration( global_motionRecorders[1]->getStoredMotions()[0] ) << endl;
+
+    Move3D::Trajectory traj = HRICS::motion_to_traj( global_motionRecorders[1]->getStoredMotions()[0], robot );
+    if( !qt_showMotion( traj ) ){
+        return;
+    }
+
+    Move3D::StackedFeatures* fct = dynamic_cast<StackedFeatures*>( global_activeFeatureFunction );
+    if( fct != NULL && fct->getFeatureFunction("SmoothnessAll") != NULL )
+    {
+//        const double factor_task_dist = 1e01;
+//        const double factor_task_vel  = 1e-03;
+//        const double factor_task_acc  = 1e-09;
+//        const double factor_task_jerk = 1e-13;
+
+//        double cost_task;
+
+        Eigen::VectorXd control_costs_t;
+        TaskSmoothnessFeature& task = static_cast<SmoothnessFeature*>(fct->getFeatureFunction("SmoothnessAll"))->task_features_;
+
+        task.getVelocity( traj, control_costs_t );
+    }
+
+    //    for( int i=0; i<int(global_trajToDraw.size()); i++ )
+    //    {
+    //        global_trajToDraw[i].replaceP3dTraj();
+    //        qt_showTraj();
+    //    }
+
 //    delete global_workspaceOccupancy;
 //    global_workspaceOccupancy = NULL;
 
