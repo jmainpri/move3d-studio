@@ -114,6 +114,7 @@
 #include "hri_costspace/human_trajectories/HRICS_human_simulator.hpp"
 #include "hri_costspace/human_trajectories/HRICS_detours.hpp"
 #include "hri_costspace/human_trajectories/HRICS_run_multiple_planners.hpp"
+#include "hri_costspace/human_trajectories/HRICS_dynamic_time_warping.hpp"
 
 #if defined( HRI_PLANNER )
 #include "hri_costspace/HRICS_hamp.hpp"
@@ -363,13 +364,93 @@ void qt_test2()
     Move3D::Scene* sce = global_Project->getActiveScene();
     Move3D::Robot* robot = sce->getActiveRobot();
 
-    if( robot != NULL ){
-        cout << "Got robot" << endl;
+//    if( robot != NULL ){
+//        cout << "Got robot" << endl;
+//    }
+
+//    Move3D::Trajectory traj(robot);
+//    traj.loadFromFile("tmp_traj_file.m3dtraj");
+//    traj.replaceP3dTraj();
+
+    robot->getP3dRobotStruct()->tcur = NULL;
+
+    std::string folder_demos = "loo_trajectories/demos/";
+    std::string folder_base_line = "loo_trajectories/base_line/";
+    std::string folder_recovered = "loo_trajectories/recovered/";
+
+    int nb_demos = 7;
+
+    std::vector<Move3D::Trajectory> demos;
+
+    for( int d=0; d<nb_demos; d++ )
+    {
+        std::stringstream ss;
+        ss.str("");
+        ss << "trajectory_human_trajs_" << std::setw(3) << std::setfill( '0' ) << d;
+        ss <<                       "_" << std::setw(3) << std::setfill( '0' ) << int(0) << ".traj";
+
+        Move3D::Trajectory traj( robot );
+        traj.loadFromFile( folder_demos + ss.str() );
+
+        traj.setColor( d );
+
+        global_trajToDraw.push_back( traj );
+        demos.push_back( traj );
     }
 
-    Move3D::Trajectory traj(robot);
-    traj.loadFromFile("tmp_traj_file.m3dtraj");
-    traj.replaceP3dTraj();
+    int nb_runs = 10;
+
+    std::vector< std::vector<Move3D::Trajectory> > planned( demos.size() );
+
+    for( int d=0; d<nb_demos; d++ )
+        for( int k=0; k<nb_runs; k++ )
+        {
+            std::stringstream ss;
+            ss.str("");
+            ss << "run_simulator_" << std::setw(3) << std::setfill( '0' ) << d;
+            ss <<              "_" << std::setw(3) << std::setfill( '0' ) << k << ".traj";
+
+            Move3D::Trajectory traj( robot );
+            traj.loadFromFile( folder_recovered + ss.str() );
+
+            traj.setColor( d );
+
+            global_trajToDraw.push_back( traj );
+            planned[d].push_back( traj );
+        }
+
+    std::vector<Eigen::VectorXd> costs(nb_demos);
+
+    for( int d=0; d<nb_demos; d++ )
+    {
+        std::vector<double> costs_tmp = dtw_compare_performance( global_ht_simulator->getActiveDofs(), demos[d], planned[d] );
+
+        costs[d] = Eigen::VectorXd::Zero( costs.size() );
+        for( int k=0; k<costs.size(); k++ )
+            costs[d][k] = costs_tmp[k];
+    }
+
+    std::vector<Eigen::VectorXd> stats1( 4 );
+    for( int i=0; i<stats1.size(); i++ )
+        stats1[i] = Eigen::VectorXd::Zero( nb_demos );
+
+    for( int d=0; d<nb_demos; d++ )
+    {
+        double mean = costs[d].mean();
+        double sq_sum = costs[d].transpose()*costs[d];
+        double stdev = std::sqrt( sq_sum / double(costs[d].size()) - (mean * mean) ); // Moyenne de carrés moins le carré de la moyenne
+        double min = costs[d].minCoeff();
+        double max = costs[d].maxCoeff();
+
+//        stats1 = Eigen::VectorXd::Zero( 4 );
+
+        cout << " DEMO " << d << endl;
+        cout << " mean " << mean << endl;
+        cout << " stdev " << stdev << endl;
+        cout << " min " << min << endl;
+        cout << " max " << max << endl;
+        cout << " duration : " << demos[d].getTimeLength() << endl;
+    }
 
     //  cout << "Plan param 1 : " << PlanEnv->getBool(PlanParam::starRRT) << endl;
     //  cout << "Plan param 2 : " << PlanEnv->getBool(PlanParam::starRewire) << endl;
