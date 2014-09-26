@@ -63,6 +63,8 @@
 #include "API/project.hpp"
 #include "API/Search/Dijkstra/dijkstra.hpp"
 #include "API/Roadmap/graphSampler.hpp"
+#include "API/Graphic/drawModule.hpp"
+#include "API/Graphic/drawCost.hpp"
 
 #include "planner/planner.hpp"
 #include "planner/AStar/AStarPlanner.hpp"
@@ -374,11 +376,19 @@ void qt_test2()
 
     robot->getP3dRobotStruct()->tcur = NULL;
 
+    if( global_DrawModule )
+    {
+        global_DrawModule->addDrawFunction( "Draw3DTrajs", boost::bind( &g3d_draw_3d_lines ) );
+        global_DrawModule->enableDrawFunction( "Draw3DTrajs" );
+    }
+
     std::string folder_demos = "loo_trajectories/demos/";
     std::string folder_base_line = "loo_trajectories/base_line/";
     std::string folder_recovered = "loo_trajectories/recovered/";
 
     int nb_demos = 7;
+
+    global_linesToDraw.clear();;
 
     std::vector<Move3D::Trajectory> demos;
 
@@ -394,6 +404,9 @@ void qt_test2()
 
         traj.setColor( d );
 
+        double alpha = double(d)/double(nb_demos);
+
+        global_linesToDraw.push_back( std::make_pair( Eigen::Vector3d(alpha, 1.-alpha, 0), traj.getJointPoseTrajectory( robot->getJoint(45) ) ) );
         global_trajToDraw.push_back( traj );
         demos.push_back( traj );
     }
@@ -411,10 +424,16 @@ void qt_test2()
             ss <<              "_" << std::setw(3) << std::setfill( '0' ) << k << ".traj";
 
             Move3D::Trajectory traj( robot );
-            traj.loadFromFile( folder_recovered + ss.str() );
+            traj.loadFromFile( folder_base_line + ss.str() );
 
             traj.setColor( d );
 
+            double alpha = double(d)/double(nb_demos);
+
+            Eigen::Vector3d color;
+
+
+            global_linesToDraw.push_back( std::make_pair( Eigen::Vector3d(alpha, 1.-alpha, 0), traj.getJointPoseTrajectory( robot->getJoint(45) ) ) );
             global_trajToDraw.push_back( traj );
             planned[d].push_back( traj );
         }
@@ -426,12 +445,12 @@ void qt_test2()
         std::vector<double> costs_tmp = dtw_compare_performance( global_ht_simulator->getActiveDofs(), demos[d], planned[d] );
 
         costs[d] = Eigen::VectorXd::Zero( costs.size() );
-        for( int k=0; k<costs.size(); k++ )
+        for( int k=0; k<int(costs.size()); k++ )
             costs[d][k] = costs_tmp[k];
     }
 
     std::vector<Eigen::VectorXd> stats1( 4 );
-    for( int i=0; i<stats1.size(); i++ )
+    for( int i=0; i<int(stats1.size()); i++ )
         stats1[i] = Eigen::VectorXd::Zero( nb_demos );
 
     for( int d=0; d<nb_demos; d++ )
@@ -450,7 +469,20 @@ void qt_test2()
         cout << " min " << min << endl;
         cout << " max " << max << endl;
         cout << " duration : " << demos[d].getTimeLength() << endl;
+
+        stats1[0][d] = mean;
+        stats1[1][d] = stdev;
+        stats1[2][d] = min;
+        stats1[3][d] = max;
     }
+
+//        stats1 = Eigen::VectorXd::Zero( 4 );
+
+    cout << endl;
+    cout << " MEAN mean  : "  << stats1[0].mean() << endl;
+    cout << " MEAN stdev : " << stats1[1].mean() << endl;
+    cout << " MEAN min   : "   << stats1[2].mean() << endl;
+    cout << " MEAN max   : "   << stats1[3].mean() << endl;
 
     //  cout << "Plan param 1 : " << PlanEnv->getBool(PlanParam::starRRT) << endl;
     //  cout << "Plan param 2 : " << PlanEnv->getBool(PlanParam::starRewire) << endl;
@@ -1362,6 +1394,8 @@ bool qt_showMotion( const Move3D::Trajectory& motion )
 
         if( tu_init == 0.0 )
             tu_init = tu;
+
+        global_w->getOpenGL()->addCurrentImage();
 
         if ( t >= motion.getTimeLength() )
             StopRun = true;
