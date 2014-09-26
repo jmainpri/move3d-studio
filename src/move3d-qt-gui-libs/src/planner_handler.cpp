@@ -383,16 +383,18 @@ void qt_test2()
     }
 
     std::string folder_demos = "loo_trajectories/demos/";
-    std::string folder_base_line = "loo_trajectories/base_line/";
+    std::string folder_base_line = "loo_trajectories/base_line_new/";
     std::string folder_recovered = "loo_trajectories/recovered/";
 
-    int nb_demos = 7;
+    int nb_demos = 1;
+    int d = 0;
 
     global_linesToDraw.clear();;
 
     std::vector<Move3D::Trajectory> demos;
 
-    for( int d=0; d<nb_demos; d++ )
+//    for( int d=0; d<nb_demos; d++ )
+    if( true )
     {
         std::stringstream ss;
         ss.str("");
@@ -402,20 +404,47 @@ void qt_test2()
         Move3D::Trajectory traj( robot );
         traj.loadFromFile( folder_demos + ss.str() );
 
+        cout << "loading trajectory : " << folder_base_line + ss.str() << " nb of waypoints : " << traj.getNbOfViaPoints() << endl;
+
         traj.setColor( d );
 
         double alpha = double(d)/double(nb_demos);
 
-        global_linesToDraw.push_back( std::make_pair( Eigen::Vector3d(alpha, 1.-alpha, 0), traj.getJointPoseTrajectory( robot->getJoint(45) ) ) );
+        global_linesToDraw.push_back( std::make_pair( Eigen::Vector3d(1, 0, 0), traj.getJointPoseTrajectory( robot->getJoint(45) ) ) );
         global_trajToDraw.push_back( traj );
-        demos.push_back( traj );
+//        demos.push_back( traj );
     }
 
-    int nb_runs = 10;
+    int nb_runs = 3;
 
-    std::vector< std::vector<Move3D::Trajectory> > planned( demos.size() );
+    std::vector< std::vector<Move3D::Trajectory> > baseline( nb_demos );
 
-    for( int d=0; d<nb_demos; d++ )
+//    for( int d=0; d<nb_demos; d++ )
+        for( int k=0; k<nb_runs; k++ )
+        {
+            std::stringstream ss;
+            ss.str("");
+            ss << "run_simulator_" << std::setw(3) << std::setfill( '0' ) << d;
+            ss <<              "_" << std::setw(3) << std::setfill( '0' ) << k << ".traj";
+
+
+            Move3D::Trajectory traj( robot );
+            traj.loadFromFile( folder_base_line + ss.str() );
+
+            cout << "loading trajectory : " << folder_base_line + ss.str() << " nb of waypoints : " << traj.getNbOfViaPoints() << endl;
+
+            traj.setColor( 0 );
+
+            double alpha = double(d)/double(nb_demos);
+
+            global_linesToDraw.push_back( std::make_pair( Eigen::Vector3d(0, 1, 0), traj.getJointPoseTrajectory( robot->getJoint(45) ) ) );
+//            global_trajToDraw.push_back( traj );
+            baseline[0].push_back( traj );
+        }
+
+    std::vector< std::vector<Move3D::Trajectory> > recovered( nb_demos );
+
+//    for( int d=0; d<nb_demos; d++ )
         for( int k=0; k<nb_runs; k++ )
         {
             std::stringstream ss;
@@ -424,65 +453,70 @@ void qt_test2()
             ss <<              "_" << std::setw(3) << std::setfill( '0' ) << k << ".traj";
 
             Move3D::Trajectory traj( robot );
-            traj.loadFromFile( folder_base_line + ss.str() );
+            traj.loadFromFile( folder_recovered + ss.str() );
 
-            traj.setColor( d );
+            cout << "loading trajectory : " << folder_recovered + ss.str() << " nb of waypoints : " << traj.getNbOfViaPoints() << endl;
+
+            traj.setColor( 1 );
 
             double alpha = double(d)/double(nb_demos);
 
-            Eigen::Vector3d color;
-
-
-            global_linesToDraw.push_back( std::make_pair( Eigen::Vector3d(alpha, 1.-alpha, 0), traj.getJointPoseTrajectory( robot->getJoint(45) ) ) );
-            global_trajToDraw.push_back( traj );
-            planned[d].push_back( traj );
+            global_linesToDraw.push_back( std::make_pair( Eigen::Vector3d(0, 0, 1), traj.getJointPoseTrajectory( robot->getJoint(45) ) ) );
+//            global_trajToDraw.push_back( traj );
+            recovered[0].push_back( traj );
         }
 
-    std::vector<Eigen::VectorXd> costs(nb_demos);
+//    std::vector<double> costs_tmp;
 
-    for( int d=0; d<nb_demos; d++ )
-    {
-        std::vector<double> costs_tmp = dtw_compare_performance( global_ht_simulator->getActiveDofs(), demos[d], planned[d] );
+//    costs_tmp = dtw_compare_performance( global_ht_simulator->getActiveDofs(), demos[0], recovered[0] );
+//    cout << "recovered : costs_tmp[" << 0 <<"] = " << costs_tmp[0] << endl;
 
-        costs[d] = Eigen::VectorXd::Zero( costs.size() );
-        for( int k=0; k<int(costs.size()); k++ )
-            costs[d][k] = costs_tmp[k];
-    }
+//    costs_tmp = dtw_compare_performance( global_ht_simulator->getActiveDofs(), demos[0], baseline[0] );
+//    cout << "baseline  : costs_tmp[" << 0 <<"] = " << costs_tmp[0] << endl;
 
-    std::vector<Eigen::VectorXd> stats1( 4 );
-    for( int i=0; i<int(stats1.size()); i++ )
-        stats1[i] = Eigen::VectorXd::Zero( nb_demos );
+//    std::vector<Eigen::VectorXd> costs(nb_demos);
 
-    for( int d=0; d<nb_demos; d++ )
-    {
-        double mean = costs[d].mean();
-        double sq_sum = costs[d].transpose()*costs[d];
-        double stdev = std::sqrt( sq_sum / double(costs[d].size()) - (mean * mean) ); // Moyenne de carrés moins le carré de la moyenne
-        double min = costs[d].minCoeff();
-        double max = costs[d].maxCoeff();
+//    for( int d=0; d<nb_demos; d++ )
+//    {
+//        std::vector<double> costs_tmp = dtw_compare_performance( global_ht_simulator->getActiveDofs(), demos[d], baseline[d] );
 
-//        stats1 = Eigen::VectorXd::Zero( 4 );
+//        costs[d] = Eigen::VectorXd::Zero( costs.size() );
+//        for( int k=0; k<int(costs.size()); k++ )
+//            costs[d][k] = costs_tmp[k];
+//    }
 
-        cout << " DEMO " << d << endl;
-        cout << " mean " << mean << endl;
-        cout << " stdev " << stdev << endl;
-        cout << " min " << min << endl;
-        cout << " max " << max << endl;
-        cout << " duration : " << demos[d].getTimeLength() << endl;
+//    std::vector<Eigen::VectorXd> stats1( 4 );
+//    for( int i=0; i<int(stats1.size()); i++ )
+//        stats1[i] = Eigen::VectorXd::Zero( nb_demos );
 
-        stats1[0][d] = mean;
-        stats1[1][d] = stdev;
-        stats1[2][d] = min;
-        stats1[3][d] = max;
-    }
+//    for( int d=0; d<nb_demos; d++ )
+//    {
+//        double mean = costs[d].mean();
+//        double sq_sum = costs[d].transpose()*costs[d];
+//        double stdev = std::sqrt( sq_sum / double(costs[d].size()) - (mean * mean) ); // Moyenne de carrés moins le carré de la moyenne
+//        double min = costs[d].minCoeff();
+//        double max = costs[d].maxCoeff();
 
-//        stats1 = Eigen::VectorXd::Zero( 4 );
+//        cout << " DEMO " << d << endl;
+//        cout << " mean " << mean << endl;
+//        cout << " stdev " << stdev << endl;
+//        cout << " min " << min << endl;
+//        cout << " max " << max << endl;
+//        cout << " duration : " << demos[d].getTimeLength() << endl;
 
-    cout << endl;
-    cout << " MEAN mean  : "  << stats1[0].mean() << endl;
-    cout << " MEAN stdev : " << stats1[1].mean() << endl;
-    cout << " MEAN min   : "   << stats1[2].mean() << endl;
-    cout << " MEAN max   : "   << stats1[3].mean() << endl;
+//        stats1[0][d] = mean;
+//        stats1[1][d] = stdev;
+//        stats1[2][d] = min;
+//        stats1[3][d] = max;
+//    }
+
+//    cout << endl;
+//    cout << " MEAN mean  : "  << stats1[0].mean() << endl;
+//    cout << " MEAN stdev : " << stats1[1].mean() << endl;
+//    cout << " MEAN min   : "   << stats1[2].mean() << endl;
+//    cout << " MEAN max   : "   << stats1[3].mean() << endl;
+
+    //**********************************************************
 
     //  cout << "Plan param 1 : " << PlanEnv->getBool(PlanParam::starRRT) << endl;
     //  cout << "Plan param 2 : " << PlanEnv->getBool(PlanParam::starRewire) << endl;
