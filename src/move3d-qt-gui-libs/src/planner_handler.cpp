@@ -361,7 +361,7 @@ void qt_test1()
     //  HRICS::printHumanConfig();
 }
 
-std::vector< std::vector<Move3D::Trajectory> > load_trajs(std::string folder, int nb_demos, int demo_id, Eigen::Vector3d color )
+std::vector< std::vector<Move3D::Trajectory> > load_trajs(std::string folder, int nb_demos, int demo_id, Eigen::Vector3d color, bool draw )
 {
     Move3D::Robot* active_human  = global_ht_simulator->getActiveHuman();
     std::vector< std::vector<Move3D::Trajectory> > trajs( nb_demos );
@@ -385,7 +385,7 @@ std::vector< std::vector<Move3D::Trajectory> > load_trajs(std::string folder, in
             // traj.setColor( 0 );
             // double alpha = double(d)/double(nb_demos);
 
-            if( d == demo_id )
+            if( d == demo_id && draw )
                 global_linesToDraw.push_back( std::make_pair( color, traj.getJointPoseTrajectory( active_human->getJoint(45) ) ) );
             // global_trajToDraw.push_back( traj );
             trajs[d].push_back( traj );
@@ -409,11 +409,17 @@ void qt_test2()
 
     std::string folder_demos = "loo_trajectories/demos/";
 
-    std::string folder_base_line = "loo_trajectories/paper_icra_0/baseline/";
-    std::string folder_recovered = "loo_trajectories/paper_icra_0/recovered/";
+//    std::string folder_base_line = "loo_trajectories/paper_icra_0/baseline/";
+//    std::string folder_recovered = "loo_trajectories/paper_icra_0/recovered/";
+//    std::string folder_no_replan_base_line = "loo_trajectories/paper_icra_0/no_replan_baseline/";
+//    std::string folder_no_replan_recovered = "loo_trajectories/paper_icra_0/no_replan_recovered/";
 
-    std::string folder_no_replan_base_line = "loo_trajectories/paper_icra_0/no_replan_baseline/";
-    std::string folder_no_replan_recovered = "loo_trajectories/paper_icra_0/no_replan_recovered/";
+
+    std::string folder_base_line = "loo_trajectories/with_collisions/zero_baseline/";
+    std::string folder_recovered = "loo_trajectories/with_collisions/recovered/";
+    std::string folder_no_replan_base_line = "loo_trajectories/with_collisions/no_replan_baseline/";
+    std::string folder_no_replan_recovered = "loo_trajectories/with_collisions/no_replan_recovered/";
+
 
     Move3D::Robot* active_human  = global_ht_simulator->getActiveHuman();
     Move3D::Robot* passive_human = global_ht_simulator->getPassiveHuman();
@@ -514,10 +520,10 @@ void qt_test2()
 
     int nb_runs = 10;
 
-    std::vector< std::vector<Move3D::Trajectory> > baseline = load_trajs( folder_base_line, nb_demos, demo_id, Eigen::Vector3d(0, 1, 0) );
-    std::vector< std::vector<Move3D::Trajectory> > recovered = load_trajs( folder_recovered, nb_demos, demo_id, Eigen::Vector3d(0, 0, 1) );
-    std::vector< std::vector<Move3D::Trajectory> > noreplan_baseline = load_trajs( folder_no_replan_base_line, nb_demos, demo_id, Eigen::Vector3d(0, 1, 0) );
-    std::vector< std::vector<Move3D::Trajectory> > noreplan_recovered = load_trajs( folder_no_replan_recovered, nb_demos, demo_id, Eigen::Vector3d(0, 0, 1) );
+    std::vector< std::vector<Move3D::Trajectory> > baseline = load_trajs( folder_base_line, nb_demos, demo_id, Eigen::Vector3d(0, 1, 0), true );
+    std::vector< std::vector<Move3D::Trajectory> > recovered = load_trajs( folder_recovered, nb_demos, demo_id, Eigen::Vector3d(0, 0, 1), true );
+    std::vector< std::vector<Move3D::Trajectory> > noreplan_baseline = load_trajs( folder_no_replan_base_line, nb_demos, demo_id, Eigen::Vector3d(0, 1, 0), false );
+    std::vector< std::vector<Move3D::Trajectory> > noreplan_recovered = load_trajs( folder_no_replan_recovered, nb_demos, demo_id, Eigen::Vector3d(0, 1, 0), false );
 
 
     std::vector< std::vector<Eigen::VectorXd> > costs( nb_demos );
@@ -605,6 +611,9 @@ void qt_test2()
             costs[d][7][k] = costs_tmp[k];
     }
 
+    // SET HUMAN CONFIGURAION
+    active_human->setAndUpdate( *demos[demo_id].getEnd() );
+
     std::vector<std::string> names;
     names.push_back( "1 (1.31) & " );
     names.push_back( "2 (1.31) & " );
@@ -613,6 +622,7 @@ void qt_test2()
     names.push_back( "5 (0.90) & " );
     names.push_back( "6 (0.70) & " );
     names.push_back( "7 (1.11) & " );
+    names.push_back( "8 & " );
 
     std::vector< std::vector<Eigen::VectorXd> > stats(nb_demos);
 
@@ -635,18 +645,19 @@ void qt_test2()
             stats[d][i][3] = max;
          }
 
-        cout << stats[d][0][0] << "  " << stats[d][0][1] << "  " << stats[d][0][2] << "  " << stats[d][0][3] << "  " ;
-        cout << stats[d][1][0] << "  " << stats[d][1][1] << "  " << stats[d][1][2] << "  " << stats[d][1][3] << "  " ;
+        // BASELINE
+//        cout << stats[d][0][0] << "  " << stats[d][0][1] << "  " << stats[d][0][2] << "  " << stats[d][0][3] << "  " ;
+//        cout << stats[d][1][0] << "  " << stats[d][1][1] << "  " << stats[d][1][2] << "  " << stats[d][1][3] << "  " ;
 
-        cout << stats[d][4][0] << "  " << stats[d][4][1] << "  " << stats[d][4][2] << "  " << stats[d][4][3] << "  " ;
-        cout << stats[d][5][0] << "  " << stats[d][5][1] << "  " << stats[d][5][2] << "  " << stats[d][5][3] << "  " << endl;
+//        cout << stats[d][4][0] << "  " << stats[d][4][1] << "  " << stats[d][4][2] << "  " << stats[d][4][3] << "  " ;
+//        cout << stats[d][5][0] << "  " << stats[d][5][1] << "  " << stats[d][5][2] << "  " << stats[d][5][3] << "  " << endl;
 
+        // RECOVERED
+        cout << stats[d][2][0] << "  " << stats[d][2][1] << "  " << stats[d][2][2] << "  " << stats[d][2][3] << "  " ;
+        cout << stats[d][3][0] << "  " << stats[d][3][1] << "  " << stats[d][3][2] << "  " << stats[d][3][3] << "  " ;
 
-//        cout << stats[d][2][0] << "  " << stats[d][2][1] << "  " << stats[d][2][2] << "  " << stats[d][2][3] << "  " ;
-//        cout << stats[d][3][0] << "  " << stats[d][3][1] << "  " << stats[d][3][2] << "  " << stats[d][3][3] << "  " ;
-
-//        cout << stats[d][6][0] << "  " << stats[d][6][1] << "  " << stats[d][6][2] << "  " << stats[d][6][3] << "  " ;
-//        cout << stats[d][7][0] << "  " << stats[d][7][1] << "  " << stats[d][7][2] << "  " << stats[d][7][3] << "  " << endl;
+        cout << stats[d][6][0] << "  " << stats[d][6][1] << "  " << stats[d][6][2] << "  " << stats[d][6][3] << "  " ;
+        cout << stats[d][7][0] << "  " << stats[d][7][1] << "  " << stats[d][7][2] << "  " << stats[d][7][3] << "  " << endl;
     }
 
     cout << endl;
@@ -672,17 +683,19 @@ void qt_test2()
 
         cout << names[d] ;
 
-        cout << stats[d][0][0] << " & " << stats[d][0][1] << " & " << stats[d][0][2] << " & " << stats[d][0][3] << " & " ;
-        cout << stats[d][1][0] << " & " << stats[d][1][1] << " & " << stats[d][1][2] << " & " << stats[d][1][3] << " & " ;
+        // BASELINE
+//        cout << stats[d][0][0] << " & " << stats[d][0][1] << " & " << stats[d][0][2] << " & " << stats[d][0][3] << " & " ;
+//        cout << stats[d][1][0] << " & " << stats[d][1][1] << " & " << stats[d][1][2] << " & " << stats[d][1][3] << " & " ;
 
-        cout << stats[d][4][0] << " & " << stats[d][4][1] << " & " << stats[d][4][2] << " & " << stats[d][4][3] << " & " ;
-        cout << stats[d][5][0] << " & " << stats[d][5][1] << " & " << stats[d][5][2] << " & " << stats[d][5][3] << " \\" << endl;
+//        cout << stats[d][4][0] << " & " << stats[d][4][1] << " & " << stats[d][4][2] << " & " << stats[d][4][3] << " & " ;
+//        cout << stats[d][5][0] << " & " << stats[d][5][1] << " & " << stats[d][5][2] << " & " << stats[d][5][3] << " \\" << endl;
 
-//        cout << stats[d][2][0] << " & " << stats[d][2][1] << " & " << stats[d][2][2] << " & " << stats[d][2][3] << " & " ;
-//        cout << stats[d][3][0] << " & " << stats[d][3][1] << " & " << stats[d][3][2] << " & " << stats[d][3][3] << " & " ;
+        // RECOVERED
+        cout << stats[d][2][0] << " & " << stats[d][2][1] << " & " << stats[d][2][2] << " & " << stats[d][2][3] << " & " ;
+        cout << stats[d][3][0] << " & " << stats[d][3][1] << " & " << stats[d][3][2] << " & " << stats[d][3][3] << " & " ;
 
-//        cout << stats[d][6][0] << " & " << stats[d][6][1] << " & " << stats[d][6][2] << " & " << stats[d][6][3] << " & " ;
-//        cout << stats[d][7][0] << " & " << stats[d][7][1] << " & " << stats[d][7][2] << " & " << stats[d][7][3] << "  " << endl;
+        cout << stats[d][6][0] << " & " << stats[d][6][1] << " & " << stats[d][6][2] << " & " << stats[d][6][3] << " & " ;
+        cout << stats[d][7][0] << " & " << stats[d][7][1] << " & " << stats[d][7][2] << " & " << stats[d][7][3] << "  " << endl;
 
     }
 
@@ -699,7 +712,7 @@ void qt_test2()
         double min1 = costs[demo_id][1].minCoeff();
         double max1 = costs[demo_id][1].maxCoeff();
 
-        cout << "baseline joint / task " << endl;
+        cout << "replanning baseline joint / task " << endl;
         cout << mean << " & " << stdev << " & " << min << " & " << max << " &  " << mean1 << " & " << stdev1 << " & " << min1 << " & " << max1 << endl;
 
         mean = costs[demo_id][2].mean();
@@ -713,8 +726,39 @@ void qt_test2()
         stdev1 = std::sqrt( sq_sum1 / double(costs[demo_id][3].size()) - (mean1 * mean1) ); // Moyenne de carrés moins le carré de la moyenne
         min1 = costs[demo_id][3].minCoeff();
         max1 = costs[demo_id][3].maxCoeff();
-        cout << "recovered joint / task " << endl;
+        cout << "replanning recovered joint / task " << endl;
         cout << mean << " & " << stdev << " & " << min << " & " << max << " &  " << mean1 << " & " << stdev1 << " & " << min1 << " & " << max1 << endl;
+
+
+        mean = costs[demo_id][4].mean();
+        sq_sum = costs[demo_id][4].transpose()*costs[demo_id][4];
+        stdev = std::sqrt( sq_sum / double(costs[demo_id][4].size()) - (mean * mean) ); // Moyenne de carrés moins le carré de la moyenne
+        min = costs[demo_id][4].minCoeff();
+        max = costs[demo_id][4].maxCoeff();
+
+        mean1 = costs[demo_id][5].mean();
+        sq_sum1 = costs[demo_id][5].transpose()*costs[demo_id][5];
+        stdev1 = std::sqrt( sq_sum1 / double(costs[demo_id][5].size()) - (mean1 * mean1) ); // Moyenne de carrés moins le carré de la moyenne
+        min1 = costs[demo_id][5].minCoeff();
+        max1 = costs[demo_id][5].maxCoeff();
+
+        cout << "one iteration baseline joint / task " << endl;
+        cout << mean << " & " << stdev << " & " << min << " & " << max << " &  " << mean1 << " & " << stdev1 << " & " << min1 << " & " << max1 << endl;
+
+        mean = costs[demo_id][6].mean();
+        sq_sum = costs[demo_id][6].transpose()*costs[demo_id][6];
+        stdev = std::sqrt( sq_sum / double(costs[demo_id][6].size()) - (mean * mean) ); // Moyenne de carrés moins le carré de la moyenne
+        min = costs[demo_id][6].minCoeff();
+        max = costs[demo_id][6].maxCoeff();
+
+        mean1 = costs[demo_id][7].mean();
+        sq_sum1 = costs[demo_id][7].transpose()*costs[demo_id][7];
+        stdev1 = std::sqrt( sq_sum1 / double(costs[demo_id][7].size()) - (mean1 * mean1) ); // Moyenne de carrés moins le carré de la moyenne
+        min1 = costs[demo_id][7].minCoeff();
+        max1 = costs[demo_id][7].maxCoeff();
+        cout << "one iteration recovered joint / task " << endl;
+        cout << mean << " & " << stdev << " & " << min << " & " << max << " &  " << mean1 << " & " << stdev1 << " & " << min1 << " & " << max1 << endl;
+
 //    cout << endl;
 //    cout << " MEAN mean  : "  << stats1[0].mean() << endl;
 //    cout << " MEAN stdev : " << stats1[1].mean() << endl;
