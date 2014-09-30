@@ -361,10 +361,43 @@ void qt_test1()
     //  HRICS::printHumanConfig();
 }
 
+std::vector< std::vector<Move3D::Trajectory> > load_trajs(std::string folder, int nb_demos, int demo_id, Eigen::Vector3d color )
+{
+    Move3D::Robot* active_human  = global_ht_simulator->getActiveHuman();
+    std::vector< std::vector<Move3D::Trajectory> > trajs( nb_demos );
+
+    int nb_runs = 10;
+
+    for( int d=0; d<nb_demos; d++ )
+        for( int k=0; k<nb_runs; k++ )
+        {
+            std::stringstream ss;
+            ss.str("");
+            ss << "run_simulator_" << std::setw(3) << std::setfill( '0' ) << d;
+            ss <<              "_" << std::setw(3) << std::setfill( '0' ) << k << ".traj";
+
+
+            Move3D::Trajectory traj( active_human );
+            traj.loadFromFile( folder + ss.str() );
+
+            cout << "loading trajectory : " << folder + ss.str() << " nb of waypoints : " << traj.getNbOfViaPoints() << endl;
+
+            // traj.setColor( 0 );
+            // double alpha = double(d)/double(nb_demos);
+
+            if( d == demo_id )
+                global_linesToDraw.push_back( std::make_pair( color, traj.getJointPoseTrajectory( active_human->getJoint(45) ) ) );
+            // global_trajToDraw.push_back( traj );
+            trajs[d].push_back( traj );
+        }
+
+    return trajs;
+}
+
 void qt_test2()
 {
-    Move3D::Scene* sce = global_Project->getActiveScene();
-    Move3D::Robot* robot = sce->getActiveRobot();
+//    Move3D::Scene* sce = global_Project->getActiveScene();
+//    Move3D::Robot* robot = sce->getActiveRobot();
 
 //    if( robot != NULL ){
 //        cout << "Got robot" << endl;
@@ -374,142 +407,314 @@ void qt_test2()
 //    traj.loadFromFile("tmp_traj_file.m3dtraj");
 //    traj.replaceP3dTraj();
 
-    robot->getP3dRobotStruct()->tcur = NULL;
+    std::string folder_demos = "loo_trajectories/demos/";
 
-    if( global_DrawModule )
-    {
-        global_DrawModule->addDrawFunction( "Draw3DTrajs", boost::bind( &g3d_draw_3d_lines ) );
-        global_DrawModule->enableDrawFunction( "Draw3DTrajs" );
+    std::string folder_base_line = "loo_trajectories/paper_icra_0/baseline/";
+    std::string folder_recovered = "loo_trajectories/paper_icra_0/recovered/";
+
+    std::string folder_no_replan_base_line = "loo_trajectories/paper_icra_0/no_replan_baseline/";
+    std::string folder_no_replan_recovered = "loo_trajectories/paper_icra_0/no_replan_recovered/";
+
+    Move3D::Robot* active_human  = global_ht_simulator->getActiveHuman();
+    Move3D::Robot* passive_human = global_ht_simulator->getPassiveHuman();
+
+    active_human->getP3dRobotStruct()->tcur = NULL;
+
+    std::vector<int> active_joint_id;
+    std::vector<Move3D::Joint*> active_joints = global_ht_simulator->getActiveJoints();
+    for( int i=0; i<active_joints.size(); i ++){
+        active_joint_id.push_back( active_joints[i]->getId() );
+        cout << "active_joints[" << i << "] : " << active_joints[i]->getName() << endl;
     }
 
-    std::string folder_demos = "loo_trajectories/demos/";
-    std::string folder_base_line = "loo_trajectories/base_line_new/";
-    std::string folder_recovered = "loo_trajectories/recovered/";
+    ChompPlanningGroup* plangroup = new ChompPlanningGroup( active_human, active_joint_id );
 
-    int nb_demos = 1;
-    int d = 0;
+    int nb_demos = 7;
+    int demo_id = HriEnv->getInt(HricsParam::ioc_sample_iteration); // TODO change that
+    if( demo_id >= nb_demos ){
+        demo_id = nb_demos-1;
+    }
 
-    global_linesToDraw.clear();;
+    global_linesToDraw.clear();
+
+        if( global_DrawModule )
+        {
+            global_DrawModule->addDrawFunction( "Draw3DTrajs", boost::bind( &g3d_draw_3d_lines ) );
+            global_DrawModule->enableDrawFunction( "Draw3DTrajs" );
+        }
+
+//    std::vector<int> active_dofs;
+
+//    active joints dof (Pelvis) [0] : 6
+//    active joints dof (TorsoX) [1] : 12
+//    active joints dof (TorsoZ) [2] : 13
+//    active joints dof (TorsoY) [3] : 14
+//    active joints dof (rShoulderTransX) [4] : 18
+//    active joints dof (rShoulderTransY) [5] : 19
+//    active joints dof (rShoulderTransZ) [6] : 20
+//    active joints dof (rShoulderY1) [7] : 21
+//    active joints dof (rShoulderX) [8] : 22
+//    active joints dof (rShoulderY2) [9] : 23
+//    active joints dof (rArmTrans) [10] : 24
+//    active joints dof (rElbowZ) [11] : 25
+//    active joints dof (rElbowX) [12] : 26
+//    active joints dof (rElbowY) [13] : 27
+//    active joints dof (lPoint) [14] : 28
+//    active joints dof (rWristZ) [15] : 29
+//    active joints dof (rWristX) [16] : 30
+//    active joints dof (rWristY) [17] : 31
+
+//    active_dofs.push_back( 6 );
+//    active_dofs.push_back( 7 );
+//    active_dofs.push_back( 8 );
+//    active_dofs.push_back( 9 );
+
+//    active_dofs.push_back( 12 );
+//    active_dofs.push_back( 13 );
+//    active_dofs.push_back( 14 );
+
+//    active_dofs.push_back( 21 );
+//    active_dofs.push_back( 22 );
+//    active_dofs.push_back( 23 );
+
+//    active_dofs.push_back( 25 );
+//    active_dofs.push_back( 26 );
+//    active_dofs.push_back( 27 );
+
+//    active_dofs.push_back( 29 );
+//    active_dofs.push_back( 30 );
+//    active_dofs.push_back( 31 );
+
+//    global_ht_simulator->getActiveDofs();
 
     std::vector<Move3D::Trajectory> demos;
 
-//    for( int d=0; d<nb_demos; d++ )
-    if( true )
+    for( int d=0; d<nb_demos; d++ )
+//    if( true )
     {
         std::stringstream ss;
         ss.str("");
         ss << "trajectory_human_trajs_" << std::setw(3) << std::setfill( '0' ) << d;
         ss <<                       "_" << std::setw(3) << std::setfill( '0' ) << int(0) << ".traj";
 
-        Move3D::Trajectory traj( robot );
+        Move3D::Trajectory traj( active_human );
         traj.loadFromFile( folder_demos + ss.str() );
 
-        cout << "loading trajectory : " << folder_base_line + ss.str() << " nb of waypoints : " << traj.getNbOfViaPoints() << endl;
+        cout << "loading trajectory : " << folder_demos + ss.str() << " nb of waypoints : " << traj.getNbOfViaPoints() << endl;
 
         traj.setColor( d );
 
         double alpha = double(d)/double(nb_demos);
 
-        global_linesToDraw.push_back( std::make_pair( Eigen::Vector3d(1, 0, 0), traj.getJointPoseTrajectory( robot->getJoint(45) ) ) );
+        if( d == demo_id )
+            global_linesToDraw.push_back( std::make_pair( Eigen::Vector3d(1, 0, 0), traj.getJointPoseTrajectory( active_human->getJoint(45) ) ) );
         global_trajToDraw.push_back( traj );
-//        demos.push_back( traj );
+        demos.push_back( traj );
     }
 
-    int nb_runs = 3;
+    int nb_runs = 10;
 
-    std::vector< std::vector<Move3D::Trajectory> > baseline( nb_demos );
-
-//    for( int d=0; d<nb_demos; d++ )
-        for( int k=0; k<nb_runs; k++ )
-        {
-            std::stringstream ss;
-            ss.str("");
-            ss << "run_simulator_" << std::setw(3) << std::setfill( '0' ) << d;
-            ss <<              "_" << std::setw(3) << std::setfill( '0' ) << k << ".traj";
+    std::vector< std::vector<Move3D::Trajectory> > baseline = load_trajs( folder_base_line, nb_demos, demo_id, Eigen::Vector3d(0, 1, 0) );
+    std::vector< std::vector<Move3D::Trajectory> > recovered = load_trajs( folder_recovered, nb_demos, demo_id, Eigen::Vector3d(0, 0, 1) );
+    std::vector< std::vector<Move3D::Trajectory> > noreplan_baseline = load_trajs( folder_no_replan_base_line, nb_demos, demo_id, Eigen::Vector3d(0, 1, 0) );
+    std::vector< std::vector<Move3D::Trajectory> > noreplan_recovered = load_trajs( folder_no_replan_recovered, nb_demos, demo_id, Eigen::Vector3d(0, 0, 1) );
 
 
-            Move3D::Trajectory traj( robot );
-            traj.loadFromFile( folder_base_line + ss.str() );
-
-            cout << "loading trajectory : " << folder_base_line + ss.str() << " nb of waypoints : " << traj.getNbOfViaPoints() << endl;
-
-            traj.setColor( 0 );
-
-            double alpha = double(d)/double(nb_demos);
-
-            global_linesToDraw.push_back( std::make_pair( Eigen::Vector3d(0, 1, 0), traj.getJointPoseTrajectory( robot->getJoint(45) ) ) );
-//            global_trajToDraw.push_back( traj );
-            baseline[0].push_back( traj );
-        }
-
-    std::vector< std::vector<Move3D::Trajectory> > recovered( nb_demos );
-
-//    for( int d=0; d<nb_demos; d++ )
-        for( int k=0; k<nb_runs; k++ )
-        {
-            std::stringstream ss;
-            ss.str("");
-            ss << "run_simulator_" << std::setw(3) << std::setfill( '0' ) << d;
-            ss <<              "_" << std::setw(3) << std::setfill( '0' ) << k << ".traj";
-
-            Move3D::Trajectory traj( robot );
-            traj.loadFromFile( folder_recovered + ss.str() );
-
-            cout << "loading trajectory : " << folder_recovered + ss.str() << " nb of waypoints : " << traj.getNbOfViaPoints() << endl;
-
-            traj.setColor( 1 );
-
-            double alpha = double(d)/double(nb_demos);
-
-            global_linesToDraw.push_back( std::make_pair( Eigen::Vector3d(0, 0, 1), traj.getJointPoseTrajectory( robot->getJoint(45) ) ) );
-//            global_trajToDraw.push_back( traj );
-            recovered[0].push_back( traj );
-        }
-
-//    std::vector<double> costs_tmp;
-
-//    costs_tmp = dtw_compare_performance( global_ht_simulator->getActiveDofs(), demos[0], recovered[0] );
-//    cout << "recovered : costs_tmp[" << 0 <<"] = " << costs_tmp[0] << endl;
-
-//    costs_tmp = dtw_compare_performance( global_ht_simulator->getActiveDofs(), demos[0], baseline[0] );
-//    cout << "baseline  : costs_tmp[" << 0 <<"] = " << costs_tmp[0] << endl;
-
-//    std::vector<Eigen::VectorXd> costs(nb_demos);
-
-//    for( int d=0; d<nb_demos; d++ )
-//    {
-//        std::vector<double> costs_tmp = dtw_compare_performance( global_ht_simulator->getActiveDofs(), demos[d], baseline[d] );
-
-//        costs[d] = Eigen::VectorXd::Zero( costs.size() );
-//        for( int k=0; k<int(costs.size()); k++ )
-//            costs[d][k] = costs_tmp[k];
-//    }
+    std::vector< std::vector<Eigen::VectorXd> > costs( nb_demos );
+    for( int d=0; d<nb_demos; d++ )
+        costs[d].resize( 8 );
 
 //    std::vector<Eigen::VectorXd> stats1( 4 );
 //    for( int i=0; i<int(stats1.size()); i++ )
-//        stats1[i] = Eigen::VectorXd::Zero( nb_demos );
+//        stats1[i] = Eigen::VectorXd::Zero( 2 );
 
-//    for( int d=0; d<nb_demos; d++ )
-//    {
-//        double mean = costs[d].mean();
-//        double sq_sum = costs[d].transpose()*costs[d];
-//        double stdev = std::sqrt( sq_sum / double(costs[d].size()) - (mean * mean) ); // Moyenne de carrés moins le carré de la moyenne
-//        double min = costs[d].minCoeff();
-//        double max = costs[d].maxCoeff();
+    std::vector<Move3D::Joint*> joints;
+    joints.push_back( active_human->getJoint(45) );
 
-//        cout << " DEMO " << d << endl;
-//        cout << " mean " << mean << endl;
-//        cout << " stdev " << stdev << endl;
-//        cout << " min " << min << endl;
-//        cout << " max " << max << endl;
-//        cout << " duration : " << demos[d].getTimeLength() << endl;
+    active_joints.clear();
+    active_joints.push_back( active_human->getJoint("Pelvis") );       // joint name : Pelvis
+    active_joints.push_back( active_human->getJoint("TorsoX" )  );
+    active_joints.push_back( active_human->getJoint("rShoulderX") );   // joint name : rShoulderX
+    active_joints.push_back( active_human->getJoint("rElbowZ") );      // joint name : rElbowZ
+    active_joints.push_back( active_human->getJoint("rWristX") );      // joint name : rWristX
 
-//        stats1[0][d] = mean;
-//        stats1[1][d] = stdev;
-//        stats1[2][d] = min;
-//        stats1[3][d] = max;
-//    }
 
+    for( int d=0; d<nb_demos; d++ )
+    {
+        std::vector<double> costs_tmp = dtw_compare_performance( plangroup, demos[d], baseline[d], active_joints );
+        costs[d][0] = Eigen::VectorXd::Zero( costs_tmp.size() );
+        for( int k=0; k<int(costs_tmp.size()); k++ )
+            costs[d][0][k] = costs_tmp[k];
+    }
+
+    for( int d=0; d<nb_demos; d++ )
+    {
+        std::vector<double> costs_tmp = dtw_compare_performance( plangroup, demos[d], baseline[d], joints  );
+        costs[d][1] = Eigen::VectorXd::Zero( costs_tmp.size() );
+        for( int k=0; k<int(costs_tmp.size()); k++ )
+            costs[d][1][k] = costs_tmp[k];
+    }
+
+
+    for( int d=0; d<nb_demos; d++ )
+    {
+        std::vector<double> costs_tmp = dtw_compare_performance( plangroup, demos[d], recovered[d], active_joints );
+        costs[d][2] = Eigen::VectorXd::Zero( costs_tmp.size() );
+        for( int k=0; k<int(costs_tmp.size()); k++ )
+            costs[d][2][k] = costs_tmp[k];
+   }
+
+    for( int d=0; d<nb_demos; d++ )
+    {
+        std::vector<double> costs_tmp = dtw_compare_performance( plangroup, demos[d], recovered[d], joints );
+        costs[d][3] = Eigen::VectorXd::Zero( costs_tmp.size() );
+        for( int k=0; k<int(costs_tmp.size()); k++ )
+            costs[d][3][k] = costs_tmp[k];
+    }
+
+    for( int d=0; d<nb_demos; d++ )
+    {
+        std::vector<double> costs_tmp = dtw_compare_performance( plangroup, demos[d], noreplan_baseline[d], active_joints );
+        costs[d][4] = Eigen::VectorXd::Zero( costs_tmp.size() );
+        for( int k=0; k<int(costs_tmp.size()); k++ )
+            costs[d][4][k] = costs_tmp[k];
+    }
+
+    for( int d=0; d<nb_demos; d++ )
+    {
+        std::vector<double> costs_tmp = dtw_compare_performance( plangroup, demos[d], noreplan_baseline[d], joints  );
+        costs[d][5] = Eigen::VectorXd::Zero( costs_tmp.size() );
+        for( int k=0; k<int(costs_tmp.size()); k++ )
+            costs[d][5][k] = costs_tmp[k];
+    }
+
+
+    for( int d=0; d<nb_demos; d++ )
+    {
+        std::vector<double> costs_tmp = dtw_compare_performance( plangroup, demos[d], noreplan_recovered[d], active_joints );
+        costs[d][6] = Eigen::VectorXd::Zero( costs_tmp.size() );
+        for( int k=0; k<int(costs_tmp.size()); k++ )
+            costs[d][6][k] = costs_tmp[k];
+   }
+
+    for( int d=0; d<nb_demos; d++ )
+    {
+        std::vector<double> costs_tmp = dtw_compare_performance( plangroup, demos[d], noreplan_recovered[d], joints );
+        costs[d][7] = Eigen::VectorXd::Zero( costs_tmp.size() );
+        for( int k=0; k<int(costs_tmp.size()); k++ )
+            costs[d][7][k] = costs_tmp[k];
+    }
+
+    std::vector<std::string> names;
+    names.push_back( "1 (1.31) & " );
+    names.push_back( "2 (1.31) & " );
+    names.push_back( "3 (1.40) & " );
+    names.push_back( "4 (0.99) & " );
+    names.push_back( "5 (0.90) & " );
+    names.push_back( "6 (0.70) & " );
+    names.push_back( "7 (1.11) & " );
+
+    std::vector< std::vector<Eigen::VectorXd> > stats(nb_demos);
+
+    for( int d=0; d<nb_demos; d++ )
+    {
+        stats[d].resize(8);
+
+        for( int i=0; i<8; i++ )
+        {
+            double mean = costs[d][i].mean();
+            double sq_sum = costs[d][i].transpose()*costs[d][i];
+            double stdev = std::sqrt( sq_sum / double(costs[d][i].size()) - (mean * mean) ); // Moyenne de carrés moins le carré de la moyenne
+            double min = costs[d][i].minCoeff();
+            double max = costs[d][i].maxCoeff();
+
+            stats[d][i].resize( 4 );
+            stats[d][i][0] = mean;
+            stats[d][i][1] = stdev;
+            stats[d][i][2] = min;
+            stats[d][i][3] = max;
+         }
+
+        cout << stats[d][0][0] << "  " << stats[d][0][1] << "  " << stats[d][0][2] << "  " << stats[d][0][3] << "  " ;
+        cout << stats[d][1][0] << "  " << stats[d][1][1] << "  " << stats[d][1][2] << "  " << stats[d][1][3] << "  " ;
+
+        cout << stats[d][4][0] << "  " << stats[d][4][1] << "  " << stats[d][4][2] << "  " << stats[d][4][3] << "  " ;
+        cout << stats[d][5][0] << "  " << stats[d][5][1] << "  " << stats[d][5][2] << "  " << stats[d][5][3] << "  " << endl;
+
+
+//        cout << stats[d][2][0] << "  " << stats[d][2][1] << "  " << stats[d][2][2] << "  " << stats[d][2][3] << "  " ;
+//        cout << stats[d][3][0] << "  " << stats[d][3][1] << "  " << stats[d][3][2] << "  " << stats[d][3][3] << "  " ;
+
+//        cout << stats[d][6][0] << "  " << stats[d][6][1] << "  " << stats[d][6][2] << "  " << stats[d][6][3] << "  " ;
+//        cout << stats[d][7][0] << "  " << stats[d][7][1] << "  " << stats[d][7][2] << "  " << stats[d][7][3] << "  " << endl;
+    }
+
+    cout << endl;
+
+    for( int d=0; d<nb_demos; d++ )
+    {
+        stats[d].resize(8);
+
+        for( int i=0; i<8; i++ )
+        {
+            double mean = costs[d][i].mean();
+            double sq_sum = costs[d][i].transpose()*costs[d][i];
+            double stdev = std::sqrt( sq_sum / double(costs[d][i].size()) - (mean * mean) ); // Moyenne de carrés moins le carré de la moyenne
+            double min = costs[d][i].minCoeff();
+            double max = costs[d][i].maxCoeff();
+
+            stats[d][i].resize( 4 );
+            stats[d][i][0] = mean;
+            stats[d][i][1] = stdev;
+            stats[d][i][2] = min;
+            stats[d][i][3] = max;
+         }
+
+        cout << names[d] ;
+
+        cout << stats[d][0][0] << " & " << stats[d][0][1] << " & " << stats[d][0][2] << " & " << stats[d][0][3] << " & " ;
+        cout << stats[d][1][0] << " & " << stats[d][1][1] << " & " << stats[d][1][2] << " & " << stats[d][1][3] << " & " ;
+
+        cout << stats[d][4][0] << " & " << stats[d][4][1] << " & " << stats[d][4][2] << " & " << stats[d][4][3] << " & " ;
+        cout << stats[d][5][0] << " & " << stats[d][5][1] << " & " << stats[d][5][2] << " & " << stats[d][5][3] << " \\" << endl;
+
+//        cout << stats[d][2][0] << " & " << stats[d][2][1] << " & " << stats[d][2][2] << " & " << stats[d][2][3] << " & " ;
+//        cout << stats[d][3][0] << " & " << stats[d][3][1] << " & " << stats[d][3][2] << " & " << stats[d][3][3] << " & " ;
+
+//        cout << stats[d][6][0] << " & " << stats[d][6][1] << " & " << stats[d][6][2] << " & " << stats[d][6][3] << " & " ;
+//        cout << stats[d][7][0] << " & " << stats[d][7][1] << " & " << stats[d][7][2] << " & " << stats[d][7][3] << "  " << endl;
+
+    }
+
+
+        double mean = costs[demo_id][0].mean();
+        double sq_sum = costs[demo_id][0].transpose()*costs[demo_id][0];
+        double stdev = std::sqrt( sq_sum / double(costs[demo_id][0].size()) - (mean * mean) ); // Moyenne de carrés moins le carré de la moyenne
+        double min = costs[demo_id][0].minCoeff();
+        double max = costs[demo_id][0].maxCoeff();
+
+        double mean1 = costs[demo_id][1].mean();
+        double sq_sum1 = costs[demo_id][1].transpose()*costs[demo_id][1];
+        double stdev1 = std::sqrt( sq_sum1 / double(costs[demo_id][1].size()) - (mean1 * mean1) ); // Moyenne de carrés moins le carré de la moyenne
+        double min1 = costs[demo_id][1].minCoeff();
+        double max1 = costs[demo_id][1].maxCoeff();
+
+        cout << "baseline joint / task " << endl;
+        cout << mean << " & " << stdev << " & " << min << " & " << max << " &  " << mean1 << " & " << stdev1 << " & " << min1 << " & " << max1 << endl;
+
+        mean = costs[demo_id][2].mean();
+        sq_sum = costs[demo_id][2].transpose()*costs[demo_id][2];
+        stdev = std::sqrt( sq_sum / double(costs[demo_id][2].size()) - (mean * mean) ); // Moyenne de carrés moins le carré de la moyenne
+        min = costs[demo_id][2].minCoeff();
+        max = costs[demo_id][2].maxCoeff();
+
+        mean1 = costs[demo_id][3].mean();
+        sq_sum1 = costs[demo_id][3].transpose()*costs[demo_id][3];
+        stdev1 = std::sqrt( sq_sum1 / double(costs[demo_id][3].size()) - (mean1 * mean1) ); // Moyenne de carrés moins le carré de la moyenne
+        min1 = costs[demo_id][3].minCoeff();
+        max1 = costs[demo_id][3].maxCoeff();
+        cout << "recovered joint / task " << endl;
+        cout << mean << " & " << stdev << " & " << min << " & " << max << " &  " << mean1 << " & " << stdev1 << " & " << min1 << " & " << max1 << endl;
 //    cout << endl;
 //    cout << " MEAN mean  : "  << stats1[0].mean() << endl;
 //    cout << " MEAN stdev : " << stats1[1].mean() << endl;
