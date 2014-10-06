@@ -280,7 +280,7 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
 
 //    cout << "features : " << global_activeFeatureFunction->getFeatures( *robot->getCurrentPos() ).transpose() << endl;
 
-    /*
+
 
     int ncol = false;
 
@@ -321,6 +321,6 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
     //HRICS::setThePlacemateInIkeaShelf();
     g3d_set_draw_coll( ncol );
 
-    */
+
 //    cout << "ncol : " << ncol << endl;
 }

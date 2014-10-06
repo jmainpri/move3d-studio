@@ -613,6 +613,8 @@ void qt_test2()
 
     // SET HUMAN CONFIGURAION
     active_human->setAndUpdate( *demos[demo_id].getEnd() );
+    passive_human->setAndUpdate( *global_ht_simulator->getDemonstrationsPassive()[demo_id].back().second );
+
 
     std::vector<std::string> names;
     names.push_back( "1 (1.31) & " );
@@ -801,12 +803,23 @@ void qt_test2()
 
 void qt_test3()
 {
-    Move3D::Scene* sce = global_Project->getActiveScene();
-    Move3D::Robot* robot = sce->getActiveRobot();
+//    Move3D::Scene* sce = global_Project->getActiveScene();
+//    Move3D::Robot* robot = sce->getActiveRobot();
 
-    print_joint_mapping(robot);
+//    print_joint_mapping(robot);
     //  HRICS_humanCostMaps->testCostFunction();
     //  HRICS_humanCostMaps->saveAgentGrids();
+
+    int nb_iter = 200;
+
+    for( int i=0; i<nb_iter; i++)
+    {
+        g3d_rotate_win_camera_rz( G3D_WIN->vs, 2*M_PI/double(nb_iter) );
+        g3d_draw_allwin_active();
+        usleep(1000);
+    }
+
+
 
     //qt_set_otp_cost_recompute();
 
@@ -1670,6 +1683,33 @@ bool qt_showMotion( const Move3D::Trajectory& motion )
 
         robot->setAndUpdate( *motion.configAtTime( t ) );
 
+        bool ncol = false;
+
+        if( global_collisionSpace )
+        {
+            double distance = numeric_limits<double>::max();
+            double potential = numeric_limits<double>::max();
+
+            ncol = global_collisionSpace->isRobotColliding( distance, potential );
+
+//            cout << "Distance to nearest obstacle = " << distance << " and potential = " << potential << endl;
+
+            if( global_optimizer && ( global_optimizer->getRobot() == robot ) ) {
+                global_optimizer->getCollisionSpaceCost( *robot->getCurrentPos() );
+            }
+        }
+        else
+        {
+            ncol = robot->isInCollision();
+        }
+
+        if( ncol ){
+            cout << "Robot in collision " << endl;
+        }
+
+        //HRICS::setThePlacemateInIkeaShelf();
+        g3d_set_draw_coll( ncol );
+
         g3d_draw_allwin_active();
 
         gettimeofday(&tim, NULL);
@@ -1678,7 +1718,7 @@ bool qt_showMotion( const Move3D::Trajectory& motion )
         if( tu_init == 0.0 )
             tu_init = tu;
 
-        global_w->getOpenGL()->addCurrentImage();
+//        global_w->getOpenGL()->addCurrentImage();
 
         if ( t >= motion.getTimeLength() )
             StopRun = true;
