@@ -263,102 +263,46 @@ void qt_drawAllWinActive()
 
 
 bool qt_showTraj();
-bool qt_showMotion( const Move3D::Trajectory& motion );
+bool qt_showMotion( const Move3D::Trajectory& motion1, const Move3D::Trajectory& motion2 );
+bool qt_showMotion2( const Move3D::Trajectory& motion1, const Move3D::Trajectory& motion2, bool save_video );
+
+static bool save_images=true;
 
 void qt_test1()
 {
-    Move3D::Scene* sce = global_Project->getActiveScene();
-    Move3D::Robot* robot = sce->getActiveRobot();
+    Move3D::Robot* active_human  = global_ht_simulator->getActiveHuman();
+    Move3D::Robot* passive_human = global_ht_simulator->getPassiveHuman();
 
-    if( robot != NULL ){
-        cout << "Got robot" << endl;
-    }
-
-    std::cout << "Load file to global motion recorder" << std::endl;
-
-    cout.precision(4);
-    cout << "motion duration : " << HRICS::motion_duration( global_motionRecorders[1]->getStoredMotions()[0] ) << endl;
-
-    Move3D::Trajectory traj = HRICS::motion_to_traj( global_motionRecorders[1]->getStoredMotions()[0], robot );
-    if( !qt_showMotion( traj ) ){
+    if( active_human == NULL || passive_human == NULL ){
+        cout << "Did not get robots" << endl;
         return;
     }
 
-    Move3D::StackedFeatures* fct = dynamic_cast<StackedFeatures*>( global_activeFeatureFunction );
-    if( fct != NULL && fct->getFeatureFunction("SmoothnessAll") != NULL )
+    active_human->getP3dRobotStruct()->tcur = NULL;
+
+    if( save_images )
     {
-//        const double factor_task_dist = 1e01;
-//        const double factor_task_vel  = 1e-03;
-//        const double factor_task_acc  = 1e-09;
-//        const double factor_task_jerk = 1e-13;
-
-//        double cost_task;
-
-        Eigen::VectorXd control_costs_t;
-        TaskSmoothnessFeature& task = static_cast<SmoothnessFeature*>(fct->getFeatureFunction("SmoothnessAll"))->task_features_;
-
-        task.getVelocity( traj, control_costs_t );
+        global_w->getOpenGL()->setSaveOnDisk( false );
+        global_w->getOpenGL()->setSaveTraj( true );
+        save_images = false;
+    }
+    else
+    {
+        global_w->getOpenGL()->saveImagesToDisk();
+        global_w->getOpenGL()->setSaveTraj( false );
     }
 
-    //    for( int i=0; i<int(global_trajToDraw.size()); i++ )
-    //    {
-    //        global_trajToDraw[i].replaceP3dTraj();
-    //        qt_showTraj();
-    //    }
+//    std::cout << "Load file to global motion recorder" << std::endl;
 
-//    delete global_workspaceOccupancy;
-//    global_workspaceOccupancy = NULL;
+//    cout.precision(4);
+//    cout << "motion duration : " << HRICS::motion_duration( global_motionRecorders[1]->getStoredMotions()[0] ) << endl;
 
-//    Move3D::Scene* sce = global_Project->getActiveScene();
-//    Move3D::Robot* robot = sce->getActiveRobot();
+//    Move3D::Trajectory active_traj  = global_ht_simulator->get
+//    Move3D::Trajectory passive_traj = HRICS::motion_to_traj( global_motionRecorders[1]->getStoredMotions()[0], active_human );
 
-//    if( robot != NULL ){
-//        cout << "Got robot" << endl;
+//    if( !qt_showMotion( active_traj, passive_traj ) ){
+//        return;
 //    }
-
-//    Move3D::Trajectory traj = robot->getCurrentTraj();
-//    traj.saveToFile("tmp_traj_file.m3dtraj");
-
-    //  Scene* sce = global_Project->getActiveScene();
-    //  Robot* robot = sce->getRobotByName("PR2_ROBOT");
-    //  if( robot == NULL ) {
-    //    cout << "NO robot PR2_ROBOT in the scene" << endl;
-    //    return;
-    //  }
-
-    //  if( m_navigation == NULL ) {
-    //    m_navigation = new HRICS::Navigation( robot );
-    //  }
-    //  else {
-    //    m_navigation->reset();
-    //  }
-
-    //  confPtr_t q_init = robot->getInitPos();
-    //  confPtr_t q_goal = robot->getGoalPos();
-
-    //  Move3D::Trajectory* path_ = m_navigation->computeRobotTrajectory( q_init, q_goal );
-
-    //  if( path_ )
-    //    path_->replaceP3dTraj();
-
-
-
-
-
-    //HRICS::generateGraspConfigurations();
-    //string robotName("PR2_ROBOT");
-    //  Node* node = global_w->Ui()->tabMotionPlanner->getIthNodeInBestTraj();
-    //
-    //  double t=0.0;
-    //  ChronoTimeOfDayOn();
-    //
-    //  dynamic_cast<StarRRT*>(global_Move3DPlanner)->pruneTreeFromNode( node );
-    //
-    //  ChronoTimeOfDayTimes( &t );
-    //  ChronoTimeOfDayOff();
-    //
-    //  cout << "Time to erase graph : " << t << endl;
-    //  HRICS::printHumanConfig();
 }
 
 std::vector< std::vector<Move3D::Trajectory> > load_trajs(std::string folder, int nb_demos, int demo_id, Eigen::Vector3d color, bool draw )
@@ -394,6 +338,12 @@ std::vector< std::vector<Move3D::Trajectory> > load_trajs(std::string folder, in
     return trajs;
 }
 
+std::vector<Move3D::Trajectory> demos;
+std::vector< std::vector<Move3D::Trajectory> > baseline;
+std::vector< std::vector<Move3D::Trajectory> > recovered;
+std::vector< std::vector<Move3D::Trajectory> > noreplan_baseline;
+std::vector< std::vector<Move3D::Trajectory> > noreplan_recovered;
+
 void qt_test2()
 {
 //    Move3D::Scene* sce = global_Project->getActiveScene();
@@ -415,10 +365,10 @@ void qt_test2()
 //    std::string folder_no_replan_recovered = "loo_trajectories/paper_icra_0/no_replan_recovered/";
 
 
-    std::string folder_base_line = "loo_trajectories/with_collisions/zero_baseline/";
-    std::string folder_recovered = "loo_trajectories/with_collisions/recovered/";
-    std::string folder_no_replan_base_line = "loo_trajectories/with_collisions/no_replan_baseline/";
-    std::string folder_no_replan_recovered = "loo_trajectories/with_collisions/no_replan_recovered/";
+    std::string folder_base_line = "loo_trajectories/with_collisions_final/zero_baseline_8/";
+    std::string folder_recovered = "loo_trajectories/with_collisions_final/recovered_8/";
+    std::string folder_no_replan_base_line = "loo_trajectories/with_collisions_final/no_replan_zero_baseline_8/";
+    std::string folder_no_replan_recovered = "loo_trajectories/with_collisions_final/no_replan_recovered_8/";
 
 
     Move3D::Robot* active_human  = global_ht_simulator->getActiveHuman();
@@ -435,7 +385,7 @@ void qt_test2()
 
     ChompPlanningGroup* plangroup = new ChompPlanningGroup( active_human, active_joint_id );
 
-    int nb_demos = 7;
+    int nb_demos = 8;
     int demo_id = HriEnv->getInt(HricsParam::ioc_sample_iteration); // TODO change that
     if( demo_id >= nb_demos ){
         demo_id = nb_demos-1;
@@ -443,11 +393,11 @@ void qt_test2()
 
     global_linesToDraw.clear();
 
-        if( global_DrawModule )
-        {
-            global_DrawModule->addDrawFunction( "Draw3DTrajs", boost::bind( &g3d_draw_3d_lines ) );
-            global_DrawModule->enableDrawFunction( "Draw3DTrajs" );
-        }
+    if( global_DrawModule )
+    {
+        global_DrawModule->addDrawFunction( "Draw3DTrajs", boost::bind( &g3d_draw_3d_lines ) );
+        global_DrawModule->enableDrawFunction( "Draw3DTrajs" );
+    }
 
 //    std::vector<int> active_dofs;
 
@@ -493,38 +443,60 @@ void qt_test2()
 
 //    global_ht_simulator->getActiveDofs();
 
-    std::vector<Move3D::Trajectory> demos;
 
-    for( int d=0; d<nb_demos; d++ )
-//    if( true )
+    if( true || demos.empty() )
     {
-        std::stringstream ss;
-        ss.str("");
-        ss << "trajectory_human_trajs_" << std::setw(3) << std::setfill( '0' ) << d;
-        ss <<                       "_" << std::setw(3) << std::setfill( '0' ) << int(0) << ".traj";
+        for( int d=0; d<nb_demos; d++ )
+            //    if( true )
+        {
+            std::stringstream ss;
+            ss.str("");
+            ss << "trajectory_human_trajs_" << std::setw(3) << std::setfill( '0' ) << d;
+            ss <<                       "_" << std::setw(3) << std::setfill( '0' ) << int(0) << ".traj";
 
-        Move3D::Trajectory traj( active_human );
-        traj.loadFromFile( folder_demos + ss.str() );
+            Move3D::Trajectory traj( active_human );
+            traj.loadFromFile( folder_demos + ss.str() );
 
-        cout << "loading trajectory : " << folder_demos + ss.str() << " nb of waypoints : " << traj.getNbOfViaPoints() << endl;
+            cout << "loading trajectory : " << folder_demos + ss.str() << " nb of waypoints : " << traj.getNbOfViaPoints() << endl;
 
-        traj.setColor( d );
+            traj.setColor( d );
 
-        double alpha = double(d)/double(nb_demos);
+            double alpha = double(d)/double(nb_demos);
 
-        if( d == demo_id )
-            global_linesToDraw.push_back( std::make_pair( Eigen::Vector3d(1, 0, 0), traj.getJointPoseTrajectory( active_human->getJoint(45) ) ) );
-        global_trajToDraw.push_back( traj );
-        demos.push_back( traj );
+            if( d == demo_id )
+                global_linesToDraw.push_back( std::make_pair( Eigen::Vector3d(1, 0, 0), traj.getJointPoseTrajectory( active_human->getJoint(45) ) ) );
+
+            global_trajToDraw.push_back( traj );
+            demos.push_back( traj );
+        }
     }
 
     int nb_runs = 10;
 
-    std::vector< std::vector<Move3D::Trajectory> > baseline = load_trajs( folder_base_line, nb_demos, demo_id, Eigen::Vector3d(0, 1, 0), true );
-    std::vector< std::vector<Move3D::Trajectory> > recovered = load_trajs( folder_recovered, nb_demos, demo_id, Eigen::Vector3d(0, 0, 1), true );
-    std::vector< std::vector<Move3D::Trajectory> > noreplan_baseline = load_trajs( folder_no_replan_base_line, nb_demos, demo_id, Eigen::Vector3d(0, 1, 0), false );
-    std::vector< std::vector<Move3D::Trajectory> > noreplan_recovered = load_trajs( folder_no_replan_recovered, nb_demos, demo_id, Eigen::Vector3d(0, 1, 0), false );
+    if( true || baseline.empty() )
+    {
+        baseline            = load_trajs( folder_base_line, nb_demos, demo_id, Eigen::Vector3d(0, 1, 0), false );
+        recovered           = load_trajs( folder_recovered, nb_demos, demo_id, Eigen::Vector3d(0, 0, 1), true );
+        noreplan_baseline   = load_trajs( folder_no_replan_base_line, nb_demos, demo_id, Eigen::Vector3d(0, 1, 0), false );
+        noreplan_recovered  = load_trajs( folder_no_replan_recovered, nb_demos, demo_id, Eigen::Vector3d(0, 1, 0), true );
+    }
 
+    // SET HUMAN CONFIGURAION
+
+    cout << "size : " << global_ht_simulator->getDemonstrationsPassive()[demo_id].size() << endl;
+
+    active_human->setAndUpdate( *demos[demo_id].getEnd() );
+    passive_human->setAndUpdate( *global_ht_simulator->getDemonstrationsPassive()[demo_id].back().second );
+
+    // Show trajectory
+    // Comment to compute DTW
+    Move3D::Trajectory passive_traj( HRICS::motion_to_traj( global_ht_simulator->getDemonstrationsPassive()[demo_id], passive_human ) );
+    Move3D::Trajectory& active_traj = recovered[demo_id][9];
+    global_linesToDraw.push_back( std::make_pair( Eigen::Vector3d(1, 0, 0), active_traj.getJointPoseTrajectory( active_human->getJoint(45) ) ) );
+
+    cout << "passive human traj size : " << passive_traj.size() << endl;
+//    qt_showMotion2( active_traj, passive_traj, true );
+    return;
 
     std::vector< std::vector<Eigen::VectorXd> > costs( nb_demos );
     for( int d=0; d<nb_demos; d++ )
@@ -812,13 +784,18 @@ void qt_test3()
 
     int nb_iter = 200;
 
-    for( int i=0; i<nb_iter; i++)
+    global_w->getOpenGL()->setSaveOnDisk( false );
+    global_w->getOpenGL()->setSaveTraj( true );
+
+    for( int i=0; i<113; i++)
     {
-        g3d_rotate_win_camera_rz( G3D_WIN->vs, 2*M_PI/double(nb_iter) );
+        g3d_rotate_win_camera_rz( G3D_WIN->vs, M_PI/double(nb_iter) );
         g3d_draw_allwin_active();
         usleep(1000);
     }
 
+    global_w->getOpenGL()->saveImagesToDisk();
+    global_w->getOpenGL()->setSaveTraj( false );
 
 
     //qt_set_otp_cost_recompute();
@@ -1427,6 +1404,10 @@ void qt_runIOC()
 //    HRICS::IocSequences* ioc = new HRICS::IocSequences;
 //    ioc->run();
 
+    global_w->getOpenGL()->setSaveOnDisk( false );
+    global_w->getOpenGL()->setSaveTraj( true );
+
+
     HRICS::IocSequences ioc;
     ioc.run();
 
@@ -1437,6 +1418,10 @@ void qt_runIOC()
         cout << "exit move3d" << endl;
         exit(1);
     }
+
+
+    global_w->getOpenGL()->saveImagesToDisk();
+    global_w->getOpenGL()->setSaveTraj( false );
 }
 
 //void qt_runHumanIOC()
@@ -1661,27 +1646,90 @@ void qt_executePlan()
 }
 #endif
 
-bool qt_showMotion( const Move3D::Trajectory& motion )
+bool qt_showMotion2( const Move3D::Trajectory& motion1, const Move3D::Trajectory& motion2, bool save_video )
 {
     cout << __PRETTY_FUNCTION__ << endl;
 
-    if( motion.size() == 0 ) {
+    if( motion1.size() == 0 ) {
         cout << "warning : motion is empty" << endl;
         return false;
     }
 
-    cout << "time length : " << motion.getTimeLength() << endl;
+    cout << "time length : " << motion1.getTimeLength() << endl;
 
-    Move3D::Robot* robot = motion.getRobot();
+    Move3D::Robot* robot = motion1.getRobot();
+    bool StopRun = false;
+    double t = 0.0;
+    double delta = 0.01;
+    timeval tim;
+
+    if( save_video )
+    {
+        global_w->getOpenGL()->setSaveOnDisk( false );
+        global_w->getOpenGL()->setSaveTraj( true );
+    }
+
+    while ( !StopRun )
+    {
+        robot->setAndUpdate( *motion1.configAtTime( t ) );
+
+        if( motion2.size() > 1 )
+        {
+            cout << "Set robot 2 in configuration" << endl;
+            motion2.getRobot()->setAndUpdate( *motion2.configAtTime( t ) );
+        }
+
+        g3d_draw_allwin_active();
+
+        t += delta;
+
+        if ( t >= motion1.getTimeLength() )
+            StopRun = true;
+
+        if ( PlanEnv->getBool(PlanParam::stopPlanner) )
+            StopRun = true;
+    }
+
+    if( save_video )
+    {
+        global_w->getOpenGL()->saveImagesToDisk();
+        global_w->getOpenGL()->setSaveTraj( false );
+    }
+
+    cout << "end " << __PRETTY_FUNCTION__ << endl;
+
+    return true;
+}
+
+bool qt_showMotion( const Move3D::Trajectory& motion1, const Move3D::Trajectory& motion2 )
+{
+    cout << __PRETTY_FUNCTION__ << endl;
+
+    if( motion1.size() == 0 ) {
+        cout << "warning : motion is empty" << endl;
+        return false;
+    }
+
+    cout << "time length : " << motion1.getTimeLength() << endl;
+
+    Move3D::Robot* robot = motion1.getRobot();
     bool StopRun = false;
     double tu_init = 0.0, tu = 0.0, t = 0.0;
     timeval tim;
+
+    global_w->getOpenGL()->setSaveOnDisk( false );
 
     while ( !StopRun )
     {
         t = tu - tu_init;
 
-        robot->setAndUpdate( *motion.configAtTime( t ) );
+        robot->setAndUpdate( *motion1.configAtTime( t ) );
+
+        if( motion2.size() > 1 )
+        {
+            cout << "Set robot 2 in configuration" << endl;
+            motion2.getRobot()->setAndUpdate( *motion2.configAtTime( t ) );
+        }
 
         bool ncol = false;
 
@@ -1710,6 +1758,8 @@ bool qt_showMotion( const Move3D::Trajectory& motion )
         //HRICS::setThePlacemateInIkeaShelf();
         g3d_set_draw_coll( ncol );
 
+        global_w->getOpenGL()->addCurrentImage();
+
         g3d_draw_allwin_active();
 
         gettimeofday(&tim, NULL);
@@ -1718,14 +1768,14 @@ bool qt_showMotion( const Move3D::Trajectory& motion )
         if( tu_init == 0.0 )
             tu_init = tu;
 
-//        global_w->getOpenGL()->addCurrentImage();
-
-        if ( t >= motion.getTimeLength() )
+        if ( t >= motion1.getTimeLength() )
             StopRun = true;
 
         if ( PlanEnv->getBool(PlanParam::stopPlanner) )
             StopRun = true;
     }
+
+    global_w->getOpenGL()->saveImagesToDisk();
 
     cout << "end " << __PRETTY_FUNCTION__ << endl;
 
@@ -1738,7 +1788,7 @@ bool qt_showTraj()
 
     Move3D::Robot* rob = global_Project->getActiveScene()->getRobotByNameContaining( robotPt->name );
     if( rob->getCurrentMove3DTraj().size() != 0 ) {
-        qt_showMotion( rob->getCurrentMove3DTraj() );
+        qt_showMotion( rob->getCurrentMove3DTraj(), Move3D::Trajectory() );
         ENV.setBool(Env::isRunning ,false);
         return true;
     }

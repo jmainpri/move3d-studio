@@ -17,13 +17,13 @@
  * ANY  SPECIAL, DIRECT,  INDIRECT, OR  CONSEQUENTIAL DAMAGES  OR  ANY DAMAGES
  * WHATSOEVER  RESULTING FROM  LOSS OF  USE, DATA  OR PROFITS,  WHETHER  IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR  OTHER TORTIOUS ACTION, ARISING OUT OF OR
- * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.                                  
+ * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- * Siméon, T., Laumond, J. P., & Lamiraux, F. (2001). 
+ * Siméon, T., Laumond, J. P., & Lamiraux, F. (2001).
  * Move3d: A generic platform for path planning. In in 4th Int. Symp.
  * on Assembly and Task Planning.
  *
- *                                               Jim Mainprice Tue 27 May 2014 
+ *                                               Jim Mainprice Tue 27 May 2014
  */
 /*
  * Source File for the Open GL Window
@@ -122,8 +122,6 @@ void GLWidget::setWinSize(double size)
     this->size = size;
 }
 
-static bool save_on_disk = false;
-
 // -------------------------------------------------------
 // Save images to disk functions
 // -------------------------------------------------------
@@ -132,11 +130,11 @@ static double time_last_save=0.0;
 
 void GLWidget::addCurrentImage()
 {
-    //ChronoTimeOfDayOn();
-    //	QPixmap* image = new QPixmap(renderPixmap());
-    QImage* image = new QImage(grabFrameBuffer());
+    // ChronoTimeOfDayOn();
+    // QPixmap* image = new QPixmap(renderPixmap());
+    QImage* image = new QImage( grabFrameBuffer() );
 
-    if( save_on_disk ) {
+    if( m_save_on_disk ) {
         string str = string(getenv("HOME_MOVE3D")) + "/video/";
         ostringstream oss(ostringstream::out);
         oss << str << "Image_" << setfill('0') << setw(4) << picsId++ << ".jpg";
@@ -158,20 +156,20 @@ void GLWidget::saveImagesToDisk()
     string str = string(getenv("HOME_MOVE3D")) + "/video/";
 
     ostringstream oss(ostringstream::out);
-    //    oss << "cd "<< str <<";rm *.jpg";
+    oss << "cd "<< str <<";rm *.jpg";
     if (! system( oss.str().c_str() ) ){
         cout << "Error in system command" << endl;
         return;
     }
     cout << "saving in : " << str << endl;
 
-    if( !save_on_disk ) {
+    if( !m_save_on_disk ) {
         for (int i = 0; i < _pictures.size(); i++)
         {
             oss.str("");
             oss << str << "Image_" << setfill('0') << setw(4) << i << ".jpg";
             cout << "Saving : " << oss.str() << endl;
-            _pictures.at(i)->save(oss.str().c_str(), "JPG", 100);
+            _pictures.at(i)->save( oss.str().c_str(), "JPG", 100 );
         }
         resetImageVector();
         cout << "Images saved to video/" << endl;
@@ -179,8 +177,9 @@ void GLWidget::saveImagesToDisk()
 
     oss.str("");
     //change to video directory then compress jpg files to AVI video for more parameters and video format see man pages of mencoder
-    //oss << "cd "<< str <<";mencoder mf://*.jpg -mf w=800:h=600:fps=25:type=jpeg -ovc lavc -lavcopts vcodec=mpeg4 -oac copy -o output.avi";
-    oss << "cd "<< str <<";ffmpeg -f image2 -r 25 -i Image_%04d.jpg -vcodec mpeg4 -b 1600k output.mp4";
+    // oss << "cd "<< str <<";mencoder mf://*.jpg -mf w=800:h=600:fps=25:type=jpeg -ovc lavc -lavcopts vcodec=mpeg4 -oac copy -o output.avi";
+    // oss << "cd "<< str <<";ffmpeg -f image2 -r 25 -i Image_%04d.jpg -vcodec mpeg4 -b 1600k output.mp4";
+    oss << "cd "<< str <<";avconv -r 25 -i Image_%04d.jpg -b:v 10000k -c mpeg4 output.mp4";
 
     if (! system(oss.str().c_str()) )
     {
