@@ -54,39 +54,52 @@ void qt_set_arm_along_body( Robot* robot )
     robot->setAndUpdate( *q_init );
 }
 
-void qt_gik( p3d_rob* robot, const Eigen::Vector3d& point )
+void qt_gik()
 {  
-    if( GLOBAL_AGENTS == NULL ) {
-        cout << "No GLOBAL_AGENTS in " << __func__ << endl;
+    if( GLOBAL_AGENTS == NULL ){
         return;
     }
 
+    int i=0;
+    for(i=0; i<XYZ_ENV->nr; i++)
+        if( strcasestr( XYZ_ENV->robot[i]->name,"VISBALL") )
+            break;
+    if(i==XYZ_ENV->nr)
+        return;
+
     // 1 - Select Goto point
     p3d_vector3 Tcoord;
-    Tcoord[0] = point[0];
-    Tcoord[1] = point[1];
-    Tcoord[2] = point[2];
+    Tcoord[0] = XYZ_ENV->robot[i]->joints[1]->abs_pos[0][3];
+    Tcoord[1] = XYZ_ENV->robot[i]->joints[1]->abs_pos[1][3];
+    Tcoord[2] = XYZ_ENV->robot[i]->joints[1]->abs_pos[2][3];
 
     // 2 - Select Task
-    HRI_GIK_TASK_TYPE task;
-    const bool leftArm = false;
+    bool leftArm = false;
+    HRI_GIK_TASK_TYPE task = leftArm ? GIK_LATREACH : GIK_RATREACH;
 
-    if (leftArm == true)
-        task = GIK_LATREACH; // Left Arm GIK
-    else
-        task = GIK_RATREACH; // Right Arm GIK
+    // 3 - Select Agent
+    HRI_AGENT* agent = NULL;
 
-    HRI_AGENT* agent = hri_get_agent_by_name( GLOBAL_AGENTS, robot->name );
-    double distance_tolerance = 0.05;
-    configPt q = p3d_get_robot_config(agent->robotPt);
+    if( agent == NULL )
+        agent = hri_get_one_agent_of_type( GLOBAL_AGENTS, HRI_HERAKLES );
+    if( agent == NULL )
+        agent = hri_get_one_agent_of_type( GLOBAL_AGENTS, HRI_ACHILE );
+    if( agent == NULL )
+        agent = hri_get_one_agent_of_type( GLOBAL_AGENTS, HRI_BIOMECH );
 
-    if( hri_agent_single_task_manip_move(agent, task, &Tcoord, distance_tolerance, &q) )
+    // 4 - Compute GiK
+    if( agent != NULL )
     {
-        cout << "GIK for " << agent->robotPt->name << " succeded" << endl;
-        p3d_set_and_update_this_robot_conf(agent->robotPt, q);
-    }
-    else {
-        cout << "GIK for " << agent->robotPt->name << " failed"<< endl;
+        configPt q = p3d_get_robot_config( agent->robotPt );
+
+        if( hri_agent_single_task_manip_move( agent, task, &Tcoord, 0.005, &q) )
+        {
+            cout << "GIK succeded" << endl;
+        }
+        else {
+            cout << "GIK failed" << endl;
+        }
+        p3d_set_and_update_this_robot_conf( agent->robotPt, q );
     }
 }
 
@@ -320,6 +333,8 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
 
     //HRICS::setThePlacemateInIkeaShelf();
     g3d_set_draw_coll( ncol );
+
+    qt_gik();
 
 
 //    cout << "ncol : " << ncol << endl;

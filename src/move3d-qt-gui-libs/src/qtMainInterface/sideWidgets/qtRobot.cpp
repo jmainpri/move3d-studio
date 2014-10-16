@@ -270,80 +270,49 @@ void RobotWidget::computeHriGik(bool leftArm)
         return;
     }
 
-#ifdef HRI_PLANNER
+//#ifdef HRI_PLANNER
+
     // 1 - Select Goto point
     p3d_vector3 Tcoord;
-
     Tcoord[0] = XYZ_ENV->robot[i]->joints[1]->abs_pos[0][3];
     Tcoord[1] = XYZ_ENV->robot[i]->joints[1]->abs_pos[1][3];
     Tcoord[2] = XYZ_ENV->robot[i]->joints[1]->abs_pos[2][3];
 
-
     // 2 - Select Task
-    HRI_GIK_TASK_TYPE task;
-
-    if (leftArm == true)
-    {
-        task = GIK_LATREACH; // Left Arm GIK
-    }
-    else
-    {
-        task = GIK_RATREACH; // Left Arm GIK
-    }
-
-    cout << "HRI_AGENTS * agents = hri_create_agents()" << endl;
+    HRI_GIK_TASK_TYPE task = leftArm ? GIK_LATREACH : GIK_RATREACH; // Left Arm GIK
 
     // 3 - Select Agent
-    HRI_AGENTS * agents = hri_create_agents();
+    cout << "HRI_AGENTS * agents = hri_create_agents()" << endl;
+    HRI_AGENTS* agents = GLOBAL_AGENTS = hri_create_agents();
+    HRI_AGENT* agent = NULL;
 
     configPt q;
+    double distance_tolerance = 0.005;
 
+    if( agent == NULL )
+        agent = hri_get_one_agent_of_type( agents, HRI_HERAKLES );
+    if( agent == NULL )
+        agent = hri_get_one_agent_of_type( agents, HRI_ACHILE );
+    if( agent == NULL )
+        agent = hri_get_one_agent_of_type( agents, HRI_BIOMECH );
 
-    double distance_tolerance = 0.05;
-
-    /** if(	agents->humans_no > 0 ) // Humans
- {
-  q = p3d_get_robot_config(agents->humans[0]->robotPt);
-  hri_agent_single_task_manip_move(agents->humans[0], task, &Tcoord, distance_tolerance, &q);
-  p3d_set_and_update_this_robot_conf(agents->humans[0]->robotPt,q);
- }
- else */
-    //if ( agents->robots_no > 0) // Robots
-    //{
-    HRI_AGENT* agent = hri_get_one_agent_of_type(agents, HRI_HERAKLES);
-    q = p3d_get_robot_config(agent->robotPt);
-    if( hri_agent_single_task_manip_move(agent, task, &Tcoord, distance_tolerance, &q) )
+    if( agent != NULL )
     {
-        cout << "GIK succeded" << endl;
-    }
-    else {
-        cout << "GIK failed" << endl;
-    }
-    p3d_set_and_update_this_robot_conf(agent->robotPt, q);
+        q = p3d_get_robot_config( agent->robotPt );
 
-
-
-    agent = hri_get_one_agent_of_type(agents, HRI_ACHILE);
-    q = p3d_get_robot_config(agent->robotPt);
-    if( hri_agent_single_task_manip_move(agent, task, &Tcoord, distance_tolerance, &q) )
-    {
-        cout << "GIK succeded" << endl;
-    }
-    else {
-        cout << "GIK failed" << endl;
+        if( hri_agent_single_task_manip_move( agent, task, &Tcoord, distance_tolerance, &q) )
+        {
+            cout << "GIK succeded" << endl;
+        }
+        else {
+            cout << "GIK failed" << endl;
+        }
+        p3d_set_and_update_this_robot_conf( agent->robotPt, q );
     }
 
-    p3d_set_and_update_this_robot_conf(agent->robotPt, q);
-
-    //	}
-    //	else
-    //  {
-    //		cout << "Warning: No Agent for GIK" << endl;
-    //	}
-
-#else
-    cout << "HRI_PLANNER not defined" << endl;
-#endif
+//#else
+//    cout << "HRI_PLANNER not defined" << endl;
+//#endif
 
 
     //delete_config(robotPt,q);
