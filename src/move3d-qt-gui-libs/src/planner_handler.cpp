@@ -378,7 +378,7 @@ void qt_test2()
 
     std::vector<int> active_joint_id;
     std::vector<Move3D::Joint*> active_joints = global_ht_simulator->getActiveJoints();
-    for( int i=0; i<active_joints.size(); i ++){
+    for( int i=0; i<int(active_joints.size()); i ++){
         active_joint_id.push_back( active_joints[i]->getId() );
         cout << "active_joints[" << i << "] : " << active_joints[i]->getName() << endl;
     }
@@ -461,7 +461,7 @@ void qt_test2()
 
             traj.setColor( d );
 
-            double alpha = double(d)/double(nb_demos);
+//            double alpha = double(d)/double(nb_demos);
 
             if( d == demo_id )
                 global_linesToDraw.push_back( std::make_pair( Eigen::Vector3d(1, 0, 0), traj.getJointPoseTrajectory( active_human->getJoint(45) ) ) );
@@ -471,7 +471,7 @@ void qt_test2()
         }
     }
 
-    int nb_runs = 10;
+//    int nb_runs = 10;
 
     if( true || baseline.empty() )
     {
@@ -775,27 +775,22 @@ void qt_test2()
 
 void qt_test3()
 {
-//    Move3D::Scene* sce = global_Project->getActiveScene();
-//    Move3D::Robot* robot = sce->getActiveRobot();
 
-//    print_joint_mapping(robot);
-    //  HRICS_humanCostMaps->testCostFunction();
-    //  HRICS_humanCostMaps->saveAgentGrids();
+//    int nb_iter = 200;
 
-    int nb_iter = 200;
+//    global_w->getOpenGL()->setSaveOnDisk( false );
+//    global_w->getOpenGL()->setSaveTraj( true );
 
-    global_w->getOpenGL()->setSaveOnDisk( false );
-    global_w->getOpenGL()->setSaveTraj( true );
+//    for( int i=0; i<113; i++)
+//    {
+//        g3d_rotate_win_camera_rz( G3D_WIN->vs, M_PI/double(nb_iter) );
+//        g3d_draw_allwin_active();
+//        usleep(1000);
+//    }
 
-    for( int i=0; i<113; i++)
-    {
-        g3d_rotate_win_camera_rz( G3D_WIN->vs, M_PI/double(nb_iter) );
-        g3d_draw_allwin_active();
-        usleep(1000);
-    }
+//    global_w->getOpenGL()->saveImagesToDisk();
+//    global_w->getOpenGL()->setSaveTraj( false );
 
-    global_w->getOpenGL()->saveImagesToDisk();
-    global_w->getOpenGL()->setSaveTraj( false );
 
 
     //qt_set_otp_cost_recompute();
@@ -1404,8 +1399,8 @@ void qt_runIOC()
 //    HRICS::IocSequences* ioc = new HRICS::IocSequences;
 //    ioc->run();
 
-    global_w->getOpenGL()->setSaveOnDisk( false );
-    global_w->getOpenGL()->setSaveTraj( true );
+//    global_w->getOpenGL()->setSaveOnDisk( false );
+//    global_w->getOpenGL()->setSaveTraj( true );
 
 
     HRICS::IocSequences ioc;
@@ -1419,9 +1414,8 @@ void qt_runIOC()
         exit(1);
     }
 
-
-    global_w->getOpenGL()->saveImagesToDisk();
-    global_w->getOpenGL()->setSaveTraj( false );
+//    global_w->getOpenGL()->saveImagesToDisk();
+//    global_w->getOpenGL()->setSaveTraj( false );
 }
 
 //void qt_runHumanIOC()
@@ -1661,7 +1655,6 @@ bool qt_showMotion2( const Move3D::Trajectory& motion1, const Move3D::Trajectory
     bool StopRun = false;
     double t = 0.0;
     double delta = 0.01;
-    timeval tim;
 
     if( save_video )
     {

@@ -23,6 +23,7 @@
 
 #include "API/ConfigSpace/configuration.hpp"
 #include "API/Device/robot.hpp"
+#include "API/Device/generalik.hpp"
 #include "API/project.hpp"
 
 #include <libmove3d/p3d/env.hpp>
@@ -56,51 +57,95 @@ void qt_set_arm_along_body( Robot* robot )
 
 void qt_gik()
 {  
-    if( GLOBAL_AGENTS == NULL ){
+    if( HRICS_activeNatu == NULL )
+        return;
+
+    Move3D::Robot* object = global_Project->getActiveScene()->getRobotByNameContaining( "VISBALL" );
+    if( object == NULL )
+        return;
+
+//    HRICS_activeNatu->computeIsReachableAndMove( object->getJoint(1)->getVectorPos(), false );
+
+    Move3D::Robot* robot = global_Project->getActiveScene()->getRobotByName("BIOMECH_HUMAN");
+    if( !robot ){
+        cout << "no robots" << endl;
         return;
     }
 
-    int i=0;
-    for(i=0; i<XYZ_ENV->nr; i++)
-        if( strcasestr( XYZ_ENV->robot[i]->name,"VISBALL") )
-            break;
-    if(i==XYZ_ENV->nr)
-        return;
+    Move3D::Joint* eef = robot->getJoint("rPalm");
 
-    // 1 - Select Goto point
-    p3d_vector3 Tcoord;
-    Tcoord[0] = XYZ_ENV->robot[i]->joints[1]->abs_pos[0][3];
-    Tcoord[1] = XYZ_ENV->robot[i]->joints[1]->abs_pos[1][3];
-    Tcoord[2] = XYZ_ENV->robot[i]->joints[1]->abs_pos[2][3];
+    std::vector<Move3D::Joint*> active_joints;
+//    active_joints.push_back( robot->getJoint( "Pelvis" ) );
+    active_joints.push_back( robot->getJoint( "TorsoX" ) );
+    active_joints.push_back( robot->getJoint( "TorsoZ" ) );
+    active_joints.push_back( robot->getJoint( "TorsoY" ) );
+    active_joints.push_back( robot->getJoint( "rShoulderTransX" ) );
+    active_joints.push_back( robot->getJoint( "rShoulderTransY" ) );
+    active_joints.push_back( robot->getJoint( "rShoulderTransZ" ) );
+    active_joints.push_back( robot->getJoint( "rShoulderY1" ) );
+    active_joints.push_back( robot->getJoint( "rShoulderX" ) );
+    active_joints.push_back( robot->getJoint( "rShoulderY2" ) );
+    active_joints.push_back( robot->getJoint( "rArmTrans" ) );
+    active_joints.push_back( robot->getJoint( "rElbowZ" ) );
+    active_joints.push_back( robot->getJoint( "rElbowX" ) );
+    active_joints.push_back( robot->getJoint( "rElbowY" ) );
+    active_joints.push_back( robot->getJoint( "lPoint" ) );
+    active_joints.push_back( robot->getJoint( "rWristZ" ) );
+    active_joints.push_back( robot->getJoint( "rWristX" ) );
+    active_joints.push_back( robot->getJoint( "rWristY" ) );
 
-    // 2 - Select Task
-    bool leftArm = false;
-    HRI_GIK_TASK_TYPE task = leftArm ? GIK_LATREACH : GIK_RATREACH;
+    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rShoulderTransX" )->getP3dJointStruct(), 0, .016, .020 );
+    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rShoulderTransY" )->getP3dJointStruct(), 0, .32, .34 );
+    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rShoulderTransZ" )->getP3dJointStruct(), 0, .24, .26 );
+    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rArmTrans" )->getP3dJointStruct(), 0, .38, .40 );
+    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "lPoint" )->getP3dJointStruct(), 0, .23, .25 );
 
-    // 3 - Select Agent
-    HRI_AGENT* agent = NULL;
+    Eigen::VectorXd xdes = object->getJoint(1)->getXYZPose();
+//    Eigen::VectorXd xdes = object->getJoint(1)->getVectorPos();
 
-    if( agent == NULL )
-        agent = hri_get_one_agent_of_type( GLOBAL_AGENTS, HRI_HERAKLES );
-    if( agent == NULL )
-        agent = hri_get_one_agent_of_type( GLOBAL_AGENTS, HRI_ACHILE );
-    if( agent == NULL )
-        agent = hri_get_one_agent_of_type( GLOBAL_AGENTS, HRI_BIOMECH );
+//    Move3D::confPtr_t q_tmp = robot->getCurrentPos();
+    robot->setAndUpdate( *HRICS_activeNatu->getComfortPosture() );
 
-    // 4 - Compute GiK
-    if( agent != NULL )
-    {
-        configPt q = p3d_get_robot_config( agent->robotPt );
+    Move3D::GeneralIK ik( robot );
+    ik.initialize( active_joints, eef );
+    ik.solve( 200, xdes );
 
-        if( hri_agent_single_task_manip_move( agent, task, &Tcoord, 0.005, &q) )
-        {
-            cout << "GIK succeded" << endl;
-        }
-        else {
-            cout << "GIK failed" << endl;
-        }
-        p3d_set_and_update_this_robot_conf( agent->robotPt, q );
-    }
+//    double dt = 0.05;
+//    bool succeed = false;
+//    std::vector<int> active_dofs;
+////    active_dofs.push_back(6+0);
+////    active_dofs.push_back(6+1);
+////    active_dofs.push_back(6+2);
+////    active_dofs.push_back(6+3);
+////    active_dofs.push_back(6+4);
+////    active_dofs.push_back(6+5);
+////    for( int i=0; i<int(active_joints.size()); i++)
+////        active_dofs.push_back( active_joints[i]->getIndexOfFirstDof() );
+
+//    for( int i=0; i<200; i++) // IK LOOP
+//    {
+//        Eigen::MatrixXd J = robot->getJacobian( active_joints, eef, true );
+//        Eigen::MatrixXd Jt = move3d_pinv( J, 1e-3 );
+//        Eigen::VectorXd q_d = Jt * ( xdes - eef->getXYZPose() );
+//        Move3D::confPtr_t q_cur = robot->getCurrentPos();
+//        Eigen::VectorXd q = q_cur->getEigenVector( active_dofs );
+//        Eigen::VectorXd q_new = q + q_d * dt;
+//        q_cur->setFromEigenVector( q_new, active_dofs );
+//        robot->setAndUpdate( *q_cur );
+//        if( ( xdes - eef->getXYZPose() ).norm() < 0.02 ){
+//            cout << "success (" << i << ")" << endl;
+//            succeed = true;
+//            break;
+//        }
+//    }
+
+//    cout << "diff = " << ( xdes - eef->getXYZPose() ).norm() << endl;
+
+//    if( !succeed ){
+//        robot->setAndUpdate( *q_tmp );
+//    }
+
+//    HRICS_activeNatu->setRobotColorFromConfiguration( true );
 }
 
 void qt_set_otp_cost_recompute()
@@ -250,8 +295,8 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
                 {
                     costRobot = robTmp;
                     cost_q = p3d_get_robot_config(costRobot);
+                    cout << "Change the robot position = " << robTmp->name << endl;
                 }
-                cout << "Change the robot position = " << robTmp->name << endl;
             }
 
             // Compute kinematic transfer point
@@ -336,6 +381,5 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p)
 
     qt_gik();
 
-
-//    cout << "ncol : " << ncol << endl;
+    cout << "ncol : " << ncol << endl;
 }

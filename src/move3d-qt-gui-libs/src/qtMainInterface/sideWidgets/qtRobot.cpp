@@ -279,7 +279,7 @@ void RobotWidget::computeHriGik(bool leftArm)
     Tcoord[2] = XYZ_ENV->robot[i]->joints[1]->abs_pos[2][3];
 
     // 2 - Select Task
-    HRI_GIK_TASK_TYPE task = leftArm ? GIK_LATREACH : GIK_RATREACH; // Left Arm GIK
+    HRI_GIK_TASK_TYPE task = leftArm ? GIK_LATREACH : GIK_RAREACH; // Left Arm GIK
 
     // 3 - Select Agent
     cout << "HRI_AGENTS * agents = hri_create_agents()" << endl;
