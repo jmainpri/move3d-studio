@@ -6,6 +6,7 @@ BM3D_INC_DIR_PROCESS (${BM3D_MODULE_NAME})
 
 BM3D_SRC_SUBDIR_PROCESS(
 planner_handler.cpp
+move3d.c
 )
 
 IF(USE_GLUT)

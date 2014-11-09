@@ -285,9 +285,9 @@ ENDIF(MULTILOCALPATH)
 
 IF(QT_LIBRARY)
 QT4_WRAP_CPP(MOC_OUTFILES main.hpp)
-ADD_EXECUTABLE(move3d-qt-studio main.cpp move3d.c ${MOC_OUTFILES})
+ADD_EXECUTABLE(move3d-qt-studio main.cpp ${MOC_OUTFILES})
 ELSE()
-ADD_EXECUTABLE(move3d-qt-studio main.cpp move3d.c)
+ADD_EXECUTABLE(move3d-qt-studio main.cpp )
 ENDIF()
 
 SET_TARGET_PROPERTIES(move3d-qt-studio PROPERTIES LINKER_LANGUAGE CXX)

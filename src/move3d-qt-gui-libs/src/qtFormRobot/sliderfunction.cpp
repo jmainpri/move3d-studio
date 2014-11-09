@@ -25,6 +25,7 @@
 #include "API/Device/robot.hpp"
 #include "API/Device/generalik.hpp"
 #include "API/project.hpp"
+#include "utils/ik_generator.hpp"
 
 #include <libmove3d/p3d/env.hpp>
 #include <libmove3d/include/P3d-pkg.h>
@@ -57,9 +58,6 @@ void qt_set_arm_along_body( Robot* robot )
 
 void qt_gik()
 {  
-    if( HRICS_activeNatu == NULL )
-        return;
-
     Move3D::Robot* object = global_Project->getActiveScene()->getRobotByNameContaining( "VISBALL" );
     if( object == NULL )
         return;
@@ -68,84 +66,126 @@ void qt_gik()
 
     Move3D::Robot* robot = global_Project->getActiveScene()->getRobotByName("BIOMECH_HUMAN");
     if( !robot ){
-        cout << "no robots" << endl;
-        return;
+        cout << "no human" << endl;
+        robot = global_Project->getActiveScene()->getRobotByName("manip_3dofs_ROBOT");
+        if( !robot ){
+            cout << "no robot" << endl;
+            return;
+        }
     }
 
-    Move3D::Joint* eef = robot->getJoint("rPalm");
+    cout << "GIK deactivated" << endl;
+    return;
 
-    std::vector<Move3D::Joint*> active_joints;
-//    active_joints.push_back( robot->getJoint( "Pelvis" ) );
-    active_joints.push_back( robot->getJoint( "TorsoX" ) );
-    active_joints.push_back( robot->getJoint( "TorsoZ" ) );
-    active_joints.push_back( robot->getJoint( "TorsoY" ) );
-    active_joints.push_back( robot->getJoint( "rShoulderTransX" ) );
-    active_joints.push_back( robot->getJoint( "rShoulderTransY" ) );
-    active_joints.push_back( robot->getJoint( "rShoulderTransZ" ) );
-    active_joints.push_back( robot->getJoint( "rShoulderY1" ) );
-    active_joints.push_back( robot->getJoint( "rShoulderX" ) );
-    active_joints.push_back( robot->getJoint( "rShoulderY2" ) );
-    active_joints.push_back( robot->getJoint( "rArmTrans" ) );
-    active_joints.push_back( robot->getJoint( "rElbowZ" ) );
-    active_joints.push_back( robot->getJoint( "rElbowX" ) );
-    active_joints.push_back( robot->getJoint( "rElbowY" ) );
-    active_joints.push_back( robot->getJoint( "lPoint" ) );
-    active_joints.push_back( robot->getJoint( "rWristZ" ) );
-    active_joints.push_back( robot->getJoint( "rWristX" ) );
-    active_joints.push_back( robot->getJoint( "rWristY" ) );
+    if( HRICS_activeNatu != NULL )
+    {
+        Move3D::Joint* eef = robot->getJoint("rPalm");
+        if( eef == NULL )
+            return;
 
-    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rShoulderTransX" )->getP3dJointStruct(), 0, .016, .020 );
-    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rShoulderTransY" )->getP3dJointStruct(), 0, .32, .34 );
-    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rShoulderTransZ" )->getP3dJointStruct(), 0, .24, .26 );
-    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rArmTrans" )->getP3dJointStruct(), 0, .38, .40 );
-    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "lPoint" )->getP3dJointStruct(), 0, .23, .25 );
+        std::vector<Move3D::Joint*> active_joints;
+        //    active_joints.push_back( robot->getJoint( "Pelvis" ) );
+        active_joints.push_back( robot->getJoint( "TorsoX" ) );
+        active_joints.push_back( robot->getJoint( "TorsoZ" ) );
+        active_joints.push_back( robot->getJoint( "TorsoY" ) );
+        active_joints.push_back( robot->getJoint( "rShoulderTransX" ) );
+        active_joints.push_back( robot->getJoint( "rShoulderTransY" ) );
+        active_joints.push_back( robot->getJoint( "rShoulderTransZ" ) );
+        active_joints.push_back( robot->getJoint( "rShoulderY1" ) );
+        active_joints.push_back( robot->getJoint( "rShoulderX" ) );
+        active_joints.push_back( robot->getJoint( "rShoulderY2" ) );
+        active_joints.push_back( robot->getJoint( "rArmTrans" ) );
+        active_joints.push_back( robot->getJoint( "rElbowZ" ) );
+        active_joints.push_back( robot->getJoint( "rElbowX" ) );
+        active_joints.push_back( robot->getJoint( "rElbowY" ) );
+        active_joints.push_back( robot->getJoint( "lPoint" ) );
+        active_joints.push_back( robot->getJoint( "rWristZ" ) );
+        active_joints.push_back( robot->getJoint( "rWristX" ) );
+        active_joints.push_back( robot->getJoint( "rWristY" ) );
 
-    Eigen::VectorXd xdes = object->getJoint(1)->getXYZPose();
-//    Eigen::VectorXd xdes = object->getJoint(1)->getVectorPos();
+        p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rShoulderTransX" )->getP3dJointStruct(), 0, .016, .020 );
+        p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rShoulderTransY" )->getP3dJointStruct(), 0, .32, .34 );
+        p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rShoulderTransZ" )->getP3dJointStruct(), 0, .24, .26 );
+        p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rArmTrans" )->getP3dJointStruct(), 0, .38, .40 );
+        p3d_jnt_set_dof_rand_bounds( robot->getJoint( "lPoint" )->getP3dJointStruct(), 0, .23, .25 );
 
-//    Move3D::confPtr_t q_tmp = robot->getCurrentPos();
-    robot->setAndUpdate( *HRICS_activeNatu->getComfortPosture() );
+        Eigen::VectorXd xdes = object->getJoint(1)->getXYZPose();
+        //    Eigen::VectorXd xdes = object->getJoint(1)->getVectorPos();
 
-    Move3D::GeneralIK ik( robot );
-    ik.initialize( active_joints, eef );
-    ik.solve( 200, xdes );
+        Move3D::confPtr_t q_tmp = robot->getCurrentPos();
+        //    robot->setAndUpdate( *HRICS_activeNatu->getComfortPosture() );
+        //    q_tmp = HRICS_activeNatu->getComfortPosture()->copy();
 
-//    double dt = 0.05;
-//    bool succeed = false;
-//    std::vector<int> active_dofs;
-////    active_dofs.push_back(6+0);
-////    active_dofs.push_back(6+1);
-////    active_dofs.push_back(6+2);
-////    active_dofs.push_back(6+3);
-////    active_dofs.push_back(6+4);
-////    active_dofs.push_back(6+5);
-////    for( int i=0; i<int(active_joints.size()); i++)
-////        active_dofs.push_back( active_joints[i]->getIndexOfFirstDof() );
+        bool succeed = false;
+        bool simple_ik = false;
+        if( !simple_ik )
+        {
+            Move3D::IKGenerator ik( robot );
+            ik.initialize( active_joints, eef );
 
-//    for( int i=0; i<200; i++) // IK LOOP
-//    {
-//        Eigen::MatrixXd J = robot->getJacobian( active_joints, eef, true );
-//        Eigen::MatrixXd Jt = move3d_pinv( J, 1e-3 );
-//        Eigen::VectorXd q_d = Jt * ( xdes - eef->getXYZPose() );
-//        Move3D::confPtr_t q_cur = robot->getCurrentPos();
-//        Eigen::VectorXd q = q_cur->getEigenVector( active_dofs );
-//        Eigen::VectorXd q_new = q + q_d * dt;
-//        q_cur->setFromEigenVector( q_new, active_dofs );
-//        robot->setAndUpdate( *q_cur );
-//        if( ( xdes - eef->getXYZPose() ).norm() < 0.02 ){
-//            cout << "success (" << i << ")" << endl;
-//            succeed = true;
-//            break;
-//        }
-//    }
+            succeed = ik.generate( xdes );
+            cout << "diff = " << ( xdes - eef->getXYZPose() ).norm() << endl;
 
-//    cout << "diff = " << ( xdes - eef->getXYZPose() ).norm() << endl;
+            if( !succeed ){
+                robot->setAndUpdate( *q_tmp );
+            }
+        }
+        else
+        {
+            Move3D::GeneralIK ik( robot );
+            ik.initialize( active_joints, eef );
 
-//    if( !succeed ){
-//        robot->setAndUpdate( *q_tmp );
-//    }
+            robot->setAndUpdate( *HRICS_activeNatu->getComfortPosture() );
+            succeed = ik.solve(xdes);
+//            Eigen::VectorXd dq = ik.single_step_joint_limits( xdes );
+//            std::vector<int> active_dofs = ik.getActiveDofs();
+//            Eigen::VectorXd q = q_tmp->getEigenVector( active_dofs );
+//            Eigen::VectorXd q_new = q + dq;
+//            q_tmp->setFromEigenVector( q_new, active_dofs );
 
-//    HRICS_activeNatu->setRobotColorFromConfiguration( true );
+
+            cout << "diff = " << ( xdes - eef->getXYZPose() ).norm() << endl;
+
+            if( !succeed ){
+                robot->setAndUpdate( *q_tmp );
+            }
+        }
+
+        HRICS_activeNatu->setRobotColorFromConfiguration( true );
+    }
+    else
+    {
+        Move3D::Joint* eef = robot->getJoint("J4");
+        if( eef == NULL )
+            return;
+
+        std::vector<Move3D::Joint*> active_joints;
+        active_joints.push_back( robot->getJoint( "J1" ) );
+        active_joints.push_back( robot->getJoint( "J2" ) );
+        active_joints.push_back( robot->getJoint( "J3" ) );
+
+//        Eigen::VectorXd xdes = object->getJoint(1)->getXYZPose();
+         Eigen::VectorXd xdes = object->getJoint(1)->getVectorPos().head(2);
+
+        Move3D::confPtr_t q_tmp = robot->getCurrentPos();
+
+        Move3D::GeneralIK ik( robot );
+        ik.initialize( active_joints, eef );
+        ik.magnitude_ = 1.0;
+
+        Eigen::VectorXd dq = ik.single_step_joint_limits( xdes );
+
+        std::vector<int> active_dofs = ik.getActiveDofs();
+        Eigen::VectorXd q = q_tmp->getEigenVector( active_dofs );
+        Eigen::VectorXd q_new = q + dq;
+        q_tmp->setFromEigenVector( q_new, active_dofs );
+        robot->setAndUpdate( *q_tmp );
+
+        cout << "xdes.transpose() : " << xdes.transpose() << endl;
+        cout << "dq.transpose() : " << dq.transpose() << endl;
+
+        cout << "diff = " << ( xdes - ( xdes.size() == 6 ? eef->getXYZPose() : Eigen::VectorXd( eef->getVectorPos().head(2) ))).norm() << endl;
+    }
 }
 
 void qt_set_otp_cost_recompute()

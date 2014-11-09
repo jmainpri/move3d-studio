@@ -96,6 +96,8 @@ Move3D_flag(USE_GLUT "Compilation with a glut window" OFF)
 Move3D_flag(USE_GSL "Mathematic Library" OFF)
 Move3D_flag(USE_QWT "Compilation with technical widget" ON)
 
+Move3D_flag(PQP "With PQP" ON)
+
 
 Move3D_CheckCompilationFlags()
 
@@ -366,6 +368,15 @@ ENDIF(${CMAKE_BUILD_TYPE} MATCHES "Debug")
 ADD_LIBRARY(Move3D-Qt-Gui SHARED ${Move3DGUI_src} ${Move3DGUI_QT_MOC} ${Move3DGUI_QT_UI_HEADERS} ${Move3DGUI_inc})
 TARGET_LINK_LIBRARIES(Move3D-Qt-Gui ${LIBS}  m)
 
+#------------------- PKG_CONFIG ---------------------------
+#----------------------------------------------------------
+
+STRING(REPLACE ";" " -D" Move3DMPLIB_CompilationFlags "-D${Move3D_CompilationFlags}")
+STRING(REPLACE ";" " -I" Move3DMPLIB_Compilation_includes "-I${INCLUDE_DIRS}")
+
+STRING(REGEX REPLACE "(debug;[^;]*;)|optimized" "" Move3DMPLIB_Compilation_libs "${LIBS}")
+STRING(REPLACE ";" " " Move3DMPLIB_Compilation_libs "${Move3DMPLIB_Compilation_libs}")
+add_subdirectory(pkgconfig)
 
 # ------------------------------------------------------------------------------
 # Intallation

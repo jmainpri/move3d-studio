@@ -79,6 +79,7 @@
 #include "utils/MultiRun.hpp"
 #include "utils/multilocalpath_utils.hpp"
 #include "utils/misc_functions.hpp"
+#include "utils/ik_generator.hpp"
 
 #include "qtLibrary.hpp"
 #include <QtCore/QMutexLocker>
@@ -775,6 +776,83 @@ void qt_test2()
 
 void qt_test3()
 {
+    Move3D::Robot* object = global_Project->getActiveScene()->getRobotByNameContaining( "VISBALL" );
+    if( object == NULL )
+        return;
+
+//    HRICS_activeNatu->computeIsReachableAndMove( object->getJoint(1)->getVectorPos(), false );
+
+    Move3D::Robot* robot = global_Project->getActiveScene()->getRobotByName("BIOMECH_HUMAN");
+    if( !robot ){
+        cout << "no human" << endl;
+        robot = global_Project->getActiveScene()->getRobotByName("manip_3dofs_ROBOT");
+        if( !robot ){
+            cout << "no robot" << endl;
+            return;
+        }
+    }
+
+    Move3D::Joint* eef = NULL;
+    if( HRICS_activeNatu != NULL )
+    {
+        eef = robot->getJoint("rPalm");
+        if( eef == NULL )
+            return;
+    }
+    else
+    {
+        eef = robot->getJoint("J4");
+        if( eef == NULL )
+            return;
+    }
+
+    std::vector<Move3D::Joint*> active_joints;
+    //    active_joints.push_back( robot->getJoint( "Pelvis" ) );
+    active_joints.push_back( robot->getJoint( "TorsoX" ) );
+    active_joints.push_back( robot->getJoint( "TorsoZ" ) );
+    active_joints.push_back( robot->getJoint( "TorsoY" ) );
+    active_joints.push_back( robot->getJoint( "rShoulderTransX" ) );
+    active_joints.push_back( robot->getJoint( "rShoulderTransY" ) );
+    active_joints.push_back( robot->getJoint( "rShoulderTransZ" ) );
+    active_joints.push_back( robot->getJoint( "rShoulderY1" ) );
+    active_joints.push_back( robot->getJoint( "rShoulderX" ) );
+    active_joints.push_back( robot->getJoint( "rShoulderY2" ) );
+    active_joints.push_back( robot->getJoint( "rArmTrans" ) );
+    active_joints.push_back( robot->getJoint( "rElbowZ" ) );
+    active_joints.push_back( robot->getJoint( "rElbowX" ) );
+    active_joints.push_back( robot->getJoint( "rElbowY" ) );
+    active_joints.push_back( robot->getJoint( "lPoint" ) );
+    active_joints.push_back( robot->getJoint( "rWristZ" ) );
+    active_joints.push_back( robot->getJoint( "rWristX" ) );
+    active_joints.push_back( robot->getJoint( "rWristY" ) );
+
+    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rShoulderTransX" )->getP3dJointStruct(), 0, .016, .020 );
+    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rShoulderTransY" )->getP3dJointStruct(), 0, .32, .34 );
+    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rShoulderTransZ" )->getP3dJointStruct(), 0, .24, .26 );
+    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rArmTrans" )->getP3dJointStruct(), 0, .38, .40 );
+    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "lPoint" )->getP3dJointStruct(), 0, .23, .25 );
+
+    Eigen::VectorXd xdes = object->getJoint(1)->getXYZPose();
+    //    Eigen::VectorXd xdes = object->getJoint(1)->getVectorPos();
+
+    Move3D::confPtr_t q_tmp = robot->getCurrentPos();
+    //    robot->setAndUpdate( *HRICS_activeNatu->getComfortPosture() );
+    //    q_tmp = HRICS_activeNatu->getComfortPosture()->copy();
+
+    bool succeed = false;
+    bool simple_ik = false;
+    if( !simple_ik )
+    {
+        Move3D::IKGenerator ik( robot );
+        ik.initialize( active_joints, eef );
+
+        succeed = ik.generate( xdes );
+        cout << "diff = " << ( xdes - eef->getXYZPose() ).norm() << endl;
+
+        if( !succeed ){
+            robot->setAndUpdate( *q_tmp );
+        }
+    }
 
 //    int nb_iter = 200;
 
@@ -1710,7 +1788,10 @@ bool qt_showMotion( const Move3D::Trajectory& motion1, const Move3D::Trajectory&
     double tu_init = 0.0, tu = 0.0, t = 0.0;
     timeval tim;
 
-    global_w->getOpenGL()->setSaveOnDisk( false );
+    bool record_video = false;
+
+    if( record_video )
+        global_w->getOpenGL()->setSaveOnDisk( false );
 
     while ( !StopRun )
     {
@@ -1751,7 +1832,8 @@ bool qt_showMotion( const Move3D::Trajectory& motion1, const Move3D::Trajectory&
         //HRICS::setThePlacemateInIkeaShelf();
         g3d_set_draw_coll( ncol );
 
-        global_w->getOpenGL()->addCurrentImage();
+        if( record_video )
+            global_w->getOpenGL()->addCurrentImage();
 
         g3d_draw_allwin_active();
 
@@ -1768,7 +1850,8 @@ bool qt_showMotion( const Move3D::Trajectory& motion1, const Move3D::Trajectory&
             StopRun = true;
     }
 
-    global_w->getOpenGL()->saveImagesToDisk();
+    if( record_video )
+        global_w->getOpenGL()->saveImagesToDisk();
 
     cout << "end " << __PRETTY_FUNCTION__ << endl;
 
@@ -2184,7 +2267,7 @@ void PlannerHandler::startPlanner(QString plannerName)
     p3d_SetStopValue(FALSE);
 #endif
     ENV.setBool(Env::isRunning, true);
-    try
+//    try
     {
         if(plannerName == "Diffusion")
         {
@@ -2384,18 +2467,20 @@ void PlannerHandler::startPlanner(QString plannerName)
             cout << "planner not define" << endl;
         }
     }
-    catch(std::string what)
-    {
-        std::cerr << "Planner thread : caught exception : " << what << std::endl;
-    }
-    catch(std::exception& e)
-    {
-        std::cerr << "Planner thread : caught exception : " << e.what() << std::endl;
-    }
-    catch(...)
-    {
-        std::cerr << "Planner thread : caught exception of unknown type." << std::endl;
-    }
+//    catch(std::string what)
+//    {
+//        std::cerr << "Planner thread : caught exception : " << what << std::endl;
+//    }
+//    catch(std::exception& e)
+//    {
+//        std::cerr << "Planner thread : caught exception : " << e.what() << std::endl;
+//    }
+//    catch(...)
+//    {
+//        std::cerr << "Planner thread : caught exception of unknown type." << std::endl;
+//    }
+
+
     ENV.setBool(Env::isRunning, false);
     mState = stopped;
     emit plannerIsStopped();

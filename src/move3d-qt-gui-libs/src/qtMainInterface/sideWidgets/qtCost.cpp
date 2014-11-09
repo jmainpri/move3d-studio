@@ -253,8 +253,6 @@ void CostWidget::initCostSpace()
         //    HRICS_init();
 
         this->resetCostFunctions();
-        //this->setCostFunction("costHRI");
-        this->setCostFunction("costHumanGrids");
 
         m_tabHri->setGroupBoxDisabled(false);
 

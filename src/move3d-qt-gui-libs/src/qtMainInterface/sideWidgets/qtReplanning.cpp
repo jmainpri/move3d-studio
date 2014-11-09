@@ -116,9 +116,12 @@ void ReplanningWidget::init()
     new connectCheckBoxToEnv( m_ui->checkBoxCovAdaptation, PlanEnv->getObject(PlanParam::trajStompMatrixAdaptation) );
     new connectCheckBoxToEnv( m_ui->checkBoxStompMaxIteration, PlanEnv->getObject(PlanParam::trajStompWithIterLimit) );
     new connectCheckBoxToEnv( m_ui->checkBoxDrawParallel, PlanEnv->getObject(PlanParam::drawParallelTraj) );
+//    new connectCheckBoxToEnv( m_ui->checkBoxDrawInCollision, PlanEnv->getObject(PlanParam::drawScaleFactorNodeSphere) );
     new connectCheckBoxToEnv( m_ui->checkBoxStompNoPrint, PlanEnv->getObject(PlanParam::trajStompNoPrint) );
     new connectCheckBoxToEnv( m_ui->checkBoxMultipleStomp, PlanEnv->getObject(PlanParam::trajStompRunMultiple) );
     new connectCheckBoxToEnv( m_ui->checkBoxStompParallel, PlanEnv->getObject(PlanParam::trajStompRunParallel) );
+    new connectCheckBoxToEnv( m_ui->checkBoxStompDrawInCollision, PlanEnv->getObject(PlanParam::trajStompDrawImprovement) );
+    new connectCheckBoxToEnv( m_ui->checkBoxMoveEndConfig, PlanEnv->getObject(PlanParam::trajStompMoveEndConfig) );
     new connectCheckBoxToEnv( m_ui->checkBoxStopWhenCollisionFree, PlanEnv->getObject(PlanParam::trajOptimStopWhenCollisionFree) );
 
     // Stomp max iteration
