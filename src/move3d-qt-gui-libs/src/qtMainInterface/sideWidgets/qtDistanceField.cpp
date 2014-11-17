@@ -69,6 +69,9 @@ void DistFieldWidget::initDistField()
     SpinBoxConnector(this,m_ui->doubleSpinBoxDrawingDistance, PlanEnv->getObject(PlanParam::distMinToDraw));
     //  connect(m_ui->doubleSpinBoxDrawingDistance,SIGNAL(valueChanged(double)),PlanEnv->getObject(PlanParam::distMinToDraw),SLOT(set(double)));
     //	m_ui->doubleSpinBoxDrawingDistance->setValue(PlanEnv->getDouble(PlanParam::distMinToDraw));
+
+    // Sets the ratio between the radius of collision points and their spacing
+     SpinBoxConnector(this,m_ui->doubleSpinBoxRatioRadiusSpacing, PlanEnv->getObject(PlanParam::ratioCollRadiusSpacing));
 }
 
 void DistFieldWidget::createDistanceField()

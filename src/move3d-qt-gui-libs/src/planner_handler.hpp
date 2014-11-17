@@ -31,8 +31,9 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-#include "P3d-pkg.h"
+#include <libmove3d/include/P3d-pkg.h>
 
+#include <boost/function.hpp>
 #include <string>
 
 // UI functions
@@ -65,6 +66,7 @@ public:
 public slots:
     void init();
     void startPlanner(QString plannerName);
+    void startPlanner(boost::function<void(void)> f);
     void stopPlanner();
     void resetPlanner();
 
@@ -74,6 +76,7 @@ signals:
     void plannerIsReset();
 
 protected:
+    boost::function<void(void)> func_;
     state mState;
     int mArgc;
     char** mArgv;

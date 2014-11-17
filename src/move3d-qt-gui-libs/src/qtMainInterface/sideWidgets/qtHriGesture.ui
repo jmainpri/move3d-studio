@@ -35,9 +35,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-292</y>
+        <y>0</y>
         <width>563</width>
-        <height>1414</height>
+        <height>1442</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -311,10 +311,17 @@
           <item>
            <widget class="QWidget" name="widget_4" native="true">
             <layout class="QGridLayout" name="gridLayout_2">
-             <item row="5" column="1">
-              <widget class="QCheckBox" name="checkBoxDrawSamples">
+             <item row="2" column="0">
+              <widget class="QCheckBox" name="checkBoxSingleIteration">
                <property name="text">
-                <string>Draw samples</string>
+                <string>Single iteration</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QCheckBox" name="checkBoxLoadSampleFromFile">
+               <property name="text">
+                <string>Load samples from file</string>
                </property>
               </widget>
              </item>
@@ -332,17 +339,10 @@
                </property>
               </widget>
              </item>
-             <item row="4" column="1">
-              <widget class="QCheckBox" name="checkBoxDrawDemonstrations">
+             <item row="5" column="1">
+              <widget class="QCheckBox" name="checkBoxDrawSamples">
                <property name="text">
-                <string>Draw demonstrations</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QCheckBox" name="checkBoxInitHumanTrajCost">
-               <property name="text">
-                <string>Init Human Trajectory Cost</string>
+                <string>Draw samples</string>
                </property>
               </widget>
              </item>
@@ -367,24 +367,38 @@
                </property>
               </widget>
              </item>
-             <item row="2" column="0">
-              <widget class="QCheckBox" name="checkBoxSingleIteration">
-               <property name="text">
-                <string>Single iteration</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QCheckBox" name="checkBoxLoadSampleFromFile">
-               <property name="text">
-                <string>Load samples from file</string>
-               </property>
-              </widget>
-             </item>
              <item row="4" column="0">
               <widget class="QCheckBox" name="checkBoxSampleAroundDemo">
                <property name="text">
                 <string>Sample around demo</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QCheckBox" name="checkBoxNoReplanning">
+               <property name="text">
+                <string>No Replanning</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QCheckBox" name="checkBoxDrawDemonstrations">
+               <property name="text">
+                <string>Draw demonstrations</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QCheckBox" name="checkBoxInitHumanTrajCost">
+               <property name="text">
+                <string>Init Human Trajectory Cost</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0">
+              <widget class="QCheckBox" name="checkBoxUseBaseline">
+               <property name="text">
+                <string>Use baseline</string>
                </property>
               </widget>
              </item>

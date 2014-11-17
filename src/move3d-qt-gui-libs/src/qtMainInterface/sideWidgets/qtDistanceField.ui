@@ -57,6 +57,13 @@
            </sizepolicy>
           </property>
           <layout class="QGridLayout" name="gridLayout">
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Drawing distance threshold</string>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="1">
             <widget class="QSpinBox" name="spinBoxNbMaxCells">
              <property name="maximum">
@@ -64,6 +71,13 @@
              </property>
              <property name="singleStep">
               <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Cell size</string>
              </property>
             </widget>
            </item>
@@ -77,19 +91,15 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_2">
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_3">
              <property name="text">
-              <string>Drawing distance threshold</string>
+              <string>CollPoints ratio Spacing / Radius</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string>Cell size</string>
-             </property>
-            </widget>
+           <item row="3" column="1">
+            <widget class="QDoubleSpinBox" name="doubleSpinBoxRatioRadiusSpacing"/>
            </item>
           </layout>
          </widget>

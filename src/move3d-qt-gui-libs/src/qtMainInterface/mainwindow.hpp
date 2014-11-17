@@ -100,7 +100,7 @@ public:
     /* returns the Ui auto genrated structure */
     Ui::MainWindow* Ui() { return m_ui; }
 
-    GLWidget*		getOpenGL();
+    GLWidget*	getOpenGL();
     MoveRobot*	getMoveRobot();
 
 public slots:
@@ -124,6 +124,8 @@ public slots:
 
     void setCurrentTraj(p3d_traj* traj);
     void refreshConstraintedDoFs();
+
+    void addTab(QWidget* tab, std::string name);
 
 signals:
     void runClicked();
@@ -200,7 +202,11 @@ private:
 
     MainWindowTestFunctions*		m_testFunctions;
 
+    //! Robot menu
     std::vector<QAction*>			m_RobotsInMenu;
+
+    //! New tabs
+    std::vector<QWidget*> new_tabs_;
 
     void connectCheckBoxes();
 
@@ -216,6 +222,8 @@ private:
     Move3D::Trajectory current_traj_;
     double traj_fps_tmp_;
     long int traj_id_;
+
+
 };
 
 // Global MainWindow Pointer 

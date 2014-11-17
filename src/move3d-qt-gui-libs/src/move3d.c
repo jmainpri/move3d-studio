@@ -103,7 +103,11 @@ static void use(void);
 
 int mainMhp(int argc, char ** argv)
 {
-    cout << "Main Mhp" << endl;
+    cout << "Main Mhp (" << argc << ")"<< endl;
+    for( int i=0; i<argc;i++)
+        cout << argv[i] << endl;
+
+
     // modif Pepijn apropos dmax and tol
     int user_dmax_to_be_set = FALSE;  /* Modif. Pepijn on dmax */
     double user_dmax = 0.0;     /* Modif. Pepijn on dmax */
@@ -178,6 +182,7 @@ int mainMhp(int argc, char ** argv)
                 file_set = TRUE;
                 ++i;
             } else {
+                cout << "i : " << i << endl;
                 use();
                 return 0;
             }

@@ -253,6 +253,14 @@ void MainWindow::initRobotsMenu()
     }
 }
 
+void MainWindow::addTab( QWidget* tab, std::string name )
+{
+    new_tabs_.push_back(tab);
+    m_ui->mainTabWidget->addTab(tab, QString());
+    m_ui->mainTabWidget->setTabText( m_ui->mainTabWidget->indexOf(tab),
+                                     QApplication::translate("MainWindow", name.c_str(), 0, QApplication::UnicodeUTF8) );
+}
+
 void MainWindow::setRobotAsCurrent()
 {
     Scene* sc = global_Project->getActiveScene();

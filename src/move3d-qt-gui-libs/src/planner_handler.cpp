@@ -1868,8 +1868,11 @@ bool qt_showTraj()
         ENV.setBool(Env::isRunning ,false);
         return true;
     }
+    else {
+        cout << "no getCurrentMove3DTraj for robot :  " << rob->getName() << endl;
+    }
 
-    g3d_show_tcur_rob(robotPt,default_drawtraj_fct_qt_pipe);
+    g3d_show_tcur_rob( robotPt, default_drawtraj_fct_qt_pipe );
     ENV.setBool(Env::isRunning,false);
 
     if (PlanEnv->getBool(PlanParam::env_showHumanTraj))
@@ -2254,6 +2257,12 @@ void PlannerHandler::init()
     emit initIsDone();
 }
 
+void PlannerHandler::startPlanner(boost::function<void(void)> f)
+{
+    func_ = f;
+    startPlanner(QString("BoostFunction"));
+}
+
 void PlannerHandler::startPlanner(QString plannerName)
 {
     if(mState == running) // already running, do nothing
@@ -2269,11 +2278,15 @@ void PlannerHandler::startPlanner(QString plannerName)
     ENV.setBool(Env::isRunning, true);
 //    try
     {
-        if(plannerName == "Diffusion")
+        if(plannerName == "BoostFunction")
+        {
+            std::cout << "Planning thread : starting boost function." << std::endl;
+            func_();
+        }
+        else if(plannerName == "Diffusion")
         {
             std::cout << "Planning thread : starting diffusion." << std::endl;
             qt_runDiffusion();
-            //qt_test();
         }
         else if(plannerName == "PRM")
         {

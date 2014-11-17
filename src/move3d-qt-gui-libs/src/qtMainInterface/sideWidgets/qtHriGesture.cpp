@@ -94,7 +94,7 @@ void HriGestureWidget::init()
 // Load the folder and convert to CSV to make one single motion file
 void HriGestureWidget::initRecordedMotion()
 {
-//    global_motionRecorder = new HRICS::RecordMotion( "HERAKLES_HUMAN1" );
+    //    global_motionRecorder = new HRICS::RecordMotion( "HERAKLES_HUMAN1" );
     connect(this, SIGNAL(selectedPlanner(QString)), global_plannerHandler, SLOT(startPlanner(QString)));
 
     new connectCheckBoxToEnv( m_ui->checkBoxInitGestureModule,  GestEnv->getObject(GestParam::init_module_at_start) );
@@ -207,7 +207,7 @@ void HriGestureWidget::loadFolder()
         global_motionRecorders.push_back( new HRICS::RecordMotion( human ) );
     }
 
-//    global_motionRecorder->loadXMLFolder();
+    //    global_motionRecorder->loadXMLFolder();
     global_motionRecorders[0]->loadCSVFolder( foldername );
 }
 
@@ -335,12 +335,12 @@ void HriGestureWidget::startGestureSimulation()
 //-------------------------------------------------------------------
 void HriGestureWidget::initGestureRecognition()
 {
-//    global_classifyMotion = new HRICS::ClassifyMotion();
+    //    global_classifyMotion = new HRICS::ClassifyMotion();
 
-//    if( global_classifyMotion->load_model() )
-//        cout << "load GMMs successfully!!!!" << endl;
-//    else
-//        cout << "ERROR loading GMMs!!!!" << endl;
+    //    if( global_classifyMotion->load_model() )
+    //        cout << "load GMMs successfully!!!!" << endl;
+    //    else
+    //        cout << "ERROR loading GMMs!!!!" << endl;
 }
 
 //-------------------------------------------------------------------
@@ -363,6 +363,9 @@ void HriGestureWidget::initHriIOC()
     new connectCheckBoxToEnv( m_ui->checkBoxUseSimulationDemos,  HriEnv->getObject(HricsParam::ioc_use_simulation_demos) );
     new connectCheckBoxToEnv( m_ui->checkBoxUserSetPelvisBounds, HriEnv->getObject(HricsParam::ioc_user_set_pelvis_bounds) );
 
+    new connectCheckBoxToEnv( m_ui->checkBoxNoReplanning, HriEnv->getObject(HricsParam::ioc_no_replanning) );
+    new connectCheckBoxToEnv( m_ui->checkBoxUseBaseline, HriEnv->getObject(HricsParam::ioc_use_baseline) );
+
     connect( m_ui->pushButtonRunIoc, SIGNAL(clicked()), this, SLOT(runIoc()) );
 
     new connectComboBoxToEnv( m_ui->comboBoxIoc, HriEnv->getObject(HricsParam::ioc_phase) );
@@ -380,14 +383,14 @@ void HriGestureWidget::initHriIOC()
     connect( m_ui->spinBoxSphereLayerToDraw, SIGNAL(valueChanged(int)), m_mainWindow, SLOT(drawAllWinActive()));
 
     connect( m_ui->pushButtonDetours,SIGNAL(clicked()),this,SLOT(runDetours()));
-//    m_ui->comboBoxIoc->setCurrentIndex(  );
+    //    m_ui->comboBoxIoc->setCurrentIndex(  );
 
-//    global_classifyMotion = new HRICS::ClassifyMotion();
+    //    global_classifyMotion = new HRICS::ClassifyMotion();
 
-//    if( global_classifyMotion->load_model() )
-//        cout << "load GMMs successfully!!!!" << endl;
-//    else
-//        cout << "ERROR loading GMMs!!!!" << endl;
+    //    if( global_classifyMotion->load_model() )
+    //        cout << "load GMMs successfully!!!!" << endl;
+    //    else
+    //        cout << "ERROR loading GMMs!!!!" << endl;
 }
 
 void HriGestureWidget::setCurrentPhase(int phase)
