@@ -100,7 +100,7 @@ void NaturalWidget::cellToShowChanged()
 
     if ( (ith >= 0) && ( ReachableCells.size() > ((unsigned int)ith)) )
     {
-        shared_ptr<Configuration> q_init = myGrid->getRobot()->getInitPos();
+        confPtr_t q_init = myGrid->getRobot()->getInitPos();
         HRICS_activeNatu->setRobotToConfortPosture();
 
 #ifdef HRI_PLANNER

@@ -446,8 +446,8 @@ void CostWidget::graphSearchTest()
 
     Graph* ptrGraph = new Graph(XYZ_GRAPH);
 
-    shared_ptr<Configuration> Init = ptrGraph->getRobot()->getInitPos();
-    shared_ptr<Configuration> Goal = ptrGraph->getRobot()->getGoalPos();
+    confPtr_t Init = ptrGraph->getRobot()->getInitPos();
+    confPtr_t Goal = ptrGraph->getRobot()->getGoalPos();
 
     cout << "Dijkstra graph search on graph" << endl;
     Dijkstra graphSearch(ptrGraph);
@@ -836,7 +836,7 @@ void CostWidget::computeAStar()
         for (unsigned int i=0;i<path.size();i++)
         {
             configPt conf = dynamic_cast<GraphState*>(path[i])->getGraphNode()->q;
-            shared_ptr<Configuration> q(new Configuration(new Robot(XYZ_ROBOT),conf));
+            confPtr_t q(new Configuration(new Robot(XYZ_ROBOT),conf));
             traj->push_back(q);
         }
 

@@ -611,7 +611,7 @@ void FormRobot::setCurrentConfig(int index)
  */
 void FormRobot::setCurrentPosition(int position)
 {
-    shared_ptr<Configuration> ptrConf;
+    confPtr_t ptrConf;
 
     if( position == 0 )
     {
@@ -755,7 +755,7 @@ void FormRobot::setConfAndTrajFromManipTest()
  */
 void FormRobot::addConfig( const std::string& name, configPt q )
 {
-    shared_ptr<Configuration> qStore( new Configuration( mRobot , q ) );
+    confPtr_t qStore( new Configuration( mRobot , q ) );
 
     mConfigurations.push_back( qStore );
 

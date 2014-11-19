@@ -62,9 +62,9 @@ extern string global_ActiveRobotName;
 extern ManipulationTestFunctions* global_manipPlanTest;
 #endif
 
-shared_ptr<Configuration> qInit;
-shared_ptr<Configuration> qGoal;
-shared_ptr<Configuration> qOpen;
+confPtr_t qInit;
+confPtr_t qGoal;
+confPtr_t qOpen;
 
 RobotWidget::RobotWidget(QWidget *parent) :
     QWidget(parent),
@@ -1090,7 +1090,7 @@ void RobotWidget::resetManipulationData()
 
     qInit = rob->getInitPos();
     qGoal = rob->getGoalPos();
-    qOpen = shared_ptr<Configuration>( new Configuration( rob, rob->getP3dRobotStruct()->openChainConf ));
+    qOpen = confPtr_t( new Configuration( rob, rob->getP3dRobotStruct()->openChainConf ));
 
     rob->setAndUpdate(*qInit);
 
@@ -1291,7 +1291,7 @@ void RobotWidget::makeNormalTraj()
 
     for(int i=(robot->getP3dRobotStruct()->nconf-1) ; i>0; i--)
     {
-        MOVE3D_PTR_NAMESPACE::shared_ptr<Configuration> q(new Configuration(robot,robot->getP3dRobotStruct()->conf[i]->q));
+        confPtr_t q(new Configuration(robot,robot->getP3dRobotStruct()->conf[i]->q));
         traj.push_back(q);
     }
 
@@ -1349,7 +1349,7 @@ void RobotWidget::on_spinBoxNavigate_valueChanged(int value)
     if ( (value < robot->nconf) && (value > 0))
     {
         configPt conf = robot->conf[value]->q;
-        shared_ptr<Configuration> q(new Configuration(rob,conf));
+        confPtr_t q(new Configuration(rob,conf));
         q->print();
         rob->setAndUpdate(*q);
 

@@ -98,7 +98,7 @@ void UtilWidget::biasPos()
 {
     //    Robot* R = new Robot(XYZ_ROBOT);
     //    CostOptimization* costOptim = new CostOptimization(R,R->getTrajStruct());
-    //    tr1::shared_ptr<Configuration> q = costOptim->cheat();
+    //    tr1::confPtr_t q = costOptim->cheat();
     //    costOptim->getRobot()->setAndUpdate(*q);
     //    this->drawAllWinActive();
 }
@@ -171,16 +171,16 @@ void UtilWidget::computeRandomLP()
     // pushButtonComputeRandomLP
     Robot* rob = global_Project->getActiveScene()->getActiveRobot();
 
-    shared_ptr<Configuration> q1 = rob->shoot();
+    confPtr_t q1 = rob->shoot();
     q1->setConstraintsWithSideEffect();
-    shared_ptr<Configuration> q2 = rob->shoot();
+    confPtr_t q2 = rob->shoot();
     q2->setConstraintsWithSideEffect();
 
     LocalPath LP( q1, q2 );
 
     double param = p3d_random(0, LP.getParamMax() );
 
-    shared_ptr<Configuration> q3 = LP.configAtParam( param );
+    confPtr_t q3 = LP.configAtParam( param );
     q3->setConstraintsWithSideEffect();
 
     cout << "----------------------------------" << endl;
