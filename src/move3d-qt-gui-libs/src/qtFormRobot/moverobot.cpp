@@ -33,9 +33,10 @@
 #include "qtLibrary.hpp"
 #include "qtConstraints.hpp"
 
+#include "API/ConfigSpace/configuration.hpp"
+
 #include <iostream>
 #include <iomanip>
-#include <tr1/memory>
 
 #include "P3d-pkg.h"
 #include "Collision-pkg.h"

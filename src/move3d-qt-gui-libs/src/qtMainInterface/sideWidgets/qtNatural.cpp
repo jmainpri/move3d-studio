@@ -10,7 +10,6 @@
 #include "ui_qtNatural.h"
 
 #include <iostream>
-#include <tr1/memory>
 #include <boost/bind.hpp>
 #include <QMessageBox>
 
@@ -32,6 +31,7 @@
 
 #include "hri_costspace/HRICS_costspace.hpp"
 #include "API/project.hpp"
+#include "API/ConfigSpace/configuration.hpp"
 
 using namespace std;
 using namespace QtShiva;

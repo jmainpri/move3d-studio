@@ -45,7 +45,6 @@
 #include <QDesktopWidget>
 #include <QFileDialog>
 
-#include <mcheck.h>
 
 #ifdef QT_GL
 QSemaphore* sem;

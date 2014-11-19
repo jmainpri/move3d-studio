@@ -42,7 +42,6 @@
 #include <cstdlib>
 #include <limits>
 #include <algorithm>
-#include <tr1/memory>
 #include <sys/time.h>
 
 #include "P3d-pkg.h"

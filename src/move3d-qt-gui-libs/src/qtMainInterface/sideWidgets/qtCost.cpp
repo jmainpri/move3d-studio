@@ -16,7 +16,6 @@
 #include <iomanip>
 #include <algorithm>
 #include <fstream>
-#include <tr1/memory>
 
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
 
@@ -31,6 +30,7 @@
 #endif
 #include "API/Search/Dijkstra/dijkstra.hpp"
 #include "API/project.hpp"
+#include "API/ConfigSpace/configuration.hpp"
 
 #ifdef USE_QWT
 #include "qtPlot/basicPlot.hpp"

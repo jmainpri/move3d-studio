@@ -13,7 +13,6 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include <tr1/memory>
 #include <boost/bind.hpp>
 #include <sys/time.h>
 #include <QMessageBox>
@@ -48,6 +47,7 @@
 
 #include "utils/ConfGenerator.h"
 #include "API/project.hpp"
+#include "API/ConfigSpace/configuration.hpp"
 
 using namespace QtShiva;
 using namespace Move3D;

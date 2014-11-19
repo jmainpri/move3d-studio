@@ -11,7 +11,6 @@
 #include "ui_qtMotionPlanner.h"
 
 #include <iostream>
-#include <tr1/memory>
 
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
 
@@ -21,9 +20,9 @@
 
 #include "planner_handler.hpp"
 
-#include "P3d-pkg.h"
-#include "Planner-pkg.h"
-#include "../p3d/ParametersEnv.hpp"
+#include <libmove3d/include/P3d-pkg.h>
+#include <libmove3d/include/Planner-pkg.h>
+#include <libmove3d/p3d/ParametersEnv.hpp>
 
 #include "planner/planner.hpp"
 #include "planner/planEnvironment.hpp"
@@ -755,7 +754,7 @@ void MotionPlanner::nodeToShowChanged()
     }
     else
     {
-        shared_ptr<Configuration> q_init = API_activeGraph->getRobot()->getInitPos();
+        confPtr_t q_init = API_activeGraph->getRobot()->getInitPos();
         API_activeGraph->getRobot()->setAndUpdate(*q_init);
         cout << "Exede the number of nodes" << endl;
     }
@@ -793,7 +792,7 @@ void MotionPlanner::edgeToShowChanged()
     }
     else
     {
-        shared_ptr<Configuration> q_init = API_activeGraph->getRobot()->getInitPos();
+        confPtr_t q_init = API_activeGraph->getRobot()->getInitPos();
         API_activeGraph->getRobot()->setAndUpdate(*q_init);
         cout << "Exede the number of edges" << endl;
     }
@@ -846,7 +845,7 @@ void MotionPlanner::removeNode()
         }
         else
         {
-            shared_ptr<Configuration> q_init = API_activeGraph->getRobot()->getInitPos();
+            confPtr_t q_init = API_activeGraph->getRobot()->getInitPos();
             API_activeGraph->getRobot()->setAndUpdate(*q_init);
             cout << "Exede the number of nodes" << endl;
         }

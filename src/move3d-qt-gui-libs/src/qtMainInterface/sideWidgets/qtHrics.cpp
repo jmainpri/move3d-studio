@@ -12,7 +12,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <tr1/memory>
 #include <boost/bind.hpp>
 #include <sys/time.h>
 #include <QMessageBox>
@@ -36,6 +35,7 @@
 #include "planner/planEnvironment.hpp"
 #include "utils/ConfGenerator.h"
 #include "API/project.hpp"
+#include "API/ConfigSpace/configuration.hpp"
 
 using namespace std;
 using namespace QtShiva;

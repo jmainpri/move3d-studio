@@ -48,7 +48,6 @@
 #include "Planner-pkg.h"
 
 #include <iostream>
-#include <tr1/memory>
 #include <vector>
 #include <fstream>
 
