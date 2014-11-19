@@ -113,7 +113,6 @@
 #include "hri_costspace/human_trajectories/HRICS_ioc_sequences.hpp"
 #include "hri_costspace/human_trajectories/HRICS_ioc.hpp"
 #include "hri_costspace/human_trajectories/HRICS_human_ioc.hpp"
-#include "hri_costspace/human_trajectories/HRICS_human_cost_space.hpp"
 #include "hri_costspace/human_trajectories/HRICS_human_simulator.hpp"
 #include "hri_costspace/human_trajectories/HRICS_detours.hpp"
 #include "hri_costspace/human_trajectories/HRICS_run_multiple_planners.hpp"
