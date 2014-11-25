@@ -414,7 +414,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-9</y>
+            <y>0</y>
             <width>411</width>
             <height>478</height>
            </rect>
@@ -790,7 +790,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>389</width>
+            <width>411</width>
             <height>814</height>
            </rect>
           </property>
@@ -1407,8 +1407,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>375</width>
-            <height>319</height>
+            <width>427</width>
+            <height>469</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_35">
@@ -1997,6 +1997,13 @@
           <widget class="QPushButton" name="pushButtonAStarInCurrentGraph">
            <property name="text">
             <string>A* in current graph</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QPushButton" name="pushButtonPlanSequence">
+           <property name="text">
+            <string>Plan Sequence</string>
            </property>
           </widget>
          </item>

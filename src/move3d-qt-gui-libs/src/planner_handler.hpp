@@ -66,7 +66,7 @@ public:
 public slots:
     void init();
     void startPlanner(QString plannerName);
-    void startPlanner(boost::function<void(void)> f);
+    void setExternalFunction(boost::function<void(void)> f);
     void stopPlanner();
     void resetPlanner();
 

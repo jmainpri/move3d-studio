@@ -74,6 +74,7 @@
 #include "planner/TrajectoryOptim/trajectoryOptim.hpp"
 #include "planner/planEnvironment.hpp"
 #include "planner/plannerFunctions.hpp"
+#include "planner/plannerSequences.hpp"
 
 #include "utils/MultiRun.hpp"
 #include "utils/multilocalpath_utils.hpp"
@@ -774,83 +775,108 @@ void qt_test2()
 
 void qt_test3()
 {
-    Move3D::Robot* object = global_Project->getActiveScene()->getRobotByNameContaining( "VISBALL" );
-    if( object == NULL )
-        return;
+    //*****************************************************************
+    /// READ TRAJS
 
-//    HRICS_activeNatu->computeIsReachableAndMove( object->getJoint(1)->getVectorPos(), false );
+    std::stringstream ss;
+    std::vector<std::string> files;
+    std::string cur_dir(get_current_dir_name());
 
-    Move3D::Robot* robot = global_Project->getActiveScene()->getRobotByName("BIOMECH_HUMAN");
-    if( !robot ){
-        cout << "no human" << endl;
-        robot = global_Project->getActiveScene()->getRobotByName("manip_3dofs_ROBOT");
-        if( !robot ){
-            cout << "no robot" << endl;
-            return;
-        }
-    }
+    cout << cur_dir << endl;
 
-    Move3D::Joint* eef = NULL;
-    if( HRICS_activeNatu != NULL )
+    int nb_trajs = 12;
+    for(int i=0; i<nb_trajs; i++ )
     {
-        eef = robot->getJoint("rPalm");
-        if( eef == NULL )
-            return;
-    }
-    else
-    {
-        eef = robot->getJoint("J4");
-        if( eef == NULL )
-            return;
+        ss.str("");
+        ss << "trajectory" << std::setw(3) << std::setfill( '0' ) << i << ".traj";
+        files.push_back( cur_dir + "/" + ss.str() );
     }
 
-    std::vector<Move3D::Joint*> active_joints;
-    //    active_joints.push_back( robot->getJoint( "Pelvis" ) );
-    active_joints.push_back( robot->getJoint( "TorsoX" ) );
-    active_joints.push_back( robot->getJoint( "TorsoZ" ) );
-    active_joints.push_back( robot->getJoint( "TorsoY" ) );
-    active_joints.push_back( robot->getJoint( "rShoulderTransX" ) );
-    active_joints.push_back( robot->getJoint( "rShoulderTransY" ) );
-    active_joints.push_back( robot->getJoint( "rShoulderTransZ" ) );
-    active_joints.push_back( robot->getJoint( "rShoulderY1" ) );
-    active_joints.push_back( robot->getJoint( "rShoulderX" ) );
-    active_joints.push_back( robot->getJoint( "rShoulderY2" ) );
-    active_joints.push_back( robot->getJoint( "rArmTrans" ) );
-    active_joints.push_back( robot->getJoint( "rElbowZ" ) );
-    active_joints.push_back( robot->getJoint( "rElbowX" ) );
-    active_joints.push_back( robot->getJoint( "rElbowY" ) );
-    active_joints.push_back( robot->getJoint( "lPoint" ) );
-    active_joints.push_back( robot->getJoint( "rWristZ" ) );
-    active_joints.push_back( robot->getJoint( "rWristX" ) );
-    active_joints.push_back( robot->getJoint( "rWristY" ) );
+    Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+    Move3D::SequencesPlanners pool( robot );
+    pool.loadTrajsFromFile( files );
+    pool.playTrajs();
 
-    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rShoulderTransX" )->getP3dJointStruct(), 0, .016, .020 );
-    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rShoulderTransY" )->getP3dJointStruct(), 0, .32, .34 );
-    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rShoulderTransZ" )->getP3dJointStruct(), 0, .24, .26 );
-    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rArmTrans" )->getP3dJointStruct(), 0, .38, .40 );
-    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "lPoint" )->getP3dJointStruct(), 0, .23, .25 );
 
-    Eigen::VectorXd xdes = object->getJoint(1)->getXYZPose();
-    //    Eigen::VectorXd xdes = object->getJoint(1)->getVectorPos();
+    //*****************************************************************
+    /// IK
+//    Move3D::Robot* object = global_Project->getActiveScene()->getRobotByNameContaining( "VISBALL" );
+//    if( object == NULL )
+//        return;
 
-    Move3D::confPtr_t q_tmp = robot->getCurrentPos();
-    //    robot->setAndUpdate( *HRICS_activeNatu->getComfortPosture() );
-    //    q_tmp = HRICS_activeNatu->getComfortPosture()->copy();
+////    HRICS_activeNatu->computeIsReachableAndMove( object->getJoint(1)->getVectorPos(), false );
 
-    bool succeed = false;
-    bool simple_ik = false;
-    if( !simple_ik )
-    {
-        Move3D::IKGenerator ik( robot );
-        ik.initialize( active_joints, eef );
+//    Move3D::Robot* robot = global_Project->getActiveScene()->getRobotByName("BIOMECH_HUMAN");
+//    if( !robot ){
+//        cout << "no human" << endl;
+//        robot = global_Project->getActiveScene()->getRobotByName("manip_3dofs_ROBOT");
+//        if( !robot ){
+//            cout << "no robot" << endl;
+//            return;
+//        }
+//    }
 
-        succeed = ik.generate( xdes );
-        cout << "diff = " << ( xdes - eef->getXYZPose() ).norm() << endl;
+//    Move3D::Joint* eef = NULL;
+//    if( HRICS_activeNatu != NULL )
+//    {
+//        eef = robot->getJoint("rPalm");
+//        if( eef == NULL )
+//            return;
+//    }
+//    else
+//    {
+//        eef = robot->getJoint("J4");
+//        if( eef == NULL )
+//            return;
+//    }
 
-        if( !succeed ){
-            robot->setAndUpdate( *q_tmp );
-        }
-    }
+//    std::vector<Move3D::Joint*> active_joints;
+//    //    active_joints.push_back( robot->getJoint( "Pelvis" ) );
+//    active_joints.push_back( robot->getJoint( "TorsoX" ) );
+//    active_joints.push_back( robot->getJoint( "TorsoZ" ) );
+//    active_joints.push_back( robot->getJoint( "TorsoY" ) );
+//    active_joints.push_back( robot->getJoint( "rShoulderTransX" ) );
+//    active_joints.push_back( robot->getJoint( "rShoulderTransY" ) );
+//    active_joints.push_back( robot->getJoint( "rShoulderTransZ" ) );
+//    active_joints.push_back( robot->getJoint( "rShoulderY1" ) );
+//    active_joints.push_back( robot->getJoint( "rShoulderX" ) );
+//    active_joints.push_back( robot->getJoint( "rShoulderY2" ) );
+//    active_joints.push_back( robot->getJoint( "rArmTrans" ) );
+//    active_joints.push_back( robot->getJoint( "rElbowZ" ) );
+//    active_joints.push_back( robot->getJoint( "rElbowX" ) );
+//    active_joints.push_back( robot->getJoint( "rElbowY" ) );
+//    active_joints.push_back( robot->getJoint( "lPoint" ) );
+//    active_joints.push_back( robot->getJoint( "rWristZ" ) );
+//    active_joints.push_back( robot->getJoint( "rWristX" ) );
+//    active_joints.push_back( robot->getJoint( "rWristY" ) );
+
+//    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rShoulderTransX" )->getP3dJointStruct(), 0, .016, .020 );
+//    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rShoulderTransY" )->getP3dJointStruct(), 0, .32, .34 );
+//    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rShoulderTransZ" )->getP3dJointStruct(), 0, .24, .26 );
+//    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "rArmTrans" )->getP3dJointStruct(), 0, .38, .40 );
+//    p3d_jnt_set_dof_rand_bounds( robot->getJoint( "lPoint" )->getP3dJointStruct(), 0, .23, .25 );
+
+//    Eigen::VectorXd xdes = object->getJoint(1)->getXYZPose();
+//    //    Eigen::VectorXd xdes = object->getJoint(1)->getVectorPos();
+
+//    Move3D::confPtr_t q_tmp = robot->getCurrentPos();
+//    //    robot->setAndUpdate( *HRICS_activeNatu->getComfortPosture() );
+//    //    q_tmp = HRICS_activeNatu->getComfortPosture()->copy();
+
+//    bool succeed = false;
+//    bool simple_ik = false;
+//    if( !simple_ik )
+//    {
+//        Move3D::IKGenerator ik( robot );
+//        ik.initialize( active_joints, eef );
+
+//        succeed = ik.generate( xdes );
+//        cout << "diff = " << ( xdes - eef->getXYZPose() ).norm() << endl;
+
+//        if( !succeed ){
+//            robot->setAndUpdate( *q_tmp );
+//        }
+//    }
 
 //    int nb_iter = 200;
 
@@ -866,6 +892,10 @@ void qt_test3()
 
 //    global_w->getOpenGL()->saveImagesToDisk();
 //    global_w->getOpenGL()->setSaveTraj( false );
+//*****************************************************************
+
+
+
 
 
 
@@ -1120,6 +1150,16 @@ void qt_runMultiSmooth()
 {
     MultiRun pool;
     pool.runMultiSmooth();
+}
+
+void qt_runPlanSequence()
+{
+    Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+    Move3D::SequencesPlanners pool(robot);
+    pool.setPlannerType( Move3D::stomp );
+    pool.runSequence();
+    pool.playTrajs();
+    pool.saveTrajsToFile( "." );
 }
 
 void qt_runAStarPlanning()
@@ -2255,10 +2295,9 @@ void PlannerHandler::init()
     emit initIsDone();
 }
 
-void PlannerHandler::startPlanner(boost::function<void(void)> f)
+void PlannerHandler::setExternalFunction(boost::function<void(void)> f)
 {
     func_ = f;
-    startPlanner(QString("BoostFunction"));
 }
 
 void PlannerHandler::startPlanner(QString plannerName)
@@ -2300,6 +2339,11 @@ void PlannerHandler::startPlanner(QString plannerName)
         {
             std::cout << "Planning thread : starting MultiSmooth." << std::endl;
             qt_runMultiSmooth();
+        }
+        else if(plannerName == "PlanSequence")
+        {
+            std::cout << "Planning thread : starting plan in sequence." << std::endl;
+            qt_runPlanSequence();
         }
 #ifdef LIGHT_PLANNER
         else if(plannerName == "Manipulation")

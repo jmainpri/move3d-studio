@@ -87,6 +87,7 @@ private slots:
     // General ---------------------------
     void checkAllEdges();
     void computeAStarInCurrentGraph();
+    void planASequenceOfPlans();
     void envDmaxSpinBoxValueChanged( double dmax );
     void envIsWithGoalValueChanged( bool state );
     void envBiDirValueChanged( bool state );

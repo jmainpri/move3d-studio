@@ -335,7 +335,7 @@ void Main_threads::loadSettings()
     }
 
     std::string home(home_path);
-    std::string fileName = home + "/" + move3d_studio_settings_file;
+    std::string fileName = move3d_studio_settings_file;
     if (!home.empty()) {
         qt_loadInterfaceParameters( false, fileName, false ); // OpenGL -> false
         cout << "Loading parameters at : " << fileName << endl;

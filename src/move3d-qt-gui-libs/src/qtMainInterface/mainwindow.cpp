@@ -464,16 +464,16 @@ void MainWindow::loadParametersQuick()
         return;
     }
 
-    std::string home(home_path);
+    std::string home( home_path );
 
-    if (!home.empty())
+    if( !home.empty() )
     {
-        std::string filename = home + "/" + move3d_studio_settings_file;
+        std::string filename = move3d_studio_settings_file;
 
         qt_loadInterfaceParameters( false, filename );
 
-        string guifile = home + "/" + ".guiparams";
-        ifstream infile( guifile.c_str() );
+        std::string guifile = home + "/" + ".guiparams";
+        std::ifstream infile( guifile.c_str() );
         if( infile.good() )
         {
             qt_loadGuiParameters( false, guifile, this );
@@ -504,7 +504,7 @@ void MainWindow::saveParametersQuick()
 
     if (!home.empty())
     {
-        std::string filename = home + "/" + move3d_studio_settings_file;
+        std::string filename = move3d_studio_settings_file;
 
         if( remove( filename.c_str() ) != 0 )
         {
@@ -950,6 +950,8 @@ void MainWindow::isPlanning()
     m_ui->labelRunning->setPalette( pal );
     m_ui->labelRunning->setText("RUNNING" );
 
+    cout << "IS PLANNING" << endl;
+
     //UITHINGQPalette pal(Qt::lightGray); // copy widget's palette to non const QPalette
     //UITHINGm_ui->toolBox->setPalette( pal );        // set the widget's palette
 
@@ -964,8 +966,12 @@ void MainWindow::isPlanning()
 
 void MainWindow::planningFinished()
 {
+    cout << __PRETTY_FUNCTION__ << endl;
+
     if( ENV.getBool(Env::isRunning) == false )
     {
+        cout << "IS NOT PLANNING" << endl;
+
         m_ui->pushButtonStop->setDisabled(true);
         m_ui->pushButtonReset->setDisabled(false);
 

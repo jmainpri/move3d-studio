@@ -86,6 +86,7 @@ using namespace std;
 
 // External varialbe handled when compiled with move3d studio
 bool move3d_studio_load_settings = false;
+bool move3d_not_rel_home = false;
 std::string move3d_studio_settings_file = ".save_interface_params";
 
 static int FILTER_TO_BE_SET_ACTIVE = FALSE;
@@ -210,10 +211,24 @@ int mainMhp(int argc, char ** argv)
             ++i;
             move3d_studio_load_settings = true;
         }
+        else if (strcmp(argv[i], "-not_rel_home") == 0) {
+            ++i;
+            move3d_not_rel_home = true;
+        }
         else if (strcmp(argv[i], "-params") == 0) {
             ++i;
             if ((i < argc)) {
-                move3d_studio_settings_file = argv[i];
+
+                char* home_char = getenv("HOME_MOVE3D");
+
+                if( home_char ) {
+                    move3d_studio_settings_file = ( move3d_not_rel_home ? "" : std::string(home_char) + "/" ) +
+                            std::string(argv[i]);
+                }
+                else {
+                    move3d_studio_settings_file = std::string(argv[i]);
+                    cout << "HOME_MOVE3D not defined!!!!" << endl;
+                }
                 ++i;
             } else {
                 use();

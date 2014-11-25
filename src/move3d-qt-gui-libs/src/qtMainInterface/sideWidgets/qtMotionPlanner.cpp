@@ -74,6 +74,7 @@ void MotionPlanner::initGeneral()
 {
     connect(m_ui->pushButtonCheckAllEdges,SIGNAL(clicked()),this,SLOT(checkAllEdges()));
     connect(m_ui->pushButtonAStarInCurrentGraph,SIGNAL(clicked()),this,SLOT(computeAStarInCurrentGraph()));
+    connect(m_ui->pushButtonPlanSequence,SIGNAL(clicked()),this,SLOT(planASequenceOfPlans()));
 
     // Connecting the Dmax Env variable
     m_ui->doubleSpinBoxDMax->setMaximum(p3d_get_env_dmax());
@@ -108,6 +109,11 @@ void MotionPlanner::checkAllEdges()
 void MotionPlanner::computeAStarInCurrentGraph()
 {
     emit selectedPlanner("ComputeAStarInCurrentGraph");
+}
+
+void MotionPlanner::planASequenceOfPlans()
+{
+    emit selectedPlanner("PlanSequence");
 }
 
 void MotionPlanner::envDmaxSpinBoxValueChanged( double dmax )
