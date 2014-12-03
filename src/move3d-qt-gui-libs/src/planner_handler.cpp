@@ -1157,7 +1157,34 @@ void qt_runPlanSequence()
     Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
     Move3D::SequencesPlanners pool(robot);
     pool.setPlannerType( Move3D::stomp );
-    pool.runSequence();
+
+    std::vector<Move3D::confPtr_t> configs = pool.getStoredConfig();
+    // Config 0 -> green
+    // Config 1 -> yellow
+    // Config 2 -> red
+    // Config 3 -> center area
+
+    std::vector<Move3D::confPtr_t> sequence;
+    sequence.push_back( configs[3] );
+    sequence.push_back( configs[0] );
+    sequence.push_back( configs[3] );
+    sequence.push_back( configs[1] );
+    sequence.push_back( configs[3] );
+    sequence.push_back( configs[0] );
+    sequence.push_back( configs[3] );
+    sequence.push_back( configs[1] );
+    sequence.push_back( configs[3] );
+    sequence.push_back( configs[0] );
+    sequence.push_back( configs[3] );
+    sequence.push_back( configs[2] );
+    sequence.push_back( configs[3] );
+    sequence.push_back( configs[0] );
+    sequence.push_back( configs[3] );
+    sequence.push_back( configs[1] );
+    sequence.push_back( configs[3] );
+    sequence.push_back( configs[0] );
+
+    pool.runSequence( sequence );
     pool.playTrajs();
     pool.saveTrajsToFile( "." );
 }
@@ -1305,8 +1332,6 @@ bool remove_motion;
 
 void qt_show_recorded_motion()
 {
-    cout << "Show recorded motion" << endl;
-
     if( global_motionRecorders.empty() ) {
         cout << "recorder not initialized" << endl;
         return;
