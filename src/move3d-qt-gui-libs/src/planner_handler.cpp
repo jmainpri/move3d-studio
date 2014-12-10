@@ -274,9 +274,12 @@ void qt_test1()
     Move3D::Robot* pr2      = global_Project->getActiveScene()->getRobotByName("PR2_ROBOT");
     Move3D::Robot* human    = global_Project->getActiveScene()->getRobotByName("HERAKLES_HUMAN1");
 
-    std::string pr2_traj_file = "/home/pr2command/catkin_ws/src/hrics-or-rafi/python_module/bioik/joint_state_traj.csv";
-    std::string human_traj_file = "/home/pr2command/workspace/test_mocap/no_split_human1_.csv";
+//    std::string pr2_traj_file = "/home/pr2command/catkin_ws/src/hrics-or-rafi/python_module/bioik/joint_state_traj.csv";
+//    std::string human_traj_file = "/home/pr2command/workspace/test_mocap/no_split_human1_.csv";
 
+    std::string folder = "/home/pr2command/workspace/test_mocap/steve_exp_1/test2";
+    std::string pr2_traj_file   = folder + "/joint_state_traj.csv";
+    std::string human_traj_file = folder + "/no_split_human1_.csv";
 
     cout << "load file 1 (pr2)" << endl;
     pr2_mapping mapping( pr2 );
