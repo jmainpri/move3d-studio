@@ -80,6 +80,7 @@
 #include "utils/multilocalpath_utils.hpp"
 #include "utils/misc_functions.hpp"
 #include "utils/ik_generator.hpp"
+#include "utils/pr2_mapping.hpp"
 
 #include "qtLibrary.hpp"
 #include <QtCore/QMutexLocker>
@@ -270,27 +271,56 @@ static bool save_images=true;
 
 void qt_test1()
 {
-    Move3D::Robot* active_human  = global_ht_simulator->getActiveHuman();
-    Move3D::Robot* passive_human = global_ht_simulator->getPassiveHuman();
+    Move3D::Robot* pr2      = global_Project->getActiveScene()->getRobotByName("PR2_ROBOT");
+    Move3D::Robot* human    = global_Project->getActiveScene()->getRobotByName("HERAKLES_HUMAN1");
 
-    if( active_human == NULL || passive_human == NULL ){
-        cout << "Did not get robots" << endl;
-        return;
-    }
+    std::string pr2_traj_file = "/home/pr2command/catkin_ws/src/hrics-or-rafi/python_module/bioik/joint_state_traj.csv";
+    std::string human_traj_file = "/home/pr2command/workspace/test_mocap/no_split_human1_.csv";
 
-    active_human->getP3dRobotStruct()->tcur = NULL;
 
-    if( save_images )
-    {
-        global_w->getOpenGL()->setSaveOnDisk( false );
-        global_w->getOpenGL()->setSaveTraj( true );
-        save_images = false;
-    }
-    else
-    {
-        global_w->getOpenGL()->saveImagesToDisk();
-        global_w->getOpenGL()->setSaveTraj( false );
-    }
+    cout << "load file 1 (pr2)" << endl;
+    pr2_mapping mapping( pr2 );
+    Move3D::Trajectory traj1 = mapping.load_trajectory( pr2_traj_file );
+
+    cout << "load file 2 (human)" << endl;
+    HRICS::RecordMotion rec_motion( human );
+    rec_motion.useBioFormat( true );
+    motion_t motion = rec_motion.loadFromCSV( human_traj_file );
+    Move3D::Trajectory traj2 = HRICS::motion_to_traj( motion, human );
+
+
+    qt_showMotion( traj1, traj2 );
+//    qt_showMotion( traj1, Move3D::Trajectory() );
+
+
+
+
+//    Move3D::Robot* active_human  = global_ht_simulator->getActiveHuman();
+//    Move3D::Robot* passive_human = global_ht_simulator->getPassiveHuman();
+
+//    if( active_human == NULL || passive_human == NULL ){
+//        cout << "Did not get robots" << endl;
+//        return;
+//    }
+
+//    active_human->getP3dRobotStruct()->tcur = NULL;
+
+//    if( save_images )
+//    {
+//        global_w->getOpenGL()->setSaveOnDisk( false );
+//        global_w->getOpenGL()->setSaveTraj( true );
+//        save_images = false;
+//    }
+//    else
+//    {
+//        global_w->getOpenGL()->saveImagesToDisk();
+//        global_w->getOpenGL()->setSaveTraj( false );
+//    }
+
+
+
+
+
 
 //    std::cout << "Load file to global motion recorder" << std::endl;
 
