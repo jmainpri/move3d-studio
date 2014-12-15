@@ -371,12 +371,15 @@ TARGET_LINK_LIBRARIES(Move3D-Qt-Gui ${LIBS}  m)
 #------------------- PKG_CONFIG ---------------------------
 #----------------------------------------------------------
 
-STRING(REPLACE ";" " -D" Move3DMPLIB_CompilationFlags "-D${Move3D_CompilationFlags}")
+STRING(REPLACE ";" " -D" Move3DMPLIB_CompilationFlags "-D${Move3D_ActiveFlags}")
 STRING(REPLACE ";" " -I" Move3DMPLIB_Compilation_includes "-I${INCLUDE_DIRS}")
 
 STRING(REGEX REPLACE "(debug;[^;]*;)|optimized" "" Move3DMPLIB_Compilation_libs "${LIBS}")
 STRING(REPLACE ";" " " Move3DMPLIB_Compilation_libs "${Move3DMPLIB_Compilation_libs}")
 add_subdirectory(pkgconfig)
+
+message("Move3D_CompilationFlagss: " ${Move3D_ActiveFlags})
+message("Move3DMPLIB_CompilationFlags: " ${Move3DMPLIB_CompilationFlags})
 
 # ------------------------------------------------------------------------------
 # Intallation
