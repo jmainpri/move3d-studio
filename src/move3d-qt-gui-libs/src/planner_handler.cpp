@@ -277,7 +277,7 @@ void qt_test1()
 //    std::string pr2_traj_file = "/home/pr2command/catkin_ws/src/hrics-or-rafi/python_module/bioik/joint_state_traj.csv";
 //    std::string human_traj_file = "/home/pr2command/workspace/test_mocap/no_split_human1_.csv";
 
-    std::string folder = "/home/pr2command/workspace/test_mocap/steve_exp_1/test2";
+    std::string folder = "/home/pr2command/workspace/test_mocap/ricoun_test/0";
     std::string pr2_traj_file   = folder + "/joint_state_traj.csv";
     std::string human_traj_file = folder + "/no_split_human1_.csv";
 
@@ -1901,32 +1901,32 @@ bool qt_showMotion( const Move3D::Trajectory& motion1, const Move3D::Trajectory&
             motion2.getRobot()->setAndUpdate( *motion2.configAtTime( t ) );
         }
 
-        bool ncol = false;
+//        bool ncol = false;
 
-        if( global_collisionSpace )
-        {
-            double distance = numeric_limits<double>::max();
-            double potential = numeric_limits<double>::max();
+//        if( global_collisionSpace )
+//        {
+//            double distance = numeric_limits<double>::max();
+//            double potential = numeric_limits<double>::max();
 
-            ncol = global_collisionSpace->isRobotColliding( distance, potential );
+//            ncol = global_collisionSpace->isRobotColliding( distance, potential );
 
-//            cout << "Distance to nearest obstacle = " << distance << " and potential = " << potential << endl;
+////            cout << "Distance to nearest obstacle = " << distance << " and potential = " << potential << endl;
 
-            if( global_optimizer && ( global_optimizer->getRobot() == robot ) ) {
-                global_optimizer->getCollisionSpaceCost( *robot->getCurrentPos() );
-            }
-        }
-        else
-        {
-            ncol = robot->isInCollision();
-        }
+//            if( global_optimizer && ( global_optimizer->getRobot() == robot ) ) {
+//                global_optimizer->getCollisionSpaceCost( *robot->getCurrentPos() );
+//            }
+//        }
+//        else
+//        {
+//            ncol = robot->isInCollision();
+//        }
 
-        if( ncol ){
-            cout << "Robot in collision " << endl;
-        }
+//        if( ncol ){
+//            cout << "Robot in collision " << endl;
+//        }
 
         //HRICS::setThePlacemateInIkeaShelf();
-        g3d_set_draw_coll( ncol );
+//        g3d_set_draw_coll( ncol );
 
         if( record_video )
             global_w->getOpenGL()->addCurrentImage();
