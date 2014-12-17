@@ -267,7 +267,7 @@ bool qt_showTraj();
 bool qt_showMotion( const Move3D::Trajectory& motion1, const Move3D::Trajectory& motion2 );
 bool qt_showMotion2( const Move3D::Trajectory& motion1, const Move3D::Trajectory& motion2, bool save_video );
 
-static bool save_images=true;
+// static bool save_images=true;
 
 void qt_test1()
 {
