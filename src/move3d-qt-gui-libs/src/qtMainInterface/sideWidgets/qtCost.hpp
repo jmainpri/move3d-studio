@@ -17,6 +17,7 @@
 
 #include "qtDistanceField.hpp"
 #include "qtRRTStar.hpp"
+#include "qtTrajectorySampling.hpp"
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
 #include "qtReplanning.hpp"
 #endif
@@ -106,16 +107,18 @@ private:
 #endif
 
 #ifdef HRI_COSTSPACE
-    HricsWidget* m_tabHri;
-    OtpWidget* m_tabOtp;
-    NaturalWidget* m_tabNatural;
-    HriGestureWidget* m_tabGesture;
+    HricsWidget*            m_tabHri;
+    OtpWidget*              m_tabOtp;
+    NaturalWidget*          m_tabNatural;
+    HriGestureWidget*       m_tabGesture;
 #endif
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
-    ReplanningWidget* m_tabReplan;
+    ReplanningWidget*       m_tabReplan;
 #endif
 
-    RRTStarWidget*   m_tabRRTStar;
+    RRTStarWidget*              m_tabRRTStar;
+    TrajectorySamplingWidget*   m_tabTrajectorySampling;
+
 
 #ifdef MIGHTABILITY_MAPS
     qtMightability* m_tabMightabiliby;

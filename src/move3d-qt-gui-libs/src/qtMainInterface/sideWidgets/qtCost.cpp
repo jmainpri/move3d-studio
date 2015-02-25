@@ -103,6 +103,10 @@ CostWidget::CostWidget(QWidget *parent) :
     m_tabRRTStar = new RRTStarWidget(m_ui->RRTStar);
     m_tabRRTStar->setObjectName(QString::fromUtf8("tabRRTStar"));
     m_ui->starLayout->addWidget(m_tabRRTStar);
+
+    m_tabTrajectorySampling = new TrajectorySamplingWidget(m_ui->TrajectorySampling);
+    m_tabTrajectorySampling->setObjectName(QString::fromUtf8("tabTrajSample"));
+    m_ui->trajSampleLayout->addWidget(m_tabTrajectorySampling);
 }
 
 CostWidget::~CostWidget()
@@ -492,45 +496,54 @@ void CostWidget::showTrajCost()
 
     cout << "Show traj cost of robot : " << robot->getName() << endl;
 
+    // Move3D::Trajectory traj = robot->getCurrentTraj();
+
     cout << "robot->getCurrentTraj()" << endl;
-    Move3D::Trajectory traj = robot->getCurrentTraj();
+    Move3D::Trajectory traj = robot->getCurrentMove3DTraj();
 
-    double step = traj.getParamMax() / double(nbSample);
-
-    vector<double> cost;
-
-    // Print all costs
-    traj.costDeltaAlongTraj();
-
-    TrajectoryStatistics traj_statistics;
-    traj.costStatistics( traj_statistics );
-
-    traj_statistics.print();
-
-    int nb_points = PlanEnv->getInt( PlanParam::nb_pointsOnTraj );
-    double cost_n_points = traj.costNPoints( nb_points );
-    cout << "Cost for ( nb points : " << nb_points << " ) : " << cost_n_points << endl;
-
-    cout << "Is trajectory valid : " << traj.isValid() << endl;
-
-    if (global_costSpace)
+    if( traj.size() == 0 )
     {
-        for( double param=0; param<traj.getParamMax(); param = param + step)
+        cout << "WARNING : current traj empty" << endl;
+    }
+    else
+    {
+        double step = traj.getParamMax() / double(nbSample);
+
+        vector<double> cost;
+
+        // Print all costs
+        traj.costDeltaAlongTraj();
+
+        TrajectoryStatistics traj_statistics;
+        traj.costStatistics( traj_statistics );
+
+        traj_statistics.print();
+
+        int nb_points = PlanEnv->getInt( PlanParam::nb_pointsOnTraj );
+        double cost_n_points = traj.costNPoints( nb_points );
+        cout << "Cost for ( nb points : " << nb_points << " ) : " << cost_n_points << endl;
+
+        cout << "Is trajectory valid : " << traj.isValid() << endl;
+
+        if( global_costSpace )
         {
-            cost.push_back( traj.configAtParam(param)->cost() );
+            for( double param=0; param<traj.getParamMax(); param = param + step)
+            {
+                cost.push_back( traj.configAtParam(param)->cost() );
+            }
+            myPlot->setTitle("Cost Space along trajectory");
         }
-        myPlot->setTitle("Cost Space along trajectory");
-    }
-    else if (global_optimizer)
-    {
-        global_optimizer->getTrajectoryCost(cost,step);
-        myPlot->setTitle("STOMP/CHOMP traj cost profile");
-    }
+        else if (global_optimizer)
+        {
+            global_optimizer->getTrajectoryCost(cost,step);
+            myPlot->setTitle("STOMP/CHOMP traj cost profile");
+        }
 
-    myPlot->setData(cost);
+         myPlot->setData( cost );
+         m_plot->show();
+    }
     delete m_plot->getPlot();
     m_plot->setPlot(myPlot);
-    m_plot->show();
 #endif
 }
 

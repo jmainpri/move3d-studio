@@ -419,13 +419,18 @@ void MainWindow::saveTraj()
 
     if (!fileName.isEmpty())
     {
-        qt_fileName = fileName.toStdString().c_str();
-        char file[256];
-        sprintf(file,"%s",qt_fileName);
-        cout <<"Saving traj at " << file << endl;
-        p3d_save_traj(file,(p3d_traj *) p3d_get_desc_curid(P3D_TRAJ));
+//        qt_fileName = fileName.toStdString().c_str();
+//        char file[256];
+//        sprintf(file,"%s",qt_fileName);
+//        cout <<"Saving traj at " << file << endl;
+//        p3d_save_traj(file,(p3d_traj *) p3d_get_desc_curid(P3D_TRAJ));
+
         //Robot* rob = global_Project->getActiveScene()->getRobotByName( global_ActiveRobotName );
         //p3d_writeXmlTraj(file, rob->getTrajStruct() );
+
+
+        global_Project->getActiveScene()->getActiveRobot()->getCurrentMove3DTraj().saveToFile( fileName.toStdString() );
+
         this->drawAllWinActive();
     }
 }
