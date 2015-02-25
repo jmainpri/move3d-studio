@@ -112,7 +112,7 @@
 #include "hri_costspace/human_trajectories/HRICS_ioc_sequences.hpp"
 #include "hri_costspace/human_trajectories/HRICS_ioc.hpp"
 #include "hri_costspace/human_trajectories/HRICS_human_ioc.hpp"
-#include "hri_costspace/human_trajectories/HRICS_human_cost_space.hpp"
+//#include "hri_costspace/HRICS_human_cost_space.hpp"
 #include "hri_costspace/human_trajectories/HRICS_human_simulator.hpp"
 #include "hri_costspace/human_trajectories/HRICS_detours.hpp"
 #include "hri_costspace/human_trajectories/HRICS_run_multiple_planners.hpp"
@@ -378,7 +378,7 @@ void qt_test2()
 
     std::vector<int> active_joint_id;
     std::vector<Move3D::Joint*> active_joints = global_ht_simulator->getActiveJoints();
-    for( int i=0; i<active_joints.size(); i ++){
+    for( size_t i=0; i<active_joints.size(); i ++){
         active_joint_id.push_back( active_joints[i]->getId() );
         cout << "active_joints[" << i << "] : " << active_joints[i]->getName() << endl;
     }
@@ -483,7 +483,9 @@ void qt_test2()
 
     // SET HUMAN CONFIGURAION
 
-    cout << "size : " << global_ht_simulator->getDemonstrationsPassive()[demo_id].size() << endl;
+    cout << "demo_id : " << demo_id << endl;
+    cout << "size 1 : " << global_ht_simulator->getDemonstrationsPassive().size() << endl;
+    cout << "size 2 : " << global_ht_simulator->getDemonstrationsPassive()[demo_id].size() << endl;
 
     active_human->setAndUpdate( *demos[demo_id].getEnd() );
     passive_human->setAndUpdate( *global_ht_simulator->getDemonstrationsPassive()[demo_id].back().second );
