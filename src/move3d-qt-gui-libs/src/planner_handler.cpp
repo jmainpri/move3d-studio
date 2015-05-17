@@ -1328,6 +1328,11 @@ void qt_runChomp()
 }
 #endif // MULTILOCALPATH
 
+void qt_run_lamp()
+{
+    lamp_simple_loop();
+}
+
 #ifdef HRI_PLANNER
 void qtMultipleOTP()
 {
@@ -2059,6 +2064,10 @@ void PlannerHandler::startPlanner(QString plannerName)
         }
         else if( plannerName == "runNoReset") {
             qt_runStompNoReset();
+        }
+        else if( plannerName == "runLamp" )
+        {
+            qt_run_lamp();
         }
         else if( plannerName == "initMlpCntrtsAndFixJoints" ){
             qt_init_mlp_cntrts_and_fixjoints();

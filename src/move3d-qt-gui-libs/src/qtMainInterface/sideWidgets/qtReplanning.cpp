@@ -98,6 +98,11 @@ void ReplanningWidget::init()
     new SpinBoxConnector( this, m_ui->doubleSpinBoxObstacFactor, PlanEnv->getObject(PlanParam::trajOptimObstacFactor) );
     new SpinBoxConnector( this, m_ui->doubleSpinBoxSmoothFactor, PlanEnv->getObject(PlanParam::trajOptimSmoothFactor) );
 
+    // Smooth Weights
+    new SpinBoxConnector( this, m_ui->doubleSpinBoxSmoothVel,   PlanEnv->getObject(PlanParam::trajStompSmoothVel) );
+    new SpinBoxConnector( this, m_ui->doubleSpinBoxSmoothAcc,   PlanEnv->getObject(PlanParam::trajStompSmoothAcc) );
+    new SpinBoxConnector( this, m_ui->doubleSpinBoxSmoothJerk,  PlanEnv->getObject(PlanParam::trajStompSmoothJerk) );
+
     //---------------------------------------
     // Test the multi gaussian
     new connectCheckBoxToEnv( m_ui->checkBoxActiveJointsSetAtStart, ENV.getObject(Env::setActiveJointsGroup) );

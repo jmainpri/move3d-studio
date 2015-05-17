@@ -279,29 +279,29 @@ void MotionPlanner::initOptim()
 {	
     new connectCheckBoxToEnv( m_ui->checkBoxCostSpace2,				ENV.getObject(Env::isCostSpace) );
     new connectCheckBoxToEnv( m_ui->checkBoxUseCostSmooth,          PlanEnv->getObject(PlanParam::trajUseCost));
-    new connectCheckBoxToEnv( m_ui->checkBoxDebug2,						ENV.getObject(Env::debugCostOptim ));
+    new connectCheckBoxToEnv( m_ui->checkBoxDebug2,                 ENV.getObject(Env::debugCostOptim ));
 
-    new connectCheckBoxToEnv( m_ui->checkBoxExtractCurrentTraj,	PlanEnv->getObject(PlanParam::rrtExtractShortestPath) );
+    new connectCheckBoxToEnv( m_ui->checkBoxExtractCurrentTraj,     PlanEnv->getObject(PlanParam::rrtExtractShortestPath) );
 
     new connectCheckBoxToEnv( m_ui->checkBoxSaveTrajCost,			PlanEnv->getObject(PlanParam::trajSaveCost) );
-    new connectCheckBoxToEnv( m_ui->checkBoxPartialShortcut,	PlanEnv->getObject(PlanParam::trajPartialShortcut) );
-    new connectCheckBoxToEnv( m_ui->checkBoxRecomputeCost,		PlanEnv->getObject(PlanParam::trajCostRecompute) );
-    new connectCheckBoxToEnv( m_ui->checkBoxCheckCollision,	  PlanEnv->getObject(PlanParam::trajComputeCollision) );
-    new connectCheckBoxToEnv( m_ui->checkBoxNPoints,          PlanEnv->getObject(PlanParam::trajNPoints) );
+    new connectCheckBoxToEnv( m_ui->checkBoxPartialShortcut,        PlanEnv->getObject(PlanParam::trajPartialShortcut) );
+    new connectCheckBoxToEnv( m_ui->checkBoxRecomputeCost,          PlanEnv->getObject(PlanParam::trajCostRecompute) );
+    new connectCheckBoxToEnv( m_ui->checkBoxCheckCollision,         PlanEnv->getObject(PlanParam::trajComputeCollision) );
+    new connectCheckBoxToEnv( m_ui->checkBoxNPoints,                PlanEnv->getObject(PlanParam::trajNPoints) );
 
-    new connectCheckBoxToEnv( m_ui->checkBoxWithTimeLimitSmoothing,		PlanEnv->getObject(PlanParam::trajWithTimeLimit) );
-    new connectCheckBoxToEnv( m_ui->checkBoxWithTimeLimitPlanning,		PlanEnv->getObject(PlanParam::planWithTimeLimit) );
+    new connectCheckBoxToEnv( m_ui->checkBoxWithTimeLimitSmoothing,	PlanEnv->getObject(PlanParam::trajWithTimeLimit) );
+    new connectCheckBoxToEnv( m_ui->checkBoxWithTimeLimitPlanning,	PlanEnv->getObject(PlanParam::planWithTimeLimit) );
 
     new connectCheckBoxToEnv( m_ui->checkBoxWithDescent,			PlanEnv->getObject(PlanParam::withDescent) );
     new connectCheckBoxToEnv( m_ui->checkBoxWithDeform,				PlanEnv->getObject(PlanParam::withDeformation) );
     new connectCheckBoxToEnv( m_ui->checkBoxWithShortCut,			PlanEnv->getObject(PlanParam::withShortCut) );
-    new connectCheckBoxToEnv( m_ui->checkBoxWithStomp,        PlanEnv->getObject(PlanParam::withStomp) );
-    new connectCheckBoxToEnv( m_ui->checkBoxStompWithTimeLimit, PlanEnv->getObject(PlanParam::trajStompWithTimeLimit) );
-    new connectCheckBoxToEnv( m_ui->checkBoxWithGainLimit,		PlanEnv->getObject(PlanParam::withGainLimit) );
-    new connectCheckBoxToEnv( m_ui->checkBoxWithIterLimit,		PlanEnv->getObject(PlanParam::withMaxIteration) );
-    new connectCheckBoxToEnv( m_ui->checkBoxShowExploration,	PlanEnv->getObject(PlanParam::showExploration) );
+    new connectCheckBoxToEnv( m_ui->checkBoxWithStomp,              PlanEnv->getObject(PlanParam::withStomp) );
+    new connectCheckBoxToEnv( m_ui->checkBoxStompWithTimeLimit,     PlanEnv->getObject(PlanParam::trajStompWithTimeLimit) );
+    new connectCheckBoxToEnv( m_ui->checkBoxWithGainLimit,          PlanEnv->getObject(PlanParam::withGainLimit) );
+    new connectCheckBoxToEnv( m_ui->checkBoxWithIterLimit,          PlanEnv->getObject(PlanParam::withMaxIteration) );
+    new connectCheckBoxToEnv( m_ui->checkBoxShowExploration,        PlanEnv->getObject(PlanParam::showExploration) );
 
-    new connectCheckBoxToEnv( m_ui->checkBoxPartialShortcut,	PlanEnv->getObject(PlanParam::trajPartialShortcut) );
+    new connectCheckBoxToEnv( m_ui->checkBoxPartialShortcut,        PlanEnv->getObject(PlanParam::trajPartialShortcut) );
 
     // Main functions for shortcut and optimization
     connect(this,                                   SIGNAL(selectedPlanner(QString)),global_plannerHandler, SLOT(startPlanner(QString)));
@@ -310,8 +310,8 @@ void MotionPlanner::initOptim()
 
     connect(m_ui->pushButtonRemoveRedundantNodes,   SIGNAL(clicked()),this,SLOT(removeRedundant()));
     connect(m_ui->pushButtonEraseDebugTraj,         SIGNAL(clicked()),this,SLOT(eraseDebugTraj()));
-    connect(m_ui->pushButtonCutTrajInSmallLP,				SIGNAL(clicked()),this,SLOT(cutTrajInSmallLP()));
-    connect(m_ui->pushButtonCutTrajAndOptimizeSM,		SIGNAL(clicked()),this,SLOT(cutTrajAndOptimizeSM()));
+    connect(m_ui->pushButtonCutTrajInSmallLP,		SIGNAL(clicked()),this,SLOT(cutTrajInSmallLP()));
+    connect(m_ui->pushButtonCutTrajAndOptimizeSM,	SIGNAL(clicked()),this,SLOT(cutTrajAndOptimizeSM()));
 
     // costCriterium
     connect( ENV.getObject(Env::costDeltaMethod),	SIGNAL(valueChanged(int)),this,		SLOT(setCostCriterium(int)), Qt::DirectConnection );

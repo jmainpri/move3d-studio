@@ -126,6 +126,7 @@ public slots:
     void refreshConstraintedDoFs();
 
     void addTab(QWidget* tab, std::string name);
+    QWidget* getTab( std::string name );
 
 signals:
     void runClicked();
@@ -196,17 +197,20 @@ signals:
 
 private:
 
+    //! Main windows properties
     Ui::MainWindow*					m_ui;
 
+    //! KCD properties
     KCDpropertiesWindow*			mKCDpropertiesWindow;
 
+    //! Test functions
     MainWindowTestFunctions*		m_testFunctions;
 
     //! Robot menu
     std::vector<QAction*>			m_RobotsInMenu;
 
     //! New tabs
-    std::vector<QWidget*> new_tabs_;
+    std::vector< std::pair<std::string, QWidget*> > new_tabs_;
 
     void connectCheckBoxes();
 

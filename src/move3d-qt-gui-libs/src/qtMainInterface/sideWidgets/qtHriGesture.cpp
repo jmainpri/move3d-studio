@@ -365,6 +365,7 @@ void HriGestureWidget::initHriIOC()
 
     new connectCheckBoxToEnv( m_ui->checkBoxNoReplanning, HriEnv->getObject(HricsParam::ioc_no_replanning) );
     new connectCheckBoxToEnv( m_ui->checkBoxUseBaseline, HriEnv->getObject(HricsParam::ioc_use_baseline) );
+    new connectCheckBoxToEnv( m_ui->checkBoxSplitMotions, HriEnv->getObject(HricsParam::ioc_split_motions) );
 
     connect( m_ui->pushButtonRunIoc, SIGNAL(clicked()), this, SLOT(runIoc()) );
 

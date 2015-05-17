@@ -221,7 +221,12 @@ int mainMhp(int argc, char ** argv)
 
                 char* home_char = getenv("HOME_MOVE3D");
 
-                if( home_char ) {
+                if( std::string(argv[i]).at(0) == '/' )
+                {
+                    move3d_not_rel_home = true;
+                }
+
+                if( home_char || move3d_not_rel_home ) {
                     move3d_studio_settings_file = ( move3d_not_rel_home ? "" : std::string(home_char) + "/" ) +
                             std::string(argv[i]);
                 }

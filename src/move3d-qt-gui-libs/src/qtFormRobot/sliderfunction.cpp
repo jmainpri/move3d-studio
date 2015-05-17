@@ -74,8 +74,8 @@ void qt_gik()
         }
     }
 
-    cout << "GIK deactivated" << endl;
-    return;
+//    cout << "GIK deactivated" << endl;
+//    return;
 
     if( HRICS_activeNatu != NULL )
     {
@@ -117,7 +117,7 @@ void qt_gik()
         //    q_tmp = HRICS_activeNatu->getComfortPosture()->copy();
 
         bool succeed = false;
-        bool simple_ik = false;
+        bool simple_ik = true;
         if( !simple_ik )
         {
             Move3D::IKGenerator ik( robot );
@@ -132,11 +132,17 @@ void qt_gik()
         }
         else
         {
+            cout << "simple Move3D::GeneralIK" << endl;
+
             Move3D::GeneralIK ik( robot );
             ik.initialize( active_joints, eef );
 
             robot->setAndUpdate( *HRICS_activeNatu->getComfortPosture() );
+
+            cout << "solve" << endl;
+
             succeed = ik.solve(xdes);
+
 //            Eigen::VectorXd dq = ik.single_step_joint_limits( xdes );
 //            std::vector<int> active_dofs = ik.getActiveDofs();
 //            Eigen::VectorXd q = q_tmp->getEigenVector( active_dofs );
