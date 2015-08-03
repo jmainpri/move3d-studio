@@ -41,6 +41,7 @@
 #include "hri_costspace/gestures/HRICS_gest_parameters.hpp"
 #include "hri_costspace/HRICS_parameters.hpp"
 #include "hri_costspace/human_trajectories/HRICS_ioc.hpp"
+#include "hri_costspace/human_trajectories/HRICS_human_simulator.hpp"
 
 #include "planner/planEnvironment.hpp"
 #include "planner/AStar/AStarPlanner.hpp"
@@ -56,6 +57,7 @@ using std::endl;
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 extern Eigen::Vector3d global_DrawnSphere;
+extern bool gestures_select_curent_motion;
 
 HriGestureWidget::HriGestureWidget(QWidget *parent) :
     QWidget(parent),
@@ -98,6 +100,7 @@ void HriGestureWidget::initRecordedMotion()
     connect(this, SIGNAL(selectedPlanner(QString)), global_plannerHandler, SLOT(startPlanner(QString)));
 
     new connectCheckBoxToEnv( m_ui->checkBoxInitGestureModule,  GestEnv->getObject(GestParam::init_module_at_start) );
+    new connectCheckBoxToEnv( m_ui->checkBoxPlaySimulationMotions,  HriEnv->getObject(HricsParam::ioc_show_last_simulation) );
 
     connect( m_ui->pushButtonLoadRecordedMotion,SIGNAL(clicked()),this,SLOT(loadRecordedMotion()));
     connect( m_ui->pushButtonShowRecordedMotion,SIGNAL(clicked()),this,SLOT(showRecordedMotion()));
@@ -111,6 +114,7 @@ void HriGestureWidget::initRecordedMotion()
     connect( m_ui->pushButtonLoadFromCSV,SIGNAL(clicked()),this,SLOT(loadFromCSV()));
 
     connect( m_ui->pushButtonLoadTwoFolders,SIGNAL(clicked()),this,SLOT(loadFolderTwoHumans()));
+    connect( m_ui->pushButtonSelectCurrentMotion,SIGNAL(clicked()),this,SLOT(selectCurrentMotion()));
 
     m_id_source_rm = 0;
     m_id_target_rm = 0;
@@ -132,8 +136,14 @@ void HriGestureWidget::loadRecordedMotion()
 
 void HriGestureWidget::showRecordedMotion()
 {
-    cout << "HriGestureWidget::showRecordedMotion" << endl;
+    cout << __PRETTY_FUNCTION__ << endl;
     emit(selectedPlanner(QString("ShowRecordedMotion")));
+}
+
+void HriGestureWidget::selectCurrentMotion()
+{
+    cout << __PRETTY_FUNCTION__ << endl;
+    gestures_select_curent_motion = true;
 }
 
 void HriGestureWidget::getIthConfigurationInMotion()
@@ -355,6 +365,8 @@ void HriGestureWidget::initHriIOC()
 
     new connectCheckBoxToEnv( m_ui->checkBoxGestureDebug,        GestEnv->getObject(GestParam::print_debug) );
     new connectCheckBoxToEnv( m_ui->checkBoxSingleIteration,     HriEnv->getObject(HricsParam::ioc_single_iteration) );
+    new connectCheckBoxToEnv( m_ui->checkBoxDrawOneDemo,         HriEnv->getObject(HricsParam::ioc_draw_one_demo) );
+    new connectCheckBoxToEnv( m_ui->checkBoxRemoveSplit,         HriEnv->getObject(HricsParam::ioc_remove_split) );
 
     new connectCheckBoxToEnv( m_ui->checkBoxDrawDemonstrations,  HriEnv->getObject(HricsParam::ioc_draw_demonstrations) );
     new connectCheckBoxToEnv( m_ui->checkBoxDrawSamples,         HriEnv->getObject(HricsParam::ioc_draw_samples) );
@@ -363,15 +375,19 @@ void HriGestureWidget::initHriIOC()
     new connectCheckBoxToEnv( m_ui->checkBoxUseSimulationDemos,  HriEnv->getObject(HricsParam::ioc_use_simulation_demos) );
     new connectCheckBoxToEnv( m_ui->checkBoxUserSetPelvisBounds, HriEnv->getObject(HricsParam::ioc_user_set_pelvis_bounds) );
 
-    new connectCheckBoxToEnv( m_ui->checkBoxNoReplanning, HriEnv->getObject(HricsParam::ioc_no_replanning) );
-    new connectCheckBoxToEnv( m_ui->checkBoxUseBaseline, HriEnv->getObject(HricsParam::ioc_use_baseline) );
-    new connectCheckBoxToEnv( m_ui->checkBoxSplitMotions, HriEnv->getObject(HricsParam::ioc_split_motions) );
+    new connectCheckBoxToEnv( m_ui->checkBoxNoReplanning,        HriEnv->getObject(HricsParam::ioc_no_replanning) );
+    new connectCheckBoxToEnv( m_ui->checkBoxUseBaseline,         HriEnv->getObject(HricsParam::ioc_use_baseline) );
+    new connectCheckBoxToEnv( m_ui->checkBoxSplitMotions,        HriEnv->getObject(HricsParam::ioc_split_motions) );
+    new connectCheckBoxToEnv( m_ui->checkBoxConservativeBaseline, HriEnv->getObject(HricsParam::ioc_conservative_baseline) );
+    new connectCheckBoxToEnv( m_ui->checkBoxParallelJob, HriEnv->getObject(HricsParam::ioc_parallel_job) );
+    new connectCheckBoxToEnv( m_ui->checkBoxShowReplanning, HriEnv->getObject(HricsParam::ioc_show_replanning) );
 
     connect( m_ui->pushButtonRunIoc, SIGNAL(clicked()), this, SLOT(runIoc()) );
 
     new connectComboBoxToEnv( m_ui->comboBoxIoc, HriEnv->getObject(HricsParam::ioc_phase) );
     new connectComboBoxToEnv( m_ui->comboBoxPlannerType, HriEnv->getObject(HricsParam::ioc_planner_type) );
     new connectComboBoxToEnv( m_ui->comboBoxIK, HriEnv->getObject(HricsParam::ioc_ik) );
+    new connectComboBoxToEnv( m_ui->comboBoxDataSet, HriEnv->getObject(HricsParam::ioc_dataset) );
 
     new SpinBoxConnector( this, m_ui->doubleSpinBoxSpherePower, HriEnv->getObject(HricsParam::ioc_spheres_power) );
     new SpinBoxConnector( this, m_ui->spinBoxSampleIteration, HriEnv->getObject(HricsParam::ioc_sample_iteration) );
@@ -392,6 +408,50 @@ void HriGestureWidget::initHriIOC()
     //        cout << "load GMMs successfully!!!!" << endl;
     //    else
     //        cout << "ERROR loading GMMs!!!!" << endl;
+}
+
+void HriGestureWidget::setSplitCombobox(int id)
+{
+    if( global_human_traj_simulator == NULL )
+        return;
+
+    std::vector<std::string> splits = global_human_traj_simulator->getMotionsNames();
+
+    if ( id < int(splits.size()) && id >= 0 )
+    {
+        std::string split = splits[id].substr( 0, 11 );
+        HriEnv->setString( HricsParam::ioc_traj_split_name, split );
+        global_human_traj_simulator->setDemonstrationId(id);
+        cout << "Split is now :  " << split << endl;
+    }
+}
+
+// This is initilized in qtCost.cpp
+// It's part of the costspace initilization
+void HriGestureWidget::initSplitCombobox()
+{
+    if( global_human_traj_simulator == NULL )
+        return;
+
+    cout << "Reset split combo box GUI" << endl;
+
+    std::vector<std::string> splits_full = global_human_traj_simulator->getMotionsNames();
+    m_ui->comboBoxSplit->clear();
+    m_ui->comboBoxSplit->blockSignals(true);
+
+    std::vector<std::string> splits;
+    for (unsigned int i=0; i<splits_full.size(); i++)
+    {
+        splits.push_back( splits_full[i].substr( 0, 11 ) );
+        m_ui->comboBoxSplit->addItem( QString( splits.back().c_str()) );
+    }
+
+    std::string function = HriEnv->getString(HricsParam::ioc_traj_split_name);
+    std::vector<std::string>::iterator it = std::find( splits.begin() , splits.end() , function );
+    m_ui->comboBoxSplit->setCurrentIndex( it - splits.begin() );
+    m_ui->comboBoxSplit->blockSignals(false);
+
+    connect(m_ui->comboBoxSplit, SIGNAL(currentIndexChanged(int)),this, SLOT(setSplitCombobox(int)));
 }
 
 void HriGestureWidget::setCurrentPhase(int phase)

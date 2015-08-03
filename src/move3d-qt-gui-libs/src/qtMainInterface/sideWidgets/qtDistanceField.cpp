@@ -72,6 +72,8 @@ void DistFieldWidget::initDistField()
 
     // Sets the ratio between the radius of collision points and their spacing
      SpinBoxConnector(this,m_ui->doubleSpinBoxRatioRadiusSpacing, PlanEnv->getObject(PlanParam::ratioCollRadiusSpacing));
+
+     SpinBoxConnector(this,m_ui->doubleSpinBoxCollisionPointsClearance, PlanEnv->getObject(PlanParam::collison_points_clearance));
 }
 
 void DistFieldWidget::createDistanceField()

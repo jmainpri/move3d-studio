@@ -36,6 +36,7 @@ public:
     ~HriGestureWidget();
     void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
     void init();
+    void initSplitCombobox();
 
 signals:
 
@@ -56,6 +57,7 @@ private slots:
     void convertFolderToCSV();
     void loadFromCSV();
     void loadFolderTwoHumans();
+    void selectCurrentMotion();
 
     // Occupancy
     //-------------------------------------------------------------------
@@ -75,6 +77,7 @@ private slots:
     void runIoc();
     void setCurrentPhase(int phase);
     void runDetours();
+    void setSplitCombobox(int id);
 
     // Legible
     //-------------------------------------------------------------------

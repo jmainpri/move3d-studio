@@ -196,7 +196,7 @@ void qt_loadCntrts(bool print, Robot* rob, QSettings& settings)
 // LOAD
 //////////////////////////////////////////////////////////////////////////////
 
-void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
+void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl, bool constraints_and_localpaths )
 { 
     QSettings settings(QString(fileName.c_str()), QSettings::IniFormat);
     // ------------------------------------------------------------------
@@ -500,11 +500,15 @@ void qt_loadInterfaceParameters(bool print, std::string fileName, bool opengl)
     // ------------------------------------------------------------------
     // Cntrts and Localpaths
     // ------------------------------------------------------------------
-    Scene* sce = global_Project->getActiveScene();
 
-    for (int i=0; i<int(sce->getNumberOfRobots()); i++) {
-        qt_loadCntrts(print,sce->getRobot(i),settings);
-        qt_loadMultiLocalPath(print,sce->getRobot(i),settings);
+    if( constraints_and_localpaths && global_Project )
+    {
+        Scene* sce = global_Project->getActiveScene();
+
+        for (int i=0; i<int(sce->getNumberOfRobots()); i++) {
+            qt_loadCntrts(print,sce->getRobot(i),settings);
+            qt_loadMultiLocalPath(print,sce->getRobot(i),settings);
+        }
     }
 
     if( opengl )
@@ -742,11 +746,15 @@ void qt_saveInterfaceParameters(bool print, std::string fileName)
     // ------------------------------------------------------------------
     // Cntrts and Localpaths
     // ------------------------------------------------------------------
-    Scene* sce = global_Project->getActiveScene();
 
-    for (int i=0; i<int(sce->getNumberOfRobots()); i++) {
-        qt_saveCntrts(print,sce->getRobot(i),settings);
-        qt_saveMultiLocalPath(print,sce->getRobot(i),settings);
+    if( global_Project != NULL )
+    {
+        Scene* sce = global_Project->getActiveScene();
+
+        for (int i=0; i<int(sce->getNumberOfRobots()); i++) {
+            qt_saveCntrts(print,sce->getRobot(i),settings);
+            qt_saveMultiLocalPath(print,sce->getRobot(i),settings);
+        }
     }
 
     qt_saveCameraAndAxis( print, g3d_get_cur_states(), settings) ;

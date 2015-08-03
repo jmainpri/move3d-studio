@@ -141,6 +141,7 @@ extern ManipulationTestFunctions* global_manipPlanTest;
 #include "planner/TrajectoryOptim/Lamp/lampSimpleLoop.hpp"
 
 const char *qt_fileName = NULL;
+bool gestures_select_curent_motion = false;
 
 using namespace std;
 using namespace Move3D;
@@ -301,8 +302,8 @@ void qt_test1()
 
 
 
-//    Move3D::Robot* active_human  = global_ht_simulator->getActiveHuman();
-//    Move3D::Robot* passive_human = global_ht_simulator->getPassiveHuman();
+//    Move3D::Robot* active_human  = global_human_traj_simulator->getActiveHuman();
+//    Move3D::Robot* passive_human = global_human_traj_simulator->getPassiveHuman();
 
 //    if( active_human == NULL || passive_human == NULL ){
 //        cout << "Did not get robots" << endl;
@@ -333,7 +334,7 @@ void qt_test1()
 //    cout.precision(4);
 //    cout << "motion duration : " << HRICS::motion_duration( global_motionRecorders[1]->getStoredMotions()[0] ) << endl;
 
-//    Move3D::Trajectory active_traj  = global_ht_simulator->get
+//    Move3D::Trajectory active_traj  = global_human_traj_simulator->get
 //    Move3D::Trajectory passive_traj = HRICS::motion_to_traj( global_motionRecorders[1]->getStoredMotions()[0], active_human );
 
 //    if( !qt_showMotion( active_traj, passive_traj ) ){
@@ -793,6 +794,7 @@ void qt_runAStarPlanning()
     else{
         cout << "Error in run AStar planner" << endl;
     }
+    cout << traj->costPerPoint() << endl;
 }
 
 void qt_runAStarInCurrentGraph()
@@ -913,8 +915,6 @@ void qt_handover()
 // Gesture Functions
 //----------------------------------------------------------
 
-bool remove_motion;
-
 void qt_show_recorded_motion()
 {
     if( global_motionRecorders.empty() ) {
@@ -933,16 +933,26 @@ void qt_show_recorded_motion()
 
         HRICS::PlayMotion* player = NULL;
 
-        if( global_ht_simulator == NULL )
+        if( global_human_traj_simulator == NULL )
         {
             cout << "USE MOTION RECORDER" << endl;
             player = new HRICS::PlayMotion( global_motionRecorders );
         }
         else
         {
-            cout << "USE MOTION VECTOR" << endl;
-            player = new HRICS::PlayMotion( global_ht_simulator->getMotions() );
-            player->setMotionsNames( global_ht_simulator->getMotionsNames() );
+            if( HriEnv->getBool(HricsParam::ioc_show_last_simulation) )
+            {
+                cout << "LAST SIMULATION MOTIONS" << endl;
+                player = new HRICS::PlayMotion(
+                            global_human_traj_simulator->getLastSimulationMotions() );
+                // player->setMotionsNames( global_human_traj_simulator->getMotionsNames() );
+            }
+            else
+            {
+                cout << "USE MOTION VECTOR" << endl;
+                player = new HRICS::PlayMotion( global_human_traj_simulator->getMotions() );
+                player->setMotionsNames( global_human_traj_simulator->getMotionsNames() );
+            }
         }
 
         if( player->getNumberOfMotions() == 0 ){
@@ -954,48 +964,33 @@ void qt_show_recorded_motion()
         //int i=3;
         for( int i=0; i<player->getNumberOfMotions(); i++ )
         {
-            if( global_ht_simulator == NULL )
-            {
-                cout << "play motion " << i;
-                cout << " , from file : " << global_motionRecorders[0]->getStoredMotionName(i) << endl;
-            }
+            std::string motion_name = player->getMotionName(i);
 
-//            if ( i > 0 ){
-//                break;
-//            }
+            cout << "play motion " << i << " , from file : "
+                 <<  motion_name << endl;
 
             player->play(i);
-
 
             if( GestEnv->getBool( GestParam::play_repeat ) ){
                 i--;
             }
             bool use_button = false;
-            while( !GestEnv->getBool(GestParam::play_next) ) {
+            while( !GestEnv->getBool( GestParam::play_next ) ) {
                 usleep(100);
                 use_button = true;
             }
             if( use_button ){
                 GestEnv->setBool( GestParam::play_next, false );
             }
-
-            else if( global_ht_simulator == NULL )
-            {
-                if( remove_motion ){
-                    names.push_back( global_motionRecorders[0]->getStoredMotionName(i) );
-                    remove_motion = false;
-                }
+            if( gestures_select_curent_motion ) {
+                cout << "ADD gesture : " << motion_name.substr(0,11) << endl;
+                names.push_back( motion_name.substr(0,11) );
+                gestures_select_curent_motion = false;
             }
         }
 
-        if( !names.empty() )
-        {
-            cout << "remove" << endl;
-            for( size_t i=0; i<names.size(); i++ )
-            {
-                cout << names[i] << endl;
-            }
-        }
+        cout << "save selected motions to file" << endl;
+        save_strings_to_file( names, "selected_motions.txt" );
     }
 
     cout << "End!!!" << endl;
@@ -1118,6 +1113,7 @@ void qt_human_prediction_simulation()
 //----------------------------------------------------------
 // Inverse Optimal Control Functions
 //----------------------------------------------------------
+HRICS::IocSequences* ioc=NULL;
 void qt_runIOC()
 {
     // TODO BUG WITH THE destructor...
@@ -1128,9 +1124,13 @@ void qt_runIOC()
 //    global_w->getOpenGL()->setSaveOnDisk( false );
 //    global_w->getOpenGL()->setSaveTraj( true );
 
-
     HRICS::IocSequences ioc;
     ioc.run();
+
+//    if( ioc == NULL ){
+//        ioc = new HRICS::IocSequences;
+//    }
+//    ioc->run();
 
     cout << "End IOC RUN!!!" << endl;
 
@@ -1380,7 +1380,7 @@ bool qt_showMotion2( const Move3D::Trajectory& motion1, const Move3D::Trajectory
         return false;
     }
 
-    cout << "time length : " << motion1.getTimeLength() << endl;
+    cout << "time length : " << motion1.getDuration() << endl;
 
     Move3D::Robot* robot = motion1.getRobot();
     bool StopRun = false;
@@ -1407,7 +1407,7 @@ bool qt_showMotion2( const Move3D::Trajectory& motion1, const Move3D::Trajectory
 
         t += delta;
 
-        if ( t >= motion1.getTimeLength() )
+        if ( t >= motion1.getDuration() )
             StopRun = true;
 
         if ( PlanEnv->getBool(PlanParam::stopPlanner) )
@@ -1434,7 +1434,7 @@ bool qt_showMotion( const Move3D::Trajectory& motion1, const Move3D::Trajectory&
         return false;
     }
 
-    cout << "time length : " << motion1.getTimeLength() << endl;
+    cout << "time length : " << motion1.getDuration() << endl;
 
     Move3D::Robot* robot = motion1.getRobot();
     bool StopRun = false;
@@ -1496,7 +1496,7 @@ bool qt_showMotion( const Move3D::Trajectory& motion1, const Move3D::Trajectory&
         if( tu_init == 0.0 )
             tu_init = tu;
 
-        if ( t >= motion1.getTimeLength() )
+        if ( t >= motion1.getDuration() )
             StopRun = true;
 
         if ( PlanEnv->getBool(PlanParam::stopPlanner) )
@@ -1720,6 +1720,13 @@ void qt_readTraj()
 
     if (qt_fileName!=NULL)
     {
+        /// COMMENT TO LOAD OLD FORMAT
+        Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+        Move3D::Trajectory traj(robot);
+        traj.loadFromFile( qt_fileName );
+        traj.replaceP3dTraj();
+        return;
+
         if (p3d_read_traj(qt_fileName))
         {
             trajPt = (p3d_traj *) p3d_get_desc_curid(P3D_TRAJ);

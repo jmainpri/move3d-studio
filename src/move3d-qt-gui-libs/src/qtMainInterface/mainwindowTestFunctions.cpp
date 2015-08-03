@@ -43,15 +43,11 @@ MainWindowTestFunctions::MainWindowTestFunctions(MainWindow* MainWinPt) : m_main
 }
 
 
-extern bool remove_motion;
 
 void MainWindowTestFunctions::test1()
 {
     cout << "------------------- test1 -------------------" << endl;
     cout << "---------------------------------------------" << endl;
-
-    cout << "remove_motion = true" << endl;
-    remove_motion = true;
 
     emit(selectedPlanner(QString("test1")));
 }

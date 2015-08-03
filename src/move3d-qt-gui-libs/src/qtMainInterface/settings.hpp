@@ -13,7 +13,9 @@
 
 // Parameters for algorithms
 void qt_saveInterfaceParameters( bool print, std::string fileName );
-void qt_loadInterfaceParameters( bool print, std::string fileName, bool opengl = true );
+void qt_loadInterfaceParameters( bool print, std::string fileName,
+                                 bool opengl = true,
+                                 bool constraints_and_localpaths = true );
 bool qt_setParameter( const std::string& name, double value );
 
 #endif

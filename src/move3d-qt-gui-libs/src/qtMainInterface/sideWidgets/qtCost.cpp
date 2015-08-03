@@ -27,6 +27,7 @@
 
 #if defined(HRI_COSTSPACE)
 #include "hri_costspace/HRICS_costspace.hpp"
+#include "hri_costspace/HRICS_parameters.hpp"
 #endif
 #include "API/Search/Dijkstra/dijkstra.hpp"
 #include "API/project.hpp"
@@ -249,6 +250,11 @@ void CostWidget::initCostSpace()
     {
         cout << "initalize global costspace" << endl;
         GlobalCostSpace::initialize();
+    }
+
+    if( HriEnv->getBool(HricsParam::init_human_trajectory_cost) )
+    {
+        m_tabGesture->initSplitCombobox();
     }
 
     if (ENV.getBool(Env::enableHri))

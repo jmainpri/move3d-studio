@@ -35,6 +35,9 @@
 #include "main.hpp"
 #include "planner_handler.hpp"
 
+#include "hri_costspace/HRICS_parameters.hpp"
+#include "hri_costspace/gestures/HRICS_gest_parameters.hpp"
+
 #include "API/scene.hpp"
 #include "API/project.hpp"
 #include "API/libmove3d_api.hpp"
@@ -254,7 +257,8 @@ static char* molecule_xpm[] = {
 #ifdef QT_GL
 /**
  * @ingroup qtWindow
- * @brief Main application with the QT_WidgetMain double thread class (X-Forms Thread)
+ * @brief Main application with the QT_WidgetMain
+ * double thread class (X-Forms Thread)
  */
 Main_threads::Main_threads()
 {
@@ -337,6 +341,7 @@ void Main_threads::loadSettings()
     std::string home(home_path);
     std::string fileName = move3d_studio_settings_file;
     if (!home.empty()) {
+        cout << "load file at : " << move3d_studio_settings_file << endl;
         qt_loadInterfaceParameters( false, fileName, false ); // OpenGL -> false
         cout << "Loading parameters at : " << fileName << endl;
         cout << "quick load succeded" << endl;
@@ -445,6 +450,8 @@ int Main_threads::run(int argc, char** argv)
 
     // Find if a file is passed as argument and set openFileDialog mode
     // Also check for nogui mode
+    bool move3d_not_rel_home = false;
+
     while (ith_arg < argc)
     {
         if (string(argv[ith_arg]) == "-nogui")
@@ -464,7 +471,7 @@ int Main_threads::run(int argc, char** argv)
         if (string(argv[ith_arg]) == "-f")
         {
             openFileDialog = false;
-            break;
+            // break; // TODO WHY ...
         }
         if (string(argv[ith_arg]) == "-launch")
         {
@@ -474,6 +481,37 @@ int Main_threads::run(int argc, char** argv)
             }
             else {
                 return 0;
+            }
+        }
+
+        if (string(argv[ith_arg]) == "-setgui" ) {
+            move3d_studio_load_settings = true;
+        }
+        if ( string(argv[ith_arg]) == "-not_rel_home" ) {
+             move3d_not_rel_home = true;
+        }
+        if ( string(argv[ith_arg]) == "-params" ) {
+
+            if ((ith_arg+1 < argc)) {
+
+                char* home_char = getenv("HOME_MOVE3D");
+
+                if( std::string(argv[ith_arg+1]).at(0) == '/' )
+                {
+                    move3d_not_rel_home = true;
+                }
+
+                if( home_char || move3d_not_rel_home ) {
+                    move3d_studio_settings_file = ( move3d_not_rel_home ? "" :
+                                                    std::string(home_char) + "/" ) +
+                            std::string(argv[ith_arg+1]);
+                }
+                else {
+                    move3d_studio_settings_file = std::string(argv[ith_arg+1]);
+                    cout << "HOME_MOVE3D not defined!!!!" << endl;
+                }
+
+                cout << "param file : " << move3d_studio_settings_file << endl;
             }
         }
 
@@ -495,10 +533,22 @@ int Main_threads::run(int argc, char** argv)
         //    app->setStyle(new QMacStyle());
     }
 
+    // GET QT PARAMETERS
+    initPlannerParameters();
+    initGestureParameters();
+    initHricsParameters();
+
+    if( move3d_studio_load_settings ) {
+        cout << "Load settings 2 " << endl;
+        loadSettings();
+    }
+
     // No argument (load a file from disc)
     if( ( argc == 1 || openFileDialog ) && (!noGui) )
     {
-        QString fileName = QFileDialog::getOpenFileName( NULL, tr("Open P3D File"), dirName.c_str(),tr("P3D (*.p3d)"));
+        QString fileName = QFileDialog::getOpenFileName(
+                    NULL, tr("Open P3D File"),
+                    dirName.c_str(),tr("P3D (*.p3d)"));
 
         if (!fileName.isEmpty())
         {
@@ -548,9 +598,6 @@ int Main_threads::run(int argc, char** argv)
 
         // Creates the wrapper to the project, be carefull to initialize in the right thread
         global_Project = new Project(new Scene(XYZ_ENV));
-
-        if( move3d_studio_load_settings )
-            loadSettings();
 
         qt_init_after_params();
 

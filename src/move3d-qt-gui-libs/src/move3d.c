@@ -73,6 +73,7 @@
 
 #if defined( CXX_PLANNER ) || defined( MOVE3D_CORE )
 #include "planner/cost_space.hpp"
+#include "hri_costspace/HRICS_parameters.hpp"
 #include <boost/bind.hpp>
 #endif
 #ifdef BIO_BALL
@@ -261,6 +262,7 @@ int mainMhp(int argc, char ** argv)
             if ((i < argc)) {
                 p3d_init_random_seed(atoi(argv[i]));
                 seed_set = TRUE;
+                cout << "set seed to : " << argv[i] << endl;
                 ++i;
             } else {
                 use();
@@ -428,8 +430,11 @@ int mainMhp(int argc, char ** argv)
     if (!dir_set)
         strcpy(file_directory, "../../demo");
 
-    if (!seed_set)
-        p3d_init_random();
+    if (!seed_set) {
+        uint seed = p3d_init_random();
+        cout << "SEED IS : " << seed << ", and run id is : " << HriEnv->getString(HricsParam::ioc_traj_split_name) << endl;
+
+    }
 
     if (!col_det_set){
         // modif Juan
@@ -520,6 +525,8 @@ int mainMhp(int argc, char ** argv)
         printf("  -- p3d file parsing start --\n");
         printf("  ----------------------------\n");
         printf("\n");
+
+        cout << "file : " << file << endl;
 
         p3d_read_desc((char *) file);
 
