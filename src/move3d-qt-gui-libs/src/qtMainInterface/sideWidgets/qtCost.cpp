@@ -62,7 +62,7 @@ MOVE3D_USING_SHARED_PTR_NAMESPACE
 
 
 // import most common Eigen types 
-//USING_PART_OF_NAMESPACE_EIGEN
+//using namespace Eigen;
 using namespace Eigen;
 
 CostWidget::CostWidget(QWidget *parent) :

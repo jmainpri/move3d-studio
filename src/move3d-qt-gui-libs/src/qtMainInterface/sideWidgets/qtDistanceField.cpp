@@ -25,7 +25,7 @@ using namespace QtShiva;
 
 MOVE3D_USING_SHARED_PTR_NAMESPACE
 // import most common Eigen types 
-//USING_PART_OF_NAMESPACE_EIGEN
+//using namespace Eigen;
 
 extern string global_ActiveRobotName;
 

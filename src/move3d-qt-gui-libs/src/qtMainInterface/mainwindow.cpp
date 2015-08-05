@@ -262,7 +262,7 @@ void MainWindow::addTab( QWidget* tab, std::string name )
 
 QWidget* MainWindow::getTab( std::string name )
 {
-    for( int i=0; i<new_tabs_.size(); i ++)
+    for( size_t i=0; i<new_tabs_.size(); i ++)
     {
         if( new_tabs_[i].first == name )
         {

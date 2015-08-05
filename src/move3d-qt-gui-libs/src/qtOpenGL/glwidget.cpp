@@ -85,7 +85,7 @@ GLWidget::GLWidget(QWidget *parent) :
     trolltechWhite =  QColor::fromCmykF(0.0, 0.0, 0.0, 0.0);
     trolltechGrey = trolltechWhite;
 
-    m_mainWindow = false;
+    m_mainWindow = NULL;
     m_save_traj = false;
 
     _isThreadWorking = true;
