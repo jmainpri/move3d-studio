@@ -120,7 +120,7 @@ private:
     QListWidget* contextList;
     std::vector<QListWidgetItem*> itemList;
 
-#ifdef USE_QWT
+#ifdef USE_QWT_5
     BasicPlotWindow *plot;
     HistoWindow* histoWin;
 #endif

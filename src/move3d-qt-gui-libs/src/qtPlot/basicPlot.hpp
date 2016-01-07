@@ -28,6 +28,10 @@
 #ifndef _BASIC_PLOT_H
 #define _BASIC_PLOT_H
 
+#include <qwt_interval.h>
+#include <qwt_point_3d.h>
+#include <qwt_compat.h>
+
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
 #include <vector>

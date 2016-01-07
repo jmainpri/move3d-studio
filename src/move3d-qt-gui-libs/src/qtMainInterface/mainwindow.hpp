@@ -38,7 +38,7 @@
 #include "qtBase/qt_widgets.hpp"
 #include "qtFormRobot/moverobot.hpp"
 
-#ifdef USE_QWT
+#ifdef USE_QWT_5
 #include "qtPlot/histoWin.hpp"
 #endif
 

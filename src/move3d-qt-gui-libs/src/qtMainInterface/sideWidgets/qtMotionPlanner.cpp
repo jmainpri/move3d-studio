@@ -14,7 +14,7 @@
 
 #include "qtBase/SpinBoxSliderConnector_p.hpp"
 
-#ifdef USE_QWT
+#ifdef USE_QWT_5
 #include "qtPlot/multiPlot.hpp"
 #endif
 
@@ -389,7 +389,7 @@ void MotionPlanner::cutTrajAndOptimizeSM()
     __traj_id++;
 #endif
 
-    //#if defined(USE_QWT)
+    //#if defined(USE_QWT_5)
     //	cout << "Plot speed --------------------------------" << endl;
     //
     //	MultiPlot* myPlot = new MultiPlot(this->plot);
@@ -715,7 +715,7 @@ void MotionPlanner::runAllGreedy()
 
 void MotionPlanner::showHistoWindow()
 {
-#ifdef USE_QWT
+#ifdef USE_QWT_5
     histoWin = new HistoWindow();
     histoWin->startWindow();
 #endif

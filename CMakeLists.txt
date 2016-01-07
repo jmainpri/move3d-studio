@@ -8,6 +8,21 @@ PROJECT(MOVE3DSTUDIO C CXX)
 set( PACKAGE_NAME move3d-studio )
 set( PACKAGE_VERSION 1.1 )
 
+# Set INSTALL PREFIX
+IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    message("CMAKE_INSTALL_PREFIX set to default")
+    if(DEFINED ENV{MOVE3D_INSTALL_DIR})
+        set(LIBMOVE3D_INSTALL_PREFIX $ENV{MOVE3D_INSTALL_DIR})
+    else()
+        set(LIBMOVE3D_INSTALL_PREFIX $ENV{ROBOTPKG_BASE})
+    endif()
+    SET(CMAKE_INSTALL_PREFIX "${LIBMOVE3D_INSTALL_PREFIX}" CACHE PATH "Move3DMPLIB install prefix" FORCE)
+else()
+    message("CMAKE_INSTALL_PREFIX not set to default")
+endif()
+
+message( STATUS "CMAKE_INSTALL_PREFIX " ${CMAKE_INSTALL_PREFIX} )
+
 # CMake information
 message( STATUS "CMake System = ${CMAKE_SYSTEM_NAME}")
 message( STATUS "CMake Processor = ${CMAKE_SYSTEM_PROCESSOR}")
@@ -112,8 +127,4 @@ IF   (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/move3d-studio.pc.in")
 	)
 ENDIF(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/move3d-studio.pc.in")
 
-
-
 ADD_SUBDIRECTORY (src)
-
-

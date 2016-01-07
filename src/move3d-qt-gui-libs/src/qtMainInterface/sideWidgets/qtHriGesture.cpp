@@ -24,6 +24,9 @@
 
 #ifdef USE_QWT
 #include "qtPlot/basicPlot.hpp"
+#endif
+
+#ifdef USE_QWT_5
 #include "qtPlot/multiPlot.hpp"
 #include "qtPlot/tempWin.hpp"
 #endif
@@ -69,7 +72,7 @@ HriGestureWidget::HriGestureWidget(QWidget *parent) :
 HriGestureWidget::~HriGestureWidget()
 {
     delete m_ui;
-    //#ifdef USE_QWT
+    //#ifdef USE_QWT_5
     //    delete this->plot;
     //#endif
 }

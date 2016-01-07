@@ -28,7 +28,7 @@
 #include <qstring.h>
 #include <qpainter.h>
 #include <qwt_plot.h>
-#include <qwt_interval_data.h>
+//#include <qwt_interval_data.h>
 #include <qwt_painter.h>
 #include <qwt_scale_map.h>
 #include "histogramItem.hpp"
@@ -37,7 +37,7 @@ class HistogramItem::PrivateData
 {
 public:
     int attributes;
-    QwtIntervalData data;
+    QwtInterval data;
     QColor color;
     double reference;
 };
@@ -85,13 +85,13 @@ double HistogramItem::baseline() const
     return d_data->reference;
 }
 
-void HistogramItem::setData(const QwtIntervalData &data)
+void HistogramItem::setData(const QwtInterval &data)
 {
     d_data->data = data;
     itemChanged();
 }
 
-const QwtIntervalData &HistogramItem::data() const
+const QwtInterval &HistogramItem::data() const
 {
     return d_data->data;
 }
@@ -164,7 +164,7 @@ bool HistogramItem::testHistogramAttribute(HistogramAttribute attribute) const
 void HistogramItem::draw(QPainter *painter, const QwtScaleMap &xMap, 
     const QwtScaleMap &yMap, const QRect &) const
 {
-    const QwtIntervalData &iData = d_data->data;
+    const QwtInterval &iData = d_data->data;
 
     painter->setPen(QPen(d_data->color));
 

@@ -48,7 +48,7 @@ BasicPlot::BasicPlot( QWidget *parent):
 QwtPlot(parent)
 {
     // Disable polygon clipping
-    QwtPainter::setDeviceClipping(false);
+    // QwtPainter::setDeviceClipping(false);
 
     // We don't need the cache here
 //    canvas()->setPaintAttribute(QwtPlotCanvas::PaintCached, false);
@@ -67,10 +67,12 @@ QwtPlot(parent)
 //    alignScales();
     
     //  Initialize data
+    QVector<QPointF> points;
     for (int i = 0; i< PLOT_SIZE; i++)
     {
         d_x[i] = i;     // time axis
         d_y[i] = i;
+        points.push_back( QPointF(d_x[i],d_y[i]) );
     }
 
     // Assign a title
@@ -80,7 +82,12 @@ QwtPlot(parent)
     // Insert new curves
     cRight = new QwtPlotCurve("Cost");
     cRight->setPen(QPen(Qt::red));
-    cRight->setRawData(d_x, d_y, PLOT_SIZE);
+
+    // cRight->setRawData(d_x, d_y, PLOT_SIZE);
+
+
+    cRight->setSamples( points );
+
     cRight->attach(this);
 
     init = false;
@@ -132,11 +139,16 @@ void BasicPlot::setData(std::vector<double> y)
       ENV.setBool(Env::initPlot,true);
     }
     
+    QVector<QPointF> points;
+    points.clear();
     for ( int i = 0; i<PLOT_SIZE ; i++)
     {
       d_y[i] = y[i];
-      //cout << y[i] << endl;
+      //cout << y[i] << endl
+      points.push_back( QPointF(d_x[i],d_y[i]) );;
     }
+
+    cRight->setSamples( points );
   }
   else
   {

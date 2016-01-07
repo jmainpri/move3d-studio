@@ -32,6 +32,9 @@
 #include <qwt_plot_curve.h>
 #include <vector>
 
+#include <qwt_point_3d.h>
+#include <qwt_compat.h>
+
 const int REPLOT_SIZE = 100;      // 0 to 200
 
 /**

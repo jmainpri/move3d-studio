@@ -20,56 +20,54 @@
 #include "qtPlot/basicPlotWindow.hpp"
 #endif
 
-namespace Ui
-{
-	class ReplanningWidget;
+namespace Ui {
+class ReplanningWidget;
 };
 
 /**
  * @ingroup qtMainWindow
  * @brief Qt Motion Planner
  */
-class ReplanningWidget : public QWidget
-{
-	Q_OBJECT
-	
-public:
-	ReplanningWidget(QWidget *parent = 0);
-	~ReplanningWidget();
-	
+class ReplanningWidget : public QWidget {
+  Q_OBJECT
+
+ public:
+  ReplanningWidget(QWidget *parent = 0);
+  ~ReplanningWidget();
+
   void init();
-	void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
-	
-private slots:
+  void setMainWindow(MainWindow *ptrMW) { m_mainWindow = ptrMW; }
+
+ private slots:
   void computeSoftMotion();
   void computeHandOver();
   void runStomp();
   void runChomp();
   void runNoReset();
-  
+
   void executeSimpleSimu();
   void plotNoisyTrajectories();
   void plotMultiVectors();
   void plotConvergence();
   void multiThreadGraphicalMode(bool);
-  
+
   void setInitMethod();
   void setInitMethodRadioButtons(int type);
   void setActiveJoints();
   void setActiveJointsRadioButtons(int type);
-  //void setPlannerTypeRadioButtons(int);
+  // void setPlannerTypeRadioButtons(int);
   void setMlpCntrtsAndFixJoints();
-	
+
 signals:
   void selectedPlanner(QString);
-  
-private:
-	Ui::ReplanningWidget*		m_ui;
-	
-	MainWindow*			m_mainWindow;
-	
+
+ private:
+  Ui::ReplanningWidget *m_ui;
+
+  MainWindow *m_mainWindow;
+
 #ifdef USE_QWT
-	BasicPlotWindow *m_plot;
+  BasicPlotWindow *m_plot;
 #endif
 };
 

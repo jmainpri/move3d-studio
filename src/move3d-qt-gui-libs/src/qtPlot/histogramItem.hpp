@@ -13,9 +13,13 @@
 #include <qglobal.h>
 #include <qcolor.h>
 
-#include "qwt_plot_item.h" 
+#include <qwt_interval.h>
+#include <qwt_point_3d.h>
+#include <qwt_compat.h>
 
-class QwtIntervalData;
+#include <qwt_plot_item.h>
+
+//class QwtIntervalData;
 class QString;
 
 /**
@@ -29,8 +33,8 @@ public:
     explicit HistogramItem(const QwtText &title);
     virtual ~HistogramItem();
 
-    void setData(const QwtIntervalData &data);
-    const QwtIntervalData &data() const;
+    void setData(const QwtInterval &data);
+    const QwtInterval &data() const;
 
     void setColor(const QColor &);
     QColor color() const;
