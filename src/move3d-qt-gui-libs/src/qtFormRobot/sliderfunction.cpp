@@ -97,21 +97,21 @@ void qt_gik() {
     active_joints.push_back(robot->getJoint("rElbowZ"));
     active_joints.push_back(robot->getJoint("rElbowX"));
     active_joints.push_back(robot->getJoint("rElbowY"));
-    active_joints.push_back(robot->getJoint("lPoint"));
+    // active_joints.push_back(robot->getJoint("lPoint"));
     active_joints.push_back(robot->getJoint("rWristZ"));
     active_joints.push_back(robot->getJoint("rWristX"));
     active_joints.push_back(robot->getJoint("rWristY"));
 
-    p3d_jnt_set_dof_rand_bounds(
-        robot->getJoint("rShoulderTransX")->getP3dJointStruct(), 0, .016, .020);
-    p3d_jnt_set_dof_rand_bounds(
-        robot->getJoint("rShoulderTransY")->getP3dJointStruct(), 0, .32, .34);
-    p3d_jnt_set_dof_rand_bounds(
-        robot->getJoint("rShoulderTransZ")->getP3dJointStruct(), 0, .24, .26);
-    p3d_jnt_set_dof_rand_bounds(
-        robot->getJoint("rArmTrans")->getP3dJointStruct(), 0, .38, .40);
-    p3d_jnt_set_dof_rand_bounds(
-        robot->getJoint("lPoint")->getP3dJointStruct(), 0, .23, .25);
+//    p3d_jnt_set_dof_rand_bounds(
+//        robot->getJoint("rShoulderTransX")->getP3dJointStruct(), 0, .016, .020);
+//    p3d_jnt_set_dof_rand_bounds(
+//        robot->getJoint("rShoulderTransY")->getP3dJointStruct(), 0, .32, .34);
+//    p3d_jnt_set_dof_rand_bounds(
+//        robot->getJoint("rShoulderTransZ")->getP3dJointStruct(), 0, .24, .26);
+//    p3d_jnt_set_dof_rand_bounds(
+//        robot->getJoint("rArmTrans")->getP3dJointStruct(), 0, .38, .40);
+//    p3d_jnt_set_dof_rand_bounds(
+//        robot->getJoint("lPoint")->getP3dJointStruct(), 0, .23, .25);
 
     Eigen::VectorXd xdes = object->getJoint(1)->getXYZPose();
     //    Eigen::VectorXd xdes = object->getJoint(1)->getVectorPos();

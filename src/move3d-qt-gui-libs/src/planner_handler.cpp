@@ -104,6 +104,7 @@
 #include "hri_costspace/HRICS_miscellaneous.hpp"
 #include "hri_costspace/HRICS_navigation.hpp"
 
+#include "hri_costspace/gestures/HRICS_openrave_human_map.hpp"
 #include "hri_costspace/gestures/HRICS_gest_parameters.hpp"
 #include "hri_costspace/gestures/HRICS_workspace_occupancy.hpp"
 #include "hri_costspace/gestures/HRICS_record_motion.hpp"
@@ -168,6 +169,7 @@ extern void* GroundCostObj;
 
 //! This function initialises the software
 //! after the parameter file has been loaded
+//! this is now executed before starting the GUI
 void qt_init_after_params() {
   cout << "p3d_set_user_drawnjnt : " << ENV.getInt(Env::jntToDraw) << endl;
   p3d_set_user_drawnjnt(ENV.getInt(Env::jntToDraw));
@@ -240,6 +242,8 @@ void qt_init_after_params() {
     global_costSpace->setCost(cost_function);
     cout << "SET COST FUNCTION : " << cost_function << endl;
   }
+
+
 
   //    if( GestEnv->getBool(GestParam::init_module_ioc) )
   //    {
@@ -335,7 +339,9 @@ void qt_test1() {
   //    }
 }
 
-void qt_test2() { hrics_ioc_compute_results(); }
+void qt_test2() {
+  hrics_ioc_compute_results();
+}
 
 // static bool recompute_cost=false;
 // static bool init_generator=false;
@@ -437,7 +443,8 @@ void qt_test3() {
   //  {
   //    // Compute IK
   //    std::vector<Eigen::Vector3d> points;
-  //    HRICS_humanCostMaps->getHandoverPointList( points, recompute_cost, true
+  //    HRICS_humanCostMaps->getHandoverPointList( points, recompute_cost,
+  //    true
   //    );
   //
   //    configPt q;
@@ -896,7 +903,8 @@ void qt_classify_motions() {
       cout << std::setw(3) << std::setfill('0') << index << " : ";
       /*int id_class =*/global_humanPredictionSimulator->classifyMotion(
           global_motionRecorders[0]->resample(stored_motions[index], 100));
-      // cout << std::setw( 3 ) << std::setfill( ' ' ) << i << " : " << id_class
+      // cout << std::setw( 3 ) << std::setfill( ' ' ) << i << " : " <<
+      // id_class
       // << endl;
     }
   }
@@ -1304,7 +1312,7 @@ bool qt_showMotion(const Move3D::Trajectory& motion1,
     //            potential );
 
     ////            cout << "Distance to nearest obstacle = " << distance << "
-    ///and potential = " << potential << endl;
+    /// and potential = " << potential << endl;
 
     //            if( global_optimizer && ( global_optimizer->getRobot() ==
     //            robot ) ) {
@@ -1490,12 +1498,14 @@ void qt_makeTrajFromViaPoints() {
   std::vector<SM_TRAJ> smTrajs;
 
   // 	if(FORMGENOM_CARTESIAN == 1) {
-  //   	for(int i=0; i<m_viaConfPlan.robot()->armManipulationData->size(); i++)
+  //   	for(int i=0;
+  //   i<m_viaConfPlan.robot()->armManipulationData->size(); i++)
   //   {
   //     		m_viaConfPlan.setArmCartesian(i,true);
   //   	}
   // 	} else {
-  //   	for(int i=0; i<m_viaConfPlan.robot()->armManipulationData->size(); i++)
+  //   	for(int i=0;
+  //   i<m_viaConfPlan.robot()->armManipulationData->size(); i++)
   //   {
   //     		m_viaConfPlan.setArmCartesian(i,false);
   //   	}
@@ -1883,7 +1893,8 @@ void PlannerHandler::startPlanner(QString plannerName) {
   //    }
   //    catch(...)
   //    {
-  //        std::cerr << "Planner thread : caught exception of unknown type." <<
+  //        std::cerr << "Planner thread : caught exception of unknown type."
+  //        <<
   //        std::endl;
   //    }
 

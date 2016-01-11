@@ -37,7 +37,7 @@
         <x>0</x>
         <y>-24</y>
         <width>540</width>
-        <height>1197</height>
+        <height>1224</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -637,7 +637,7 @@
              <property name="verticalSpacing">
               <number>0</number>
              </property>
-             <item row="6" column="1">
+             <item row="7" column="1">
               <widget class="QDoubleSpinBox" name="doubleSpinBoxSmoothFactor">
                <property name="decimals">
                 <number>10</number>
@@ -673,20 +673,27 @@
                </property>
               </widget>
              </item>
-             <item row="8" column="1">
+             <item row="9" column="1">
               <widget class="QDoubleSpinBox" name="doubleSpinBoxSmoothVel"/>
              </item>
-             <item row="9" column="1">
+             <item row="10" column="1">
               <widget class="QDoubleSpinBox" name="doubleSpinBoxSmoothAcc"/>
              </item>
-             <item row="6" column="0">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Nombre de points</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0">
               <widget class="QLabel" name="label_11">
                <property name="text">
                 <string>Smooth Factor</string>
                </property>
               </widget>
              </item>
-             <item row="4" column="1">
+             <item row="5" column="1">
               <widget class="QDoubleSpinBox" name="doubleSpinBoxObstacWeight">
                <property name="decimals">
                 <number>10</number>
@@ -696,21 +703,21 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label">
-               <property name="text">
-                <string>Nombre de points</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
+             <item row="4" column="0">
               <widget class="QLabel" name="label_4">
                <property name="text">
                 <string>Smooth Weigth</string>
                </property>
               </widget>
              </item>
-             <item row="3" column="1">
+             <item row="5" column="0">
+              <widget class="QLabel" name="label_5">
+               <property name="text">
+                <string>Obstacle Weigth</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
               <widget class="QDoubleSpinBox" name="doubleSpinBoxSmoothWeight">
                <property name="decimals">
                 <number>10</number>
@@ -720,12 +727,8 @@
                </property>
               </widget>
              </item>
-             <item row="4" column="0">
-              <widget class="QLabel" name="label_5">
-               <property name="text">
-                <string>Obstacle Weigth</string>
-               </property>
-              </widget>
+             <item row="1" column="1">
+              <widget class="QDoubleSpinBox" name="doubleSpinBoxDuration"/>
              </item>
              <item row="1" column="0">
               <widget class="QLabel" name="label_2">
@@ -740,16 +743,10 @@
                </property>
               </widget>
              </item>
-             <item row="1" column="1">
-              <widget class="QDoubleSpinBox" name="doubleSpinBoxDuration"/>
-             </item>
-             <item row="5" column="1">
-              <widget class="QDoubleSpinBox" name="doubleSpinBoxGeneraWeight">
-               <property name="decimals">
-                <number>10</number>
-               </property>
-               <property name="maximum">
-                <double>10000.000000000000000</double>
+             <item row="6" column="0">
+              <widget class="QLabel" name="label_10">
+               <property name="text">
+                <string>General Weight</string>
                </property>
               </widget>
              </item>
@@ -760,21 +757,27 @@
                </property>
               </widget>
              </item>
-             <item row="5" column="0">
-              <widget class="QLabel" name="label_10">
-               <property name="text">
-                <string>General Weight</string>
+             <item row="6" column="1">
+              <widget class="QDoubleSpinBox" name="doubleSpinBoxGeneraWeight">
+               <property name="decimals">
+                <number>10</number>
+               </property>
+               <property name="maximum">
+                <double>10000.000000000000000</double>
                </property>
               </widget>
              </item>
-             <item row="7" column="0">
+             <item row="8" column="0">
               <widget class="QLabel" name="label_12">
                <property name="text">
                 <string>Obstacle Factor</string>
                </property>
               </widget>
              </item>
-             <item row="7" column="1">
+             <item row="11" column="1">
+              <widget class="QDoubleSpinBox" name="doubleSpinBoxSmoothJerk"/>
+             </item>
+             <item row="8" column="1">
               <widget class="QDoubleSpinBox" name="doubleSpinBoxObstacFactor">
                <property name="decimals">
                 <number>10</number>
@@ -784,29 +787,36 @@
                </property>
               </widget>
              </item>
-             <item row="10" column="1">
-              <widget class="QDoubleSpinBox" name="doubleSpinBoxSmoothJerk"/>
-             </item>
-             <item row="8" column="0">
+             <item row="9" column="0">
               <widget class="QLabel" name="label_13">
                <property name="text">
                 <string>* Smoothness Vel.</string>
                </property>
               </widget>
              </item>
-             <item row="9" column="0">
+             <item row="10" column="0">
               <widget class="QLabel" name="label_14">
                <property name="text">
                 <string>* Smoothness Acc.</string>
                </property>
               </widget>
              </item>
-             <item row="10" column="0">
+             <item row="11" column="0">
               <widget class="QLabel" name="label_15">
                <property name="text">
                 <string>* Smoothness Jerk.</string>
                </property>
               </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_16">
+               <property name="text">
+                <string>End Goal Strength</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QDoubleSpinBox" name="doubleSpinBoxConstStrength"/>
              </item>
             </layout>
            </widget>

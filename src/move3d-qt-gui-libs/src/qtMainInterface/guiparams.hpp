@@ -17,13 +17,13 @@
  * ANY  SPECIAL, DIRECT,  INDIRECT, OR  CONSEQUENTIAL DAMAGES  OR  ANY DAMAGES
  * WHATSOEVER  RESULTING FROM  LOSS OF  USE, DATA  OR PROFITS,  WHETHER  IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR  OTHER TORTIOUS ACTION, ARISING OUT OF OR
- * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.                                  
+ * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- * Siméon, T., Laumond, J. P., & Lamiraux, F. (2001). 
+ * Siméon, T., Laumond, J. P., & Lamiraux, F. (2001).
  * Move3d: A generic platform for path planning. In in 4th Int. Symp.
  * on Assembly and Task Planning.
  *
- *                                               Jim Mainprice Tue 27 May 2014 
+ *                                               Jim Mainprice Tue 27 May 2014
  */
 #ifndef GUI_PARAMETERS_HPP
 #define GUI_PARAMETERS_HPP
@@ -32,10 +32,10 @@
 
 #include "mainwindow.hpp"
 
-#ifdef QT_LIBRARY
-class GuiParam : public QObject
-{
+#include <QtCore/QSettings>
 
+#ifdef QT_LIBRARY
+class GuiParam : public QObject {
   Q_OBJECT;
   Q_ENUMS(boolParameter);
   Q_ENUMS(intParameter);
@@ -43,50 +43,38 @@ class GuiParam : public QObject
   Q_ENUMS(stringParameter);
   Q_ENUMS(vectorParameter);
 
-public:
-
+ public:
   GuiParam();
   ~GuiParam();
 
 #else
-namespace GuiParam
-{
+namespace GuiParam {
 #endif
-        enum boolParameter
-        {
-            tete
-        };
+  enum boolParameter { tete };
 
-        enum intParameter
-        {
-            mainwin_x,
-            mainwin_y,
-            mainwin_w,
-            mainwin_h,
-            tab_index_main,
-            tab_index_cost
-        };
+  enum intParameter {
+    mainwin_x,
+    mainwin_y,
+    mainwin_w,
+    mainwin_h,
+    tab_index_main,
+    tab_index_cost
+  };
 
-        enum doubleParameter
-        {
-            toto
-        };
+  enum doubleParameter { toto };
 
-        enum stringParameter
-        {
-             titi
-        };
+  enum stringParameter { titi };
 
-        enum vectorParameter
-        {
-             tutu
-        };
+  enum vectorParameter { tutu };
 };
 
 // Object that holds all parameters
 // Of the planner Environment
-extern Parameters<GuiParam::boolParameter,GuiParam::intParameter,GuiParam::doubleParameter,
-GuiParam::stringParameter,GuiParam::vectorParameter>* GuiEnv;
+extern Parameters<GuiParam::boolParameter,
+                  GuiParam::intParameter,
+                  GuiParam::doubleParameter,
+                  GuiParam::stringParameter,
+                  GuiParam::vectorParameter>* GuiEnv;
 
 // Functions that initializes the planner
 // Parameters
@@ -98,6 +86,7 @@ extern GuiParam* EnumGuiParameterObject;
 
 // Parameters of individual (computer, account) settings
 void qt_saveGuiParameters(bool print, std::string fileName, MainWindow* mw);
-void qt_loadGuiParameters(bool print, std::string fileName, MainWindow* mw);
+void qt_loadGuiParameters(bool print, std::string fileName, MainWindow* mw=NULL);
 
-#endif // GUI_PARAMETERS_HPP
+
+#endif  // GUI_PARAMETERS_HPP

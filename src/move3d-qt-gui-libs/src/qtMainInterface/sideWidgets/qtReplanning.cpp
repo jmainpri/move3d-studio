@@ -248,6 +248,11 @@ void ReplanningWidget::init() {
                        m_ui->doubleSpinBoxDuration,
                        PlanEnv->getObject(PlanParam::trajDuration));
 
+  // Set the strength of the constraint projection along the trajectory
+  new SpinBoxConnector(this,
+                       m_ui->doubleSpinBoxConstStrength,
+                       PlanEnv->getObject(PlanParam::trajStompConstStrength));
+
   // Set the standard deviation of the perturbations
   new SpinBoxConnector(this,
                        m_ui->doubleSpinBoxStdDev,
