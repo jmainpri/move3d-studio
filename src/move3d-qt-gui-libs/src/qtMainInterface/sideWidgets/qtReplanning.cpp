@@ -151,6 +151,11 @@ void ReplanningWidget::init() {
                        m_ui->doubleSpinBoxGeneraWeight,
                        PlanEnv->getObject(PlanParam::trajOptimGlobalWeight));
   new SpinBoxConnector(this,
+                       m_ui->doubleSpinBoxTerminalWeight,
+                       PlanEnv->getObject(PlanParam::trajOptimTermWeight));
+
+
+  new SpinBoxConnector(this,
                        m_ui->doubleSpinBoxObstacFactor,
                        PlanEnv->getObject(PlanParam::trajOptimObstacFactor));
   new SpinBoxConnector(this,

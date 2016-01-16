@@ -174,11 +174,9 @@ void qt_gik() {
     ik.magnitude_ = 1.0;
 
     Eigen::VectorXd dq = ik.single_step_joint_limits(xdes);
-
-    std::vector<int> active_dofs = ik.getActiveDofs();
-    Eigen::VectorXd q = q_tmp->getEigenVector(active_dofs);
+    Eigen::VectorXd q = q_tmp->getEigenVector(ik.active_dofs());
     Eigen::VectorXd q_new = q + dq;
-    q_tmp->setFromEigenVector(q_new, active_dofs);
+    q_tmp->setFromEigenVector(q_new, ik.active_dofs());
     robot->setAndUpdate(*q_tmp);
 
     cout << "xdes.transpose() : " << xdes.transpose() << endl;
