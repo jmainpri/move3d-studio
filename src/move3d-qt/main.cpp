@@ -702,6 +702,10 @@ void draw_opengl() {}
  * @brief Main function of Move3D
  */
 int main(int argc, char* argv[]) {
+
+  unsigned int localVar;
+  printf("Address of a stack variable: %08X\n", &localVar);
+
   move3d_set_api_scene();
 
   move3d_set_api_functions_configuration();

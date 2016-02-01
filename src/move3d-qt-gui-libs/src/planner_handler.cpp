@@ -243,8 +243,6 @@ void qt_init_after_params() {
     cout << "SET COST FUNCTION : " << cost_function << endl;
   }
 
-
-
   //    if( GestEnv->getBool(GestParam::init_module_ioc) )
   //    {
   //        HRICS_initIverseOptimalControlFramework();
@@ -339,9 +337,7 @@ void qt_test1() {
   //    }
 }
 
-void qt_test2() {
-  hrics_ioc_compute_results();
-}
+void qt_test2() { hrics_ioc_compute_results(); }
 
 // static bool recompute_cost=false;
 // static bool init_generator=false;
@@ -365,24 +361,30 @@ void qt_test3() {
 
   //    cout << cur_dir << endl;
 
-  //    int nb_trajs = 12;
-  //    for(int i=0; i<nb_trajs; i++ )
-  //    {
-  //        ss.str("");
-  //        ss << "trajectory" << std::setw(3) << std::setfill( '0' ) << i <<
-  //        ".traj";
-  //        files.push_back( cur_dir + "/" + ss.str() );
-  //    }
+  std::vector<std::string> files;
+  int nb_trajs = 10;
+  for (int i = 0; i < nb_trajs; i++) {
+    std::stringstream ss;
+    ss.str("");
+    ss << std::string(getenv("HOME_MOVE3D")) +
+              "/../move3d-launch/launch_files/";
+    ss << "dtw_test_trajectories/dtw_trajectory";
+    ss << "_" << std::setw(3) << std::setfill('0') << i;
+    ss << "_" << std::setw(3) << std::setfill('0') << 0 << ".csv";
+    files.push_back(ss.str());
+  }
 
-  //    Move3D::Robot* robot =
-  //    global_Project->getActiveScene()->getActiveRobot();
-  //    Move3D::SequencesPlanners pool( robot );
-  //    pool.loadTrajsFromFile( files );
-  //    pool.playTrajs();
+  Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
+  Move3D::SequencesPlanners pool(robot);
+  pool.loadTrajsFromFile(files);
+  pool.playTrajs();
 
   //*****************************************************************
 
-  test_ik_generator();
+  // test_ik_generator();
+
+  //*****************************************************************
+
 
   //*****************************************************************
 
@@ -820,10 +822,13 @@ void qt_show_recorded_motion() {
     } else {
       if (HriEnv->getBool(HricsParam::ioc_show_last_simulation)) {
         cout << "LAST SIMULATION MOTIONS" << endl;
-        player = new HRICS::PlayMotion(
-            global_human_traj_simulator->getLastSimulationMotions());
+
+        const std::vector<std::vector<motion_t> >& motions =
+            global_human_traj_simulator->getLastSimulationMotions();
+
+        player = new HRICS::PlayMotion(motions);
         // player->setMotionsNames(
-        // global_human_traj_simulator->getMotionsNames() );
+        // global_human_traj_simulator->getMotionsNames());
       } else {
         cout << "USE MOTION VECTOR" << endl;
         player =
@@ -1280,7 +1285,7 @@ bool qt_showMotion(const Move3D::Trajectory& motion1,
     return false;
   }
 
-  cout << "time length : " << motion1.getDuration() << endl;
+  cout << "duration : " << motion1.getDuration() << " sec." << endl;
 
   Move3D::Robot* robot = motion1.getRobot();
   bool StopRun = false;
@@ -1301,36 +1306,31 @@ bool qt_showMotion(const Move3D::Trajectory& motion1,
       motion2.getRobot()->setAndUpdate(*motion2.configAtTime(t));
     }
 
-    //        bool ncol = false;
+    const bool draw_collisions = true;
+    if (draw_collisions) {
+      bool ncol = false;
+      if (global_collisionSpace) {
+        double distance = numeric_limits<double>::max();
+        double potential = numeric_limits<double>::max();
+        ncol = global_collisionSpace->isRobotColliding(distance, potential);
 
-    //        if( global_collisionSpace )
-    //        {
-    //            double distance = numeric_limits<double>::max();
-    //            double potential = numeric_limits<double>::max();
+        cout << "Distance to nearest obstacle = " << distance
+             << " and potential = " << potential << endl;
 
-    //            ncol = global_collisionSpace->isRobotColliding( distance,
-    //            potential );
+        if (global_optimizer && (global_optimizer->getRobot() == robot)) {
+          global_optimizer->getCollisionSpaceCost(*robot->getCurrentPos());
+        }
+      } else {
+        ncol = robot->isInCollision();
+      }
 
-    ////            cout << "Distance to nearest obstacle = " << distance << "
-    /// and potential = " << potential << endl;
+      if (ncol) {
+        cout << "Robot in collision " << endl;
+      }
 
-    //            if( global_optimizer && ( global_optimizer->getRobot() ==
-    //            robot ) ) {
-    //                global_optimizer->getCollisionSpaceCost(
-    //                *robot->getCurrentPos() );
-    //            }
-    //        }
-    //        else
-    //        {
-    //            ncol = robot->isInCollision();
-    //        }
-
-    //        if( ncol ){
-    //            cout << "Robot in collision " << endl;
-    //        }
-
-    // HRICS::setThePlacemateInIkeaShelf();
-    //        g3d_set_draw_coll( ncol );
+      // HRICS::setThePlacemateInIkeaShelf();
+      // g3d_set_draw_coll(ncol);
+    }
 
     if (record_video) global_w->getOpenGL()->addCurrentImage();
 

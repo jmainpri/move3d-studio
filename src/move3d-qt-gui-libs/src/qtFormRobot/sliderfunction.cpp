@@ -55,7 +55,7 @@ void qt_set_arm_along_body(Robot* robot) {
   robot->setAndUpdate(*q_init);
 }
 
-void qt_gik() {
+void qt_gik(Robot* robot_slider) {
   Move3D::Robot* object =
       global_Project->getActiveScene()->getRobotByNameContaining("VISBALL");
   if (object == NULL) return;
@@ -75,6 +75,9 @@ void qt_gik() {
     }
   }
 
+  if( robot_slider == robot )
+    return;
+
   // cout << "GIK deactivated" << endl;
   // return;
 
@@ -83,17 +86,17 @@ void qt_gik() {
     if (eef == NULL) return;
 
     std::vector<Move3D::Joint*> active_joints;
-    //    active_joints.push_back( robot->getJoint( "Pelvis" ) );
+    // active_joints.push_back( robot->getJoint( "Pelvis" ) );
     active_joints.push_back(robot->getJoint("TorsoX"));
     active_joints.push_back(robot->getJoint("TorsoZ"));
     active_joints.push_back(robot->getJoint("TorsoY"));
-    active_joints.push_back(robot->getJoint("rShoulderTransX"));
-    active_joints.push_back(robot->getJoint("rShoulderTransY"));
-    active_joints.push_back(robot->getJoint("rShoulderTransZ"));
+    // active_joints.push_back(robot->getJoint("rShoulderTransX"));
+    // active_joints.push_back(robot->getJoint("rShoulderTransY"));
+    // active_joints.push_back(robot->getJoint("rShoulderTransZ"));
     active_joints.push_back(robot->getJoint("rShoulderY1"));
     active_joints.push_back(robot->getJoint("rShoulderX"));
     active_joints.push_back(robot->getJoint("rShoulderY2"));
-    active_joints.push_back(robot->getJoint("rArmTrans"));
+    // active_joints.push_back(robot->getJoint("rArmTrans"));
     active_joints.push_back(robot->getJoint("rElbowZ"));
     active_joints.push_back(robot->getJoint("rElbowX"));
     active_joints.push_back(robot->getJoint("rElbowY"));
@@ -102,16 +105,23 @@ void qt_gik() {
     active_joints.push_back(robot->getJoint("rWristX"));
     active_joints.push_back(robot->getJoint("rWristY"));
 
-//    p3d_jnt_set_dof_rand_bounds(
-//        robot->getJoint("rShoulderTransX")->getP3dJointStruct(), 0, .016, .020);
-//    p3d_jnt_set_dof_rand_bounds(
-//        robot->getJoint("rShoulderTransY")->getP3dJointStruct(), 0, .32, .34);
-//    p3d_jnt_set_dof_rand_bounds(
-//        robot->getJoint("rShoulderTransZ")->getP3dJointStruct(), 0, .24, .26);
-//    p3d_jnt_set_dof_rand_bounds(
-//        robot->getJoint("rArmTrans")->getP3dJointStruct(), 0, .38, .40);
-//    p3d_jnt_set_dof_rand_bounds(
-//        robot->getJoint("lPoint")->getP3dJointStruct(), 0, .23, .25);
+    // This is set in the Natural class at startup
+    bool set_joint_limits = false;
+    if (set_joint_limits) {
+      p3d_jnt_set_dof_rand_bounds(
+          robot->getJoint("rShoulderTransX")->getP3dJointStruct(),
+          0,
+          .016,
+          .020);
+      p3d_jnt_set_dof_rand_bounds(
+          robot->getJoint("rShoulderTransY")->getP3dJointStruct(), 0, .32, .34);
+      p3d_jnt_set_dof_rand_bounds(
+          robot->getJoint("rShoulderTransZ")->getP3dJointStruct(), 0, .24, .26);
+      p3d_jnt_set_dof_rand_bounds(
+          robot->getJoint("rArmTrans")->getP3dJointStruct(), 0, .38, .40);
+      p3d_jnt_set_dof_rand_bounds(
+          robot->getJoint("lPoint")->getP3dJointStruct(), 0, .23, .25);
+    }
 
     Eigen::VectorXd xdes = object->getJoint(1)->getXYZPose();
     //    Eigen::VectorXd xdes = object->getJoint(1)->getVectorPos();
@@ -139,7 +149,8 @@ void qt_gik() {
       ik.initialize(active_joints, eef);
       robot->setAndUpdate(*HRICS_activeNatu->getComfortPosture());
       cout << "solve" << endl;
-      succeed = ik.solve(xdes);
+      succeed = true;
+      // succeed = ik.solve(xdes);
 
       //            Eigen::VectorXd dq = ik.single_step_joint_limits( xdes );
       //            std::vector<int> active_dofs = ik.getActiveDofs();
@@ -412,7 +423,7 @@ void qtSliderFunction(p3d_rob* robotPt, configPt p) {
   // HRICS::setThePlacemateInIkeaShelf();
   g3d_set_draw_coll(ncol);
 
-  qt_gik();
+  qt_gik(robot);
 
   cout << "ncol : " << ncol << endl;
 }
