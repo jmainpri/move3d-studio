@@ -43,7 +43,8 @@ static bool init_generator = false;
 static bool use_list_generator = false;
 static ConfGenerator* generatorPtr = NULL;
 
-void qt_set_arm_along_body(Robot* robot) {
+void qt_set_arm_along_body(Robot* robot)
+{
   confPtr_t q_curr = robot->getCurrentPos();
   confPtr_t q_init = robot->getInitPos();
   (*q_init)[6] = (*q_curr)[6];
@@ -55,7 +56,8 @@ void qt_set_arm_along_body(Robot* robot) {
   robot->setAndUpdate(*q_init);
 }
 
-void qt_gik(Robot* robot_slider) {
+void qt_gik(Robot* robot_slider)
+{
   Move3D::Robot* object =
       global_Project->getActiveScene()->getRobotByNameContaining("VISBALL");
   if (object == NULL) return;
@@ -75,8 +77,7 @@ void qt_gik(Robot* robot_slider) {
     }
   }
 
-  if( robot_slider == robot )
-    return;
+  if (robot_slider == robot) return;
 
   // cout << "GIK deactivated" << endl;
   // return;
@@ -106,7 +107,7 @@ void qt_gik(Robot* robot_slider) {
     active_joints.push_back(robot->getJoint("rWristY"));
 
     // This is set in the Natural class at startup
-    bool set_joint_limits = false;
+    bool set_joint_limits = true;
     if (set_joint_limits) {
       p3d_jnt_set_dof_rand_bounds(
           robot->getJoint("rShoulderTransX")->getP3dJointStruct(),
@@ -124,11 +125,11 @@ void qt_gik(Robot* robot_slider) {
     }
 
     Eigen::VectorXd xdes = object->getJoint(1)->getXYZPose();
-    //    Eigen::VectorXd xdes = object->getJoint(1)->getVectorPos();
+    // Eigen::VectorXd xdes = object->getJoint(1)->getVectorPos();
 
     Move3D::confPtr_t q_tmp = robot->getCurrentPos();
-    //    robot->setAndUpdate( *HRICS_activeNatu->getComfortPosture() );
-    //    q_tmp = HRICS_activeNatu->getComfortPosture()->copy();
+    // robot->setAndUpdate( *HRICS_activeNatu->getComfortPosture() );
+    // q_tmp = HRICS_activeNatu->getComfortPosture()->copy();
 
     bool succeed = false;
     bool simple_ik = true;
@@ -138,7 +139,6 @@ void qt_gik(Robot* robot_slider) {
       succeed = ik.generate(xdes);
       cout << "generate ik" << endl;
       cout << "diff = " << (xdes - eef->getXYZPose()).norm() << endl;
-
       if (!succeed) {
         robot->setAndUpdate(*q_tmp);
       }
@@ -150,16 +150,15 @@ void qt_gik(Robot* robot_slider) {
       robot->setAndUpdate(*HRICS_activeNatu->getComfortPosture());
       cout << "solve" << endl;
       succeed = true;
-      // succeed = ik.solve(xdes);
+      succeed = ik.solve(xdes);
 
-      //            Eigen::VectorXd dq = ik.single_step_joint_limits( xdes );
-      //            std::vector<int> active_dofs = ik.getActiveDofs();
-      //            Eigen::VectorXd q = q_tmp->getEigenVector( active_dofs );
-      //            Eigen::VectorXd q_new = q + dq;
-      //            q_tmp->setFromEigenVector( q_new, active_dofs );
+      // Eigen::VectorXd dq = ik.single_step_joint_limits( xdes );
+      // std::vector<int> active_dofs = ik.getActiveDofs();
+      // Eigen::VectorXd q = q_tmp->getEigenVector( active_dofs );
+      // Eigen::VectorXd q_new = q + dq;
+      // q_tmp->setFromEigenVector( q_new, active_dofs );
 
       cout << "diff = " << (xdes - eef->getXYZPose()).norm() << endl;
-
       if (!succeed) {
         robot->setAndUpdate(*q_tmp);
       }
@@ -203,7 +202,8 @@ void qt_gik(Robot* robot_slider) {
 
 void qt_set_otp_cost_recompute() { recompute_cost = true; }
 
-void qt_otp() {
+void qt_otp()
+{
   //  HRICS_humanCostMaps->testCostFunction();
   //  HRICS_humanCostMaps->saveAgentGrids();
 
@@ -289,7 +289,8 @@ void qt_otp() {
 
 //! function that computes a cost
 //! on the robot actual configuration
-void qtSliderFunction(p3d_rob* robotPt, configPt p) {
+void qtSliderFunction(p3d_rob* robotPt, configPt p)
+{
   // No cost is computed for the other robots
   if (ENV.getBool(Env::isCostSpace) && (XYZ_ENV->active_robot == robotPt)) {
 #ifdef P3D_PLANNER

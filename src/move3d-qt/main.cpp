@@ -268,7 +268,8 @@ Main_threads::~Main_threads() {}
 // Not elegant, but it works.
 MainWindow* global_w(NULL);
 QThread* global_PlanningThread(NULL);
-void draw_opengl() {
+void draw_opengl()
+{
   if (global_PlanningThread != QThread::currentThread()) {
     cout << "Warning Draw Outside of Planning thread" << endl;
   }
@@ -321,7 +322,8 @@ script));
   }
 */
 
-void Main_threads::loadSettings() {
+void Main_threads::loadSettings()
+{
   char* home_path = getenv("HOME_MOVE3D");
   if (home_path == NULL) {
     cout << "HOME_MOVE3D is not defined" << endl;
@@ -340,7 +342,8 @@ void Main_threads::loadSettings() {
   }
 }
 
-void Main_threads::initInterface() {
+void Main_threads::initInterface()
+{
 #ifdef QT_UI_XML_FILES
   // Sets up gui specific parameter structure
   initGuiParameters();
@@ -348,8 +351,8 @@ void Main_threads::initInterface() {
   // Loads all Qt settings execept the GUI settings (needs the Mainwindow to
   // loading them here allow to execute the qt_init_after_params before
   // the initialization of the MainWindow
-//   loadSettings();
-//   qt_init_after_params();
+  //   loadSettings();
+  //   qt_init_after_params();
 
   MainWindow* w = new MainWindow();
   global_w = w;
@@ -449,7 +452,8 @@ void Main_threads::initInterface() {
 #endif
 }
 
-int Main_threads::run(int argc, char** argv) {
+int Main_threads::run(int argc, char** argv)
+{
   int argc_tmp;
   char** argv_tmp = NULL;
   int ith_arg = 0;
@@ -637,7 +641,8 @@ int Main_threads::run(int argc, char** argv) {
   return coreApp->exec();
 }
 
-void Main_threads::selectPlanner() {
+void Main_threads::selectPlanner()
+{
   if (ENV.getBool(Env::isPRMvsDiffusion)) {
     emit(selectedPlanner(QString("PRM")));
   } else {
@@ -645,7 +650,8 @@ void Main_threads::selectPlanner() {
   }
 }
 
-void Main_threads::exit() {
+void Main_threads::exit()
+{
   cout << "Ends all threads" << endl;
   app->quit();
 }
@@ -657,7 +663,8 @@ Simple_threads::Simple_threads() { sem = new QSemaphore(0); }
 
 Simple_threads::~Simple_threads() {}
 
-int Simple_threads::run(int argc, char** argv) {
+int Simple_threads::run(int argc, char** argv)
+{
   app = new QApplication(argc, argv);
   app->setWindowIcon(QIcon(QPixmap(molecule_xpm)));
 
@@ -701,7 +708,8 @@ void draw_opengl() {}
  * @ingroup qtWindow
  * @brief Main function of Move3D
  */
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
 
   unsigned int localVar;
   printf("Address of a stack variable: %08X\n", &localVar);

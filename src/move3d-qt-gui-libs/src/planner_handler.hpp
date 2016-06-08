@@ -17,13 +17,13 @@
  * ANY  SPECIAL, DIRECT,  INDIRECT, OR  CONSEQUENTIAL DAMAGES  OR  ANY DAMAGES
  * WHATSOEVER  RESULTING FROM  LOSS OF  USE, DATA  OR PROFITS,  WHETHER  IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR  OTHER TORTIOUS ACTION, ARISING OUT OF OR
- * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.                                  
+ * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- * Siméon, T., Laumond, J. P., & Lamiraux, F. (2001). 
+ * Siméon, T., Laumond, J. P., & Lamiraux, F. (2001).
  * Move3d: A generic platform for path planning. In in 4th Int. Symp.
  * on Assembly and Task Planning.
  *
- *                                               Jim Mainprice Tue 27 May 2014 
+ *                                               Jim Mainprice Tue 27 May 2014
  */
 #ifndef PLANNER_HANDLER_HPP_INCLUDED
 #define PLANNER_HANDLER_HPP_INCLUDED
@@ -48,38 +48,39 @@ void qt_load_HRICS_Grid(std::string gridName);
 void qt_init_after_params();
 
 // Variable used for file reading
-extern const char *qt_fileName;
+extern const char* qt_fileName;
 
 // Planner Handler object
 class PlannerHandler : public QObject
 {
-    Q_OBJECT;
+  Q_OBJECT;
 
-public:
-    enum state {
-        running, // A planning algorithm instance is running
-        stopped, // A planning algorithm instance has been created, but is stopped
-        none }; // There is no instance created
+ public:
+  enum state {
+    running,  // A planning algorithm instance is running
+    stopped,  // A planning algorithm instance has been created, but is stopped
+    none
+  };  // There is no instance created
 
-    PlannerHandler(int argc, char** argv);
+  PlannerHandler(int argc, char** argv);
 
-public slots:
-    void init();
-    void startPlanner(QString plannerName);
-    void setExternalFunction(boost::function<void(void)> f);
-    void stopPlanner();
-    void resetPlanner();
+ public slots:
+  void init();
+  void startPlanner(QString plannerName);
+  void setExternalFunction(boost::function<void(void)> f);
+  void stopPlanner();
+  void resetPlanner();
 
 signals:
-    void initIsDone();
-    void plannerIsStopped();
-    void plannerIsReset();
+  void initIsDone();
+  void plannerIsStopped();
+  void plannerIsReset();
 
-protected:
-    boost::function<void(void)> func_;
-    state mState;
-    int mArgc;
-    char** mArgv;
+ protected:
+  boost::function<void(void)> func_;
+  state mState;
+  int mArgc;
+  char** mArgv;
 };
 
 extern PlannerHandler* global_plannerHandler;

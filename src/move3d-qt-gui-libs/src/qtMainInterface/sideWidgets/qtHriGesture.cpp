@@ -463,6 +463,8 @@ void HriGestureWidget::initHriIOC() {
                            HriEnv->getObject(HricsParam::ioc_ik));
   new connectComboBoxToEnv(m_ui->comboBoxDataSet,
                            HriEnv->getObject(HricsParam::ioc_dataset));
+  new connectComboBoxToEnv(m_ui->comboBoxSimilarity,
+                           HriEnv->getObject(HricsParam::ioc_similarity));
 
   new SpinBoxConnector(this,
                        m_ui->doubleSpinBoxSpherePower,

@@ -44,9 +44,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-275</y>
+        <y>-504</y>
         <width>563</width>
-        <height>1593</height>
+        <height>1626</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -597,9 +597,6 @@
                </item>
               </widget>
              </item>
-             <item row="1" column="3">
-              <widget class="QComboBox" name="comboBoxSplit"/>
-             </item>
              <item row="2" column="3">
               <widget class="QComboBox" name="comboBoxDataSet">
                <item>
@@ -620,6 +617,28 @@
                <item>
                 <property name="text">
                  <string>human_robot_exp</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="QComboBox" name="comboBoxSplit"/>
+             </item>
+             <item row="3" column="3">
+              <widget class="QComboBox" name="comboBoxSimilarity">
+               <item>
+                <property name="text">
+                 <string>dtw</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>euclidean</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>SAL</string>
                 </property>
                </item>
               </widget>

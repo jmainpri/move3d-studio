@@ -170,7 +170,8 @@ extern void* GroundCostObj;
 //! This function initialises the software
 //! after the parameter file has been loaded
 //! this is now executed before starting the GUI
-void qt_init_after_params() {
+void qt_init_after_params()
+{
   cout << "p3d_set_user_drawnjnt : " << ENV.getInt(Env::jntToDraw) << endl;
   p3d_set_user_drawnjnt(ENV.getInt(Env::jntToDraw));
 
@@ -270,7 +271,8 @@ bool qt_showMotion2(const Move3D::Trajectory& motion1,
 
 // static bool save_images=true;
 
-void qt_test1() {
+void qt_test1()
+{
   Move3D::Robot* pr2 =
       global_Project->getActiveScene()->getRobotByName("PR2_ROBOT");
   Move3D::Robot* human =
@@ -337,14 +339,15 @@ void qt_test1() {
   //    }
 }
 
-void qt_test2() { hrics_ioc_compute_results(); }
+void qt_test2() {  }
 
 // static bool recompute_cost=false;
 // static bool init_generator=false;
 // static bool use_list_generator=false;
 // static ConfGenerator* generatorPtr=NULL;
 
-void qt_test3() {
+void qt_test3()
+{
   //*****************************************************************
   /// Sample TRAJS
   // lamp_sample_trajectories();
@@ -361,6 +364,7 @@ void qt_test3() {
 
   //    cout << cur_dir << endl;
 
+  // test_visualize_dtw()
   std::vector<std::string> files;
   int nb_trajs = 10;
   for (int i = 0; i < nb_trajs; i++) {
@@ -384,7 +388,6 @@ void qt_test3() {
   // test_ik_generator();
 
   //*****************************************************************
-
 
   //*****************************************************************
 
@@ -505,7 +508,8 @@ void qt_test3() {
   //  }
 }
 
-void qt_resetGraph() {
+void qt_resetGraph()
+{
   try {
     if (API_activeGraph) {
       delete API_activeGraph;
@@ -532,7 +536,8 @@ void qt_resetGraph() {
 /**
  * Run Diffusion
  */
-void qt_runDiffusion() {
+void qt_runDiffusion()
+{
   cout << "Run Diffusion" << endl;
   Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
 
@@ -579,7 +584,8 @@ void qt_runDiffusion() {
 /**
  * Run PRM
  */
-void qt_runPRM() {
+void qt_runPRM()
+{
   cout << "Run Probabilistic Road Map" << endl;
   Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
 
@@ -629,17 +635,20 @@ void qt_runPRM() {
   //        API_activeGraph, robot->getInitPos(), robot->getGoalPos(), 7 );
 }
 
-void qt_runMultiRRT() {
+void qt_runMultiRRT()
+{
   MultiRun pool;
   pool.runMultiRRT();
 }
 
-void qt_runMultiSmooth() {
+void qt_runMultiSmooth()
+{
   MultiRun pool;
   pool.runMultiSmooth();
 }
 
-void qt_runPlanSequence() {
+void qt_runPlanSequence()
+{
   Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
   Move3D::SequencesPlanners pool(robot);
   pool.setPlannerType(Move3D::stomp);
@@ -675,7 +684,8 @@ void qt_runPlanSequence() {
   pool.saveTrajsToFile(".");
 }
 
-void qt_runAStarPlanning() {
+void qt_runAStarPlanning()
+{
   Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
   Move3D::confPtr_t q_init = robot->getInitPos();
   Move3D::confPtr_t q_goal = robot->getGoalPos();
@@ -694,7 +704,8 @@ void qt_runAStarPlanning() {
   cout << traj->costPerPoint() << endl;
 }
 
-void qt_runAStarInCurrentGraph() {
+void qt_runAStarInCurrentGraph()
+{
   if (API_activeGraph) {
     Move3D::Robot* robot = API_activeGraph->getRobot();
 
@@ -708,26 +719,30 @@ void qt_runAStarInCurrentGraph() {
     cout << "Graph Empty" << endl;
 }
 
-void qt_sampleGraph() {
+void qt_sampleGraph()
+{
   cout << "Sample Graph" << endl;
   graphSampler sampler;
   sampler.initialize();
   sampler.sample();
 }
 
-void qt_makeGridGraph() {
+void qt_makeGridGraph()
+{
   cout << "Make Grid Graph" << endl;
   graphSampler sampler;
   sampler.makeGrid(6);
 }
 
-void qt_generateDetours() {
+void qt_generateDetours()
+{
   cout << "Sample Graph" << endl;
   HRICS::Detours* det = new HRICS::Detours;
   det->planAStar();
 }
 
-void qt_extractAllTrajectories() {
+void qt_extractAllTrajectories()
+{
   ENV.setBool(Env::drawGraph, false);
   ENV.setBool(Env::drawTrajVector, false);
   ENV.setBool(Env::drawGrid, false);
@@ -794,7 +809,8 @@ void qt_runNavigation() { Manip::runNavigation(); }
 
 #endif
 
-void qt_handover() {
+void qt_handover()
+{
   //  compute_handOver();
 }
 
@@ -802,7 +818,8 @@ void qt_handover() {
 // Gesture Functions
 //----------------------------------------------------------
 
-void qt_show_recorded_motion() {
+void qt_show_recorded_motion()
+{
   if (global_motionRecorders.empty()) {
     cout << "recorder not initialized" << endl;
     return;
@@ -876,7 +893,8 @@ void qt_show_recorded_motion() {
   cout << "End!!!" << endl;
 }
 
-void qt_workspace_occupancy() {
+void qt_workspace_occupancy()
+{
   cout << "Loading regressed motion and computing the occupancy" << endl;
   std::string foldername =
       "/home/jmainpri/Dropbox/workspace/gesture-recognition/gmm/"
@@ -887,7 +905,8 @@ void qt_workspace_occupancy() {
   global_workspaceOccupancy->computeOccpancy();
 }
 
-void qt_classify_motions() {
+void qt_classify_motions()
+{
   if (global_humanPredictionSimulator == NULL ||
       global_motionRecorders.empty()) {
     cout << "global_humanPredictionSimulator or global_motionRecorder are not "
@@ -916,7 +935,8 @@ void qt_classify_motions() {
   cout << "End!!!" << endl;
 }
 
-void qt_voxel_occupancy_simulation() {
+void qt_voxel_occupancy_simulation()
+{
   cout << "Starting Simulator" << endl;
 
   if (global_humanPredictionSimulator == NULL) {
@@ -926,7 +946,8 @@ void qt_voxel_occupancy_simulation() {
   global_humanPredictionSimulator->runVoxelOccupancy();
 }
 
-void qt_human_prediction_simulation_tests() {
+void qt_human_prediction_simulation_tests()
+{
   cout << "Starting Simulator" << endl;
 
   if (global_humanPredictionSimulator == NULL) {
@@ -973,7 +994,8 @@ void qt_human_prediction_simulation_tests() {
   }
 }
 
-void qt_human_prediction_simulation() {
+void qt_human_prediction_simulation()
+{
   cout << "Starting Simulator" << endl;
   if (global_humanPredictionSimulator == NULL) {
     cout << "global_humanPredictionSimulator == NULL" << endl;
@@ -989,7 +1011,8 @@ void qt_human_prediction_simulation() {
 // Inverse Optimal Control Functions
 //----------------------------------------------------------
 HRICS::IocSequences* ioc = NULL;
-void qt_runIOC() {
+void qt_runIOC()
+{
   // TODO BUG WITH THE destructor...
 
   //    HRICS::IocSequences* ioc = new HRICS::IocSequences;
@@ -1028,7 +1051,8 @@ void qt_runIOC() {
 //----------------------------------------------------------
 HRICS::Navigation* navPlanner = NULL;
 
-void qt_computeAStar() {
+void qt_computeAStar()
+{
   cout << "Compute AStar" << endl;
   Move3D::Robot* rob;
 
@@ -1048,7 +1072,8 @@ void qt_computeAStar() {
 
 #ifdef HRI_PLANNER
 
-void qtRealTimeOtp() {
+void qtRealTimeOtp()
+{
   dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
   dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->setRobotPos();
   int tmp = PlanEnv->getInt(PlanParam::env_timeShow);
@@ -1108,7 +1133,8 @@ void qtRealTimeOtp() {
   PlanEnv->setInt(PlanParam::env_timeShow, tmp);
 }
 
-void qtOTP() {
+void qtOTP()
+{
   //    global_w->getOpenGL()
   dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
 
@@ -1122,13 +1148,15 @@ void qtOTP() {
   //	dynamic_cast<HRICS::Workspace*>(HRICS_MotionPL)->computePR2GIK();
 }
 
-void qt_simpleNav() {
+void qt_simpleNav()
+{
   dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->navigate();
   qt_drawAllWinActive();
 }
 #endif
 
-void qt_runParallelStomp() {
+void qt_runParallelStomp()
+{
   if (PlanEnv->getBool(PlanParam::trajStompRunMultiple)) {
     cout << "RUN MULTIPLE PARALLEL STOMP" << endl;
     stomp_motion_planner::srompRun_MultipleParallel();
@@ -1146,7 +1174,8 @@ void qt_runParallelStomp() {
   }
 }
 
-void qt_runStomp() {
+void qt_runStomp()
+{
   cout << "-----------------------------------------------------------" << endl;
 
   if (!PlanEnv->getBool(PlanParam::trajStompRunParallel)) {
@@ -1163,7 +1192,8 @@ void qt_runStomp() {
   }
 }
 
-void qt_runStompNoReset() {
+void qt_runStompNoReset()
+{
   cout << "-----------------------------------------------------------" << endl;
   cout << "RUN NORMAL STOMP (no reset)" << endl;
 
@@ -1174,12 +1204,14 @@ void qt_runStompNoReset() {
   }
 }
 #ifdef MULTILOCALPATH
-void qt_init_mlp_cntrts_and_fixjoints() {
+void qt_init_mlp_cntrts_and_fixjoints()
+{
   traj_optim_init_mlp_cntrts_and_fix_joints(
       global_Project->getActiveScene()->getActiveRobot());
 }
 
-void qt_runChomp() {
+void qt_runChomp()
+{
   if (traj_optim_runChomp()) {
     cout << "Chomp has run succesfully!!!" << endl;
   } else {
@@ -1194,7 +1226,8 @@ void qt_runChomp() {
 void qt_run_lamp() { lamp_simple_loop(); }
 
 #ifdef HRI_PLANNER
-void qtMultipleOTP() {
+void qtMultipleOTP()
+{
   dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)->saveInitConf();
   dynamic_cast<HRICS::OTPMotionPl*>(HRICS_MotionPLConfig)
       ->multipliComputeOtp(PlanEnv->getInt(PlanParam::env_MOTP));
@@ -1202,7 +1235,8 @@ void qtMultipleOTP() {
 }
 #endif
 
-static int default_drawtraj_fct_qt_pipe(p3d_rob* robot, p3d_localpath* curLp) {
+static int default_drawtraj_fct_qt_pipe(p3d_rob* robot, p3d_localpath* curLp)
+{
   g3d_draw_allwin_active();
   usleep(20000);
   // cout << "ENV.getDouble(Env::showTrajFPS) = " <<
@@ -1211,7 +1245,8 @@ static int default_drawtraj_fct_qt_pipe(p3d_rob* robot, p3d_localpath* curLp) {
 }
 
 #if defined(LIGHT_PLANNER) && defined(MULTILOCALPATH)
-void qt_executeSimpleSimu() {
+void qt_executeSimpleSimu()
+{
   cout << "qt_executeSimpleSimu" << endl;
 
   if (global_rePlanningEnv == NULL) {
@@ -1220,7 +1255,8 @@ void qt_executeSimpleSimu() {
   global_rePlanningEnv->execute_simple_simulation(default_drawtraj_fct_qt_pipe);
 }
 
-void qt_executePlan() {
+void qt_executePlan()
+{
   if (HRICS::initShelfScenario()) {
     HRICS::execShelfScenario();
   }
@@ -1229,7 +1265,8 @@ void qt_executePlan() {
 
 bool qt_showMotion2(const Move3D::Trajectory& motion1,
                     const Move3D::Trajectory& motion2,
-                    bool save_video) {
+                    bool save_video)
+{
   cout << __PRETTY_FUNCTION__ << endl;
 
   if (motion1.size() == 0) {
@@ -1277,7 +1314,8 @@ bool qt_showMotion2(const Move3D::Trajectory& motion1,
 }
 
 bool qt_showMotion(const Move3D::Trajectory& motion1,
-                   const Move3D::Trajectory& motion2) {
+                   const Move3D::Trajectory& motion2)
+{
   cout << __PRETTY_FUNCTION__ << endl;
 
   if (motion1.size() == 0) {
@@ -1353,7 +1391,8 @@ bool qt_showMotion(const Move3D::Trajectory& motion1,
   return true;
 }
 
-bool qt_showTraj() {
+bool qt_showTraj()
+{
   p3d_rob* robotPt = (p3d_rob*)p3d_get_desc_curid(P3D_ROBOT);
 
   Move3D::Robot* rob =
@@ -1393,7 +1432,8 @@ bool qt_showTraj() {
 /**
  * Shortcut optimization
  */
-void qt_shortCut() {
+void qt_shortCut()
+{
   Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
 
   cout << "Random shortCut for robot : " << robot->getName() << endl;
@@ -1408,7 +1448,8 @@ void qt_shortCut() {
 /**
  * Deformation optimization
  */
-void qt_optimize() {
+void qt_optimize()
+{
   Move3D::Robot* robot = global_Project->getActiveScene()->getActiveRobot();
 
   cout << "Random deformation for robot : " << robot->getName() << endl;
@@ -1423,7 +1464,8 @@ void qt_optimize() {
 /**
  * Optimize one step
  */
-void qt_oneStepOptim() {
+void qt_oneStepOptim()
+{
   p3d_rob* robotPt = (p3d_rob*)p3d_get_desc_curid(P3D_ROBOT);
   p3d_traj* CurrentTrajPt = robotPt->tcur;
 
@@ -1444,7 +1486,8 @@ void qt_oneStepOptim() {
   return;
 }
 
-void qt_removeRedundantNodes() {
+void qt_removeRedundantNodes()
+{
   p3d_rob* robotPt = (p3d_rob*)p3d_get_desc_curid(P3D_ROBOT);
   p3d_traj* CurrentTrajPt = robotPt->tcur;
 
@@ -1470,7 +1513,8 @@ void qt_removeRedundantNodes() {
   return;
 }
 
-void qt_recomputeValidEdges() {
+void qt_recomputeValidEdges()
+{
   if (API_activeGraph) {
     // Graph* tmpGraph = new Graph( *API_activeGraph );
 
@@ -1489,7 +1533,8 @@ void qt_recomputeValidEdges() {
 /**
  * Make traj from via points
  */
-void qt_makeTrajFromViaPoints() {
+void qt_makeTrajFromViaPoints()
+{
   //    p3d_rob * robotPt =
   //    p3d_get_robot_by_name("PR2_ROBOT");//justin//JIDOKUKA_ROBOT
   p3d_rob* robotPt =
@@ -1519,7 +1564,8 @@ void qt_makeTrajFromViaPoints() {
 /**
  * Read Scenario
  */
-void qt_readScenario() {
+void qt_readScenario()
+{
   //	std::string fileToOpen(qt_fileName);
   cout << " Should Open scenarion " /*<< fileToOpen << " or "*/ << qt_fileName
        << endl;
@@ -1531,7 +1577,8 @@ void qt_readScenario() {
 /**
  * Save Scenario
  */
-void qt_saveScenario() {
+void qt_saveScenario()
+{
   std::string fileToOpen(qt_fileName);
   cout << " Should Save scenario " << fileToOpen << endl;
 
@@ -1539,7 +1586,8 @@ void qt_saveScenario() {
   p3d_save_scenario(qt_fileName);
 }
 
-void qt_readTraj() {
+void qt_readTraj()
+{
   p3d_rob* robotPt = (p3d_rob*)p3d_get_desc_curid(P3D_ROBOT);
   // int ir;
   configPt qi, qf;
@@ -1575,7 +1623,8 @@ void qt_readTraj() {
 
 //------------------------------------------------------------------
 //------------------------------------------------------------------
-void qt_recompute_agent_grid_cost() {
+void qt_recompute_agent_grid_cost()
+{
   // If a costspace exists re compute all cell cost
   if (HRICS_humanCostMaps != NULL) {
     HRICS_humanCostMaps->computeAllCellCost();
@@ -1584,7 +1633,8 @@ void qt_recompute_agent_grid_cost() {
   }
 }
 
-void qt_save_agent_grid() {
+void qt_save_agent_grid()
+{
   if (HRICS_humanCostMaps != NULL) {
     HRICS_humanCostMaps->saveAgentGrids();
   } else {
@@ -1592,7 +1642,8 @@ void qt_save_agent_grid() {
   }
 }
 
-void qt_load_agent_grid() {
+void qt_load_agent_grid()
+{
   if (HRICS_humanCostMaps != NULL) {
     const char* move3d_home = getenv("HOME_MOVE3D");
 
@@ -1611,7 +1662,8 @@ void qt_load_agent_grid() {
 }
 //------------------------------------------------------------------
 //------------------------------------------------------------------
-void qt_load_HRICS_Grid(std::string docname) {
+void qt_load_HRICS_Grid(std::string docname)
+{
 #ifdef HRI_COSTSPACE
   ENV.setBool(Env::drawGrid, false);
 
@@ -1655,7 +1707,8 @@ void qt_load_HRICS_Grid(std::string docname) {
 //------------------------------------------------------------------
 
 // Add a trajectory to the interface
-void qt_add_traj(char* name, int id, p3d_rob* rob, p3d_traj* traj) {
+void qt_add_traj(char* name, int id, p3d_rob* rob, p3d_traj* traj)
+{
   std::ostringstream oss;
   oss << name << " (" << id - 1 << " )";
 // cout << "traj = " << traj << endl;
@@ -1675,7 +1728,8 @@ void qt_add_traj(char* name, int id, p3d_rob* rob, p3d_traj* traj) {
 #endif
 }
 
-void qt_add_config_to_ui(char* name, p3d_rob* rob, double* q) {
+void qt_add_config_to_ui(char* name, p3d_rob* rob, double* q)
+{
 #ifdef QT_GL
   if (global_manipPlanTest) {
     global_manipPlanTest->addConf(name, q);
@@ -1692,7 +1746,8 @@ void qt_add_config_to_ui(char* name, p3d_rob* rob, double* q) {
 }
 
 #ifdef HRI_PLANNER
-void qt_test() {
+void qt_test()
+{
   cout << "Running test" << endl;
 
   HRI_AGENTS* agents = hri_create_agents();
@@ -1712,18 +1767,23 @@ extern pthread_attr_t attr;
 extern int mainMhp(int argc, char** argv);
 
 PlannerHandler::PlannerHandler(int argc, char** argv)
-    : mState(none), mArgc(argc), mArgv(argv) {}
+    : mState(none), mArgc(argc), mArgv(argv)
+{
+}
 
-void PlannerHandler::init() {
+void PlannerHandler::init()
+{
   mainMhp(mArgc, mArgv);
   emit initIsDone();
 }
 
-void PlannerHandler::setExternalFunction(boost::function<void(void)> f) {
+void PlannerHandler::setExternalFunction(boost::function<void(void)> f)
+{
   func_ = f;
 }
 
-void PlannerHandler::startPlanner(QString plannerName) {
+void PlannerHandler::startPlanner(QString plannerName)
+{
   if (mState == running)  // already running, do nothing
   {
     printf(
@@ -1904,7 +1964,8 @@ void PlannerHandler::startPlanner(QString plannerName) {
 }
 
 //------------------------------------------------------------------------------
-void PlannerHandler::stopPlanner() {
+void PlannerHandler::stopPlanner()
+{
   if (mState != running)  // not running, do nothing
   {
     printf(
@@ -1920,7 +1981,8 @@ void PlannerHandler::stopPlanner() {
 }
 
 //------------------------------------------------------------------------------
-void PlannerHandler::resetPlanner() {
+void PlannerHandler::resetPlanner()
+{
   if (mState == running)  // running, do nothing
   {
     printf(

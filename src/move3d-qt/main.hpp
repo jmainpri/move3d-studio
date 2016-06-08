@@ -17,22 +17,22 @@
  * ANY  SPECIAL, DIRECT,  INDIRECT, OR  CONSEQUENTIAL DAMAGES  OR  ANY DAMAGES
  * WHATSOEVER  RESULTING FROM  LOSS OF  USE, DATA  OR PROFITS,  WHETHER  IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR  OTHER TORTIOUS ACTION, ARISING OUT OF OR
- * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.                                  
+ * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- * Siméon, T., Laumond, J. P., & Lamiraux, F. (2001). 
+ * Siméon, T., Laumond, J. P., & Lamiraux, F. (2001).
  * Move3d: A generic platform for path planning. In in 4th Int. Symp.
  * on Assembly and Task Planning.
  *
- *                                               Jim Mainprice Tue 27 May 2014 
+ *                                               Jim Mainprice Tue 27 May 2014
  */
 #ifndef MAIN_HPP
 #define MAIN_HPP
 
-#if defined( QT_LIBRARY ) && defined( MOVE3D_CORE )
+#if defined(QT_LIBRARY) && defined(MOVE3D_CORE)
 #include "qtLibrary.hpp"
 #endif
 
-#if defined( QT_GL ) && defined( MOVE3D_CORE )
+#if defined(QT_GL) && defined(MOVE3D_CORE)
 #include "qtOpenGL/qtGLWindow.hpp"
 #endif
 
@@ -41,32 +41,33 @@
 #ifdef QT_GL
 /**
  * @ingroup qtWindow
- * @brief Main application with the QT_WidgetMain double thread class (X-Forms Thread)
+ * @brief Main application with the QT_WidgetMain double thread class (X-Forms
+ * Thread)
  */
-class Main_threads: public QObject
+class Main_threads : public QObject
 {
   Q_OBJECT
-  
-  qtGLWindow* 	g3dWin;
-  QApplication*       app;
-  QCoreApplication* 	coreApp;
-  
-public:
+
+  qtGLWindow* g3dWin;
+  QApplication* app;
+  QCoreApplication* coreApp;
+
+ public:
   Main_threads();
   ~Main_threads();
-  
+
   int run(int argc, char** argv);
-  
-public slots:
+
+ public slots:
   void selectPlanner();
   void initInterface();
   void loadSettings();
-  
+
 signals:
   void selectedPlanner(QString);
-  
-  private slots :
-  void exit();  
+
+ private slots:
+  void exit();
 };
 
 /**
@@ -75,22 +76,21 @@ signals:
  */
 class Simple_threads : public QObject
 {
-	Q_OBJECT
+  Q_OBJECT
 
-	GLWidget* 	m_simpleOpenGlWidget;
+  GLWidget* m_simpleOpenGlWidget;
 
-	QApplication* 	app;
-	
-public:
-	Simple_threads();
-	~Simple_threads();
-	
+  QApplication* app;
+
+ public:
+  Simple_threads();
+  ~Simple_threads();
+
   int run(int argc, char** argv);
 
-	
-	private slots :
+ private slots:
 };
 
 #endif
 
-#endif // MAIN_HPP
+#endif  // MAIN_HPP
